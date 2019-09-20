@@ -1,0 +1,75 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCEGroup_log.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}18 Sep 2019, 16:15:13
+{txt}
+{com}. 
+. 
+. ***************************
+. **  Clean and Merge Data **
+. ***************************
+. 
+. use "${c -(}folder{c )-}/SCE/IncExpSCEDstIndM",clear 
+{txt}
+{com}. 
+. duplicates report year month userid
+
+{p 0 4}{txt}Duplicates in terms of {res} year month userid{p_end}
+
+{txt}{hline 10}{c TT}{hline 27}
+   copies {c |} observations       surplus
+{hline 10}{c +}{hline 27}
+        1 {c |}        {res}79064             0
+{txt}{hline 10}{c BT}{hline 27}
+
+{com}. 
+. rename userid ID 
+{res}{txt}
+{com}. 
+. *******************************
+. **  Set Panel Data Structure **
+. *******************************
+. 
+. xtset ID date
+{res}{txt}{col 8}panel variable:  {res}ID (unbalanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 01jun2013 00:00:00 to 01may2018 00:00:00
+{col 25}but with gaps
+{txt}{col 17}delta:  {res}.001 seconds
+{txt}
+{com}. sort ID year month 
+{txt}
+{com}. 
+. ddd
+{err}unrecognized command:  ddd
+{txt}{search r(199):r(199);}
+
+end of do-file
+
+{search r(199):r(199);}
+
+{com}. do "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/DoFile/Step03_IndSCEAnalysisGroup.do"
+{txt}
+{com}. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
+{txt}
+{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/ind"
+{txt}
+{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
+{txt}
+{com}. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. set more off 
+{txt}
+{com}. capture log close
+{smcl}
+{com}{sf}{ul off}

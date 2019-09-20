@@ -8,7 +8,7 @@
 
 
 clear
-global mainfolder "/Users/Myworld/Dropbox/IncomeExp/WorkingFolder"
+global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
 global folder "${mainfolder}/SurveyData/"
 global sum_graph_folder "${mainfolder}/Graphs/pop"
 global sum_table_folder "${mainfolder}/Tables"
