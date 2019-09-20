@@ -60,17 +60,28 @@ local group_vars age_g edu_g inc_g
 **********************************
 
 
+
 foreach gp in `group_vars' {
 tabstat Q24_mean Q24_var Q24_iqr, st(p10 p50 p90) by(`gp')
+}
+
+
+foreach mom in iqr var mean {
+
+twoway (hist Q24_`mom',fcolor(ltblue) lcolor(none)), ///
+	   ylabel("") ///
+	   title("`mom'")
+graph export "${sum_graph_folder}/hist/hist_`mom'.png",as(png) replace  
+
 }
 
 
 foreach gp in `group_vars' {
 foreach mom in iqr var mean {
 
-twoway (hist Q24_`mom' if `gp'==0,fcolor(gs15) lcolor(none)) /// 
-       (hist Q24_`mom' if `gp'==1,fcolor(ltblue) lcolor(none)) ///
-	   (hist Q24_`mom' if `gp'==2,fcolor(red) lcolor(none)), ///
+twoway (hist Q24_`mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
+       (hist Q24_`mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
+	   (hist Q24_`mom' if `gp'==2,fcolor(red) lcolor("")), ///
 	   xlabel("") ///
 	   ylabel("") ///
 	   title("`mom'") ///
