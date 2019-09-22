@@ -1,0 +1,98 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/popSCE_log.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}22 Sep 2019, 14:29:34
+{txt}
+{com}. 
+. 
+. ***************************
+. **  Clean and Merge Data **
+. ***************************
+. 
+. use "${c -(}folder{c )-}/SCE/IncExpSCEDstIndM",clear 
+{txt}
+{com}. 
+. duplicates report year month userid
+
+{p 0 4}{txt}Duplicates in terms of {res} year month userid{p_end}
+
+{txt}{hline 10}{c TT}{hline 27}
+   copies {c |} observations       surplus
+{hline 10}{c +}{hline 27}
+        1 {c |}        {res}79064             0
+{txt}{hline 10}{c BT}{hline 27}
+
+{com}. 
+. 
+. ******************************
+. *** Merge with demographics **
+. *****************************
+. 
+. merge 1:1 year month userid using "${c -(}folder{c )-}/SCE/IncExpSCEProbIndM",keep(master match) 
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}          79,064{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. rename _merge hh_info_merge
+{res}{txt}
+{com}. 
+. ************************************
+. **  Collapse to Population Series **
+. ************************************
+. 
+. collapse (median)  IncMean IncVar Q24_mean Q24_var Q24_iqr, by(year month date) 
+{txt}
+{com}. order date year month
+{txt}
+{com}. duplicates report date 
+
+{p 0 4}{txt}Duplicates in terms of {res} date{p_end}
+
+{txt}{hline 10}{c TT}{hline 27}
+   copies {c |} observations       surplus
+{hline 10}{c +}{hline 27}
+        1 {c |}           {res}60             0
+{txt}{hline 10}{c BT}{hline 27}
+
+{com}. 
+. drop date 
+{txt}
+{com}. gen date_str=string(year)+"m"+string(month)
+{txt}
+{com}. gen date= monthly(date_str,"YM")
+{txt}
+{com}. format date %tm
+{txt}
+{com}. tsset date 
+{res}{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2018m5
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. ************************************
+. **  Times Series Plots  **
+. ************************************
+. 
+. foreach mom in mean var iqr{c -(}
+{txt}  2{com}. tsline Q24_`mom',lwidth(thick) title("`mom'") ///
+>        ytitle("`mom'") 
+{txt}  3{com}.            
+. graph export "${c -(}sum_graph_folder{c )-}/median_`mom'.png",as(png) replace  
+{txt}  4{com}. {c )-}
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/pop/median_mean.png written in PNG format)
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/pop/median_var.png written in PNG format)
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/pop/median_iqr.png written in PNG format)
+
+{com}. 
+. log close 
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/popSCE_log.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}22 Sep 2019, 14:29:41
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

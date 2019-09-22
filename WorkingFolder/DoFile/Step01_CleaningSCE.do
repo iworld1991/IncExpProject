@@ -307,10 +307,6 @@ save "${folder}/SCE/IncExpSCEProbIndM",replace
 gen SCE_mean = .
 gen SCE_var = .
 
-* for nowcasting
-gen SCE_mean1 = . 
-gen SCE_var1 = .   
-
 /*
 * Kernal density plot only 
 
@@ -360,6 +356,7 @@ label var Q24_var "Average Uncertainty of 1-yr-ahead expected income growth"
 label var Q24_iqr "Average 25/75 IQR of 1-yr-ahead expected income growth(%)"
 label var Q24_cent50 "Average Median of 1-yr-ahead expected income growth(%)"
 label var Q24_disg "Disagreements of 1-yr-ahead expected income growth"
+
 
 
 save "${folder}/SCE/IncExpSCEProbPopM",replace 

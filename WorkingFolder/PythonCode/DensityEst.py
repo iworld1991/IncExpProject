@@ -230,7 +230,7 @@ def TriangleStats(lb,ub):
 
 # ### Case 3. Uniform Distribution
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 def UniformEst(bin,probs):
     """
     This function fits a histogram with only one bin of positive probability to a uniform distribution.
@@ -262,7 +262,7 @@ def UniformEst(bin,probs):
     return {"lb":lb,"ub":ub}
 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 def UniformStats(lb,ub):
     """
     The function computes the moment of a uniform distribution.
@@ -278,7 +278,7 @@ def UniformStats(lb,ub):
            variance: estimated variance 
     """
     
-    if lb!=[] and ub!=[]:
+    if lb.size>0 and ub.size>0:
         mean = (lb+ub)/2
         var = (ub-lb)**2/12
     else:
@@ -291,7 +291,7 @@ def UniformStats(lb,ub):
 
 # ### Test using made-up data
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## test 1: GenBeta Dist
 sim_bins= np.array([0,0.2,0.32,0.5,1,1.2])
 sim_probs=np.array([0,0.2,0.5,0.3,0])
@@ -303,7 +303,7 @@ sim_bins2 = np.array([0,0.2,0.32,0.5,1,1.2])
 sim_probs2=np.array([0.2,0,0.8,0,0])
 TriangleEst(sim_bins2,sim_probs2)
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## test 3: Uniform Dist
 
 sim_bins3 = np.array([0,0.2,0.32,0.5,1,1.2])
@@ -388,9 +388,9 @@ def SynDensityStat(bin,probs):
         return {"mean":[],"variance":[]}
 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## testing the synthesized estimator function using an arbitrary example created above
-SynDensityStat(sim_bins2,sim_probs2)['variance']
+SynDensityStat(sim_bins3,sim_probs3)['mean']
 
 # + {"code_folding": []}
 ### loading probabilistic data  
@@ -434,8 +434,8 @@ for i in range(nobs):
 # -
 
 ### exporting moments estimates to pkl
-#IndSCE_est = pd.concat([IndSCE,IndSCE_moment_est], join='inner', axis=1)
-#IndSCE_est.to_pickle("./IndSCEDstIndM.pkl")
+IndSCE_est = pd.concat([IndSCE,IndSCE_moment_est], join='inner', axis=1)
+IndSCE_est.to_pickle("./IndSCEDstIndM.pkl")
 IndSCE_pk = pd.read_pickle('./IndSCEDstIndM.pkl')
 
 IndSCE_pk['IncMean']=pd.to_numeric(IndSCE_pk['IncMean'],errors='coerce')   # income growth from y-1 to y 
@@ -462,3 +462,6 @@ for id in IndSCE_pk.index[IndSCE_pk['IncMean']<-8]:
     print(sim_probs_data)
     stats_est=SynDensityStat(SCE_bins,sim_probs_data)
     print(stats_est['mean'])
+# -
+
+

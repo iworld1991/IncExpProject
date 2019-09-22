@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Est_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}20 Sep 2019, 11:34:21
+ {txt}opened on:  {res}22 Sep 2019, 14:28:54
 {txt}
 {com}. 
 . 
@@ -248,7 +248,7 @@ Summary statistics: p10, p50, p90
 . foreach mom in iqr var mean {c -(}
 {txt}  2{com}. 
 . twoway (hist Q24_`mom',fcolor(ltblue) lcolor(none)), ///
->            ylabel("") ///
+>            ytitle("") ///
 >            title("`mom'")
 {txt}  3{com}. graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'.png",as(png) replace  
 {txt}  4{com}. 
@@ -258,14 +258,37 @@ Summary statistics: p10, p50, p90
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/hist/hist_mean.png written in PNG format)
 
 {com}. 
-. ddd
-{err}unrecognized command:  ddd
-{txt}{search r(199):r(199);}
+. foreach gp in `group_vars' {c -(}
+{txt}  2{com}. foreach mom in iqr var mean {c -(}
+{txt}  3{com}. 
+. twoway (hist Q24_`mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
+>        (hist Q24_`mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
+>            (hist Q24_`mom' if `gp'==2,fcolor(red) lcolor("")), ///
+>            xtitle("") ///
+>            ytitle("") ///
+>            title("`mom'") ///
+>            legend(label(1 `gp'=0) label(2 `gp'=1) label(3 `gp'=2) col(1))
+{txt}  4{com}. 
+. graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'_`gp'.png",as(png) replace  
+{txt}  5{com}. 
+. {c )-}
+{txt}  6{com}. {c )-}
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/hist/hist_iqr_age_g.png written in PNG format)
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/hist/hist_var_age_g.png written in PNG format)
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/hist/hist_mean_age_g.png written in PNG format)
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/hist/hist_iqr_edu_g.png written in PNG format)
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/hist/hist_var_edu_g.png written in PNG format)
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/hist/hist_mean_edu_g.png written in PNG format)
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/hist/hist_iqr_inc_g.png written in PNG format)
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/hist/hist_var_inc_g.png written in PNG format)
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/hist/hist_mean_inc_g.png written in PNG format)
 
-end of do-file
-
-{search r(199):r(199);}
-
-{com}. clear
-
-. 
+{com}. 
+. log close 
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Est_log.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}22 Sep 2019, 14:29:17
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

@@ -69,12 +69,11 @@ tabstat Q24_mean Q24_var Q24_iqr, st(p10 p50 p90) by(`gp')
 foreach mom in iqr var mean {
 
 twoway (hist Q24_`mom',fcolor(ltblue) lcolor(none)), ///
-	   ylabel("") ///
+	   ytitle("") ///
 	   title("`mom'")
 graph export "${sum_graph_folder}/hist/hist_`mom'.png",as(png) replace  
 
 }
-
 
 foreach gp in `group_vars' {
 foreach mom in iqr var mean {
@@ -82,8 +81,8 @@ foreach mom in iqr var mean {
 twoway (hist Q24_`mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
        (hist Q24_`mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
 	   (hist Q24_`mom' if `gp'==2,fcolor(red) lcolor("")), ///
-	   xlabel("") ///
-	   ylabel("") ///
+	   xtitle("") ///
+	   ytitle("") ///
 	   title("`mom'") ///
 	   legend(label(1 `gp'=0) label(2 `gp'=1) label(3 `gp'=2) col(1))
 
