@@ -1,9 +1,9 @@
 {smcl}
 {com}{sf}{ul off}{txt}{.-}
       name:  {res}<unnamed>
-       {txt}log:  {res}/Users/Myworld/Dropbox/IncomeExp/WorkingFolder/indSCE_log.smcl
+       {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}13 Sep 2019, 16:11:08
+ {txt}opened on:  {res}22 Sep 2019, 15:08:24
 {txt}
 {com}. 
 . 
@@ -380,7 +380,7 @@ IncExp_Var~h {c |}
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}{txt}
 {com}. esttab using "${c -(}sum_table_folder{c )-}/ind/autoregSCEIndM.csv", mtitles se  r2 replace
-{res}{txt}(output written to {browse  `"/Users/Myworld/Dropbox/IncomeExp/WorkingFolder/Tables/ind/autoregSCEIndM.csv"'})
+{res}{txt}(output written to {browse  `"/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/ind/autoregSCEIndM.csv"'})
 
 {com}. eststo clear
 {txt}
@@ -511,7 +511,7 @@ IncExp_Var~h {c |}
 {res}{txt}
 {com}. 
 . esttab using "${c -(}sum_table_folder{c )-}/ind/ChEfficiencySCEIndQ.csv", mtitles b(%8.3f) se(%8.3f) scalars(N r2) sfmt(%8.3f %8.3f %8.3f) replace
-{res}{txt}(output written to {browse  `"/Users/Myworld/Dropbox/IncomeExp/WorkingFolder/Tables/ind/ChEfficiencySCEIndQ.csv"'})
+{res}{txt}(output written to {browse  `"/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/ind/ChEfficiencySCEIndQ.csv"'})
 
 {com}. 
 . 
@@ -552,9 +552,9 @@ IncExp_Var~h {c |}
 . 
 . log close 
       {txt}name:  {res}<unnamed>
-       {txt}log:  {res}/Users/Myworld/Dropbox/IncomeExp/WorkingFolder/indSCE_log.smcl
+       {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_log.smcl
   {txt}log type:  {res}smcl
- {txt}closed on:  {res}13 Sep 2019, 16:11:12
+ {txt}closed on:  {res}22 Sep 2019, 15:08:28
 {txt}{.-}
 {smcl}
 {txt}{sf}{ul off}

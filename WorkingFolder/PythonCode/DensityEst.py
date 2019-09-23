@@ -279,6 +279,7 @@ def UniformStats(lb,ub):
     """
     
     if lb.size>0 and ub.size>0:
+        print("yes")
         mean = (lb+ub)/2
         var = (ub-lb)**2/12
     else:
@@ -308,7 +309,8 @@ TriangleEst(sim_bins2,sim_probs2)
 
 sim_bins3 = np.array([0,0.2,0.32,0.5,1,1.2])
 sim_probs3=np.array([0,0,0,0,1])
-UniformEst(sim_bins3,sim_probs3)
+sim_para3 = UniformEst(sim_bins3,sim_probs3)
+UniformStats(sim_para3['lb'],sim_para3['ub'])
 # -
 
 # ### Test with simulated data from known distribution 
@@ -399,6 +401,12 @@ IndSCE=pd.read_stata('../SurveyData/SCE/IncExpSCEProbIndM.dta')
 # -
 
 IndSCE.head()
+
+## how many observations?
+len(IndSCE)
+
+## how many observations have density forecasts
+len(IndSCE['Q24_bin10'].dropna())
 
 # + {"code_folding": []}
 ## survey-specific parameters 

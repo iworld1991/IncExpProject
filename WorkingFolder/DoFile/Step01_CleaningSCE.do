@@ -294,7 +294,6 @@ foreach mom in mean var{
 }
 
 
-
 save "${folder}/SCE/IncExpSCEProbIndM",replace 
 
 ***************************************
