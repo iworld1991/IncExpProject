@@ -31,7 +31,7 @@ rename _merge hh_info_merge
 **  Collapse to Population Series **
 ************************************
 
-collapse (median)  IncMean IncVar Q24_mean Q24_var Q24_iqr, by(year month date) 
+collapse (median)  Q24_mean Q24_var Q24_iqr, by(year month date) 
 order date year month
 duplicates report date 
 
@@ -41,12 +41,25 @@ gen date= monthly(date_str,"YM")
 format date %tm
 tsset date 
 
+***********************
+**  Moving  Average  **
+***********************
+
+
+foreach mom in mean var iqr{
+gen Q24_`mom'mv3 = (F1.Q24_`mom' + Q24_`mom' + L1.Q24_`mom') / 3
+label var Q24_`mom'mv3 "Q24_`mom' (3-month average)"
+}
+
 ************************************
 **  Times Series Plots  **
 ************************************
 
 foreach mom in mean var iqr{
-tsline Q24_`mom',lwidth(thick) title("`mom'") ///
+twoway (tsline Q24_`mom',lwidth(med) lpattern(dash)) ///
+       (tsline Q24_`mom'mv3,lwidth(thick) lpattern(solid)), ///
+	   legend(label(1 "`mom'") label(2 "3-month moving average `mom'")) ///
+	   title("`mom' of expected income growth") ///
        ytitle("`mom'") 
 	   
 graph export "${sum_graph_folder}/median_`mom'.png",as(png) replace  

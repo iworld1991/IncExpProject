@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/popSCE_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}22 Sep 2019, 14:29:34
+ {txt}opened on:  {res}27 Sep 2019, 10:20:37
 {txt}
 {com}. 
 . 
@@ -45,7 +45,7 @@
 . **  Collapse to Population Series **
 . ************************************
 . 
-. collapse (median)  IncMean IncVar Q24_mean Q24_var Q24_iqr, by(year month date) 
+. collapse (median)  Q24_mean Q24_var Q24_iqr, by(year month date) 
 {txt}
 {com}. order date year month
 {txt}
@@ -73,18 +73,71 @@
 {txt}{col 17}delta:  {res}1 month
 {txt}
 {com}. 
+. ***********************
+. **  Moving  Average  **
+. ***********************
+. 
+. 
+. foreach mom in mean var iqr{c -(}
+{txt}  2{com}. gen Q24_`mom'mv3 = (F1.Q24_`mom' + Q24_`mom' + L1.Q24_`mom') / 3
+{txt}  3{com}. label var Q24_`mom'mv3 "Q24_`mom' (3-month average)"
+{txt}  4{com}. {c )-}
+{txt}(2 missing values generated)
+(2 missing values generated)
+(2 missing values generated)
+
+{com}. 
 . ************************************
 . **  Times Series Plots  **
 . ************************************
 . 
 . foreach mom in mean var iqr{c -(}
-{txt}  2{com}. tsline Q24_`mom',lwidth(thick) title("`mom'") ///
+{txt}  2{com}. twoway (tsline Q24_`mom',lwidth(med) lpattern(dash)) ///
+>        (tsline Q24_`mom'mv3,lwidth(thick) lpattern(solid)), ///
+>            legend(label(1 "`mom'") label(2 "3-month moving average `mom'")) ///
+>            title("`mom' of expected income growth") ///
 >        ytitle("`mom'") 
 {txt}  3{com}.            
 . graph export "${c -(}sum_graph_folder{c )-}/median_`mom'.png",as(png) replace  
 {txt}  4{com}. {c )-}
+{p 0 4 2}
+{txt}(note:  named style
+med not found in class
+linewidth,  default attributes used)
+{p_end}
+{com}{txt}{p 0 8} (note:  linewidth  {com}{txt}not found in scheme, default attributes used){p_end}
+{p 0 4 2}
+{txt}(note:  named style
+med not found in class
+linewidth,  default attributes used)
+{p_end}
+{com}{txt}{p 0 8} (note:  linewidth  {com}{txt}not found in scheme, default attributes used){p_end}
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/pop/median_mean.png written in PNG format)
+{p 0 4 2}
+{txt}(note:  named style
+med not found in class
+linewidth,  default attributes used)
+{p_end}
+{com}{txt}{p 0 8} (note:  linewidth  {com}{txt}not found in scheme, default attributes used){p_end}
+{p 0 4 2}
+{txt}(note:  named style
+med not found in class
+linewidth,  default attributes used)
+{p_end}
+{com}{txt}{p 0 8} (note:  linewidth  {com}{txt}not found in scheme, default attributes used){p_end}
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/pop/median_var.png written in PNG format)
+{p 0 4 2}
+{txt}(note:  named style
+med not found in class
+linewidth,  default attributes used)
+{p_end}
+{com}{txt}{p 0 8} (note:  linewidth  {com}{txt}not found in scheme, default attributes used){p_end}
+{p 0 4 2}
+{txt}(note:  named style
+med not found in class
+linewidth,  default attributes used)
+{p_end}
+{com}{txt}{p 0 8} (note:  linewidth  {com}{txt}not found in scheme, default attributes used){p_end}
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/pop/median_iqr.png written in PNG format)
 
 {com}. 
@@ -92,7 +145,7 @@
       {txt}name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/popSCE_log.smcl
   {txt}log type:  {res}smcl
- {txt}closed on:  {res}22 Sep 2019, 14:29:41
+ {txt}closed on:  {res}27 Sep 2019, 10:20:44
 {txt}{.-}
 {smcl}
 {txt}{sf}{ul off}
