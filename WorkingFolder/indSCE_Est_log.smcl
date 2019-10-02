@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Est_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}22 Sep 2019, 15:09:23
+ {txt}opened on:  {res}30 Sep 2019, 15:32:21
 {txt}
 {com}. 
 . 
@@ -46,7 +46,7 @@
 . *******************************
 . rename userid ID 
 {res}{txt}
-{com}. xtset ID date
+{com}. xtset ID date   /* this is not correct. ID is unique here.*/
 {res}{txt}{col 8}panel variable:  {res}ID (unbalanced)
 {txt}{col 9}time variable:  {res}{col 25}date, 01jun2013 00:00:00 to 01may2018 00:00:00
 {col 25}but with gaps
@@ -54,1282 +54,718 @@
 {txt}
 {com}. sort ID year month 
 {txt}
-{com}. ddd
-{err}unrecognized command:  ddd
-{txt}{search r(199):r(199);}
-
-end of do-file
-
-{search r(199):r(199);}
-
-{com}. corr IncMean Q24_mean
-{txt}(obs=1379)
-
-             {c |}  IncMean Q24_mean
-{hline 13}{c +}{hline 18}
-     IncMean {c |}{res}   1.0000
-    {txt}Q24_mean {c |}{res}   0.4388   1.0000
-
-
-{com}. corr IncVar Q24_var
-{txt}(obs=1381)
-
-             {c |}   IncVar  Q24_var
-{hline 13}{c +}{hline 18}
-      IncVar {c |}{res}   1.0000
-     {txt}Q24_var {c |}{res}   0.3852   1.0000
-
-
-{com}. count if IncMean!=.
-{res} 1503
-
-{com}. count 
-{res}79064
-
-{com}. count if Q24_bin1!.
-{err}Q24_bin1!:  operator invalid
-{txt}{search r(198):r(198);}
-
-{com}. count if Q24_bin1!=.
-{res}52878
-
-{com}. count if Q24_var!=.
-{res}47501
-
-{com}. clear
-
-. use "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/IncExpSCEDstIndM.dta"
-
-. count if IncMean!=.
-{res} 1503
-
-{com}. clear
-
-. use "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/IncExpSCEProbIndM.dta"
-
-. clear
-
-. do "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/DoFile/Step01_CleaningSCE.do"
-{txt}
-{com}. ****************************************************
-. ***   This do files cleans SCE individual density **
-. ***   forecasts and moments. It exclude the top and *
-. ***   bottom 5 percentiles of mean and uncertainty. *
-. ***   It also plots histograms of mean forecast and *
-. ***   uncertainty. **********************************
-. *****************************************************
+{com}. 
+. *******************************
+. ** Exclude extreme outliers 
+. ******************************
 . 
+. keep if Q32 < 100 & Q32 >= 10
+{txt}(67437 observations deleted)
+
+{com}. 
+. *****************************
+. *** generate group vars *****
+. *****************************
 . 
-. clear
+. gen cohort = year-Q32
 {txt}
-{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
+{com}. label var cohort "cohort by year of birth"
 {txt}
-{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
+{com}. egen cohort_g = cut(cohort), group(3)
 {txt}
-{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/pop"
+{com}. label define cohortlb 0 "1915-1956" 1 "1957-1972" 2 "1973-2000"
 {txt}
-{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
+{com}. label value cohort_g cohortlb
 {txt}
 {com}. 
-. cd ${c -(}folder{c )-}
-{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+. egen age_g = cut(Q32), group(3)  
 {txt}
-{com}. pwd
-{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{com}. label var age_g "age group"
 {txt}
-{com}. set more off 
+{com}. label define agelb 0 "Young" 1 "Middle-age" 2 "Old"
+{txt}
+{com}. label value age_g agelb
+{txt}
+{com}. 
+. egen edu_g = cut(Q36), group(3) 
+{txt}(1 missing value generated)
+
+{com}. label var edu_g "education group"
+{txt}
+{com}. label define edulb 0 "Low Education" 1 "Medium Education" 2 "High Education"
+{txt}
+{com}. label value edu_g adulb
+{txt}
+{com}. 
+. gen gender_g = Q33 
+{txt}(2 missing values generated)
+
+{com}. label var gender_g "gender_grou"
+{txt}
+{com}. 
+. egen inc_g = cut(Q47), group(3)
+{txt}(126 missing values generated)
+
+{com}. label var inc_g "income_g"
+{txt}
+{com}. label define inclb 0 "Low income" 1 "Middle Income" 2 "High Income"
+{txt}
+{com}. label value inc_g inclb
+{txt}
+{com}. 
+. local group_vars age_g edu_g inc_g cohort_g
 {txt}
 {com}. 
 . 
-. use "${c -(}folder{c )-}/SCE/NYFED_SCE_2013.dta",clear
-{txt}
-{com}. append using "${c -(}folder{c )-}/SCE/NYFED_SCE_2014_2016.dta",force
-{txt}{p 0 7 2}
-(note: variable
-DHH2_11_other was str48 in the using data, but will be
-byte now)
-{p_end}
-{p 0 7 2}
-(note: variable
-Q13new was 
-byte, now double to accommodate using data's values)
-{p_end}
-{p 0 7 2}
-(note: variable
-Q19 was 
-int, now double to accommodate using data's values)
-{p_end}
-{p 0 7 2}
-(note: variable
-Q32 was 
-byte, now int to accommodate using data's values)
-{p_end}
+. **********************************
+. *** tables and hists of Vars *****
+. **********************************
+. 
+. 
+. foreach gp in `group_vars' {c -(}
+{txt}  2{com}. tabstat Q24_mean Q24_var Q24_iqr, st(p10 p50 p90) by(`gp')
+{txt}  3{com}. {c )-}
 
-{com}. append using  "${c -(}folder{c )-}/SCE/NYFED_SCE_post2016.dta",force
-{txt}{p 0 7 2}
-(note: variable
-DHH2_11_other was str83 in the using data, but will be
-byte now)
-{p_end}
-{p 0 7 2}
-(note: variable
-Q3 was 
-byte, now int to accommodate using data's values)
-{p_end}
-{p 0 7 2}
-(note: variable
-Q32 was 
-int, now double to accommodate using data's values)
-{p_end}
+{txt}Summary statistics: p10, p50, p90
+  by categories of: age_g (age group)
+
+{ralign 10:age_g} {...}
+{c |}{...}
+  Q24_mean   Q24_var   Q24_iqr
+{hline 11}{c +}{hline 30}
+{ralign 10:Young} {...}
+{c |}{...}
+ {res} .7777428  .3333333  .9061641
+{txt}{space 10} {...}
+{c |}{...}
+ {res}  2.96073  1.650073         2
+{txt}{space 10} {...}
+{c |}{...}
+ {res} 6.809876  21.20652  10.22087
+{txt}{hline 11}{c +}{hline 30}
+{ralign 10:Middle-age} {...}
+{c |}{...}
+ {res} .4221108  .3333333  .8810234
+{txt}{space 10} {...}
+{c |}{...}
+ {res} 2.367884  1.056389  1.437962
+{txt}{space 10} {...}
+{c |}{...}
+ {res} 6.025575  17.71149  8.342402
+{txt}{hline 11}{c +}{hline 30}
+{ralign 10:Old} {...}
+{c |}{...}
+ {res} .7119929  .3333333  .9061639
+{txt}{space 10} {...}
+{c |}{...}
+ {res}        2  1.044458  1.391605
+{txt}{space 10} {...}
+{c |}{...}
+ {res} 6.017493  22.44984  9.520319
+{txt}{hline 11}{c +}{hline 30}
+{ralign 10:Total} {...}
+{c |}{...}
+ {res} .6104578  .3333333  .9061639
+{txt}{space 10} {...}
+{c |}{...}
+ {res} 2.537525  1.333333  1.713396
+{txt}{space 10} {...}
+{c |}{...}
+ {res}  6.47924  20.05368  9.314573
+{txt}{hline 11}{c BT}{hline 30}
+
+Summary statistics: p10, p50, p90
+  by categories of: edu_g (education group)
+
+{ralign 6:edu_g} {...}
+{c |}{...}
+  Q24_mean   Q24_var   Q24_iqr
+{hline 7}{c +}{hline 30}
+{ralign 6:0} {...}
+{c |}{...}
+ {res} 2.08e-08  .3333333         1
+{txt}{space 6} {...}
+{c |}{...}
+ {res}        2  1.333333         2
+{txt}{space 6} {...}
+{c |}{...}
+ {res} 6.558024    30.028        13
+{txt}{hline 7}{c +}{hline 30}
+{ralign 6:1} {...}
+{c |}{...}
+ {res} .1782963  .3333333  .9061641
+{txt}{space 6} {...}
+{c |}{...}
+ {res} 2.453082  1.105975  1.570626
+{txt}{space 6} {...}
+{c |}{...}
+ {res} 6.318821  20.84629  12.18417
+{txt}{hline 7}{c +}{hline 30}
+{ralign 6:2} {...}
+{c |}{...}
+ {res} .8352844  .3333333  .8566982
+{txt}{space 6} {...}
+{c |}{...}
+ {res} 2.708411   1.34117    1.7134
+{txt}{space 6} {...}
+{c |}{...}
+ {res}  6.49011  18.49858  7.409681
+{txt}{hline 7}{c +}{hline 30}
+{ralign 6:Total} {...}
+{c |}{...}
+ {res} .6104578  .3333333  .9061639
+{txt}{space 6} {...}
+{c |}{...}
+ {res} 2.537525  1.333333  1.713396
+{txt}{space 6} {...}
+{c |}{...}
+ {res}  6.47924  20.05368  9.314573
+{txt}{hline 7}{c BT}{hline 30}
+
+Summary statistics: p10, p50, p90
+  by categories of: inc_g (income_g)
+
+{ralign 13:inc_g} {...}
+{c |}{...}
+  Q24_mean   Q24_var   Q24_iqr
+{hline 14}{c +}{hline 30}
+{ralign 13:Low income} {...}
+{c |}{...}
+ {res} 2.08e-08  .3333333         1
+{txt}{space 13} {...}
+{c |}{...}
+ {res} 2.000654  1.333333         2
+{txt}{space 13} {...}
+{c |}{...}
+ {res} 6.924951   31.6453        13
+{txt}{hline 14}{c +}{hline 30}
+{ralign 13:Middle Income} {...}
+{c |}{...}
+ {res} .5375247  .3333333  .9061639
+{txt}{space 13} {...}
+{c |}{...}
+ {res} 2.192116  1.132435  1.514932
+{txt}{space 13} {...}
+{c |}{...}
+ {res}        6  18.82199  8.680031
+{txt}{hline 14}{c +}{hline 30}
+{ralign 13:High Income} {...}
+{c |}{...}
+ {res}        1  .3333333   .856698
+{txt}{space 13} {...}
+{c |}{...}
+ {res} 2.793575  1.333333   1.64027
+{txt}{space 13} {...}
+{c |}{...}
+ {res} 6.599971  17.20418  7.156532
+{txt}{hline 14}{c +}{hline 30}
+{ralign 13:Total} {...}
+{c |}{...}
+ {res} .6104578  .3333333  .9061639
+{txt}{space 13} {...}
+{c |}{...}
+ {res} 2.537525  1.333333  1.713396
+{txt}{space 13} {...}
+{c |}{...}
+ {res} 6.486081  20.26763  9.346632
+{txt}{hline 14}{c BT}{hline 30}
+
+Summary statistics: p10, p50, p90
+  by categories of: cohort_g 
+
+{ralign 9:cohort_g} {...}
+{c |}{...}
+  Q24_mean   Q24_var   Q24_iqr
+{hline 10}{c +}{hline 30}
+{ralign 9:1915-1956} {...}
+{c |}{...}
+ {res} .6228527  .3333333  .9061639
+{txt}{space 9} {...}
+{c |}{...}
+ {res}        2  .9760123  1.324268
+{txt}{space 9} {...}
+{c |}{...}
+ {res}        6  21.60151  8.832264
+{txt}{hline 10}{c +}{hline 30}
+{ralign 9:1957-1972} {...}
+{c |}{...}
+ {res} .4477587  .3333333  .8566982
+{txt}{space 9} {...}
+{c |}{...}
+ {res} 2.280812  1.044458  1.435542
+{txt}{space 9} {...}
+{c |}{...}
+ {res}        6  16.78715  8.509292
+{txt}{hline 10}{c +}{hline 30}
+{ralign 9:1973-2000} {...}
+{c |}{...}
+ {res} .7586042  .3333333  .9061641
+{txt}{space 9} {...}
+{c |}{...}
+ {res} 2.955731  1.632472         2
+{txt}{space 9} {...}
+{c |}{...}
+ {res} 6.868142  21.45051   10.2934
+{txt}{hline 10}{c +}{hline 30}
+{ralign 9:Total} {...}
+{c |}{...}
+ {res} .6104578  .3333333  .9061639
+{txt}{space 9} {...}
+{c |}{...}
+ {res} 2.537525  1.333333  1.713396
+{txt}{space 9} {...}
+{c |}{...}
+ {res}  6.47924  20.05368  9.314573
+{txt}{hline 10}{c BT}{hline 30}
 
 {com}. 
 . 
-. sort date
-{txt}
-{com}. unique userid
-{txt}Number of unique values of userid is  {res}11664
-{txt}Number of records is  {res}79064
-{txt}
+. foreach gp in `group_vars' {c -(}
+{txt}  2{com}. table `gp', c(median Q24_var) by(year)
+{txt}  3{com}. {c )-}
+
+{txt}{hline 11}{c TT}{hline 13}
+year and   {c |}
+age group  {c |} med(Q24_var)
+{hline 11}{c +}{hline 13}
+2013       {c |}
+     Young {c |}    {res}1.4706578
+{txt}Middle-age {c |}    {res}1.0504482
+       {txt}Old {c |}    {res}.87410492
+{txt}{hline 11}{c +}{hline 13}
+2014       {c |}
+     Young {c |}     {res}1.642285
+{txt}Middle-age {c |}     {res}1.333333
+       {txt}Old {c |}    {res}.87410492
+{txt}{hline 11}{c +}{hline 13}
+2015       {c |}
+     Young {c |}    {res}1.7716688
+{txt}Middle-age {c |}    {res}.87410492
+       {txt}Old {c |}     {res}1.333333
+{txt}{hline 11}{c +}{hline 13}
+2016       {c |}
+     Young {c |}    {res}1.6922234
+{txt}Middle-age {c |}    {res}.86692697
+       {txt}Old {c |}    {res}1.1862721
+{txt}{hline 11}{c +}{hline 13}
+2017       {c |}
+     Young {c |}    {res}1.7856894
+{txt}Middle-age {c |}    {res}.93161613
+       {txt}Old {c |}    {res}.66666669
+{txt}{hline 11}{c +}{hline 13}
+2018       {c |}
+     Young {c |}    {res}1.5146742
+{txt}Middle-age {c |}    {res}.94059372
+       {txt}Old {c |}    {res}1.0095498
+{txt}{hline 11}{c BT}{hline 13}
+
+{hline 10}{c TT}{hline 13}
+year and  {c |}
+education {c |}
+group     {c |} med(Q24_var)
+{hline 10}{c +}{hline 13}
+2013      {c |}
+        0 {c |}     {res}1.105975
+        {txt}1 {c |}    {res}.89902848
+        {txt}2 {c |}     {res}1.333333
+{txt}{hline 10}{c +}{hline 13}
+2014      {c |}
+        0 {c |}     {res}1.425889
+        {txt}1 {c |}     {res}1.333333
+        {txt}2 {c |}    {res}1.4992648
+{txt}{hline 10}{c +}{hline 13}
+2015      {c |}
+        0 {c |}    {res}1.8824012
+        {txt}1 {c |}    {res}.66863903
+        {txt}2 {c |}    {res}1.5399913
+{txt}{hline 10}{c +}{hline 13}
+2016      {c |}
+        0 {c |}     {res}1.333333
+        {txt}1 {c |}     {res}1.105975
+        {txt}2 {c |}     {res}1.333333
+{txt}{hline 10}{c +}{hline 13}
+2017      {c |}
+        0 {c |}     {res}1.105975
+        {txt}1 {c |}    {res}1.1379284
+        {txt}2 {c |}    {res}1.3586999
+{txt}{hline 10}{c +}{hline 13}
+2018      {c |}
+        0 {c |}     {res}1.536028
+        {txt}1 {c |}    {res}1.0006096
+        {txt}2 {c |}     {res}1.333333
+{txt}{hline 10}{c BT}{hline 13}
+
+{hline 14}{c TT}{hline 13}
+year and      {c |}
+income_g      {c |} med(Q24_var)
+{hline 14}{c +}{hline 13}
+2013          {c |}
+   Low income {c |}    {res}1.9040942
+{txt}Middle Income {c |}    {res}.66666669
+  {txt}High Income {c |}     {res}1.333333
+{txt}{hline 14}{c +}{hline 13}
+2014          {c |}
+   Low income {c |}    {res}1.6520977
+{txt}Middle Income {c |}     {res}1.333333
+  {txt}High Income {c |}    {res}1.3432762
+{txt}{hline 14}{c +}{hline 13}
+2015          {c |}
+   Low income {c |}     {res}1.333333
+{txt}Middle Income {c |}    {res}.99126315
+  {txt}High Income {c |}    {res}1.4270498
+{txt}{hline 14}{c +}{hline 13}
+2016          {c |}
+   Low income {c |}     {res}1.333333
+{txt}Middle Income {c |}    {res}1.3262935
+  {txt}High Income {c |}    {res}1.2031537
+{txt}{hline 14}{c +}{hline 13}
+2017          {c |}
+   Low income {c |}     {res}1.333333
+{txt}Middle Income {c |}     {res}1.333333
+  {txt}High Income {c |}     {res}1.333333
+{txt}{hline 14}{c +}{hline 13}
+2018          {c |}
+   Low income {c |}     {res}1.333333
+{txt}Middle Income {c |}     {res}1.333333
+  {txt}High Income {c |}    {res}1.3093832
+{txt}{hline 14}{c BT}{hline 13}
+
+{hline 10}{c TT}{hline 13}
+year and  {c |}
+cohort_g  {c |} med(Q24_var)
+{hline 10}{c +}{hline 13}
+2013      {c |}
+1915-1956 {c |}    {res}.72505316
+{txt}1957-1972 {c |}     {res}1.166442
+{txt}1973-2000 {c |}     {res}1.646167
+{txt}{hline 10}{c +}{hline 13}
+2014      {c |}
+1915-1956 {c |}    {res}.87410492
+{txt}1957-1972 {c |}     {res}1.333333
+{txt}1973-2000 {c |}     {res}1.642285
+{txt}{hline 10}{c +}{hline 13}
+2015      {c |}
+1915-1956 {c |}     {res}1.333333
+{txt}1957-1972 {c |}    {res}.84719852
+{txt}1973-2000 {c |}    {res}1.7716688
+{txt}{hline 10}{c +}{hline 13}
+2016      {c |}
+1915-1956 {c |}    {res}1.1651365
+{txt}1957-1972 {c |}    {res}.93051246
+{txt}1973-2000 {c |}    {res}1.5051229
+{txt}{hline 10}{c +}{hline 13}
+2017      {c |}
+1915-1956 {c |}    {res}1.0897299
+{txt}1957-1972 {c |}    {res}.81034333
+{txt}1973-2000 {c |}    {res}1.7099483
+{txt}{hline 10}{c +}{hline 13}
+2018      {c |}
+1915-1956 {c |}    {res}1.1888956
+{txt}1957-1972 {c |}    {res}.66666669
+{txt}1973-2000 {c |}    {res}1.4926659
+{txt}{hline 10}{c BT}{hline 13}
+
 {com}. 
+. /*
+> 
+> foreach mom in iqr var mean {c -(}
+> 
+> twoway (hist Q24_`mom',fcolor(ltblue) lcolor(none)), ///
+>            ytitle("") ///
+>            title("`mom'")
+> graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'.png",as(png) replace  
+> 
+> {c )-}
+> 
+> foreach gp in `group_vars' {c -(}
+> foreach mom in iqr var mean {c -(}
+> 
+> twoway (hist Q24_`mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
+>        (hist Q24_`mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
+>            (hist Q24_`mom' if `gp'==2,fcolor(red) lcolor("")), ///
+>            xtitle("") ///
+>            ytitle("") ///
+>            title("`mom'") ///
+>            legend(label(1 `gp'=0) label(2 `gp'=1) label(3 `gp'=2) col(1))
+> 
+> graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'_`gp'.png",as(png) replace  
+> 
+> {c )-}
+> {c )-}
+> */
 . ********************
-. *** Date format ****
+. ** Regression ******
 . ********************
-. gen date_str = string(date)
-{txt}
-{com}. gen year = substr(date_str,1,4)
-{txt}
-{com}. gen month = substr(date_str,5,2)
-{txt}
-{com}. gen date2=year+"m"+month
-{txt}
-{com}. gen date3= monthly(date2,"YM")
-{txt}
-{com}. format date3 %tm
-{txt}
-{com}. drop date_str date2 date
-{txt}
-{com}. rename date3 date
-{res}{txt}
-{com}. destring year, replace
-{txt}year has all characters numeric; {res}replaced {txt}as {res}int
-{txt}
-{com}. destring month, replace 
-{txt}month has all characters numeric; {res}replaced {txt}as {res}byte
-{txt}
-{com}. order date year month
-{txt}
-{com}. xtset userid date
-{res}{txt}{col 8}panel variable:  {res}userid (unbalanced)
-{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2018m5, but with gaps
-{txt}{col 17}delta:  {res}1 month
+. 
+. global other_control i.Q33 i.Q34 Q35_1 Q35_2 Q35_3 Q35_4 Q35_5 Q35_6 
 {txt}
 {com}. 
-. **********************
-. ** Label variables ***
-. **********************
-. 
-. label var Q1 "finance better or worser(5 vals) from y-1 to y"
-{txt}
-{com}. label var Q2 "finance better or worser(5 vals) from y to y+1"
-{txt}
-{com}. label var Q3 "chance of moving (%)"
-{txt}
-{com}. label var Q4new "chance of UE higher from y to y+1(0-1)"
-{txt}
-{com}. label var Q5new "chance of saving interest rate higher from y to y+1(%)"
-{txt}
-{com}. label var Q6new "chance of stock market up from y to y+1(%)"
-{txt}
-{com}. label var Q8v2 "inflation or deflation from y to y+1 (1/0)"
-{txt}
-{com}. label var Q8v2part2 "inflation(or deflation) from y to y+1 (%) "
-{txt}
-{com}. label var Q9_cent25 "25 percentile of inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_cent50 "50 percentile of inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_cent75 "75 percentile of inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_var "var of inflation from y to y+1"
-{txt}
-{com}. label var Q9_iqr "25/75 inter-quantile range of inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_mean "mean of inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_probdeflation "prob of deflation from y to y+1 (0-1)"
-{txt}
-{com}. label var Q9_bin1 "density: >12% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin2 "density: 8%-12% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin3 "density: 4%-8% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin4 "density: 2%-4% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin5 "density: 0%-2% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin6 "density: -2%-0% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin7 "density: -4%- -2% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin8 "density: -8%--4% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin9 "density: -12%- -8% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin10 "density: <-12% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9bv2 "inflation or deflation from y+1 to y+2 (1/0)"
-{txt}
-{com}. label var Q9bv2part2 "inflation(or deflation) from y+1 to y+2 (%)"
-{txt}
-{com}. label var Q9c_cent25 "25 percentile of inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_cent50 "50 percentile of inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_cent75 "75 percentile of inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_var "var of inflation from y+1 to y+2"
-{txt}
-{com}. label var Q9c_mean "mean of inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_iqr "25/75 inter-quantile range of inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_probdeflation "prob of deflation from y+1 to y+2 (0-1)"
-{txt}
-{com}. label var Q9c_bin1 "density: >12% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin2 "density: 8%-12% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin3 "density: 4%-8% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin4 "density: 2%-4% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin5 "density: 0%-2% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin6 "density: -2%-0% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin7 "density: -4%- -2% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin8 "density: -8%--4% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin9 "density: -12%- -8% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin10 "density: <-12% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q10_1 "current empsituations:full-time"
-{txt}
-{com}. label var Q10_2 "current emp situations:part-time"
-{txt}
-{com}. label var Q10_3 "current emp situations: not working but wants to work"
-{txt}
-{com}. label var Q10_4 "current emp situations: temporary laid-off"
-{txt}
-{com}. label var Q10_5 "current emp situations: on sick or other leave"
-{txt}
-{com}. label var Q10_6 "current emp situations: permanently disabled/unable to work"
-{txt}
-{com}. label var Q10_7 "current emp situations: retiree or early retiree"
-{txt}
-{com}. label var Q10_8 "current emp situations: student or in training"
-{txt}
-{com}. label var Q10_9 "current emp situations: homemaker"
-{txt}
-{com}. label var Q10_10 "current emp situations: others"
-{txt}
-{com}. label var Q11 "number of jobs"
-{txt}
-{com}. label var Q12new "work for someone or self-employed(1/0)"
-{txt}
-{com}. label var ES1_1 ""
-{txt}
-{com}. label var ES1_2 ""
-{txt}
-{com}. label var ES1_3 ""
-{txt}
-{com}. label var ES1_4 ""
-{txt}
-{com}. label var ES2 ""
-{txt}
-{com}. label var ES3new ""
-{txt}
-{com}. label var ES4 ""
-{txt}
-{com}. label var ES5 ""
-{txt}
-{com}. label var Q13new "chance of losing job from y to y+1(%)"
-{txt}
-{com}. label var Q14new "chance of voluntarily leaving the job from y to y+1(%)"
-{txt}
-{com}. label var Q15 "currently looking for a job (1/0)"
-{txt}
-{com}. label var Q16 "duration of unemployment (months)"
-{txt}
-{com}. label var Q17new "chance of finding and accepting a job from y to y+1(%)"
-{txt}
-{com}. label var Q18new "chance of finding and accepting a job from m to m+3"
-{txt}
-{com}. label var Q19 "duration of out of work(%)"
-{txt}
-{com}. label var Q20new "chance of starting looking for a job from y to y+1(%)"
-{txt}
-{com}. label var Q21new "chance of starting looking for a job from m to m+3(%)"
-{txt}
-{com}. label var Q22new ""
-{txt}
-{com}. label var Q23v2 ""
-{txt}
-{com}. label var Q23v2part2 ""
-{txt}
-{com}. label var Q24_cent25 "25 percentile of earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_cent50 "50 percentile of earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_cent75 "75 percentile of earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_var "var of earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_mean "mean of earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_iqr "25/75 inter-quantile range of earning growth of same job/time/place from y to y+1(%)"
-{txt}note: label truncated to 80 characters
+. eststo clear
+{txt}
+{com}. 
+. foreach mom in iqr var mean {c -(}
+{txt}  2{com}. eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year, robust 
+{txt}  3{com}. eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year ${c -(}other_control{c )-}, robust 
+{txt}  4{com}. {c )-}
 
-{com}. label var Q24_probdeflation "???"
-{txt}
-{com}. label var Q24_bin1 ">12% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin2 "8%-12% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin3 "4%-8% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin4 "2%-4% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin5 "0-2% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin6 "-2%-0 earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin7 "-4%- -2% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin8 "-8% - -4% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin9 "-12%- -8% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin10 "<-12% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q25v2 "increase/decrease of total household income from y to y+1(1/0)"
-{txt}
-{com}. label var Q25v2part2 "increase of total household income from y to y+1(%)"
-{txt}
-{com}. label var Q26v2 "increase/decrease of total household spending from y to y+1(1/0)"
-{txt}
-{com}. label var Q26v2part2 "increase of total household spending from y to y+1(%)"
-{txt}
-{com}. label var Q27v2 "increase/decrease of total household tax payment given the same income (1/0)"
-{txt}
-{com}. label var Q27v2part2 "increase of total household tax payment given the same income (%)"
-{txt}
-{com}. label var Q28 "easier/harder to get credit/loan from y-1 to y(1-5)"
-{txt}
-{com}. label var Q29 "easier/harder to get credit/loan from y to y+1(1-5)"
-{txt}
-{com}. label var Q30new "chance of non-payment of debt from m to m+3(%)"
-{txt}
-{com}. label var Q31v2 "increase/decrease of nationwide house price(1/0)"
-{txt}
-{com}. label var Q31v2part2 "increase of nationwide house price(%)"
-{txt}
-{com}. label var C1_cent25 "25 percentile of increase of nationwide house price(%)"
-{txt}
-{com}. label var C1_cent50 "50 percentile of increase of nationwide house price(%)"
-{txt}
-{com}. label var C1_cent75 "75 percentile of increase of nationwide house price(%)"
-{txt}
-{com}. label var C1_var "var of increase of nationwide house price"
-{txt}
-{com}. label var C1_mean "mean of increase of nationwide house price(%)"
-{txt}
-{com}. label var C1_iqr "25/75 inter-quantile range  of increase of nationwide house price(%)"
-{txt}
-{com}. label var C1_probdeflation "??"
-{txt}
-{com}. label var C1_bin1 ">12% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin2 "8%-12% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin3 "4%-8% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin4 "2%-4% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin5 "0-2% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin6 "-2%-0% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin7 "-4%- -2% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin8 "-8%- -4% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin9 "-12%- -8% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin10 "<-12% increase in nationwide house price(%)"
-{txt}
-{com}. label var C2 "increase/decrease in nationwide house price from y+1 to y+2(1/0)"
-{txt}
-{com}. label var C2part2 "increase in nationwide house price from y+1 to y+2(%)"
-{txt}
-{com}. label var C3 "increase/decrease of U.S. gov debt from y to y+1(1/0)"
-{txt}
-{com}. label var C3part2"increase of U.S. gov debt from y to y+1(%)"
-{txt}
-{com}. label var C4_1 "increase of a gallon of gas from y to y+1(%)"
-{txt}
-{com}. label var C4_2 "increase of food price from y to y+1(%)"
-{txt}
-{com}. label var C4_3 "increase of a medical care from y to y+1(%)"
-{txt}
-{com}. label var C4_4 "increase of college education from y to y+1(%)"
-{txt}
-{com}. label var C4_5 "increase of price of renting a typical house/apt from y to y+1(%)"
-{txt}
-{com}. label var C4_6  "increase of gold price from y to y+1(%)"
-{txt}
-{com}. label var QNUM1 "num q 1: (correct if ==150)"
-{txt}
-{com}. label var QNUM2 ""
-{txt}
-{com}. label var QNUM3 ""
-{txt}
-{com}. label var QNUM5 ""
-{txt}
-{com}. label var QNUM6 ""
-{txt}
-{com}. label var QNUM8 ""
-{txt}
-{com}. label var QNUM9 ""
-{txt}
-{com}. label var Q32 "age(in years)"
-{txt}
-{com}. label var Q33 "gender"
-{txt}
-{com}. label var Q34 "hispanic/latino/spanish(1/0)"
-{txt}
-{com}. label var Q35_1 "race: white"
-{txt}
-{com}. label var Q35_2 "race: black/african american"
-{txt}
-{com}. label var Q35_3 "race: american indian/alaska native"
-{txt}
-{com}. label var Q35_4 "race: asian"
-{txt}
-{com}. label var Q35_5 "race: native hawaiian or other pacific islander"
-{txt}
-{com}. label var Q35_6 "race: other"
-{txt}
-{com}. label var Q36 "education (1-8 low to high, 9 other)"
-{txt}
-{com}. label var Q37 "months of current work"
-{txt}
-{com}. label var Q38 "living with partner/not (1/0)"
-{txt}
-{com}. label var HH2_1 "emp of partner: full-time for someone"
-{txt}
-{com}. label var HH2_2 "emp of partner: part-time for someone"
-{txt}
-{com}. label var HH2_3 "emp of partner: self-employed"
-{txt}
-{com}. label var HH2_4 "emp of partner: not working but wants to work"
-{txt}
-{com}. label var HH2_5 "emp of partner: temporary laid-off"
-{txt}
-{com}. label var HH2_6 "emp of partner: on sick or other leave"
-{txt}
-{com}. label var HH2_7 "emp of partner: permanently disabled/unable to work"
-{txt}
-{com}. label var HH2_8 "emp of partner: retiree or early retiree"
-{txt}
-{com}. label var HH2_9 "emp of partner: student or in training"
-{txt}
-{com}. label var HH2_10 "emp of partner: homemaker"
-{txt}
-{com}. label var HH2_10 "emp of partner: other"
-{txt}
-{com}. label var _STATE "state (2-digit code)"
-{txt}
-{com}. label var Q41 "years of living in the current residence"
-{txt}
-{com}. label var Q42 "years of living in the current states"
-{txt}
-{com}. label var Q43 "own/rent/other a house(1/2/3)"
-{txt}
-{com}. label var Q43a "my/spounser/both's name under which current residence is owned/rent"
-{txt}
-{com}. label var Q44 "own other homes(1/0)"
-{txt}
-{com}. label var Q45b "health condition(1-5 from good to poor)"
-{txt}
-{com}. label var Q45new_1 ""
-{txt}
-{com}. label var Q45new_2 ""
-{txt}
-{com}. label var Q45new_3 ""
-{txt}
-{com}. label var Q45new_4 ""
-{txt}
-{com}. label var Q45new_5 ""
-{txt}
-{com}. label var Q45new_6 ""
-{txt}
-{com}. label var Q45new_7 ""
-{txt}
-{com}. label var Q45new_8 ""
-{txt}
-{com}. label var Q45new_9 ""
-{txt}
-{com}. label var Q46 "financial decision making of household(1-5, together to individual)"
-{txt}
-{com}. label var Q47 "total pre-tax household income from y-1 to y(1-11, low to high)"
-{txt}
-{com}. label var D1 "same household as last year(1/0)"
-{txt}
-{com}. label var D3 "date of moving to the current residence(month/year)"
-{txt}
-{com}. label var D6 "total pre-tax household income from y-1 to y(1-11,low to high)"
-{txt}
-{com}. label var D2new_1 "memeber in the current resident:spounse/partner"
-{txt}
-{com}. label var D2new_2 "memeber in the current resident: child >25"
-{txt}
-{com}. label var D2new_3 "memeber in the current resident: child 18-24"
-{txt}
-{com}. label var D2new_4 "memeber in the current resident: child 6-17"
-{txt}
-{com}. label var D2new_5 "memeber in the current resident: child <=5 "
-{txt}
-{com}. label var D2new_6 "memeber in the current resident: own/sponse's parents"
-{txt}
-{com}. label var D2new_7 "memeber in the current resident:other relatives"
-{txt}
-{com}. label var D2new_8 "memeber in the current resident:non-relatives"
-{txt}
-{com}. label var DSAME "same job as last year in survey"
-{txt}
-{com}. label var DQ38 "living as a partner or married with some one(1/0)"
-{txt}
-{com}. label var Q48 "interesting/uninteresting of the questions in the survey(1/0)"
-{txt}
-{com}. 
-. 
-. ** Only keep useful variables so that the data file is smaller. 
-. 
-. 
-. global keeplist date year month userid tenure weight ///
->        Q24_cent25 Q24_cent50 Q24_cent75 Q24_var Q24_mean Q24_iqr ///
->            Q24_bin1 Q24_bin2 Q24_bin3 Q24_bin4 Q24_bin5 Q24_bin6 Q24_bin7 Q24_bin8 Q24_bin9 Q24_bin10 ///
->            Q32 Q33 Q34 Q35_1 Q35_2 Q35_3 Q35_4 Q35_5 Q35_6 Q36 Q37 Q38 ///
->            HH2_1 HH2_2 HH2_3 HH2_4 HH2_5 HH2_6 HH2_7 HH2_8 HH2_9 HH2_10 HH2_11 ///
->            _STATE Q41 Q42 Q43 Q43a Q44 Q45b ///
->            Q45new_1 Q45new_2 Q45new_3 Q45new_4 Q45new_5 Q45new_6 Q45new_7 Q45new_8 Q45new_9 ///
->            Q46 Q47 D1 D3 D6 D2new_1 D2new_2 D2new_3 D2new_4 D2new_5 D2new_6 D2new_7 D2new_8 D2newdk_1 DSAME DQ38 ///
->            DHH2_1 DHH2_2 DHH2_3 DHH2_4 DHH2_5 DHH2_6 DHH2_7 DHH2_8 DHH2_9 DHH2_10 DHH2_11 DHH2_11_other D5b Q48 QRA1 QRA2 ///
->            _AGE_CAT _NUM_CAT _REGION_CAT _COMMUTING_ZONE _EDU_CAT _HH_INC_CAT
-{txt}
-{com}. 
-. keep ${c -(}keeplist{c )-}
-{txt}
-{com}. 
-. 
-. *************************
-. *** Exclude outliers *****
-. *************************
-. 
-. local Moments Q24_mean Q24_var
-{txt}
-{com}. 
-. foreach var in `Moments'{c -(}
-{txt}  2{com}.       egen `var'p5=pctile(`var'),p(5)
-{txt}  3{com}.           egen `var'p95=pctile(`var'),p(95)
-{txt}  4{com}.           replace `var' = . if `var' <`var'p5 | (`var' >`var'p95 & `var'!=.)
-{txt}  5{com}. {c )-}
-{txt}(5177 real changes made, 5177 to missing)
-(5068 real changes made, 5068 to missing)
+{txt}Linear regression                                      Number of obs ={res}    7686
+                                                       {txt}F( 13,  7672) ={res}   14.14
+                                                       {txt}Prob > F      = {res} 0.0000
+                                                       {txt}R-squared     = {res} 0.0378
+                                                       {txt}Root MSE      = {res} 4.3417
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}     Q24_iqr{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}age_g {c |}
+{space 1}Middle-age  {c |}{col 14}{res}{space 2}  .100617{col 26}{space 2} .2698856{col 37}{space 1}    0.37{col 46}{space 3}0.709{col 54}{space 4}-.4284325{col 67}{space 3} .6296666
+{txt}{space 8}Old  {c |}{col 14}{res}{space 2} .6715467{col 26}{space 2} .4369778{col 37}{space 1}    1.54{col 46}{space 3}0.124{col 54}{space 4}-.1850491{col 67}{space 3} 1.528142
+{txt}{space 12} {c |}
+{space 7}edu_g {c |}
+{space 10}1  {c |}{col 14}{res}{space 2}-.9601392{col 26}{space 2} .2453745{col 37}{space 1}   -3.91{col 46}{space 3}0.000{col 54}{space 4} -1.44114{col 67}{space 3}-.4791382
+{txt}{space 10}2  {c |}{col 14}{res}{space 2}-1.483053{col 26}{space 2} .2331632{col 37}{space 1}   -6.36{col 46}{space 3}0.000{col 54}{space 4}-1.940116{col 67}{space 3}-1.025989
+{txt}{space 12} {c |}
+{space 7}inc_g {c |}
+Middle In..  {c |}{col 14}{res}{space 2}-1.371131{col 26}{space 2} .1731507{col 37}{space 1}   -7.92{col 46}{space 3}0.000{col 54}{space 4}-1.710554{col 67}{space 3}-1.031708
+{txt}High Income  {c |}{col 14}{res}{space 2}-1.440357{col 26}{space 2} .1602318{col 37}{space 1}   -8.99{col 46}{space 3}0.000{col 54}{space 4}-1.754455{col 67}{space 3}-1.126259
+{txt}{space 12} {c |}
+{space 4}cohort_g {c |}
+{space 2}1957-1972  {c |}{col 14}{res}{space 2}  .589782{col 26}{space 2} .3448917{col 37}{space 1}    1.71{col 46}{space 3}0.087{col 54}{space 4}-.0862999{col 67}{space 3} 1.265864
+{txt}{space 2}1973-2000  {c |}{col 14}{res}{space 2} 1.197827{col 26}{space 2} .4420874{col 37}{space 1}    2.71{col 46}{space 3}0.007{col 54}{space 4} .3312149{col 67}{space 3} 2.064439
+{txt}{space 12} {c |}
+{space 8}year {c |}
+{space 7}2014  {c |}{col 14}{res}{space 2} .2050723{col 26}{space 2} .1571671{col 37}{space 1}    1.30{col 46}{space 3}0.192{col 54}{space 4}-.1030182{col 67}{space 3} .5131628
+{txt}{space 7}2015  {c |}{col 14}{res}{space 2} .1537679{col 26}{space 2} .1539929{col 37}{space 1}    1.00{col 46}{space 3}0.318{col 54}{space 4}-.1481003{col 67}{space 3} .4556361
+{txt}{space 7}2016  {c |}{col 14}{res}{space 2} .1529661{col 26}{space 2} .1574056{col 37}{space 1}    0.97{col 46}{space 3}0.331{col 54}{space 4}-.1555919{col 67}{space 3} .4615241
+{txt}{space 7}2017  {c |}{col 14}{res}{space 2} .1980062{col 26}{space 2} .1531027{col 37}{space 1}    1.29{col 46}{space 3}0.196{col 54}{space 4} -.102117{col 67}{space 3} .4981293
+{txt}{space 7}2018  {c |}{col 14}{res}{space 2}  .312037{col 26}{space 2} .2301391{col 37}{space 1}    1.36{col 46}{space 3}0.175{col 54}{space 4}-.1390985{col 67}{space 3} .7631726
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 4.782883{col 26}{space 2} .5001688{col 37}{space 1}    9.56{col 46}{space 3}0.000{col 54}{space 4} 3.802415{col 67}{space 3}  5.76335
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est1{txt} stored)
+
+Linear regression                                      Number of obs ={res}    7684
+                                                       {txt}F( 21,  7662) ={res}   13.62
+                                                       {txt}Prob > F      = {res} 0.0000
+                                                       {txt}R-squared     = {res} 0.0654
+                                                       {txt}Root MSE      = {res} 4.2815
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}     Q24_iqr{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}age_g {c |}
+{space 1}Middle-age  {c |}{col 14}{res}{space 2} .0612794{col 26}{space 2}  .272874{col 37}{space 1}    0.22{col 46}{space 3}0.822{col 54}{space 4}-.4736283{col 67}{space 3}  .596187
+{txt}{space 8}Old  {c |}{col 14}{res}{space 2} .6208965{col 26}{space 2} .4395746{col 37}{space 1}    1.41{col 46}{space 3}0.158{col 54}{space 4}  -.24079{col 67}{space 3} 1.482583
+{txt}{space 12} {c |}
+{space 7}edu_g {c |}
+{space 10}1  {c |}{col 14}{res}{space 2}-.9325712{col 26}{space 2} .2400983{col 37}{space 1}   -3.88{col 46}{space 3}0.000{col 54}{space 4} -1.40323{col 67}{space 3}-.4619128
+{txt}{space 10}2  {c |}{col 14}{res}{space 2}-1.392641{col 26}{space 2} .2276241{col 37}{space 1}   -6.12{col 46}{space 3}0.000{col 54}{space 4}-1.838846{col 67}{space 3}-.9464352
+{txt}{space 12} {c |}
+{space 7}inc_g {c |}
+Middle In..  {c |}{col 14}{res}{space 2}-1.275428{col 26}{space 2} .1702478{col 37}{space 1}   -7.49{col 46}{space 3}0.000{col 54}{space 4} -1.60916{col 67}{space 3}-.9416953
+{txt}High Income  {c |}{col 14}{res}{space 2}-1.270376{col 26}{space 2} .1589856{col 37}{space 1}   -7.99{col 46}{space 3}0.000{col 54}{space 4}-1.582031{col 67}{space 3}-.9587208
+{txt}{space 12} {c |}
+{space 4}cohort_g {c |}
+{space 2}1957-1972  {c |}{col 14}{res}{space 2} .4486085{col 26}{space 2} .3440466{col 37}{space 1}    1.30{col 46}{space 3}0.192{col 54}{space 4} -.225817{col 67}{space 3} 1.123034
+{txt}{space 2}1973-2000  {c |}{col 14}{res}{space 2} .9999433{col 26}{space 2} .4431471{col 37}{space 1}    2.26{col 46}{space 3}0.024{col 54}{space 4} .1312537{col 67}{space 3} 1.868633
+{txt}{space 12} {c |}
+{space 8}year {c |}
+{space 7}2014  {c |}{col 14}{res}{space 2} .1088789{col 26}{space 2} .1548126{col 37}{space 1}    0.70{col 46}{space 3}0.482{col 54}{space 4}-.1945961{col 67}{space 3} .4123539
+{txt}{space 7}2015  {c |}{col 14}{res}{space 2} .0763854{col 26}{space 2} .1517107{col 37}{space 1}    0.50{col 46}{space 3}0.615{col 54}{space 4}-.2210091{col 67}{space 3} .3737798
+{txt}{space 7}2016  {c |}{col 14}{res}{space 2} .0747385{col 26}{space 2} .1555084{col 37}{space 1}    0.48{col 46}{space 3}0.631{col 54}{space 4}-.2301004{col 67}{space 3} .3795775
+{txt}{space 7}2017  {c |}{col 14}{res}{space 2} .1234996{col 26}{space 2} .1514157{col 37}{space 1}    0.82{col 46}{space 3}0.415{col 54}{space 4}-.1733167{col 67}{space 3} .4203158
+{txt}{space 7}2018  {c |}{col 14}{res}{space 2} .2600905{col 26}{space 2} .2261618{col 37}{space 1}    1.15{col 46}{space 3}0.250{col 54}{space 4}-.1832484{col 67}{space 3} .7034294
+{txt}{space 12} {c |}
+{space 7}2.Q33 {c |}{col 14}{res}{space 2} .2889238{col 26}{space 2} .0993438{col 37}{space 1}    2.91{col 46}{space 3}0.004{col 54}{space 4} .0941826{col 67}{space 3} .4836649
+{txt}{space 7}2.Q34 {c |}{col 14}{res}{space 2}-1.138593{col 26}{space 2} .2375445{col 37}{space 1}   -4.79{col 46}{space 3}0.000{col 54}{space 4}-1.604245{col 67}{space 3}-.6729406
+{txt}{space 7}Q35_1 {c |}{col 14}{res}{space 2}-1.021826{col 26}{space 2} .3325132{col 37}{space 1}   -3.07{col 46}{space 3}0.002{col 54}{space 4}-1.673643{col 67}{space 3}-.3700092
+{txt}{space 7}Q35_2 {c |}{col 14}{res}{space 2} 1.214771{col 26}{space 2} .3598288{col 37}{space 1}    3.38{col 46}{space 3}0.001{col 54}{space 4} .5094082{col 67}{space 3} 1.920134
+{txt}{space 7}Q35_3 {c |}{col 14}{res}{space 2}-.1535611{col 26}{space 2} .3611666{col 37}{space 1}   -0.43{col 46}{space 3}0.671{col 54}{space 4}-.8615465{col 67}{space 3} .5544244
+{txt}{space 7}Q35_4 {c |}{col 14}{res}{space 2}-.6262374{col 26}{space 2} .3597975{col 37}{space 1}   -1.74{col 46}{space 3}0.082{col 54}{space 4}-1.331539{col 67}{space 3} .0790641
+{txt}{space 7}Q35_5 {c |}{col 14}{res}{space 2} .2724122{col 26}{space 2}  .811604{col 37}{space 1}    0.34{col 46}{space 3}0.737{col 54}{space 4}-1.318554{col 67}{space 3} 1.863378
+{txt}{space 7}Q35_6 {c |}{col 14}{res}{space 2}-.2109228{col 26}{space 2} .3831132{col 37}{space 1}   -0.55{col 46}{space 3}0.582{col 54}{space 4}-.9619294{col 67}{space 3} .5400838
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 6.482604{col 26}{space 2} .6495767{col 37}{space 1}    9.98{col 46}{space 3}0.000{col 54}{space 4} 5.209256{col 67}{space 3} 7.755952
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est2{txt} stored)
+
+Linear regression                                      Number of obs ={res}    6809
+                                                       {txt}F( 13,  6795) ={res}    4.73
+                                                       {txt}Prob > F      = {res} 0.0000
+                                                       {txt}R-squared     = {res} 0.0113
+                                                       {txt}Root MSE      = {res} 12.102
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}age_g {c |}
+{space 1}Middle-age  {c |}{col 14}{res}{space 2} .5680704{col 26}{space 2} .8899409{col 37}{space 1}    0.64{col 46}{space 3}0.523{col 54}{space 4}-1.176492{col 67}{space 3} 2.312633
+{txt}{space 8}Old  {c |}{col 14}{res}{space 2} 1.078342{col 26}{space 2} 1.251568{col 37}{space 1}    0.86{col 46}{space 3}0.389{col 54}{space 4}-1.375124{col 67}{space 3} 3.531808
+{txt}{space 12} {c |}
+{space 7}edu_g {c |}
+{space 10}1  {c |}{col 14}{res}{space 2}-1.239043{col 26}{space 2} .6230046{col 37}{space 1}   -1.99{col 46}{space 3}0.047{col 54}{space 4}-2.460327{col 67}{space 3}-.0177587
+{txt}{space 10}2  {c |}{col 14}{res}{space 2}-1.312405{col 26}{space 2}  .605026{col 37}{space 1}   -2.17{col 46}{space 3}0.030{col 54}{space 4}-2.498445{col 67}{space 3}-.1263644
+{txt}{space 12} {c |}
+{space 7}inc_g {c |}
+Middle In..  {c |}{col 14}{res}{space 2} -2.58841{col 26}{space 2} .4899559{col 37}{space 1}   -5.28{col 46}{space 3}0.000{col 54}{space 4}-3.548877{col 67}{space 3}-1.627942
+{txt}High Income  {c |}{col 14}{res}{space 2}-2.373655{col 26}{space 2} .4765137{col 37}{space 1}   -4.98{col 46}{space 3}0.000{col 54}{space 4}-3.307771{col 67}{space 3}-1.439539
+{txt}{space 12} {c |}
+{space 4}cohort_g {c |}
+{space 2}1957-1972  {c |}{col 14}{res}{space 2}-.3009178{col 26}{space 2} .8950296{col 37}{space 1}   -0.34{col 46}{space 3}0.737{col 54}{space 4}-2.055456{col 67}{space 3}  1.45362
+{txt}{space 2}1973-2000  {c |}{col 14}{res}{space 2} 1.587144{col 26}{space 2} 1.284152{col 37}{space 1}    1.24{col 46}{space 3}0.217{col 54}{space 4} -.930195{col 67}{space 3} 4.104484
+{txt}{space 12} {c |}
+{space 8}year {c |}
+{space 7}2014  {c |}{col 14}{res}{space 2}-.0273285{col 26}{space 2} .4519025{col 37}{space 1}   -0.06{col 46}{space 3}0.952{col 54}{space 4}-.9131988{col 67}{space 3} .8585419
+{txt}{space 7}2015  {c |}{col 14}{res}{space 2} .1051334{col 26}{space 2} .4582185{col 37}{space 1}    0.23{col 46}{space 3}0.819{col 54}{space 4}-.7931184{col 67}{space 3} 1.003385
+{txt}{space 7}2016  {c |}{col 14}{res}{space 2}-.0621415{col 26}{space 2} .4686043{col 37}{space 1}   -0.13{col 46}{space 3}0.895{col 54}{space 4}-.9807527{col 67}{space 3} .8564697
+{txt}{space 7}2017  {c |}{col 14}{res}{space 2} .7120363{col 26}{space 2} .4964375{col 37}{space 1}    1.43{col 46}{space 3}0.152{col 54}{space 4}-.2611366{col 67}{space 3} 1.685209
+{txt}{space 7}2018  {c |}{col 14}{res}{space 2} .1831903{col 26}{space 2} .6301264{col 37}{space 1}    0.29{col 46}{space 3}0.771{col 54}{space 4}-1.052055{col 67}{space 3} 1.418435
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 8.540242{col 26}{space 2}  1.35264{col 37}{space 1}    6.31{col 46}{space 3}0.000{col 54}{space 4} 5.888644{col 67}{space 3} 11.19184
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est3{txt} stored)
+
+Linear regression                                      Number of obs ={res}    6807
+                                                       {txt}F( 21,  6785) ={res}    5.15
+                                                       {txt}Prob > F      = {res} 0.0000
+                                                       {txt}R-squared     = {res} 0.0198
+                                                       {txt}Root MSE      = {res} 12.059
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}age_g {c |}
+{space 1}Middle-age  {c |}{col 14}{res}{space 2} .4281341{col 26}{space 2} .8907351{col 37}{space 1}    0.48{col 46}{space 3}0.631{col 54}{space 4}-1.317986{col 67}{space 3} 2.174254
+{txt}{space 8}Old  {c |}{col 14}{res}{space 2} .7703442{col 26}{space 2} 1.256893{col 37}{space 1}    0.61{col 46}{space 3}0.540{col 54}{space 4} -1.69356{col 67}{space 3} 3.234248
+{txt}{space 12} {c |}
+{space 7}edu_g {c |}
+{space 10}1  {c |}{col 14}{res}{space 2}-1.129365{col 26}{space 2} .6207508{col 37}{space 1}   -1.82{col 46}{space 3}0.069{col 54}{space 4}-2.346231{col 67}{space 3} .0875017
+{txt}{space 10}2  {c |}{col 14}{res}{space 2} -1.18219{col 26}{space 2} .6038007{col 37}{space 1}   -1.96{col 46}{space 3}0.050{col 54}{space 4}-2.365829{col 67}{space 3} .0014483
+{txt}{space 12} {c |}
+{space 7}inc_g {c |}
+Middle In..  {c |}{col 14}{res}{space 2} -2.60225{col 26}{space 2} .4872771{col 37}{space 1}   -5.34{col 46}{space 3}0.000{col 54}{space 4}-3.557466{col 67}{space 3}-1.647034
+{txt}High Income  {c |}{col 14}{res}{space 2}-2.450307{col 26}{space 2} .4795806{col 37}{space 1}   -5.11{col 46}{space 3}0.000{col 54}{space 4}-3.390435{col 67}{space 3}-1.510179
+{txt}{space 12} {c |}
+{space 4}cohort_g {c |}
+{space 2}1957-1972  {c |}{col 14}{res}{space 2}-.5467424{col 26}{space 2}  .899662{col 37}{space 1}   -0.61{col 46}{space 3}0.543{col 54}{space 4}-2.310362{col 67}{space 3} 1.216877
+{txt}{space 2}1973-2000  {c |}{col 14}{res}{space 2} 1.190431{col 26}{space 2} 1.288409{col 37}{space 1}    0.92{col 46}{space 3}0.356{col 54}{space 4}-1.335255{col 67}{space 3} 3.716117
+{txt}{space 12} {c |}
+{space 8}year {c |}
+{space 7}2014  {c |}{col 14}{res}{space 2}-.1210228{col 26}{space 2} .4500752{col 37}{space 1}   -0.27{col 46}{space 3}0.788{col 54}{space 4}-1.003311{col 67}{space 3} .7612657
+{txt}{space 7}2015  {c |}{col 14}{res}{space 2} .0264505{col 26}{space 2} .4564519{col 37}{space 1}    0.06{col 46}{space 3}0.954{col 54}{space 4}-.8683384{col 67}{space 3} .9212394
+{txt}{space 7}2016  {c |}{col 14}{res}{space 2}-.0762591{col 26}{space 2} .4678564{col 37}{space 1}   -0.16{col 46}{space 3}0.871{col 54}{space 4}-.9934043{col 67}{space 3} .8408862
+{txt}{space 7}2017  {c |}{col 14}{res}{space 2}  .693465{col 26}{space 2} .4948511{col 37}{space 1}    1.40{col 46}{space 3}0.161{col 54}{space 4}-.2765983{col 67}{space 3} 1.663528
+{txt}{space 7}2018  {c |}{col 14}{res}{space 2} .2018926{col 26}{space 2} .6291775{col 37}{space 1}    0.32{col 46}{space 3}0.748{col 54}{space 4}-1.031493{col 67}{space 3} 1.435278
+{txt}{space 12} {c |}
+{space 7}2.Q33 {c |}{col 14}{res}{space 2} 1.336814{col 26}{space 2} .3021749{col 37}{space 1}    4.42{col 46}{space 3}0.000{col 54}{space 4} .7444566{col 67}{space 3} 1.929172
+{txt}{space 7}2.Q34 {c |}{col 14}{res}{space 2}-1.548483{col 26}{space 2} .6358374{col 37}{space 1}   -2.44{col 46}{space 3}0.015{col 54}{space 4}-2.794924{col 67}{space 3}-.3020422
+{txt}{space 7}Q35_1 {c |}{col 14}{res}{space 2}-1.626279{col 26}{space 2} .9785297{col 37}{space 1}   -1.66{col 46}{space 3}0.097{col 54}{space 4}-3.544504{col 67}{space 3} .2919464
+{txt}{space 7}Q35_2 {c |}{col 14}{res}{space 2} 1.133669{col 26}{space 2} 1.044491{col 37}{space 1}    1.09{col 46}{space 3}0.278{col 54}{space 4}-.9138615{col 67}{space 3}   3.1812
+{txt}{space 7}Q35_3 {c |}{col 14}{res}{space 2}-.3050403{col 26}{space 2} 1.094305{col 37}{space 1}   -0.28{col 46}{space 3}0.780{col 54}{space 4}-2.450222{col 67}{space 3} 1.840141
+{txt}{space 7}Q35_4 {c |}{col 14}{res}{space 2}-.8069944{col 26}{space 2} 1.065605{col 37}{space 1}   -0.76{col 46}{space 3}0.449{col 54}{space 4}-2.895915{col 67}{space 3} 1.281926
+{txt}{space 7}Q35_5 {c |}{col 14}{res}{space 2} 2.568426{col 26}{space 2} 3.132792{col 37}{space 1}    0.82{col 46}{space 3}0.412{col 54}{space 4}-3.572829{col 67}{space 3}  8.70968
+{txt}{space 7}Q35_6 {c |}{col 14}{res}{space 2} .0850465{col 26}{space 2} 1.054307{col 37}{space 1}    0.08{col 46}{space 3}0.936{col 54}{space 4}-1.981725{col 67}{space 3} 2.151818
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}  10.8876{col 26}{space 2} 1.840752{col 37}{space 1}    5.91{col 46}{space 3}0.000{col 54}{space 4} 7.279151{col 67}{space 3} 14.49605
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est4{txt} stored)
+
+Linear regression                                      Number of obs ={res}    6735
+                                                       {txt}F( 13,  6721) ={res}   10.96
+                                                       {txt}Prob > F      = {res} 0.0000
+                                                       {txt}R-squared     = {res} 0.0196
+                                                       {txt}Root MSE      = {res} 2.4286
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}    Q24_mean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}age_g {c |}
+{space 1}Middle-age  {c |}{col 14}{res}{space 2}-.1663949{col 26}{space 2} .1595532{col 37}{space 1}   -1.04{col 46}{space 3}0.297{col 54}{space 4}-.4791697{col 67}{space 3}   .14638
+{txt}{space 8}Old  {c |}{col 14}{res}{space 2}-.1295172{col 26}{space 2} .2343779{col 37}{space 1}   -0.55{col 46}{space 3}0.581{col 54}{space 4}-.5889721{col 67}{space 3} .3299378
+{txt}{space 12} {c |}
+{space 7}edu_g {c |}
+{space 10}1  {c |}{col 14}{res}{space 2} .0292865{col 26}{space 2} .1129799{col 37}{space 1}    0.26{col 46}{space 3}0.795{col 54}{space 4}  -.19219{col 67}{space 3}  .250763
+{txt}{space 10}2  {c |}{col 14}{res}{space 2} .1074164{col 26}{space 2} .1103172{col 37}{space 1}    0.97{col 46}{space 3}0.330{col 54}{space 4}-.1088403{col 67}{space 3} .3236731
+{txt}{space 12} {c |}
+{space 7}inc_g {c |}
+Middle In..  {c |}{col 14}{res}{space 2}-.0998781{col 26}{space 2} .0926829{col 37}{space 1}   -1.08{col 46}{space 3}0.281{col 54}{space 4}-.2815659{col 67}{space 3} .0818097
+{txt}High Income  {c |}{col 14}{res}{space 2}  .254919{col 26}{space 2} .0909821{col 37}{space 1}    2.80{col 46}{space 3}0.005{col 54}{space 4} .0765652{col 67}{space 3} .4332729
+{txt}{space 12} {c |}
+{space 4}cohort_g {c |}
+{space 2}1957-1972  {c |}{col 14}{res}{space 2} .0367726{col 26}{space 2}  .174885{col 37}{space 1}    0.21{col 46}{space 3}0.833{col 54}{space 4}-.3060576{col 67}{space 3} .3796027
+{txt}{space 2}1973-2000  {c |}{col 14}{res}{space 2} .3977753{col 26}{space 2}  .241324{col 37}{space 1}    1.65{col 46}{space 3}0.099{col 54}{space 4}-.0752963{col 67}{space 3} .8708469
+{txt}{space 12} {c |}
+{space 8}year {c |}
+{space 7}2014  {c |}{col 14}{res}{space 2} .3105751{col 26}{space 2}   .09645{col 37}{space 1}    3.22{col 46}{space 3}0.001{col 54}{space 4} .1215026{col 67}{space 3} .4996476
+{txt}{space 7}2015  {c |}{col 14}{res}{space 2} .2513144{col 26}{space 2} .0936661{col 37}{space 1}    2.68{col 46}{space 3}0.007{col 54}{space 4} .0676991{col 67}{space 3} .4349296
+{txt}{space 7}2016  {c |}{col 14}{res}{space 2}  .112961{col 26}{space 2} .0932273{col 37}{space 1}    1.21{col 46}{space 3}0.226{col 54}{space 4}-.0697941{col 67}{space 3}  .295716
+{txt}{space 7}2017  {c |}{col 14}{res}{space 2} .3159619{col 26}{space 2} .0948164{col 37}{space 1}    3.33{col 46}{space 3}0.001{col 54}{space 4} .1300917{col 67}{space 3} .5018322
+{txt}{space 7}2018  {c |}{col 14}{res}{space 2} .2835612{col 26}{space 2} .1278913{col 37}{space 1}    2.22{col 46}{space 3}0.027{col 54}{space 4} .0328538{col 67}{space 3} .5342686
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 2.502511{col 26}{space 2} .2597263{col 37}{space 1}    9.64{col 46}{space 3}0.000{col 54}{space 4} 1.993365{col 67}{space 3} 3.011657
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est5{txt} stored)
+
+Linear regression                                      Number of obs ={res}    6733
+                                                       {txt}F( 21,  6711) ={res}    8.02
+                                                       {txt}Prob > F      = {res} 0.0000
+                                                       {txt}R-squared     = {res} 0.0242
+                                                       {txt}Root MSE      = {res} 2.4244
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}    Q24_mean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}age_g {c |}
+{space 1}Middle-age  {c |}{col 14}{res}{space 2}-.1821726{col 26}{space 2} .1585091{col 37}{space 1}   -1.15{col 46}{space 3}0.250{col 54}{space 4}-.4929008{col 67}{space 3} .1285557
+{txt}{space 8}Old  {c |}{col 14}{res}{space 2}-.1773638{col 26}{space 2} .2346881{col 37}{space 1}   -0.76{col 46}{space 3}0.450{col 54}{space 4}-.6374269{col 67}{space 3} .2826994
+{txt}{space 12} {c |}
+{space 7}edu_g {c |}
+{space 10}1  {c |}{col 14}{res}{space 2} .0512331{col 26}{space 2} .1134379{col 37}{space 1}    0.45{col 46}{space 3}0.652{col 54}{space 4}-.1711413{col 67}{space 3} .2736074
+{txt}{space 10}2  {c |}{col 14}{res}{space 2} .1194052{col 26}{space 2} .1105909{col 37}{space 1}    1.08{col 46}{space 3}0.280{col 54}{space 4}-.0973881{col 67}{space 3} .3361984
+{txt}{space 12} {c |}
+{space 7}inc_g {c |}
+Middle In..  {c |}{col 14}{res}{space 2}-.1201528{col 26}{space 2} .0928062{col 37}{space 1}   -1.29{col 46}{space 3}0.195{col 54}{space 4}-.3020825{col 67}{space 3} .0617769
+{txt}High Income  {c |}{col 14}{res}{space 2} .1943853{col 26}{space 2} .0923397{col 37}{space 1}    2.11{col 46}{space 3}0.035{col 54}{space 4} .0133701{col 67}{space 3} .3754004
+{txt}{space 12} {c |}
+{space 4}cohort_g {c |}
+{space 2}1957-1972  {c |}{col 14}{res}{space 2} .0234866{col 26}{space 2} .1758674{col 37}{space 1}    0.13{col 46}{space 3}0.894{col 54}{space 4}-.3212694{col 67}{space 3} .3682426
+{txt}{space 2}1973-2000  {c |}{col 14}{res}{space 2} .3663773{col 26}{space 2} .2412274{col 37}{space 1}    1.52{col 46}{space 3}0.129{col 54}{space 4} -.106505{col 67}{space 3} .8392595
+{txt}{space 12} {c |}
+{space 8}year {c |}
+{space 7}2014  {c |}{col 14}{res}{space 2} .3034139{col 26}{space 2}   .09632{col 37}{space 1}    3.15{col 46}{space 3}0.002{col 54}{space 4}  .114596{col 67}{space 3} .4922318
+{txt}{space 7}2015  {c |}{col 14}{res}{space 2} .2557291{col 26}{space 2} .0935209{col 37}{space 1}    2.73{col 46}{space 3}0.006{col 54}{space 4} .0723985{col 67}{space 3} .4390597
+{txt}{space 7}2016  {c |}{col 14}{res}{space 2} .1197828{col 26}{space 2} .0932076{col 37}{space 1}    1.29{col 46}{space 3}0.199{col 54}{space 4}-.0629338{col 67}{space 3} .3024993
+{txt}{space 7}2017  {c |}{col 14}{res}{space 2} .3203834{col 26}{space 2} .0949394{col 37}{space 1}    3.37{col 46}{space 3}0.001{col 54}{space 4}  .134272{col 67}{space 3} .5064948
+{txt}{space 7}2018  {c |}{col 14}{res}{space 2} .2900237{col 26}{space 2} .1274185{col 37}{space 1}    2.28{col 46}{space 3}0.023{col 54}{space 4} .0402431{col 67}{space 3} .5398044
+{txt}{space 12} {c |}
+{space 7}2.Q33 {c |}{col 14}{res}{space 2} .2893914{col 26}{space 2} .0604955{col 37}{space 1}    4.78{col 46}{space 3}0.000{col 54}{space 4}  .170801{col 67}{space 3} .4079817
+{txt}{space 7}2.Q34 {c |}{col 14}{res}{space 2}-.0709378{col 26}{space 2} .1194458{col 37}{space 1}   -0.59{col 46}{space 3}0.553{col 54}{space 4}-.3050896{col 67}{space 3}  .163214
+{txt}{space 7}Q35_1 {c |}{col 14}{res}{space 2} .2416869{col 26}{space 2} .1937807{col 37}{space 1}    1.25{col 46}{space 3}0.212{col 54}{space 4}-.1381848{col 67}{space 3} .6215585
+{txt}{space 7}Q35_2 {c |}{col 14}{res}{space 2} .3137807{col 26}{space 2} .2011807{col 37}{space 1}    1.56{col 46}{space 3}0.119{col 54}{space 4}-.0805973{col 67}{space 3} .7081587
+{txt}{space 7}Q35_3 {c |}{col 14}{res}{space 2} .1483184{col 26}{space 2} .2143387{col 37}{space 1}    0.69{col 46}{space 3}0.489{col 54}{space 4}-.2718534{col 67}{space 3} .5684903
+{txt}{space 7}Q35_4 {c |}{col 14}{res}{space 2}  .534152{col 26}{space 2} .2250446{col 37}{space 1}    2.37{col 46}{space 3}0.018{col 54}{space 4} .0929931{col 67}{space 3} .9753109
+{txt}{space 7}Q35_5 {c |}{col 14}{res}{space 2}-.3727464{col 26}{space 2} .3816822{col 37}{space 1}   -0.98{col 46}{space 3}0.329{col 54}{space 4}-1.120965{col 67}{space 3} .3754719
+{txt}{space 7}Q35_6 {c |}{col 14}{res}{space 2} .3252738{col 26}{space 2} .2159531{col 37}{space 1}    1.51{col 46}{space 3}0.132{col 54}{space 4}-.0980628{col 67}{space 3} .7486104
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 2.198761{col 26}{space 2} .3361975{col 37}{space 1}    6.54{col 46}{space 3}0.000{col 54}{space 4} 1.539707{col 67}{space 3} 2.857815
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est6{txt} stored)
+
+{com}. esttab using "${c -(}sum_table_folder{c )-}/mom_group.csv", ///
+>              se r2 drop(0.age_g 0.edu_g 0.inc_g 0.cohort_g 2013.year ///
+>                                     1.Q33 1.Q34 _cons) replace
+{res}{txt}(output written to {browse  `"/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/mom_group.csv"'})
 
 {com}. 
 . 
-. 
-. *************************
-. *** Other Measures *****
-. *************************
-. 
-. egen Q24_sd = sd(Q24_mean), by(date)
-{txt}
-{com}. gen Q24_disg = Q24_sd^2
-{txt}
-{com}. label var Q24_disg "Disagreements of 1-yr-ahead expted income growth"
-{txt}
-{com}. 
-. 
-. foreach var in Q24{c -(}
-{txt}  2{com}. foreach mom in mean var{c -(}
-{txt}  3{com}.      egen `var'_`mom'p75 =pctile(`var'_`mom'),p(75) by(year month)
-{txt}  4{com}.          egen `var'_`mom'p25 =pctile(`var'_`mom'),p(25) by(year month)
-{txt}  5{com}.          egen `var'_`mom'p50 =pctile(`var'_`mom'),p(50) by(year month)
-{txt}  6{com}.          local lb: variable label `var'_`mom'
-{txt}  7{com}.          label var `var'_`mom'p75 "`lb': 75 pctile"
-{txt}  8{com}.          label var `var'_`mom'p25 "`lb': 25 pctile"
-{txt}  9{com}.          label var `var'_`mom'p50 "`lb': 50 pctile"
-{txt} 10{com}. {c )-}
-{txt} 11{com}. {c )-}
-{txt}
-{com}. 
-. 
-. 
-. save "${c -(}folder{c )-}/SCE/IncExpSCEProbIndM",replace 
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData//SCE/IncExpSCEProbIndM.dta saved
-
-{com}. ddd
-{err}unrecognized command:  ddd
-{txt}{search r(199):r(199);}
-
-end of do-file
-
-{search r(199):r(199);}
-
-{com}. clear
-
-. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD05177.000000"
-{txt}
-{com}. ****************************************************
-. ***   This do files cleans SCE individual density **
-. ***   forecasts and moments. It exclude the top and *
-. ***   bottom 5 percentiles of mean and uncertainty. *
-. ***   It also plots histograms of mean forecast and *
-. ***   uncertainty. **********************************
-. *****************************************************
-. 
-. 
-. clear
-{txt}
-{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
-{txt}
-{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
-{txt}
-{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/pop"
-{txt}
-{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
-{txt}
-{com}. 
-. cd ${c -(}folder{c )-}
-{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
-{txt}
-{com}. pwd
-{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
-{txt}
-{com}. set more off 
-{txt}
-{com}. 
-. 
-. use "${c -(}folder{c )-}/SCE/NYFED_SCE_2013.dta",clear
-{txt}
-{com}. append using "${c -(}folder{c )-}/SCE/NYFED_SCE_2014_2016.dta",force
-{txt}{p 0 7 2}
-(note: variable
-DHH2_11_other was str48 in the using data, but will be
-byte now)
-{p_end}
-{p 0 7 2}
-(note: variable
-Q13new was 
-byte, now double to accommodate using data's values)
-{p_end}
-{p 0 7 2}
-(note: variable
-Q19 was 
-int, now double to accommodate using data's values)
-{p_end}
-{p 0 7 2}
-(note: variable
-Q32 was 
-byte, now int to accommodate using data's values)
-{p_end}
-
-{com}. append using  "${c -(}folder{c )-}/SCE/NYFED_SCE_post2016.dta",force
-{txt}{p 0 7 2}
-(note: variable
-DHH2_11_other was str83 in the using data, but will be
-byte now)
-{p_end}
-{p 0 7 2}
-(note: variable
-Q3 was 
-byte, now int to accommodate using data's values)
-{p_end}
-{p 0 7 2}
-(note: variable
-Q32 was 
-int, now double to accommodate using data's values)
-{p_end}
-
-{com}. 
-. 
-. sort date
-{txt}
-{com}. unique userid
-{txt}Number of unique values of userid is  {res}11664
-{txt}Number of records is  {res}79064
-{txt}
-{com}. 
-. ********************
-. *** Date format ****
-. ********************
-. gen date_str = string(date)
-{txt}
-{com}. gen year = substr(date_str,1,4)
-{txt}
-{com}. gen month = substr(date_str,5,2)
-{txt}
-{com}. gen date2=year+"m"+month
-{txt}
-{com}. gen date3= monthly(date2,"YM")
-{txt}
-{com}. format date3 %tm
-{txt}
-{com}. drop date_str date2 date
-{txt}
-{com}. rename date3 date
-{res}{txt}
-{com}. destring year, replace
-{txt}year has all characters numeric; {res}replaced {txt}as {res}int
-{txt}
-{com}. destring month, replace 
-{txt}month has all characters numeric; {res}replaced {txt}as {res}byte
-{txt}
-{com}. order date year month
-{txt}
-{com}. xtset userid date
-{res}{txt}{col 8}panel variable:  {res}userid (unbalanced)
-{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2018m5, but with gaps
-{txt}{col 17}delta:  {res}1 month
-{txt}
-{com}. 
-. **********************
-. ** Label variables ***
-. **********************
-. 
-. label var Q1 "finance better or worser(5 vals) from y-1 to y"
-{txt}
-{com}. label var Q2 "finance better or worser(5 vals) from y to y+1"
-{txt}
-{com}. label var Q3 "chance of moving (%)"
-{txt}
-{com}. label var Q4new "chance of UE higher from y to y+1(0-1)"
-{txt}
-{com}. label var Q5new "chance of saving interest rate higher from y to y+1(%)"
-{txt}
-{com}. label var Q6new "chance of stock market up from y to y+1(%)"
-{txt}
-{com}. label var Q8v2 "inflation or deflation from y to y+1 (1/0)"
-{txt}
-{com}. label var Q8v2part2 "inflation(or deflation) from y to y+1 (%) "
-{txt}
-{com}. label var Q9_cent25 "25 percentile of inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_cent50 "50 percentile of inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_cent75 "75 percentile of inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_var "var of inflation from y to y+1"
-{txt}
-{com}. label var Q9_iqr "25/75 inter-quantile range of inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_mean "mean of inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_probdeflation "prob of deflation from y to y+1 (0-1)"
-{txt}
-{com}. label var Q9_bin1 "density: >12% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin2 "density: 8%-12% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin3 "density: 4%-8% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin4 "density: 2%-4% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin5 "density: 0%-2% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin6 "density: -2%-0% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin7 "density: -4%- -2% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin8 "density: -8%--4% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin9 "density: -12%- -8% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9_bin10 "density: <-12% inflation from y to y+1(%)"
-{txt}
-{com}. label var Q9bv2 "inflation or deflation from y+1 to y+2 (1/0)"
-{txt}
-{com}. label var Q9bv2part2 "inflation(or deflation) from y+1 to y+2 (%)"
-{txt}
-{com}. label var Q9c_cent25 "25 percentile of inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_cent50 "50 percentile of inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_cent75 "75 percentile of inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_var "var of inflation from y+1 to y+2"
-{txt}
-{com}. label var Q9c_mean "mean of inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_iqr "25/75 inter-quantile range of inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_probdeflation "prob of deflation from y+1 to y+2 (0-1)"
-{txt}
-{com}. label var Q9c_bin1 "density: >12% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin2 "density: 8%-12% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin3 "density: 4%-8% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin4 "density: 2%-4% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin5 "density: 0%-2% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin6 "density: -2%-0% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin7 "density: -4%- -2% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin8 "density: -8%--4% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin9 "density: -12%- -8% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q9c_bin10 "density: <-12% inflation from y+1 to y+2(%)"
-{txt}
-{com}. label var Q10_1 "current empsituations:full-time"
-{txt}
-{com}. label var Q10_2 "current emp situations:part-time"
-{txt}
-{com}. label var Q10_3 "current emp situations: not working but wants to work"
-{txt}
-{com}. label var Q10_4 "current emp situations: temporary laid-off"
-{txt}
-{com}. label var Q10_5 "current emp situations: on sick or other leave"
-{txt}
-{com}. label var Q10_6 "current emp situations: permanently disabled/unable to work"
-{txt}
-{com}. label var Q10_7 "current emp situations: retiree or early retiree"
-{txt}
-{com}. label var Q10_8 "current emp situations: student or in training"
-{txt}
-{com}. label var Q10_9 "current emp situations: homemaker"
-{txt}
-{com}. label var Q10_10 "current emp situations: others"
-{txt}
-{com}. label var Q11 "number of jobs"
-{txt}
-{com}. label var Q12new "work for someone or self-employed(1/0)"
-{txt}
-{com}. label var ES1_1 ""
-{txt}
-{com}. label var ES1_2 ""
-{txt}
-{com}. label var ES1_3 ""
-{txt}
-{com}. label var ES1_4 ""
-{txt}
-{com}. label var ES2 ""
-{txt}
-{com}. label var ES3new ""
-{txt}
-{com}. label var ES4 ""
-{txt}
-{com}. label var ES5 ""
-{txt}
-{com}. label var Q13new "chance of losing job from y to y+1(%)"
-{txt}
-{com}. label var Q14new "chance of voluntarily leaving the job from y to y+1(%)"
-{txt}
-{com}. label var Q15 "currently looking for a job (1/0)"
-{txt}
-{com}. label var Q16 "duration of unemployment (months)"
-{txt}
-{com}. label var Q17new "chance of finding and accepting a job from y to y+1(%)"
-{txt}
-{com}. label var Q18new "chance of finding and accepting a job from m to m+3"
-{txt}
-{com}. label var Q19 "duration of out of work(%)"
-{txt}
-{com}. label var Q20new "chance of starting looking for a job from y to y+1(%)"
-{txt}
-{com}. label var Q21new "chance of starting looking for a job from m to m+3(%)"
-{txt}
-{com}. label var Q22new ""
-{txt}
-{com}. label var Q23v2 ""
-{txt}
-{com}. label var Q23v2part2 ""
-{txt}
-{com}. label var Q24_cent25 "25 percentile of earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_cent50 "50 percentile of earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_cent75 "75 percentile of earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_var "var of earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_mean "mean of earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_iqr "25/75 inter-quantile range of earning growth of same job/time/place from y to y+1(%)"
-{txt}note: label truncated to 80 characters
-
-{com}. label var Q24_probdeflation "???"
-{txt}
-{com}. label var Q24_bin1 ">12% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin2 "8%-12% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin3 "4%-8% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin4 "2%-4% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin5 "0-2% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin6 "-2%-0 earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin7 "-4%- -2% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin8 "-8% - -4% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin9 "-12%- -8% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q24_bin10 "<-12% earning growth of same job/time/place from y to y+1(%)"
-{txt}
-{com}. label var Q25v2 "increase/decrease of total household income from y to y+1(1/0)"
-{txt}
-{com}. label var Q25v2part2 "increase of total household income from y to y+1(%)"
-{txt}
-{com}. label var Q26v2 "increase/decrease of total household spending from y to y+1(1/0)"
-{txt}
-{com}. label var Q26v2part2 "increase of total household spending from y to y+1(%)"
-{txt}
-{com}. label var Q27v2 "increase/decrease of total household tax payment given the same income (1/0)"
-{txt}
-{com}. label var Q27v2part2 "increase of total household tax payment given the same income (%)"
-{txt}
-{com}. label var Q28 "easier/harder to get credit/loan from y-1 to y(1-5)"
-{txt}
-{com}. label var Q29 "easier/harder to get credit/loan from y to y+1(1-5)"
-{txt}
-{com}. label var Q30new "chance of non-payment of debt from m to m+3(%)"
-{txt}
-{com}. label var Q31v2 "increase/decrease of nationwide house price(1/0)"
-{txt}
-{com}. label var Q31v2part2 "increase of nationwide house price(%)"
-{txt}
-{com}. label var C1_cent25 "25 percentile of increase of nationwide house price(%)"
-{txt}
-{com}. label var C1_cent50 "50 percentile of increase of nationwide house price(%)"
-{txt}
-{com}. label var C1_cent75 "75 percentile of increase of nationwide house price(%)"
-{txt}
-{com}. label var C1_var "var of increase of nationwide house price"
-{txt}
-{com}. label var C1_mean "mean of increase of nationwide house price(%)"
-{txt}
-{com}. label var C1_iqr "25/75 inter-quantile range  of increase of nationwide house price(%)"
-{txt}
-{com}. label var C1_probdeflation "??"
-{txt}
-{com}. label var C1_bin1 ">12% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin2 "8%-12% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin3 "4%-8% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin4 "2%-4% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin5 "0-2% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin6 "-2%-0% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin7 "-4%- -2% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin8 "-8%- -4% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin9 "-12%- -8% increase in nationwide house price(%)"
-{txt}
-{com}. label var C1_bin10 "<-12% increase in nationwide house price(%)"
-{txt}
-{com}. label var C2 "increase/decrease in nationwide house price from y+1 to y+2(1/0)"
-{txt}
-{com}. label var C2part2 "increase in nationwide house price from y+1 to y+2(%)"
-{txt}
-{com}. label var C3 "increase/decrease of U.S. gov debt from y to y+1(1/0)"
-{txt}
-{com}. label var C3part2"increase of U.S. gov debt from y to y+1(%)"
-{txt}
-{com}. label var C4_1 "increase of a gallon of gas from y to y+1(%)"
-{txt}
-{com}. label var C4_2 "increase of food price from y to y+1(%)"
-{txt}
-{com}. label var C4_3 "increase of a medical care from y to y+1(%)"
-{txt}
-{com}. label var C4_4 "increase of college education from y to y+1(%)"
-{txt}
-{com}. label var C4_5 "increase of price of renting a typical house/apt from y to y+1(%)"
-{txt}
-{com}. label var C4_6  "increase of gold price from y to y+1(%)"
-{txt}
-{com}. label var QNUM1 "num q 1: (correct if ==150)"
-{txt}
-{com}. label var QNUM2 ""
-{txt}
-{com}. label var QNUM3 ""
-{txt}
-{com}. label var QNUM5 ""
-{txt}
-{com}. label var QNUM6 ""
-{txt}
-{com}. label var QNUM8 ""
-{txt}
-{com}. label var QNUM9 ""
-{txt}
-{com}. label var Q32 "age(in years)"
-{txt}
-{com}. label var Q33 "gender"
-{txt}
-{com}. label var Q34 "hispanic/latino/spanish(1/0)"
-{txt}
-{com}. label var Q35_1 "race: white"
-{txt}
-{com}. label var Q35_2 "race: black/african american"
-{txt}
-{com}. label var Q35_3 "race: american indian/alaska native"
-{txt}
-{com}. label var Q35_4 "race: asian"
-{txt}
-{com}. label var Q35_5 "race: native hawaiian or other pacific islander"
-{txt}
-{com}. label var Q35_6 "race: other"
-{txt}
-{com}. label var Q36 "education (1-8 low to high, 9 other)"
-{txt}
-{com}. label var Q37 "months of current work"
-{txt}
-{com}. label var Q38 "living with partner/not (1/0)"
-{txt}
-{com}. label var HH2_1 "emp of partner: full-time for someone"
-{txt}
-{com}. label var HH2_2 "emp of partner: part-time for someone"
-{txt}
-{com}. label var HH2_3 "emp of partner: self-employed"
-{txt}
-{com}. label var HH2_4 "emp of partner: not working but wants to work"
-{txt}
-{com}. label var HH2_5 "emp of partner: temporary laid-off"
-{txt}
-{com}. label var HH2_6 "emp of partner: on sick or other leave"
-{txt}
-{com}. label var HH2_7 "emp of partner: permanently disabled/unable to work"
-{txt}
-{com}. label var HH2_8 "emp of partner: retiree or early retiree"
-{txt}
-{com}. label var HH2_9 "emp of partner: student or in training"
-{txt}
-{com}. label var HH2_10 "emp of partner: homemaker"
-{txt}
-{com}. label var HH2_10 "emp of partner: other"
-{txt}
-{com}. label var _STATE "state (2-digit code)"
-{txt}
-{com}. label var Q41 "years of living in the current residence"
-{txt}
-{com}. label var Q42 "years of living in the current states"
-{txt}
-{com}. label var Q43 "own/rent/other a house(1/2/3)"
-{txt}
-{com}. label var Q43a "my/spounser/both's name under which current residence is owned/rent"
-{txt}
-{com}. label var Q44 "own other homes(1/0)"
-{txt}
-{com}. label var Q45b "health condition(1-5 from good to poor)"
-{txt}
-{com}. label var Q45new_1 ""
-{txt}
-{com}. label var Q45new_2 ""
-{txt}
-{com}. label var Q45new_3 ""
-{txt}
-{com}. label var Q45new_4 ""
-{txt}
-{com}. label var Q45new_5 ""
-{txt}
-{com}. label var Q45new_6 ""
-{txt}
-{com}. label var Q45new_7 ""
-{txt}
-{com}. label var Q45new_8 ""
-{txt}
-{com}. label var Q45new_9 ""
-{txt}
-{com}. label var Q46 "financial decision making of household(1-5, together to individual)"
-{txt}
-{com}. label var Q47 "total pre-tax household income from y-1 to y(1-11, low to high)"
-{txt}
-{com}. label var D1 "same household as last year(1/0)"
-{txt}
-{com}. label var D3 "date of moving to the current residence(month/year)"
-{txt}
-{com}. label var D6 "total pre-tax household income from y-1 to y(1-11,low to high)"
-{txt}
-{com}. label var D2new_1 "memeber in the current resident:spounse/partner"
-{txt}
-{com}. label var D2new_2 "memeber in the current resident: child >25"
-{txt}
-{com}. label var D2new_3 "memeber in the current resident: child 18-24"
-{txt}
-{com}. label var D2new_4 "memeber in the current resident: child 6-17"
-{txt}
-{com}. label var D2new_5 "memeber in the current resident: child <=5 "
-{txt}
-{com}. label var D2new_6 "memeber in the current resident: own/sponse's parents"
-{txt}
-{com}. label var D2new_7 "memeber in the current resident:other relatives"
-{txt}
-{com}. label var D2new_8 "memeber in the current resident:non-relatives"
-{txt}
-{com}. label var DSAME "same job as last year in survey"
-{txt}
-{com}. label var DQ38 "living as a partner or married with some one(1/0)"
-{txt}
-{com}. label var Q48 "interesting/uninteresting of the questions in the survey(1/0)"
-{txt}
-{com}. 
-. 
-. ** Only keep useful variables so that the data file is smaller. 
-. 
-. 
-. global keeplist date year month userid tenure weight ///
->        Q24_cent25 Q24_cent50 Q24_cent75 Q24_var Q24_mean Q24_iqr ///
->            Q24_bin1 Q24_bin2 Q24_bin3 Q24_bin4 Q24_bin5 Q24_bin6 Q24_bin7 Q24_bin8 Q24_bin9 Q24_bin10 ///
->            Q32 Q33 Q34 Q35_1 Q35_2 Q35_3 Q35_4 Q35_5 Q35_6 Q36 Q37 Q38 ///
->            HH2_1 HH2_2 HH2_3 HH2_4 HH2_5 HH2_6 HH2_7 HH2_8 HH2_9 HH2_10 HH2_11 ///
->            _STATE Q41 Q42 Q43 Q43a Q44 Q45b ///
->            Q45new_1 Q45new_2 Q45new_3 Q45new_4 Q45new_5 Q45new_6 Q45new_7 Q45new_8 Q45new_9 ///
->            Q46 Q47 D1 D3 D6 D2new_1 D2new_2 D2new_3 D2new_4 D2new_5 D2new_6 D2new_7 D2new_8 D2newdk_1 DSAME DQ38 ///
->            DHH2_1 DHH2_2 DHH2_3 DHH2_4 DHH2_5 DHH2_6 DHH2_7 DHH2_8 DHH2_9 DHH2_10 DHH2_11 DHH2_11_other D5b Q48 QRA1 QRA2 ///
->            _AGE_CAT _NUM_CAT _REGION_CAT _COMMUTING_ZONE _EDU_CAT _HH_INC_CAT
-{txt}
-{com}. 
-. keep ${c -(}keeplist{c )-}
-{txt}
-{com}. 
-. ddd
-{err}unrecognized command:  ddd
-{txt}{search r(199):r(199);}
-
-end of do-file
-
-{search r(199):r(199);}
-
-{com}. count if Q24_mean!=.
-{res}52569
-
-{com}. count if Q24_var!=.
-{res}52569
-
-{com}. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD05177.000000"
-{txt}
-{com}. ****************************************************
-. ***   This do files cleans SCE individual density **
-. ***   forecasts and moments. It exclude the top and *
-. ***   bottom 5 percentiles of mean and uncertainty. *
-. ***   It also plots histograms of mean forecast and *
-. ***   uncertainty. **********************************
-. *****************************************************
-. 
-. 
-. clear
-{txt}
-{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
-{txt}
-{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
-{txt}
-{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/pop"
-{txt}
-{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
-{txt}
-{com}. 
-. cd ${c -(}folder{c )-}
-{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
-{txt}
-{com}. pwd
-{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
-{txt}
-{com}. set more off 
-{txt}
-{com}. 
-. 
-. use "${c -(}folder{c )-}/SCE/NYFED_SCE_2013.dta",clear
-{txt}
-{com}. append using "${c -(}folder{c )-}/SCE/NYFED_SCE_2014_2016.dta",force
-{txt}{p 0 7 2}
-(note: variable
-DHH2_11_other was str48 in the using data, but will be
-byte now)
-{p_end}
-{p 0 7 2}
-(note: variable
-Q13new was 
-byte, now double to accommodate using data's values)
-{p_end}
-{p 0 7 2}
-(note: variable
-Q19 was 
-int, now double to accommodate using data's values)
-{p_end}
-{p 0 7 2}
-(note: variable
-Q32 was 
-byte, now int to accommodate using data's values)
-{p_end}
-
-{com}. append using  "${c -(}folder{c )-}/SCE/NYFED_SCE_post2016.dta",force
-{txt}{p 0 7 2}
-(note: variable
-DHH2_11_other was str83 in the using data, but will be
-byte now)
-{p_end}
-{p 0 7 2}
-(note: variable
-Q3 was 
-byte, now int to accommodate using data's values)
-{p_end}
-{p 0 7 2}
-(note: variable
-Q32 was 
-int, now double to accommodate using data's values)
-{p_end}
-
-{com}. 
-. 
-. sort date
-{txt}
-{com}. unique userid
-{txt}Number of unique values of userid is  {res}11664
-{txt}Number of records is  {res}79064
-{txt}
-{com}. ddd
-{err}unrecognized command:  ddd
-{txt}{search r(199):r(199);}
-
-end of do-file
-
-{search r(199):r(199);}
-
-{com}. count if Q24_iqr!-
-{err}invalid syntax
-{txt}{search r(198):r(198);}
-
-{com}. count if Q24_iqr!=.
-{res}52569
-
-{com}. clear
-
-. 
+. log close 
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Est_log.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}30 Sep 2019, 15:32:24
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

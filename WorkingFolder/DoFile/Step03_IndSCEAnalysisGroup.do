@@ -31,28 +31,44 @@ rename _merge hh_info_merge
 **  Set Panel Data Structure **
 *******************************
 rename userid ID 
-xtset ID date
+xtset ID date   /* this is not correct. ID is unique here.*/
 sort ID year month 
 
+*******************************
+** Exclude extreme outliers 
+******************************
+
+keep if Q32 < 100 & Q32 >= 10
 
 *****************************
 *** generate group vars *****
 *****************************
 
+gen cohort = year-Q32
+label var cohort "cohort by year of birth"
+egen cohort_g = cut(cohort), group(3)
+label define cohortlb 0 "1915-1956" 1 "1957-1972" 2 "1973-2000"
+label value cohort_g cohortlb
+
 egen age_g = cut(Q32), group(3)  
 label var age_g "age group"
+label define agelb 0 "Young" 1 "Middle-age" 2 "Old"
+label value age_g agelb
 
 egen edu_g = cut(Q36), group(3) 
 label var edu_g "education group"
+label define edulb 0 "Low Education" 1 "Medium Education" 2 "High Education"
+label value edu_g adulb
 
 gen gender_g = Q33 
 label var gender_g "gender_grou"
 
 egen inc_g = cut(Q47), group(3)
 label var inc_g "income_g"
+label define inclb 0 "Low income" 1 "Middle Income" 2 "High Income"
+label value inc_g inclb
 
-
-local group_vars age_g edu_g inc_g
+local group_vars age_g edu_g inc_g cohort_g
 
 
 **********************************
@@ -60,11 +76,16 @@ local group_vars age_g edu_g inc_g
 **********************************
 
 
-
 foreach gp in `group_vars' {
 tabstat Q24_mean Q24_var Q24_iqr, st(p10 p50 p90) by(`gp')
 }
 
+
+foreach gp in `group_vars' {
+table `gp', c(median Q24_var) by(year)
+}
+
+/*
 
 foreach mom in iqr var mean {
 
@@ -90,5 +111,22 @@ graph export "${sum_graph_folder}/hist/hist_`mom'_`gp'.png",as(png) replace
 
 }
 }
+*/
+********************
+** Regression ******
+********************
+
+global other_control i.Q33 i.Q34 Q35_1 Q35_2 Q35_3 Q35_4 Q35_5 Q35_6 
+
+eststo clear
+
+foreach mom in iqr var mean {
+eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year, robust 
+eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year ${other_control}, robust 
+}
+esttab using "${sum_table_folder}/mom_group.csv", ///
+             se r2 drop(0.age_g 0.edu_g 0.inc_g 0.cohort_g 2013.year ///
+			            1.Q33 1.Q34 _cons) replace
+
 
 log close 
