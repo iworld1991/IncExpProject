@@ -40,6 +40,18 @@ sort ID year month
 
 keep if Q32 < 100 & Q32 >= 10
 
+
+
+*****************************
+*** generate other vars *****
+*****************************
+
+gen age_sq = (Q32-30)^2
+label var age_sq "Age-squared"
+
+encode _STATE, gen(state_id)
+label var state_id "state id"
+
 *****************************
 *** generate group vars *****
 *****************************
@@ -117,16 +129,18 @@ graph export "${sum_graph_folder}/hist/hist_`mom'_`gp'.png",as(png) replace
 ********************
 
 global other_control i.Q33 i.Q34 Q35_1 Q35_2 Q35_3 Q35_4 Q35_5 Q35_6 
+global macro_ex_var Q4new Q6new Q9_mean Q13new
 
 eststo clear
 
-foreach mom in iqr var mean {
-eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year, robust 
-eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year ${other_control}, robust 
+foreach mom in var iqr mean{
+eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id, robust 
+eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${other_control}, robust 
+eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${other_control} ${macro_ex_var}, robust 
 }
 esttab using "${sum_table_folder}/mom_group.csv", ///
-             se r2 drop(0.age_g 0.edu_g 0.inc_g 0.cohort_g 2013.year ///
-			            1.Q33 1.Q34 _cons) replace
+             se r2 drop(0.age_g 0.edu_g 0.inc_g 0.cohort_g  *.year *state_id 1.Q33 1.Q34 _cons) ///
+			 label replace
 
 
 log close 

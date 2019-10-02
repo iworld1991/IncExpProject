@@ -46,8 +46,8 @@ xtset userid date
 ** Label variables ***
 **********************
 
-label var Q1 "finance better or worser(5 vals) from y-1 to y"
-label var Q2 "finance better or worser(5 vals) from y to y+1"
+label var Q1 "finance better or worse(5 vals) from y-1 to y"
+label var Q2 "finance better or worse(5 vals) from y to y+1"
 label var Q3 "chance of moving (%)"
 label var Q4new "chance of UE higher from y to y+1(0-1)"
 label var Q5new "chance of saving interest rate higher from y to y+1(%)"
@@ -119,9 +119,9 @@ label var Q18new "chance of finding and accepting a job from m to m+3"
 label var Q19 "duration of out of work(%)"
 label var Q20new "chance of starting looking for a job from y to y+1(%)"
 label var Q21new "chance of starting looking for a job from m to m+3(%)"
-label var Q22new ""
-label var Q23v2 ""
-label var Q23v2part2 ""
+label var Q22new "chance of finding a new job if losing the current one within 3 months"
+label var Q23v2 "earning increase/decrease from the same job/time/place from y to y+1(%)"
+label var Q23v2part2 "change of earning from the same job/time/place from y to y+1(%)"
 label var Q24_cent25 "25 percentile of earning growth of same job/time/place from y to y+1(%)"
 label var Q24_cent50 "50 percentile of earning growth of same job/time/place from y to y+1(%)"
 label var Q24_cent75 "75 percentile of earning growth of same job/time/place from y to y+1(%)"
@@ -243,8 +243,7 @@ label var Q48 "interesting/uninteresting of the questions in the survey(1/0)"
 
 ** Only keep useful variables so that the data file is smaller. 
 
-
-global keeplist date year month userid tenure weight ///
+global keeplist date year month userid tenure weight ///        
        Q24_cent25 Q24_cent50 Q24_cent75 Q24_var Q24_mean Q24_iqr ///
 	   Q24_bin1 Q24_bin2 Q24_bin3 Q24_bin4 Q24_bin5 Q24_bin6 Q24_bin7 Q24_bin8 Q24_bin9 Q24_bin10 ///
 	   Q32 Q33 Q34 Q35_1 Q35_2 Q35_3 Q35_4 Q35_5 Q35_6 Q36 Q37 Q38 ///
@@ -253,7 +252,8 @@ global keeplist date year month userid tenure weight ///
 	   Q45new_1 Q45new_2 Q45new_3 Q45new_4 Q45new_5 Q45new_6 Q45new_7 Q45new_8 Q45new_9 ///
 	   Q46 Q47 D1 D3 D6 D2new_1 D2new_2 D2new_3 D2new_4 D2new_5 D2new_6 D2new_7 D2new_8 D2newdk_1 DSAME DQ38 ///
 	   DHH2_1 DHH2_2 DHH2_3 DHH2_4 DHH2_5 DHH2_6 DHH2_7 DHH2_8 DHH2_9 DHH2_10 DHH2_11 DHH2_11_other D5b Q48 QRA1 QRA2 ///
-	   _AGE_CAT _NUM_CAT _REGION_CAT _COMMUTING_ZONE _EDU_CAT _HH_INC_CAT
+	   _AGE_CAT _NUM_CAT _REGION_CAT _COMMUTING_ZONE _EDU_CAT _HH_INC_CAT ///
+	   Q1 Q2 Q3 Q4new Q5new Q6new Q9_mean Q13new
 
 keep ${keeplist}
 
