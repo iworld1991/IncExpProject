@@ -26,7 +26,7 @@ from scipy.optimize import minimize
 import copy as cp
 
 
-# + {"code_folding": [6, 22, 26, 32, 51, 65, 92, 123]}
+# + {"code_folding": [1, 6, 10, 13, 24, 28, 34, 53, 67, 77, 91, 106, 118, 122, 149, 155, 174, 184, 194]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''
@@ -39,6 +39,7 @@ class IMAProcess:
     '''
     def __init__(self,
                  t = 100,
+                 n_periods = 1,
                  process_para = {'ma_coeffs':np.ones(0),
                                  'sigmas': np.ones((2,100))}
                 ):
@@ -47,6 +48,7 @@ class IMAProcess:
         self.ma_q = len(process_para)
         self.t = t
         self.sigmas = process_para['sigmas']
+        self.n_periods = n_periods
     
     ## auxiliary function for ma cum sum
     def cumshocks(self,
@@ -91,6 +93,30 @@ class IMAProcess:
         self.SimMoms = {'Mean':mean_diff,
                        'Var':varcov_diff}
         return self.SimMoms
+    
+    def TimeAggregate(self,
+                      n_periods = None):
+        simulated = self.simulated
+        t = self.t
+        n_periods = self.n_periods
+        
+        simulated_agg = np.array([np.sum(simulated[:,i-n_periods:i],axis=1) for i in range(n_periods,t+1)]).T
+        self.simulated_agg = simulated_agg
+        return self.simulated_agg
+    
+    def SimulateMomentsAgg(self):
+        series_agg = self.simulated_agg 
+        
+        ## the first difference 
+        diff = np.diff(series_agg,
+                       axis=1)
+        ## moments of first diff
+        mean_diff = np.mean(diff,axis = 0)
+        varcov_diff = np.cov(diff.T)
+        
+        self.SimAggMoms = {'Mean':mean_diff,
+                           'Var':varcov_diff}
+        return self.SimAggMoms
     
     def ComputeGenMoments(self):
         ## parameters 
@@ -174,9 +200,40 @@ class IMAProcess:
         
         self.para_est = para_est
         return self.para_est
+    
+    def Autocovar(self,
+                  step = 1):
+        cov_var = self.SimMoms['Var']
+        if step >= 0:
+            autovar = np.array([cov_var[i,i+step] for i in range(len(cov_var)-1)])
+        if step < 0:
+            autovar = np.array([cov_var[i+step,i] for i in range(abs(step),len(cov_var)-1)]) 
+        self.autovar = autovar
+        return self.autovar
+    
+    def AutocovarComp(self,
+                  step = 1):
+        cov_var = self.GenMoms['Var']
+        if step >= 0:
+            autovar = np.array([cov_var[i,i+step] for i in range(len(cov_var)-1)])
+        if step < 0:
+            autovar = np.array([cov_var[i+step,i] for i in range(abs(step),len(cov_var)-1)]) 
+        self.autovarGen = autovar
+        return self.autovarGen
+    
+    def AutocovarAgg(self,
+                     step = 0):
+        cov_var = self.SimAggMoms['Var']
+        if step >=0:
+            autovar = np.array([cov_var[i,i+step] for i in range(len(cov_var)-1)]) 
+        if step < 0:
+            autovar = np.array([cov_var[i,i+step] for i in range(abs(step),len(cov_var)-1)]) 
+        self.autovar = autovar
+        self.autovaragg = autovar
+        return self.autovaragg 
 
 
-# + {"code_folding": [0, 10, 14]}
+# + {"code_folding": [0, 10]}
 ## debugging test of the data 
 
 t = 50
@@ -196,27 +253,27 @@ dt = IMAProcess(t = t,
 sim_data = dt.SimulateSeries(n_sim = 5000)
 sim_moms = dt.SimulatedMoments()
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## get the computed moments 
 
 comp_moms = dt.ComputeGenMoments()
 
 av_comp = comp_moms['Mean']
 cov_var_comp = comp_moms['Var']
-var_comp = np.diagonal(cov_var)
-autovarb1_comp = np.array([cov_var_comp[i,i+1] for i in range(len(cov_var_comp)-1)]) 
+var_comp = dt.AutocovarComp(step=0) #np.diagonal(cov_var_comp)
+autovarb1_comp = dt.AutocovarComp(step=-1)  #np.array([cov_var_comp[i,i+1] for i in range(len(cov_var_comp)-1)]) 
 
 # + {"code_folding": [0]}
 ## get the simulated moments 
 av = sim_moms['Mean']
 cov_var = sim_moms['Var']
-var = np.diagonal(cov_var)
-autovarb1 = np.array([cov_var[i,i+1] for i in range(len(cov_var)-1)]) 
+var = dt.Autocovar(step = 0)   #= np.diagonal(cov_var)
+autovarb1 = dt.Autocovar(step = -1) #np.array([cov_var[i,i+1] for i in range(len(cov_var)-1)]) 
 
 # + {"code_folding": [0]}
 ## plot simulated moments of first diff 
 
-plt.figure(figsize=((15,4)))
+plt.figure(figsize=((20,4)))
 
 plt.subplot(1,4,1)
 plt.title(r'$\sigma_{\theta,t},\sigma_{\epsilon,t}$')
@@ -240,14 +297,14 @@ plt.subplot(1,4,4)
 plt.title(r'$Cov(\Delta y_t,\Delta y_{t+1})$')
 plt.plot(autovarb1,label='simulated')
 plt.plot(autovarb1_comp,label='computed')
-plt.legend(loc=0)
+plt.legend(loc = 0)
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## robustness check if the transitory risks is approximately equal to the assigned level
 
 sigma_t_est = np.array(np.sqrt(abs(autovarb1)))
-plt.plot(sigma_t_est,label=r'$\widehat sigma_{\theta,t}$')
-plt.plot(t_sigmas[1:],label=r'$sigma_{\theta,t}$')
+plt.plot(sigma_t_est,'r-',label=r'$\widehat sigma_{\theta,t}$')
+plt.plot(t_sigmas[1:],'b-.',label=r'$sigma_{\theta,t}$')
 plt.legend(loc=1)
 
 # + {"code_folding": []}
@@ -256,6 +313,22 @@ plt.legend(loc=1)
 sim_moms_fake = sim_moms.copy()
 new_IMA = cp.deepcopy(dt)
 new_IMA.GetDataMoments(sim_moms_fake)
-new_IMA.EstimatePara()
-# -
+#new_IMA.EstimatePara()
+# + {"code_folding": [0]}
+## time aggregation 
 
+sim_data = dt.SimulateSeries(n_sim = 1000)
+agg_series = dt.TimeAggregate(n_periods = 3)
+agg_series_moms = dt.SimulateMomentsAgg()
+
+# + {"code_folding": [0]}
+## difference times degree of time aggregation leads to different autocorrelation
+for ns in np.array([2,8]):
+    an_instance = cp.deepcopy(dt)
+    series = an_instance.SimulateSeries(n_sim =500)
+    agg_series = an_instance.TimeAggregate(n_periods = ns)
+    agg_series_moms = an_instance.SimulateMomentsAgg()
+    var_sim = an_instance.AutocovarAgg(step=0)
+    var_b1 = an_instance.AutocovarAgg(step=-1)
+    plt.plot(var_b1,label=r'={}'.format(ns))
+plt.legend(loc=1)
