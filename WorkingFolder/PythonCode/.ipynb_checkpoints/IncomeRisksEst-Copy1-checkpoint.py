@@ -25,8 +25,11 @@ import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 import copy as cp
 
+para_default = (np.array([1]),
+               np.random.uniform(0,1,100).reshape([2,50]))
 
-# + {"code_folding": [1, 6, 10, 24, 28, 34, 53, 67, 77, 91, 119, 123, 137, 153, 167, 183, 198, 208, 218]}
+
+# + {"code_folding": [6, 24, 28, 34, 53, 67, 77, 91, 119, 123, 138, 153, 159, 178, 188, 198]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''
@@ -40,14 +43,14 @@ class IMAProcess:
     def __init__(self,
                  t = 100,
                  n_periods = 1,
-                 ma_coeffs = np.ones(1),
-                 sigmas = np.ones([2,100]),
+                 process_para = {'ma_coeffs':np.ones(1),
+                                 'sigmas': np.ones((1,200))}
                 ):
-        #self.process_para = process_para
-        self.ma_coeffs = ma_coeffs
+        self.process_para = process_para
+        self.ma_coeffs = process_para['ma_coeffs']
         self.ma_q = self.ma_coeffs.shape[0]
         self.t = t
-        self.sigmas =sigmas
+        self.sigmas = process_para['sigmas'].reshape([2,t])
         self.n_periods = n_periods
     
     ## auxiliary function for ma cum sum
@@ -121,8 +124,8 @@ class IMAProcess:
     def ComputeGenMoments(self):
         ## parameters 
         t = self.t 
-        ma_coeffs = self.ma_coeffs
-        sigmas = self.sigmas
+        ma_coeffs = self.process_para['ma_coeffs']
+        sigmas = self.process_para['sigmas']
         p_sigmas = sigmas[0,:]
         t_sigmas = sigmas[1,:]
         ma_q = self.ma_q 
@@ -151,13 +154,14 @@ class IMAProcess:
         self.data_moms_dct = data_moms_dct
         
     def ObjFunc(self,
-                para):
+                para_test = para_default):
         data_moms_dct = self.data_moms_dct
         t = self.t
-        ma_coeffs,sigmas = para
+        print
+        ma_coeffs,sigmas = para_test
         self.t = t
-        self.ma_coeffs = ma_coeffs
-        self.sigmas = sigmas
+        self.process_para = {'ma_coeffs':ma_coeffs,
+                             'sigmas':sigmas}
         model_moms_dct = self.ComputeGenMoments() 
         model_moms = np.array([model_moms_dct[key] for key in ['Var']]).flatten()
         data_moms = np.array([data_moms_dct[key] for key in ['Var']]).flatten()
@@ -167,8 +171,7 @@ class IMAProcess:
     def EstimatePara(self,
                      method = 'CG',
                      bounds = None,
-                     para_guess =(1,
-                                  np.random.uniform(0,1,100).reshape(2,50)),
+                     para_guess = (([]),([])),
                      options = {'disp':True}):
         
         para_est = minimize(self.ObjFunc,
@@ -179,43 +182,23 @@ class IMAProcess:
         
         self.para_est = para_est
         return self.para_est    
-    
-    def ObjFuncSim(self,
-                para_sim):
-        data_moms_dct = self.data_moms_dct
-        t = self.t
-        ma_coeffs,sigmas = para_sim
-        self.t = t
-        self.ma_coeffs = ma_coeffs
-        self.sigmas = sigmas
-        model_moms_dct = self.SimulatedMoments() 
-        model_moms = np.array([model_moms_dct[key] for key in ['Var']]).flatten()
-        data_moms = np.array([data_moms_dct[key] for key in ['Var']]).flatten()
-        diff = np.linalg.norm(model_moms - data_moms)
-        return diff
         
     def EstimateParabySim(self,
-                     method = 'CG',
-                     bounds = None,
-                     para_guess =(1,
-                                  np.random.uniform(0,1,100).reshape(2,50)),
-                     options = {'disp':True}):
-        
-        para_est_sim = minimize(self.ObjFuncSim,
-                            x0 = para_guess,
-                            method = method,
-                            bounds = bounds,
-                            options = options)['x']
-        
-        self.para_est_sim = para_est_sim
-        return self.para_est_sim  
-    
-    def EstimateParabySim2(self,
                          method = 'TNC',
                          options = {'disp':True}):
         data_moms_dct = self.data_moms_dct
         process_para_default = self.process_para
         
+        def ObjFunc(self,
+                    para_est = process_para_default):
+            self.process_para = {'ma_coeffs':para_est[0],
+                                'sigmas':para_est[1]}
+            a_sim = self.SimulateSeries()
+            model_moms_sim_dct = self.SimulatedMoments() 
+            model_moms = np.array([model_moms_sim_dct[key] for key in model_moms_sim_dct.keys()])
+            data_moms = np.array([data_moms_dct[key] for key in data_moms_dct.keys()])
+            diff = np.linalg.norm(model_moms_sim - data_moms)
+            return diff
         
         para_est = minimize(ObjFunc,
                            x0 = None,
@@ -256,6 +239,7 @@ class IMAProcess:
         self.autovaragg = autovar
         return self.autovaragg 
 
+
 # + {"code_folding": [0]}
 ## debugging test of the data 
 
@@ -271,8 +255,8 @@ sigmas = np.array([p_sigmas_draw,
                    t_sigmas])
 
 dt = IMAProcess(t = t,
-                ma_coeffs = ma_nosa,
-                sigmas = sigmas)
+               process_para = {'ma_coeffs':ma_nosa,
+                              'sigmas':sigmas})
 sim_data = dt.SimulateSeries(n_sim = 5000)
 sim_moms = dt.SimulatedMoments()
 
@@ -361,15 +345,13 @@ sigmas = np.array([p_sigmas_draw,
                    t_sigmas])
 
 dt_fake = IMAProcess(t = t,
-                     ma_coeffs = ma_nosa,
-                     sigmas = sigmas)
+               process_para = {'ma_coeffs':ma_nosa,
+                              'sigmas':sigmas})
 sim_data = dt_fake.SimulateSeries(n_sim = 5000)
 sim_moms = dt_fake.SimulatedMoments()
 # -
 
 # ### Estimation
-#
-# #### Estimation using computed moments 
 
 # + {"code_folding": []}
 ## estimation of income risks 
@@ -378,45 +360,33 @@ dt_est = cp.deepcopy(dt)
 dt_est.GetDataMoments(sim_moms)
 # -
 
-para_est = dt_est.EstimatePara(method='CG')
-
-
-# + {"code_folding": [0]}
-## check the estimation and true parameters 
-
-fig = plt.figure(figsize=([10,4]))
-
-plt.subplot(1,2,1)
-plt.title('Permanent shocks')
-plt.plot(dt_est.para_est[1][0].T**2,'r-',label='Estimation')
-plt.plot(dt_est.sigmas[0]**2,'o',label='Truth')
-
-
-plt.subplot(1,2,2)
-plt.title('Transitory shocks')
-plt.plot(dt_est.para_est[1][1].T**2,'r-',label='Estimation')
-plt.plot(dt_est.sigmas[1]**2,'o',label='Truth')
-plt.legend(loc=0)
+dt_est.ComputeGenMoments()['Var']
+#dt_est.EstimatePara()
 
 # + {"code_folding": []}
-#### Estimation using simulated moments 
+def fakefunc(para_est):
+    ma_coeffs = np.ones(1)
+    sigmas = para_est
+    process_para = {'ma_coeffs':ma_coeffs,
+                   'sigmas':sigmas}
+    dt_est.process_para = process_para 
+    vec = dt_est.ComputeGenMoments()['Var']
+    loss = np.linalg.norm(vec)
+    return loss
+
+
+# + {"code_folding": []}
+para_tuple = np.random.uniform(0,1,100).reshape([2,50])
+para_tuple[1,:]
 # -
 
-para_est_sim = dt_est.EstimateParabySim(method='CG')
+fakefunc(para_tuple)
 
 # + {"code_folding": []}
-## check the estimation and true parameters
-
-fig = plt.figure(figsize=([10,4]))
-
-plt.subplot(1,2,1)
-plt.title('Permanent shocks')
-plt.plot(dt_est.para_est_sim[1][0].T**2,'r-',label='Estimation(sim)')
-plt.plot(dt_est.sigmas[0]**2,'o',label='Truth')
+minimize(fakefunc,
+        x0 = np.random.uniform(0,1,100).reshape([2,50]),
+        options = {'disp':True}
+        )
+# -
 
 
-plt.subplot(1,2,2)
-plt.title('Transitory shocks')
-plt.plot(dt_est.para_est_sim[1][1].T**2,'r-',label='Estimation(sim)')
-plt.plot(dt_est.sigmas[1]**2,'o',label='Truth')
-plt.legend(loc=0)
