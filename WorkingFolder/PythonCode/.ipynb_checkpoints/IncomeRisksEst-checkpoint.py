@@ -26,7 +26,7 @@ from scipy.optimize import minimize
 import copy as cp
 
 
-# + {"code_folding": [1, 6, 10, 24, 28, 34, 53, 67, 76, 90, 118, 122, 126, 140, 156, 171, 187, 210, 226, 236, 246]}
+# + {"code_folding": [1, 6, 10, 24, 28, 34, 53, 67, 77, 91, 119, 123, 137, 153, 167, 183, 198, 208, 218]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''
@@ -39,7 +39,7 @@ class IMAProcess:
     '''
     def __init__(self,
                  t = 100,
-                 n_periods = np.array([1]),
+                 n_periods = 1,
                  ma_coeffs = np.ones(1),
                  sigmas = np.ones([2,100]),
                 ):
@@ -95,9 +95,10 @@ class IMAProcess:
         return self.SimMoms
     
     def TimeAggregate(self,
-                      n_periods = 1):
+                      n_periods = None):
         simulated = self.simulated
         t = self.t
+        n_periods = self.n_periods
         
         simulated_agg = np.array([np.sum(simulated[:,i-n_periods:i],axis=1) for i in range(n_periods,t+1)]).T
         self.simulated_agg = simulated_agg
@@ -149,10 +150,6 @@ class IMAProcess:
                       data_moms_dct):
         self.data_moms_dct = data_moms_dct
         
-    def GetDataMomentsAgg(self,
-                          data_moms_agg_dct):
-        self.data_moms_agg_dct = data_moms_agg_dct    
-        
     def ObjFunc(self,
                 para):
         data_moms_dct = self.data_moms_dct
@@ -191,7 +188,6 @@ class IMAProcess:
         self.t = t
         self.ma_coeffs = ma_coeffs
         self.sigmas = sigmas
-        model_series_sim = self.SimulateSeries() 
         model_moms_dct = self.SimulatedMoments() 
         model_moms = np.array([model_moms_dct[key] for key in ['Var']]).flatten()
         data_moms = np.array([data_moms_dct[key] for key in ['Var']]).flatten()
@@ -201,7 +197,7 @@ class IMAProcess:
     def EstimateParabySim(self,
                      method = 'CG',
                      bounds = None,
-                     para_guess =(np.array([1]),
+                     para_guess =(1,
                                   np.random.uniform(0,1,100).reshape(2,50)),
                      options = {'disp':True}):
         
@@ -214,44 +210,20 @@ class IMAProcess:
         self.para_est_sim = para_est_sim
         return self.para_est_sim  
     
-    def ObjFuncAgg(self,
-                   para_agg):
-        data_moms_agg_dct = self.data_moms_agg_dct
-        t = self.t
-        ma_coeffs,sigmas = para_agg
-        self.t = t
-        self.ma_coeffs = ma_coeffs
-        self.sigmas = sigmas
-        model_series_sim = self.SimulateSeries() 
-        model_moms_dct = self.SimulatedMoments() 
-        model_series_agg = self.TimeAggregate(n_periods = 12)
-        model_moms_agg_dct = self.SimulateMomentsAgg()
-        model_moms = np.array([model_moms_agg_dct[key] for key in ['Var']]).flatten()
-        data_moms = np.array([data_moms_agg_dct[key] for key in ['Var']]).flatten()
-        if len(model_moms) > len(data_moms):
-            n_burn = len(model_moms) - len(data_moms)
-            model_moms = model_moms[n_burn:]
-        if len(model_moms) < len(data_moms):
-            n_burn = -(len(model_moms) - len(data_moms))
-            data_moms = data_moms[n_burn:]
-        diff = np.linalg.norm(model_moms - data_moms)
-        return diff
-    
-    def EstimateParaAgg(self,
-                        method = 'CG',
-                        bounds = None,
-                        para_guess =(np.array([1]),
-                                     np.random.uniform(0,1,100).reshape(2,50)),
-                        options = {'disp':True}):
+    def EstimateParabySim2(self,
+                         method = 'TNC',
+                         options = {'disp':True}):
+        data_moms_dct = self.data_moms_dct
+        process_para_default = self.process_para
         
-        para_est_agg = minimize(self.ObjFuncAgg,
-                                x0 = para_guess,
-                                method = method,
-                                bounds = bounds,
-                                options = options)['x']
         
-        self.para_est_agg = para_est_agg
-        return self.para_est_agg  
+        para_est = minimize(ObjFunc,
+                           x0 = None,
+                           method = method,
+                           options = options)
+        
+        self.para_est = para_est
+        return self.para_est
     
     def Autocovar(self,
                   step = 1):
@@ -283,7 +255,6 @@ class IMAProcess:
         self.autovar = autovar
         self.autovaragg = autovar
         return self.autovaragg 
-
 
 # + {"code_folding": [0]}
 ## debugging test of the data 
@@ -351,7 +322,7 @@ plt.plot(autovarb1,label='simulated')
 plt.plot(autovarb1_comp,label='computed')
 plt.legend(loc = 0)
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## robustness check if the transitory risks is approximately equal to the assigned level
 
 sigma_t_est = np.array(np.sqrt(abs(autovarb1)))
@@ -369,7 +340,7 @@ sim_data = dt.SimulateSeries(n_sim = 1000)
 agg_series = dt.TimeAggregate(n_periods = 2)
 agg_series_moms = dt.SimulateMomentsAgg()
 
-# + {"code_folding": [0]}
+# + {"code_folding": [1]}
 ## difference times degree of time aggregation leads to different autocorrelation
 for ns in np.array([2,8]):
     an_instance = cp.deepcopy(dt)
@@ -392,46 +363,46 @@ sigmas = np.array([p_sigmas_draw,
 dt_fake = IMAProcess(t = t,
                      ma_coeffs = ma_nosa,
                      sigmas = sigmas)
-data_fake = dt_fake.SimulateSeries(n_sim = 5000)
-moms_fake = dt_fake.SimulatedMoments()
+sim_data = dt_fake.SimulateSeries(n_sim = 5000)
+sim_moms = dt_fake.SimulatedMoments()
 # -
 
 # ### Estimation
 #
 # #### Estimation using computed moments 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## estimation of income risks 
 
 dt_est = cp.deepcopy(dt)
-dt_est.GetDataMoments(moms_fake)
+dt_est.GetDataMoments(sim_moms)
 # -
 
 para_est = dt_est.EstimatePara(method='CG')
 
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## check the estimation and true parameters 
 
 fig = plt.figure(figsize=([10,4]))
 
 plt.subplot(1,2,1)
-plt.title('Permanent Risk')
+plt.title('Permanent shocks')
 plt.plot(dt_est.para_est[1][0].T**2,'r-',label='Estimation')
-plt.plot(dt_fake.sigmas[0]**2,'-*',label='Truth')
+plt.plot(dt_est.sigmas[0]**2,'o',label='Truth')
 
 
 plt.subplot(1,2,2)
-plt.title('Transitory Risk')
+plt.title('Transitory shocks')
 plt.plot(dt_est.para_est[1][1].T**2,'r-',label='Estimation')
-plt.plot(dt_fake.sigmas[1]**2,'-*',label='Truth')
+plt.plot(dt_est.sigmas[1]**2,'o',label='Truth')
 plt.legend(loc=0)
 
 # + {"code_folding": [], "cell_type": "markdown"}
 # #### Estimation using simulated moments 
 # -
 
-para_est_sim = dt_est.EstimateParabySim()
+para_est_sim = dt_est.EstimateParabySim(method='CG')
 
 # + {"code_folding": []}
 ## check the estimation and true parameters
@@ -439,42 +410,13 @@ para_est_sim = dt_est.EstimateParabySim()
 fig = plt.figure(figsize=([10,4]))
 
 plt.subplot(1,2,1)
-plt.title('Permanent Risk')
+plt.title('Permanent shocks')
 plt.plot(dt_est.para_est_sim[1][0].T**2,'r-',label='Estimation(sim)')
-plt.plot(dt_fake.sigmas[0]**2,'-*',label='Truth')
+plt.plot(dt_est.sigmas[0]**2,'o',label='Truth')
 
 
 plt.subplot(1,2,2)
-plt.title('Transitory Risk')
+plt.title('Transitory shocks')
 plt.plot(dt_est.para_est_sim[1][1].T**2,'r-',label='Estimation(sim)')
-plt.plot(dt_fake.sigmas[1]**2,'-*',label='Truth')
-plt.legend(loc=0)
-# -
-
-# #### Estimation using time aggregated data
-
-# + {"code_folding": [0]}
-## get some fake aggregated data moments
-moms_agg_fake = dt_fake.TimeAggregate()
-moms_agg_dct_fake = dt_fake.SimulateMomentsAgg()
-
-# + {"code_folding": [0]}
-## estimation 
-dt_est.GetDataMomentsAgg(moms_agg_dct_fake)
-dt_est.EstimateParaAgg()
-
-# + {"code_folding": [0]}
-## check the estimation and true parameters
-
-fig = plt.figure(figsize=([10,4]))
-
-plt.subplot(1,2,1)
-plt.title('Permanent Risk')
-plt.plot(dt_est.para_est_agg[1][0].T**2,'r-',label='Estimation(agg)')
-plt.plot(dt_fake.sigmas[0]**2,'-*',label='Truth')
-
-plt.subplot(1,2,2)
-plt.title('Transitory Risk')
-plt.plot(dt_est.para_est_agg[1][1].T**2,'r-',label='Estimation(agg)')
-plt.plot(dt_fake.sigmas[1]**2,'-*',label='Truth')
+plt.plot(dt_est.sigmas[1]**2,'o',label='Truth')
 plt.legend(loc=0)
