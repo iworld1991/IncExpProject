@@ -294,48 +294,49 @@ def UniformStats(lb,ub):
 
 # + {"code_folding": []}
 ## test 1: GenBeta Dist
-#sim_bins= np.array([0,0.2,0.32,0.5,1,1.2])
-#sim_probs=np.array([0,0.2,0.5,0.3,0])
-#GeneralizedBetaEst(sim_bins,sim_probs)
+sim_bins= np.array([0,0.2,0.32,0.5,1,1.2])
+sim_probs=np.array([0,0.2,0.5,0.3,0])
+GeneralizedBetaEst(sim_bins,sim_probs)
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## test 2: Triangle Dist
-#sim_bins2 = np.array([0,0.2,0.32,0.5,1,1.2])
-#sim_probs2=np.array([0.2,0,0.8,0,0])
-#TriangleEst(sim_bins2,sim_probs2)
+sim_bins2 = np.array([0,0.2,0.32,0.5,1,1.2])
+sim_probs2=np.array([0.2,0,0.8,0,0])
+TriangleEst(sim_bins2,sim_probs2)
 
 # + {"code_folding": []}
 ## test 3: Uniform Dist
 
-#sim_bins3 = np.array([0,0.2,0.32,0.5,1,1.2])
-#sim_probs3=np.array([0,0,0,0,1])
-#sim_para3 = UniformEst(sim_bins3,sim_probs3)
-#UniformStats(sim_para3['lb'],sim_para3['ub'])
+sim_bins3 = np.array([0,0.2,0.32,0.5,1,1.2])
+sim_probs3=np.array([0,0,0,0,1])
+sim_para3 = UniformEst(sim_bins3,sim_probs3)
+UniformStats(sim_para3['lb'],sim_para3['ub'])
 # -
 
 # ### Test with simulated data from known distribution 
 # - we simulate data from a true beta distribution with known parameters
 # - then we estimate the parameters with our module and see how close it is with the true parameters 
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## simulate a generalized distribution
-#sim_n=1000
-#true_alpha,true_beta,true_loc,true_scale=1.4,2.2,0,1
-#sim_data = beta.rvs(true_alpha,true_beta,loc=true_loc,scale=true_scale,size=sim_n)
-#sim_bins2=plt.hist(sim_data)[1]
-#sim_probs2=plt.hist(sim_data)[0]/sim_n
-#sim_est=GeneralizedBetaEst(sim_bins2,sim_probs2)
-#sim_est
+sim_n=1000
+true_alpha,true_beta,true_loc,true_scale=1.4,2.2,0,1
+sim_data = beta.rvs(true_alpha,true_beta,loc=true_loc,scale=true_scale,size=sim_n)
+sim_bins2=plt.hist(sim_data)[1]
+sim_probs2=plt.hist(sim_data)[0]/sim_n
+sim_est=GeneralizedBetaEst(sim_bins2,sim_probs2)
+sim_est
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## plot the estimated generalized beta versus the histogram of simulated data drawn from a true beta distribution 
-#sim_x = np.linspace(true_loc,true_loc+true_scale,sim_n)
-#sim_pdf=beta.pdf(sim_x,sim_est[0],sim_est[1],loc=true_loc,scale=true_scale)
-#plt.plot(sim_x,sim_pdf,label='Estimated pdf')
-#plt.hist(sim_data,density=True,label='Dist of Simulated Data')
-#plt.legend(loc=0)
+sim_x = np.linspace(true_loc,true_loc+true_scale,sim_n)
+sim_pdf=beta.pdf(sim_x,sim_est[0],sim_est[1],loc=true_loc,scale=true_scale)
+plt.plot(sim_x,sim_pdf,label='Estimated pdf')
+plt.hist(sim_data,density=True,label='Dist of Simulated Data')
+plt.legend(loc=0)
 
-# + {"code_folding": [1]}
+
+# + {"code_folding": [0]}
 ## This is the synthesized density estimation function
 def SynDensityStat(bin,probs):
     """
@@ -388,9 +389,87 @@ def SynDensityStat(bin,probs):
     else:
         return {"mean":[],"variance":[]}
 
+
 # + {"code_folding": []}
 ## testing the synthesized estimator function using an arbitrary example created above
-#SynDensityStat(sim_bins3,sim_probs3)['mean']
+SynDensityStat(sim_bins3,sim_probs3)['mean']
+
+# + {"code_folding": []}
+### loading probabilistic data  
+IndSCE=pd.read_stata('../SurveyData/SCE/IncExpSCEProbIndM.dta')   
+# monthly income growth 
+# -
+
+IndSCE.head()
+
+## how many observations?
+len(IndSCE)
+
+## how many observations have density forecasts
+len(IndSCE['Q24_bin10'].dropna())
+
+# + {"code_folding": []}
+## survey-specific parameters 
+nobs=len(IndSCE)
+SCE_bins=np.array([-20,-12,-8,-4,-2,0,2,4,8,12,20])
+print("There are "+str(len(SCE_bins)-1)+" bins in SCE")
+
+# + {"code_folding": []}
+##############################################
+### attention: the estimation happens here!!!!!
+###################################################
+
+
+## creating positions 
+index  = IndSCE.index
+columns=['IncMean','IncVar']
+IndSCE_moment_est = pd.DataFrame(index=index,
+                                 columns=columns)
+
+## Invoking the estimation
+for i in range(nobs):
+    print(i)
+    ## take the probabilities (flip to the right order, normalized to 0-1)
+    Inc = np.flip(np.array([IndSCE.iloc[i,:]['Q24_bin'+str(n)]/100 for n in range(1,11)]))
+    print(Inc)
+    if not np.isnan(Inc).any():
+        stats_est = SynDensityStat(SCE_bins,Inc)
+        if len(stats_est)>0:
+            IndSCE_moment_est['IncMean'][i] = stats_est['mean']
+            print(stats_est['mean'])
+            IndSCE_moment_est['IncVar'][i] = stats_est['variance']
+            print(stats_est['variance'])
+# -
+
+### exporting moments estimates to pkl
+IndSCE_est = pd.concat([IndSCE,IndSCE_moment_est], join='inner', axis=1)
+IndSCE_est.to_pickle("./IndSCEDstIndM.pkl")
+IndSCE_pk = pd.read_pickle('./IndSCEDstIndM.pkl')
+
+IndSCE_pk['IncMean']=pd.to_numeric(IndSCE_pk['IncMean'],errors='coerce')   # income growth from y-1 to y 
+IndSCE_pk['IncVar']=pd.to_numeric(IndSCE_pk['IncVar'],errors='coerce')   
+
+
+IndSCE_pk.tail()
+
+columns_keep = ['date','year','month','userid','tenure','IncMean','IncVar']
+IndSCE_pk_new = IndSCE_pk[columns_keep]
+IndSCE_pk_new.to_stata('../SurveyData/SCE/IncExpSCEDstIndM.dta')
+
+# + {"code_folding": []}
+### Robustness checks: focus on big negative mean estimates 
+sim_bins_data = SCE_bins
+print(str(sum(IndSCE_pk['IncMean']<-6))+' abnormals')
+ct=0
+figure=plt.plot()
+for id in IndSCE_pk.index[IndSCE_pk['IncMean']<-8]:
+    print(id)
+    print(IndSCE_pk['IncMean'][id])
+    sim_probs_data= np.flip(np.array([IndSCE['Q24_bin'+str(n)][id]/100 for n in range(1,11)]))
+    plt.bar(sim_bins_data[1:],sim_probs_data)
+    print(sim_probs_data)
+    stats_est=SynDensityStat(SCE_bins,sim_probs_data)
+    print(stats_est['mean'])
 # -
 
 
