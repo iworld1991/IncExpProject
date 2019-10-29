@@ -30,7 +30,7 @@ from IncomeProcess import IMAProcess as ima
 # + {"code_folding": []}
 ## debugging test of the data 
 
-t = 50
+t = 66
 ma_nosa = np.array([1])
 p_sigmas = np.arange(t)  # sizes of the time-varying permanent volatility 
 p_sigmas_rw = np.ones(t) # a special case of time-invariant permanent volatility, random walk 
@@ -108,7 +108,7 @@ plt.legend(loc=1)
 ## time aggregation 
 
 sim_data = dt.SimulateSeries(n_sim = 1000)
-agg_series = dt.TimeAggregate(n_periods = 2)
+agg_series = dt.TimeAggregate(n_periods = 3)
 agg_series_moms = dt.SimulateMomentsAgg()
 
 # + {"code_folding": [1]}
@@ -152,7 +152,7 @@ dt_est.GetDataMoments(moms_fake)
 
 para_est = dt_est.EstimatePara(method='CG',
                               para_guess = (np.array([1]),
-                                           np.random.uniform(0,1,100).reshape(2,50)
+                                            np.ones([2,t])
                                            ))
 
 
