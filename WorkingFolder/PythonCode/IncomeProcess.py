@@ -19,7 +19,23 @@ from scipy.optimize import minimize
 import copy as cp
 
 
-# + {"code_folding": [6, 10, 24, 34, 53, 67, 76, 90, 118, 122, 126, 140, 156, 171, 187, 213, 229, 239, 249]}
+# + {"code_folding": [0, 8]}
+def toVec(ma_coeffs,
+          sigmas,
+          t,
+          ma_q):
+    assert ma_coeffs.shape == (ma_q,)
+    assert sigmas.shape == (2, t)
+    return np.hstack([ma_coeffs.flatten(), sigmas.flatten()])
+
+def toPara(vec,
+           t,
+           ma_q):
+    assert len(vec) == 2*t + ma_q
+    return vec[:ma_q-1], vec[ma_q:].reshape(2,t)
+
+
+# + {"code_folding": [6, 24, 28, 34, 53, 67, 76, 90, 118, 122, 126, 142, 162, 199, 225, 241, 251, 261]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''
@@ -40,9 +56,9 @@ class IMAProcess:
         self.ma_coeffs = ma_coeffs
         self.ma_q = self.ma_coeffs.shape[0]
         self.t = t
-        self.sigmas =sigmas
+        self.sigmas = sigmas
         self.n_periods = n_periods
-    
+        
     ## auxiliary function for ma cum sum
     def cumshocks(self,
                   shocks,
@@ -150,8 +166,10 @@ class IMAProcess:
                 para):
         data_moms_dct = self.data_moms_dct
         t = self.t
-        ma_coeffs,sigmas = para
-        self.t = t
+        ma_q = self.ma_q
+        ma_coeffs,sigmas = toPara(para,
+                                  t,
+                                  ma_q)
         self.ma_coeffs = ma_coeffs
         self.sigmas = sigmas
         model_moms_dct = self.ComputeGenMoments() 
@@ -159,13 +177,14 @@ class IMAProcess:
         data_moms = np.array([data_moms_dct[key] for key in ['Var']]).flatten()
         diff = np.linalg.norm(model_moms - data_moms)
         return diff
-        
+    
     def EstimatePara(self,
                      method = 'CG',
                      bounds = None,
-                     para_guess = (np.array([1]),
-                                   np.random.uniform(0,1,100).reshape(2,50)),
+                     para_guess = None,
                      options = {'disp':True}):
+        t = self.t
+        ma_q = self.ma_q
         
         para_est = minimize(self.ObjFunc,
                             x0 = para_guess,
@@ -173,39 +192,48 @@ class IMAProcess:
                             bounds = bounds,
                             options = options)['x']
         
-        self.para_est = para_est
+        self.para_est = toPara(para_est,
+                               t,
+                               ma_q)
+        
         return self.para_est    
     
     def ObjFuncSim(self,
-                para_sim):
+                   para_sim):
         data_moms_dct = self.data_moms_dct
         t = self.t
-        ma_coeffs,sigmas = para_sim
-        self.t = t
+        ma_q = self.ma_q
+        ma_coeffs,sigmas = toPara(para_sim,
+                                  t,
+                                  ma_q)
         self.ma_coeffs = ma_coeffs
         self.sigmas = sigmas
         model_series_sim = self.SimulateSeries() 
-        model_moms_dct = self.SimulatedMoments() 
+        model_moms_dct = self.SimulatedMoments()  
         model_moms = np.array([model_moms_dct[key] for key in ['Var']]).flatten()
         data_moms = np.array([data_moms_dct[key] for key in ['Var']]).flatten()
         diff = np.linalg.norm(model_moms - data_moms)
         return diff
         
     def EstimateParabySim(self,
-                     method = 'CG',
-                     bounds = None,
-                     para_guess =(np.array([1]),
-                                  np.random.uniform(0,1,100).reshape(2,50)),
-                     options = {'disp':True}):
+                          method = 'CG',
+                          bounds = None,
+                          para_guess = None,
+                          options = {'disp':True}):
+        t = self.t
+        ma_q = self.ma_q
         
         para_est_sim = minimize(self.ObjFuncSim,
-                            x0 = para_guess,
-                            method = method,
-                            bounds = bounds,
-                            options = options)['x']
+                                x0 = para_guess,
+                                method = method,
+                                bounds = bounds,
+                                options = options)['x']
         
-        self.para_est_sim = para_est_sim
-        return self.para_est_sim  
+        self.para_est_sim = toPara(para_est_sim,
+                                   t,
+                                   ma_q)
+        
+        return self.para_est_sim    
     
     def ObjFuncAgg(self,
                    para_agg,
@@ -237,7 +265,7 @@ class IMAProcess:
                         method = 'CG',
                         bounds = None,
                         para_guess =(np.array([1]),
-                                     np.random.uniform(0,1,100).reshape(2,50)),
+                                     np.random.uniform(0,1,200).reshape(2,100)),
                         options = {'disp':True}):
         
         para_est_agg = minimize(self.ObjFuncAgg,
@@ -279,6 +307,16 @@ class IMAProcess:
         self.autovar = autovar
         self.autovaragg = autovar
         return self.autovaragg 
+# + {"code_folding": []}
+#vec = IMAProcess.toVec(np.ones(2),
+#               np.ones([2,100]),
+#               t = 100,
+#               ma_q = 2)
+
+# + {"code_folding": []}
+#IMAProcess.toPara(vec,
+#       t = 100,
+#       ma_q =2)
 # -
 
 

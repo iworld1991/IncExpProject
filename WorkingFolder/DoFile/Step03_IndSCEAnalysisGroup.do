@@ -40,7 +40,7 @@ sort ID year month
 
 keep if Q32 < 100 & Q32 >= 10
 
-
+drop if IncVar < 0
 
 *****************************
 *** generate other vars *****
@@ -70,10 +70,12 @@ label value age_g agelb
 egen edu_g = cut(Q36), group(3) 
 label var edu_g "education group"
 label define edulb 0 "Low Education" 1 "Medium Education" 2 "High Education"
-label value edu_g adulb
+label value edu_g edulb
 
 gen gender_g = Q33 
 label var gender_g "gender_grou"
+label define gdlb 0 "Male" 1 "Female" 
+label value gender_g gdlb
 
 egen inc_g = cut(Q47), group(3)
 label var inc_g "income_g"
@@ -89,7 +91,7 @@ local group_vars age_g edu_g inc_g cohort_g
 
 
 foreach gp in `group_vars' {
-tabstat Q24_mean Q24_var Q24_iqr, st(p10 p50 p90) by(`gp')
+tabstat Q24_mean Q24_var Q24_iqr IncMean IncVar, st(p10 p50 p90) by(`gp')
 }
 
 
@@ -123,7 +125,36 @@ graph export "${sum_graph_folder}/hist/hist_`mom'_`gp'.png",as(png) replace
 
 }
 }
+
+
+
+foreach mom in Mean Var{
+
+twoway (hist Inc`mom',fcolor(ltblue) lcolor(none)), ///
+	   ytitle("") ///
+	   title("`mom'")
+graph export "${sum_graph_folder}/hist/hist_Inc`mom'.png",as(png) replace  
+
+}
+
+foreach gp in `group_vars' {
+foreach mom in Mean Var{
+
+twoway (hist Inc`mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
+       (hist Inc`mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
+	   (hist Inc`mom' if `gp'==2,fcolor(red) lcolor("")), ///
+	   xtitle("") ///
+	   ytitle("") ///
+	   title("`mom'") ///
+	   legend(label(1 `gp'=0) label(2 `gp'=1) label(3 `gp'=2) col(1))
+
+graph export "${sum_graph_folder}/hist/hist_Inc_`mom'_`gp'.png",as(png) replace  
+
+}
+}
+
 */
+
 ********************
 ** Regression ******
 ********************
@@ -138,6 +169,13 @@ eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id, robu
 eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${other_control}, robust 
 eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${other_control} ${macro_ex_var}, robust 
 }
+foreach mom in Mean Var{
+eststo: reg Inc`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id, robust 
+eststo: reg Inc`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${other_control}, robust 
+eststo: reg Inc`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${other_control} ${macro_ex_var}, robust 
+
+}
+
 esttab using "${sum_table_folder}/mom_group.csv", ///
              se r2 drop(0.age_g 0.edu_g 0.inc_g 0.cohort_g  *.year *state_id 1.Q33 1.Q34 _cons) ///
 			 label replace

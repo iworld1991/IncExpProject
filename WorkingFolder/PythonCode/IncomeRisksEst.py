@@ -27,7 +27,7 @@ import copy as cp
 
 from IncomeProcess import IMAProcess as ima
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## debugging test of the data 
 
 t = 66
@@ -42,8 +42,8 @@ sigmas = np.array([p_sigmas_draw,
                    t_sigmas])
 
 dt = ima(t = t,
-                ma_coeffs = ma_nosa,
-                sigmas = sigmas)
+         ma_coeffs = ma_nosa,
+         sigmas = sigmas)
 sim_data = dt.SimulateSeries(n_sim = 5000)
 sim_moms = dt.SimulatedMoments()
 
@@ -126,7 +126,7 @@ plt.legend(loc=1)
 
 # ### Estimation
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## some fake data moments with alternative parameters
 
 pt_ratio_fake = 0.6
@@ -135,8 +135,8 @@ sigmas = np.array([p_sigmas_draw,
                    t_sigmas])
 
 dt_fake = ima(t = t,
-                     ma_coeffs = ma_nosa,
-                     sigmas = sigmas)
+              ma_coeffs = ma_nosa,
+              sigmas = sigmas)
 data_fake = dt_fake.SimulateSeries(n_sim = 5000)
 moms_fake = dt_fake.SimulatedMoments()
 # -
@@ -148,15 +148,15 @@ moms_fake = dt_fake.SimulatedMoments()
 
 dt_est = cp.deepcopy(dt)
 dt_est.GetDataMoments(moms_fake)
-# -
 
+para_guess_this = np.ones(2*t  + dt_est.ma_q)  # make sure the length of the parameters are right 
+
+# + {"code_folding": [0]}
 para_est = dt_est.EstimatePara(method='CG',
-                              para_guess = (np.array([1]),
-                                            np.ones([2,t])
-                                           ))
+                              para_guess = para_guess_this)
 
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## check the estimation and true parameters 
 
 fig = plt.figure(figsize=([10,4]))
@@ -177,7 +177,11 @@ plt.legend(loc=0)
 # #### Estimation using simulated moments 
 # -
 
-para_est_sim = dt_est.EstimateParabySim()
+para_guess_this2 = para_guess_this*0.3
+para_est_sim = dt_est.EstimateParabySim(method='Powell',
+                                        para_guess = para_guess_this2,
+                                        options={'disp':True,
+                                                'ftol': 0.000000001})
 
 # + {"code_folding": [0]}
 ## check the estimation and true parameters
@@ -186,14 +190,14 @@ fig = plt.figure(figsize=([10,4]))
 
 plt.subplot(1,2,1)
 plt.title('Permanent Risk')
-plt.plot(dt_est.para_est_sim[1][0].T**2,'r-',label='Estimation(sim)')
-plt.plot(dt_fake.sigmas[0]**2,'-*',label='Truth')
+plt.plot(dt_est.para_est_sim[1][0][1:].T**2,'r-',label='Estimation(sim)')
+plt.plot(dt_fake.sigmas[0][1:]**2,'-*',label='Truth')
 
 
 plt.subplot(1,2,2)
 plt.title('Transitory Risk')
-plt.plot(dt_est.para_est_sim[1][1].T**2,'r-',label='Estimation(sim)')
-plt.plot(dt_fake.sigmas[1]**2,'-*',label='Truth')
+plt.plot(dt_est.para_est_sim[1][1][1:].T**2,'r-',label='Estimation(sim)')
+plt.plot(dt_fake.sigmas[1][1:]**2,'-*',label='Truth')
 plt.legend(loc=0)
 
 # + {"code_folding": [0]}
@@ -203,10 +207,13 @@ n_loop = 10
 
 para_est_sum_sim = (np.array([0]),np.zeros([2,50]))
 for i in range(n_loop):
-    para_est_this_time = abs(dt_est.EstimateParabySim(method='CG'))
-    para_est_sum_sim = para_est_sum_sim + para_est_this_time
-    
-para_est_av = para_est_sum_sim/n_loop
+    para_est_this_time = dt_est.EstimateParabySim(method='Powell',
+                                                     para_guess = para_guess_this2,
+                                                     options = {'disp': True,
+                                                               'ftol': 0.0000001})
+# -
+
+para_est_av = sum([abs(para_est_sum_sim[2*i+1]) for i in range(1,n_loop+1)] )/n_loop
 
 # + {"code_folding": [0]}
 ## check the estimation and true parameters
@@ -215,14 +222,14 @@ fig = plt.figure(figsize=([14,4]))
 
 plt.subplot(1,2,1)
 plt.title('Permanent Risk')
-plt.plot(para_est_av[1][0].T**2,'r-',label='Estimation(sim)')
-plt.plot(dt_fake.sigmas[0]**2,'-*',label='Truth')
+plt.plot(para_est_av[0][1:].T**2,'r-',label='Estimation(sim)')
+plt.plot(dt_fake.sigmas[0][1:]**2,'-*',label='Truth')
 
 
 plt.subplot(1,2,2)
 plt.title('Transitory Risk')
-plt.plot(para_est_av[1][1].T**2,'r-',label='Estimation(sim)')
-plt.plot(dt_fake.sigmas[1]**2,'-*',label='Truth')
+plt.plot(para_est_av[1][1:].T**2,'r-',label='Estimation(sim)')
+plt.plot(dt_fake.sigmas[1][1:]**2,'-*',label='Truth')
 plt.legend(loc=0)
 # -
 

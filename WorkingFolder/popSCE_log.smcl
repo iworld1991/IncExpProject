@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/popSCE_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}27 Sep 2019, 10:20:37
+ {txt}opened on:  {res}29 Oct 2019, 00:55:31
 {txt}
 {com}. 
 . 
@@ -45,7 +45,7 @@
 . **  Collapse to Population Series **
 . ************************************
 . 
-. collapse (median)  Q24_mean Q24_var Q24_iqr, by(year month date) 
+. collapse (median)  Q24_mean Q24_var Q24_iqr IncMean IncVar, by(year month date) 
 {txt}
 {com}. order date year month
 {txt}
@@ -145,7 +145,7 @@ linewidth,  default attributes used)
       {txt}name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/popSCE_log.smcl
   {txt}log type:  {res}smcl
- {txt}closed on:  {res}27 Sep 2019, 10:20:44
+ {txt}closed on:  {res}29 Oct 2019, 00:55:40
 {txt}{.-}
 {smcl}
 {txt}{sf}{ul off}

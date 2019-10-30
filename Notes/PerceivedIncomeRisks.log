@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  27 SEP 2019 11:13
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  29 OCT 2019 13:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -189,24 +189,126 @@ Package: subcaption 2018/05/01 v1.1-162 Sub-captions (AR)
 \c@subfigure=\count101
 \c@subtable=\count102
 )
+(/usr/local/texlive/2019/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2018/04/16 v5.8 Page Geometry
+\Gm@cnth=\count103
+\Gm@cntv=\count104
+\c@Gm@tempcnt=\count105
+\Gm@bindingoffset=\dimen116
+\Gm@wd@mp=\dimen117
+\Gm@odd@mp=\dimen118
+\Gm@even@mp=\dimen119
+\Gm@layoutwidth=\dimen120
+\Gm@layoutheight=\dimen121
+\Gm@layouthoffset=\dimen122
+\Gm@layoutvoffset=\dimen123
+\Gm@dimlist=\toks15
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/adjustbox/adjustbox.sty
+Package: adjustbox 2019/01/04 v1.2 Adjusting TeX boxes (trim, clip, ...)
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2014/12/03 v2.7a package option processing (HA)
+
+(/usr/local/texlive/2019/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/local/texlive/2019/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+\XKV@toks=\toks16
+\XKV@tempa@toks=\toks17
+)
+\XKV@depth=\count106
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+))
+(/usr/local/texlive/2019/texmf-dist/tex/latex/adjustbox/adjcalc.sty
+Package: adjcalc 2012/05/16 v1.1 Provides advanced setlength with multiple back
+-ends (calc, etex, pgfmath)
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/adjustbox/trimclip.sty
+Package: trimclip 2018/04/08 v1.1 Trim and clip general TeX material
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/collectbox/collectbox.sty
+Package: collectbox 2012/05/17 v0.4b Collect macro arguments as boxes
+\collectedbox=\box27
+)
+\tc@llx=\dimen124
+\tc@lly=\dimen125
+\tc@urx=\dimen126
+\tc@ury=\dimen127
+Package trimclip Info: Using driver 'tc-pdftex.def'.
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/adjustbox/tc-pdftex.def
+File: tc-pdftex.def 2019/01/04 v2.2 Clipping driver for pdftex
+))
+\adjbox@Width=\dimen128
+\adjbox@Height=\dimen129
+\adjbox@Depth=\dimen130
+\adjbox@Totalheight=\dimen131
+\adjbox@pwidth=\dimen132
+\adjbox@pheight=\dimen133
+\adjbox@pdepth=\dimen134
+\adjbox@ptotalheight=\dimen135
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/ifoddpage/ifoddpage.sty
+Package: ifoddpage 2016/04/23 v1.1 Conditionals for odd/even page detection
+\c@checkoddpage=\count107
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/varwidth/varwidth.sty
+Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
+\@vwid@box=\box28
+\sift@deathcycles=\count108
+\@vwid@loff=\dimen136
+\@vwid@roff=\dimen137
+))
+(/usr/local/texlive/2019/texmf-dist/tex/latex/tools/tabularx.sty
+Package: tabularx 2016/02/03 v2.11b `tabularx' package (DPC)
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/tools/array.sty
+Package: array 2018/12/30 v2.4k Tabular extension package (FMi)
+\col@sep=\dimen138
+\ar@mcellbox=\box29
+\extrarowheight=\dimen139
+\NC@list=\toks18
+\extratabsurround=\skip46
+\backup@length=\skip47
+\ar@cellbox=\box30
+)
+\TX@col@width=\dimen140
+\TX@old@table=\dimen141
+\TX@old@col=\dimen142
+\TX@target=\dimen143
+\TX@delta=\dimen144
+\TX@cols=\count109
+\TX@ftn=\toks19
+)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/rotating.sty
+Package: rotating 2016/08/11 v2.16d rotated objects in LaTeX
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\c@r@tfl@t=\count110
+\rotFPtop=\skip48
+\rotFPbot=\skip49
+\rot@float@box=\box31
+\rot@mess@toks=\toks20
+)
 (./PerceivedIncomeRisks.aux)
 \openout1 = `PerceivedIncomeRisks.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-\AtBeginShipoutBox=\box27
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+\AtBeginShipoutBox=\box32
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/color.sty
 Package: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
@@ -216,7 +318,7 @@ File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package color Info: Driver file: pdftex.def on input line 147.
 )
-Package hyperref Info: Link coloring ON on input line 19.
+Package hyperref Info: Link coloring ON on input line 26.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -224,11 +326,11 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 (/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count103
+\c@section@level=\count111
 )
-LaTeX Info: Redefining \ref on input line 19.
-LaTeX Info: Redefining \pageref on input line 19.
-LaTeX Info: Redefining \nameref on input line 19.
+LaTeX Info: Redefining \ref on input line 26.
+LaTeX Info: Redefining \pageref on input line 26.
+LaTeX Info: Redefining \nameref on input line 26.
 
 (./PerceivedIncomeRisks.out) (./PerceivedIncomeRisks.out)
 \@outlinefile=\write3
@@ -237,17 +339,17 @@ LaTeX Info: Redefining \nameref on input line 19.
 
 (/usr/local/texlive/2019/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count104
-\scratchdimen=\dimen116
-\scratchbox=\box28
-\nofMPsegments=\count105
-\nofMParguments=\count106
-\everyMPshowfont=\toks15
-\MPscratchCnt=\count107
-\MPscratchDim=\dimen117
-\MPnumerator=\count108
-\makeMPintoPDFobject=\count109
-\everyMPtoPDFconversion=\toks16
+\scratchcounter=\count112
+\scratchdimen=\dimen145
+\scratchbox=\box33
+\nofMPsegments=\count113
+\nofMParguments=\count114
+\everyMPshowfont=\toks21
+\MPscratchCnt=\count115
+\MPscratchDim=\dimen146
+\MPnumerator=\count116
+\makeMPintoPDFobject=\count117
+\everyMPtoPDFconversion=\toks22
 ) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -266,96 +368,154 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: rotating package is loaded.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 22.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 22.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 22.
 
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* bindingoffset: 14.45377pt
+* modes: 
+* h-part:(L,W,R)=(65.04256pt, 452.969pt, 65.04256pt)
+* v-part:(T,H,B)=(86.72377pt, 671.5993pt, 86.72377pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=452.969pt
+* \textheight=671.5993pt
+* \oddsidemargin=7.22633pt
+* \evensidemargin=-7.22743pt
+* \topmargin=-22.54622pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=18.06749pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 29.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 29.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 29.
 
 Package natbib Warning: Citation `rozsypal2017overpersistence' on page 1 undefi
-ned on input line 35.
+ned on input line 42.
 
-[1
-
-{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (2.4729pt too wide) in paragraph at lines 39--40
-[]\OT1/cmr/m/n/10 Third, the lit-er-a-ture that de-velped un-der the stan-dard 
-on-con-sump-tion/saving
- []
-
-<figures/median_mean.png, id=32, 585.18625pt x 425.59pt>
+<figures/median_mean.png, id=17, 585.18625pt x 425.59pt>
 File: figures/median_mean.png Graphic file (type png)
 <use figures/median_mean.png>
-Package pdftex.def Info: figures/median_mean.png  used on input line 51.
-(pdftex.def)             Requested size: 103.50105pt x 75.27162pt.
-<figures/median_var.png, id=34, 585.18625pt x 425.59pt>
+Package pdftex.def Info: figures/median_mean.png  used on input line 58.
+(pdftex.def)             Requested size: 135.89207pt x 98.83176pt.
+<figures/median_var.png, id=19, 585.18625pt x 425.59pt>
 File: figures/median_var.png Graphic file (type png)
 <use figures/median_var.png>
-Package pdftex.def Info: figures/median_var.png  used on input line 52.
-(pdftex.def)             Requested size: 103.50105pt x 75.27162pt.
-<figures/median_iqr.png, id=35, 585.18625pt x 425.59pt>
+Package pdftex.def Info: figures/median_var.png  used on input line 59.
+(pdftex.def)             Requested size: 135.89207pt x 98.83176pt.
+<figures/median_iqr.png, id=20, 585.18625pt x 425.59pt>
 File: figures/median_iqr.png Graphic file (type png)
 <use figures/median_iqr.png>
-Package pdftex.def Info: figures/median_iqr.png  used on input line 53.
-(pdftex.def)             Requested size: 103.50105pt x 75.27162pt.
-<figures/hist_mean.png, id=37, 585.18625pt x 425.59pt>
+Package pdftex.def Info: figures/median_iqr.png  used on input line 60.
+(pdftex.def)             Requested size: 135.89207pt x 98.83176pt.
+<figures/hist_mean.png, id=22, 585.18625pt x 425.59pt>
 File: figures/hist_mean.png Graphic file (type png)
 <use figures/hist_mean.png>
-Package pdftex.def Info: figures/hist_mean.png  used on input line 69.
-(pdftex.def)             Requested size: 103.50105pt x 75.27162pt.
-<figures/hist_var.png, id=38, 585.18625pt x 425.59pt>
+Package pdftex.def Info: figures/hist_mean.png  used on input line 76.
+(pdftex.def)             Requested size: 135.89207pt x 98.83176pt.
+<figures/hist_var.png, id=23, 585.18625pt x 425.59pt>
 File: figures/hist_var.png Graphic file (type png)
 <use figures/hist_var.png>
-Package pdftex.def Info: figures/hist_var.png  used on input line 70.
-(pdftex.def)             Requested size: 103.50105pt x 75.27162pt.
-<figures/hist_iqr.png, id=39, 585.18625pt x 425.59pt>
+Package pdftex.def Info: figures/hist_var.png  used on input line 77.
+(pdftex.def)             Requested size: 135.89207pt x 98.83176pt.
+<figures/hist_iqr.png, id=24, 585.18625pt x 425.59pt>
 File: figures/hist_iqr.png Graphic file (type png)
 <use figures/hist_iqr.png>
-Package pdftex.def Info: figures/hist_iqr.png  used on input line 71.
-(pdftex.def)             Requested size: 103.50105pt x 75.27162pt.
-<figures/hist_var_age_g.png, id=41, 585.18625pt x 425.59pt>
+Package pdftex.def Info: figures/hist_iqr.png  used on input line 78.
+(pdftex.def)             Requested size: 135.89207pt x 98.83176pt.
+<figures/hist_IncMean.png, id=25, 585.18625pt x 425.59pt>
+File: figures/hist_IncMean.png Graphic file (type png)
+<use figures/hist_IncMean.png>
+Package pdftex.def Info: figures/hist_IncMean.png  used on input line 79.
+(pdftex.def)             Requested size: 135.89207pt x 98.83176pt.
+<figures/hist_IncVar.png, id=26, 585.18625pt x 425.59pt>
+File: figures/hist_IncVar.png Graphic file (type png)
+<use figures/hist_IncVar.png>
+Package pdftex.def Info: figures/hist_IncVar.png  used on input line 80.
+(pdftex.def)             Requested size: 135.89207pt x 98.83176pt.
+<figures/hist_var_age_g.png, id=28, 585.18625pt x 425.59pt>
 File: figures/hist_var_age_g.png Graphic file (type png)
 <use figures/hist_var_age_g.png>
-Package pdftex.def Info: figures/hist_var_age_g.png  used on input line 85.
-(pdftex.def)             Requested size: 103.50105pt x 75.27162pt.
-<figures/hist_var_edu_g.png, id=42, 585.18625pt x 425.59pt>
+Package pdftex.def Info: figures/hist_var_age_g.png  used on input line 94.
+(pdftex.def)             Requested size: 135.89207pt x 98.83176pt.
+<figures/hist_var_edu_g.png, id=29, 585.18625pt x 425.59pt>
 File: figures/hist_var_edu_g.png Graphic file (type png)
 <use figures/hist_var_edu_g.png>
-Package pdftex.def Info: figures/hist_var_edu_g.png  used on input line 86.
-(pdftex.def)             Requested size: 103.50105pt x 75.27162pt.
-<figures/hist_var_inc_g.png, id=43, 585.18625pt x 425.59pt>
+Package pdftex.def Info: figures/hist_var_edu_g.png  used on input line 95.
+(pdftex.def)             Requested size: 135.89207pt x 98.83176pt.
+<figures/hist_var_inc_g.png, id=30, 585.18625pt x 425.59pt>
 File: figures/hist_var_inc_g.png Graphic file (type png)
 <use figures/hist_var_inc_g.png>
-Package pdftex.def Info: figures/hist_var_inc_g.png  used on input line 87.
-(pdftex.def)             Requested size: 103.50105pt x 75.27162pt.
-(./PerceivedIncomeRisks.bbl [2 <./figures/median_mean.png> <./figures/median_va
-r.png> <./figures/median_iqr.png> <./figures/hist_mean.png> <./figures/hist_var
-.png> <./figures/hist_iqr.png>])
+Package pdftex.def Info: figures/hist_var_inc_g.png  used on input line 96.
+(pdftex.def)             Requested size: 135.89207pt x 98.83176pt.
+<figures/hist_Inc_Var_age_g.png, id=31, 585.18625pt x 425.59pt>
+File: figures/hist_Inc_Var_age_g.png Graphic file (type png)
+<use figures/hist_Inc_Var_age_g.png>
+Package pdftex.def Info: figures/hist_Inc_Var_age_g.png  used on input line 97.
+
+(pdftex.def)             Requested size: 135.89207pt x 98.83176pt.
+<figures/hist_Inc_Var_edu_g.png, id=32, 585.18625pt x 425.59pt>
+File: figures/hist_Inc_Var_edu_g.png Graphic file (type png)
+<use figures/hist_Inc_Var_edu_g.png>
+Package pdftex.def Info: figures/hist_Inc_Var_edu_g.png  used on input line 98.
+
+(pdftex.def)             Requested size: 135.89207pt x 98.83176pt.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 109.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 109.
+(./PerceivedIncomeRisks.bbl [1
+
+{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}])
 
 Package natbib Warning: There were undefined citations.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 97.
-[3 <./figures/hist_var_age_g.png> <./figures/hist_var_edu_g.png> <./figures/his
-t_var_inc_g.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 97.
- (./PerceivedIncomeRisks.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 97.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 97.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 150.
+[2 <./figures/median_mean.png> <./figures/median_var.png> <./figures/median_iqr
+.png> <./figures/hist_mean.png> <./figures/hist_var.png> <./figures/hist_iqr.pn
+g> <./figures/hist_IncMean.png> <./figures/hist_IncVar.png>] [3 <./figures/hist
+_var_age_g.png> <./figures/hist_var_edu_g.png> <./figures/hist_var_inc_g.png> <
+./figures/hist_Inc_Var_age_g.png> <./figures/hist_Inc_Var_edu_g.png>] [4]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 150.
+
+(./PerceivedIncomeRisks.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 150.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 150.
 Package rerunfilecheck Info: File `PerceivedIncomeRisks.out' has not changed.
 (rerunfilecheck)             Checksum: 7881770BB092422ACFDFBB5EC45368E1;96.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 97.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 150.
  ) 
 Here is how much of TeX's memory you used:
- 6546 strings out of 492616
- 100965 string characters out of 6129482
- 191616 words of memory out of 5000000
- 10412 multiletter control sequences out of 15000+600000
+ 8226 strings out of 492616
+ 127614 string characters out of 6129482
+ 238456 words of memory out of 5000000
+ 12036 multiletter control sequences out of 15000+600000
  8886 words of font info for 31 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,6n,39p,982b,419s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,10n,77p,982b,440s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></
@@ -366,10 +526,10 @@ cal/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local
 /texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/te
 xlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/tex
 live/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb>
-Output written on PerceivedIncomeRisks.pdf (3 pages, 514140 bytes).
+Output written on PerceivedIncomeRisks.pdf (4 pages, 592905 bytes).
 PDF statistics:
- 105 PDF objects out of 1000 (max. 8388607)
- 71 compressed objects within 1 object stream
- 12 named destinations out of 1000 (max. 500000)
- 62 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 119 PDF objects out of 1000 (max. 8388607)
+ 76 compressed objects within 1 object stream
+ 14 named destinations out of 1000 (max. 500000)
+ 82 words of extra memory for PDF output out of 10000 (max. 10000000)
 
