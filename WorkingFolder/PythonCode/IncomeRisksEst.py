@@ -163,20 +163,20 @@ fig = plt.figure(figsize=([10,4]))
 
 plt.subplot(1,2,1)
 plt.title('Permanent Risk')
-plt.plot(dt_est.para_est[1][0].T**2,'r-',label='Estimation')
-plt.plot(dt_fake.sigmas[0]**2,'-*',label='Truth')
+plt.plot(dt_est.para_est[1][0][1:].T**2,'r-',label='Estimation')
+plt.plot(dt_fake.sigmas[0][1:]**2,'-*',label='Truth')
 
 
 plt.subplot(1,2,2)
 plt.title('Transitory Risk')
-plt.plot(dt_est.para_est[1][1].T**2,'r-',label='Estimation')
-plt.plot(dt_fake.sigmas[1]**2,'-*',label='Truth')
+plt.plot(dt_est.para_est[1][1][1:].T**2,'r-',label='Estimation')
+plt.plot(dt_fake.sigmas[1][1:]**2,'-*',label='Truth')
 plt.legend(loc=0)
 
 # + {"code_folding": [], "cell_type": "markdown"}
 # #### Estimation using simulated moments 
-# -
 
+# + {"code_folding": [1]}
 para_guess_this2 = para_guess_this*0.3
 para_est_sim = dt_est.EstimateParabySim(method='Powell',
                                         para_guess = para_guess_this2,
@@ -200,7 +200,7 @@ plt.plot(dt_est.para_est_sim[1][1][1:].T**2,'r-',label='Estimation(sim)')
 plt.plot(dt_fake.sigmas[1][1:]**2,'-*',label='Truth')
 plt.legend(loc=0)
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ### reapeating the estimation for many times
 
 n_loop = 10
@@ -235,15 +235,21 @@ plt.legend(loc=0)
 
 # #### Estimation using time aggregated data
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## get some fake aggregated data moments
 moms_agg_fake = dt_fake.TimeAggregate()
 moms_agg_dct_fake = dt_fake.SimulateMomentsAgg()
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## estimation 
+para_guess_this3 = para_guess_this*0.5
 dt_est.GetDataMomentsAgg(moms_agg_dct_fake)
-para_est_agg = dt_est.EstimateParaAgg()
+dt_est.n_periods = 12
+para_est_agg = dt_est.EstimateParaAgg(method ='Powell',
+                                      para_guess = para_guess_this3,
+                                      options={'disp':True,
+                                              'ftol': 0.000000001}
+                                     )
 
 # + {"code_folding": [0]}
 ## check the estimation and true parameters
@@ -252,39 +258,44 @@ fig = plt.figure(figsize=([10,4]))
 
 plt.subplot(1,2,1)
 plt.title('Permanent Risk')
-plt.plot(dt_est.para_est_agg[1][0].T**2,'r-',label='Estimation(agg)')
-plt.plot(dt_fake.sigmas[0]**2,'-*',label='Truth')
+plt.plot(dt_est.para_est_agg[1][0][11:-1].T**2,'r-',label='Estimation(agg)')
+plt.plot(dt_fake.sigmas[0][11:-1]**2,'-*',label='Truth')
 
 plt.subplot(1,2,2)
 plt.title('Transitory Risk')
-plt.plot(dt_est.para_est_agg[1][1].T**2,'r-',label='Estimation(agg)')
-plt.plot(dt_fake.sigmas[1]**2,'-*',label='Truth')
+plt.plot(dt_est.para_est_agg[1][1][11:-1].T**2,'r-',label='Estimation(agg)')
+plt.plot(dt_fake.sigmas[1][11:-1]**2,'-*',label='Truth')
 plt.legend(loc=0)
 
 # + {"code_folding": [0]}
 ### reapeating the estimation for many times
 
-n_loop = 20
+n_loop = 5
 
 para_est_sum_agg = (np.array([0]),np.zeros([2,50]))
 for i in range(n_loop):
-    para_est_this_time = abs(dt_est.EstimateParaAgg(method='CG'))
+    para_est_this_time = dt_est.EstimateParaAgg(method ='Powell',
+                                      para_guess = para_guess_this3,
+                                      options={'disp':True,
+                                              'ftol': 0.000000001})
     para_est_sum_agg = para_est_sum_agg + para_est_this_time
-    
-para_est_av_agg = para_est_sum_agg/n_loop
+# -
 
-# + {"code_folding": []}
+para_est_av_agg = sum([abs(para_est_sum_agg[2*i+1]) for i in range(1,n_loop+1)] )/n_loop
+
+# + {"code_folding": [0]}
 ## check the estimation and true parameters
 
-fig = plt.figure(figsize=([10,4]))
+fig = plt.figure(figsize=([14,4]))
+
 
 plt.subplot(1,2,1)
 plt.title('Permanent Risk')
-plt.plot(para_est_av_agg[1][0].T**2,'r-',label='Estimation(agg)')
-plt.plot(dt_fake.sigmas[0]**2,'-*',label='Truth')
+plt.plot(para_est_av_agg[0][11:].T**2,'r-',label='Estimation(agg)')
+plt.plot(dt_fake.sigmas[0][11:]**2,'-*',label='Truth')
 
 plt.subplot(1,2,2)
 plt.title('Transitory Risk')
-plt.plot(para_est_av_agg[1][1].T**2,'r-',label='Estimation(agg)')
-plt.plot(dt_fake.sigmas[1]**2,'-*',label='Truth')
+plt.plot(para_est_av_agg[1][11:].T**2,'r-',label='Estimation(agg)')
+plt.plot(dt_fake.sigmas[1][11:]**2,'-*',label='Truth')
 plt.legend(loc=0)

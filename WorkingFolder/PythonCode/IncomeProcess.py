@@ -35,7 +35,7 @@ def toPara(vec,
     return vec[:ma_q-1], vec[ma_q:].reshape(2,t)
 
 
-# + {"code_folding": [6, 24, 28, 34, 53, 67, 76, 90, 118, 122, 126, 142, 162, 199, 225, 241, 251, 261]}
+# + {"code_folding": [1, 6, 24, 28, 34, 53, 67, 76, 90, 118, 122, 126, 142, 162, 179]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''
@@ -236,12 +236,14 @@ class IMAProcess:
         return self.para_est_sim    
     
     def ObjFuncAgg(self,
-                   para_agg,
-                   n_periods = 12):
+                   para_agg):
         data_moms_agg_dct = self.data_moms_agg_dct
         t = self.t
-        ma_coeffs,sigmas = para_agg
-        
+        ma_q = self.ma_q
+        n_periods = self.n_periods
+        ma_coeffs,sigmas = toPara(para_agg,
+                                  t,
+                                  ma_q)
         new_instance = cp.deepcopy(self)
         new_instance.t = t   
         new_instance.ma_coeffs = ma_coeffs
@@ -264,17 +266,19 @@ class IMAProcess:
     def EstimateParaAgg(self,
                         method = 'CG',
                         bounds = None,
-                        para_guess =(np.array([1]),
-                                     np.random.uniform(0,1,200).reshape(2,100)),
+                        para_guess = None,
                         options = {'disp':True}):
-        
+        t = self.t
+        ma_q = self.ma_q
         para_est_agg = minimize(self.ObjFuncAgg,
                                 x0 = para_guess,
                                 method = method,
                                 bounds = bounds,
                                 options = options)['x']
         
-        self.para_est_agg = para_est_agg
+        self.para_est_agg = toPara(para_est_agg,
+                                   t,
+                                   ma_q)
         return self.para_est_agg  
     
     def Autocovar(self,
@@ -307,16 +311,5 @@ class IMAProcess:
         self.autovar = autovar
         self.autovaragg = autovar
         return self.autovaragg 
-# + {"code_folding": []}
-#vec = IMAProcess.toVec(np.ones(2),
-#               np.ones([2,100]),
-#               t = 100,
-#               ma_q = 2)
-
-# + {"code_folding": []}
-#IMAProcess.toPara(vec,
-#       t = 100,
-#       ma_q =2)
 # -
-
 
