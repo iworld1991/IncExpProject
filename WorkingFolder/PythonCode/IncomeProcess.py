@@ -35,7 +35,7 @@ def toPara(vec,
     return vec[:ma_q-1], vec[ma_q:].reshape(2,t)
 
 
-# + {"code_folding": [1, 6, 24, 28, 34, 53, 67, 76, 90, 118, 122, 126, 142, 162, 179]}
+# + {"code_folding": [6, 24, 28, 34, 53, 67, 76, 90, 118, 122, 126, 142, 162, 179]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''

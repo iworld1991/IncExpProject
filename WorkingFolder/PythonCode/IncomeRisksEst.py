@@ -18,7 +18,7 @@
 # This noteobok contains the following
 #
 #  - Estimation functions of time-varying income risks for an integrated moving average process of income/earnings
-#  - It allows for different assumptions about expectations, ranging from rational expectation to alternative assumptions. 
+#  - It will allow for estimation jointly using data and expectation survey with alternative assumptions about expectations, ranging from rational expectation to alternative assumptions. 
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -98,7 +98,7 @@ plt.legend(loc = 0)
 
 sigma_t_est = np.array(np.sqrt(abs(autovarb1)))
 plt.plot(sigma_t_est,'r-',label=r'$\widehat \sigma_{\theta,t}$')
-plt.plot(t_sigmas[1:],'b-.',label=r'$\sigma_{\theta,t}$')
+plt.plot(t_sigmas[1:-1],'b-.',label=r'$\sigma_{\theta,t}$')  # the head and tail trimmed
 plt.legend(loc=1)
 # -
 
@@ -111,7 +111,7 @@ sim_data = dt.SimulateSeries(n_sim = 1000)
 agg_series = dt.TimeAggregate(n_periods = 3)
 agg_series_moms = dt.SimulateMomentsAgg()
 
-# + {"code_folding": [1]}
+# + {"code_folding": [0, 1]}
 ## difference times degree of time aggregation leads to different autocorrelation
 for ns in np.array([2,8]):
     an_instance = cp.deepcopy(dt)
@@ -122,17 +122,24 @@ for ns in np.array([2,8]):
     var_b1 = an_instance.AutocovarAgg(step=-1)
     plt.plot(var_b1,label=r'={}'.format(ns))
 plt.legend(loc=1)
+plt.title('1-degree autocovariance of different \n level of time aggregation')
 # -
 
 # ### Estimation
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## some fake data moments with alternative parameters
 
-pt_ratio_fake = 0.6
+## fix ratio of p and t risks
+pt_ratio_fake = 0.66
 t_sigmas = pt_ratio_fake * p_sigmas_draw # sizes of the time-varyingpermanent volatility
+
+## both p and t risks are draws
+p_sigmas_draw = np.random.uniform(0,1,t)
+t_sigmas_draw = np.random.uniform(0,1,t)
+
 sigmas = np.array([p_sigmas_draw,
-                   t_sigmas])
+                   t_sigmas_draw])
 
 dt_fake = ima(t = t,
               ma_coeffs = ma_nosa,
@@ -143,7 +150,7 @@ moms_fake = dt_fake.SimulatedMoments()
 
 # #### Estimation using computed moments 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## estimation of income risks 
 
 dt_est = cp.deepcopy(dt)
@@ -176,12 +183,17 @@ plt.legend(loc=0)
 # + {"code_folding": [], "cell_type": "markdown"}
 # #### Estimation using simulated moments 
 
-# + {"code_folding": [1]}
+# + {"code_folding": []}
 para_guess_this2 = para_guess_this*0.3
+
+bounds_this = ((0,1),) + ((0,0.5),)*(2*t)
+
 para_est_sim = dt_est.EstimateParabySim(method='Powell',
                                         para_guess = para_guess_this2,
                                         options={'disp':True,
-                                                'ftol': 0.000000001})
+                                                'xtol':0.0000000000000001,
+                                                'ftol':0.00000000000000001}
+                                       )
 
 # + {"code_folding": [0]}
 ## check the estimation and true parameters
@@ -203,14 +215,16 @@ plt.legend(loc=0)
 # + {"code_folding": []}
 ### reapeating the estimation for many times
 
-n_loop = 10
+n_loop = 5
 
 para_est_sum_sim = (np.array([0]),np.zeros([2,50]))
 for i in range(n_loop):
     para_est_this_time = dt_est.EstimateParabySim(method='Powell',
                                                      para_guess = para_guess_this2,
                                                      options = {'disp': True,
-                                                               'ftol': 0.0000001})
+                                                               'ftol': 0.00000000000000001,
+                                                               'xtol':0.000000001})
+    para_est_sum_sim  = para_est_sum_sim + para_est_this_time
 # -
 
 para_est_av = sum([abs(para_est_sum_sim[2*i+1]) for i in range(1,n_loop+1)] )/n_loop
@@ -267,7 +281,7 @@ plt.plot(dt_est.para_est_agg[1][1][11:-1].T**2,'r-',label='Estimation(agg)')
 plt.plot(dt_fake.sigmas[1][11:-1]**2,'-*',label='Truth')
 plt.legend(loc=0)
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ### reapeating the estimation for many times
 
 n_loop = 5

@@ -83,7 +83,7 @@ def GeneralizedBetaEst(bin,probs):
         return para_est   # could be 2 or 4 parameters 
 
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 def GeneralizedBetaStats(alpha,beta,lb,ub):
     """
     This function computes the moments of a generalized beta distribution, mean and variance for now. 
@@ -101,6 +101,7 @@ def GeneralizedBetaStats(alpha,beta,lb,ub):
     # lb=0 and ub=1 for a standard beta distribution
     mean = lb + (ub-lb)*alpha/(alpha+beta)
     var = (ub-lb)**2*alpha*beta/((alpha+beta)**2*(alpha+beta+1))
+    skewness = 
     return {"mean": mean,
             "variance":var}
 
