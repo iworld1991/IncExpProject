@@ -19,7 +19,6 @@ use "${folder}/SCE/IncExpSCEDstIndM",clear
 
 duplicates report year month userid
 
-
 ******************************
 *** Merge with demographics **
 *****************************
@@ -99,6 +98,7 @@ foreach gp in `group_vars' {
 table `gp', c(median Q24_var) by(year)
 }
 
+
 /*
 
 foreach mom in iqr var mean {
@@ -127,8 +127,9 @@ graph export "${sum_graph_folder}/hist/hist_`mom'_`gp'.png",as(png) replace
 }
 
 
+*/
 
-foreach mom in Mean Var{
+foreach mom in Mean Var Skew Kurt{
 
 twoway (hist Inc`mom',fcolor(ltblue) lcolor(none)), ///
 	   ytitle("") ///
@@ -138,7 +139,7 @@ graph export "${sum_graph_folder}/hist/hist_Inc`mom'.png",as(png) replace
 }
 
 foreach gp in `group_vars' {
-foreach mom in Mean Var{
+foreach mom in Mean Var Skew Kurt{
 
 twoway (hist Inc`mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
        (hist Inc`mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
@@ -152,8 +153,6 @@ graph export "${sum_graph_folder}/hist/hist_Inc_`mom'_`gp'.png",as(png) replace
 
 }
 }
-
-*/
 
 ********************
 ** Regression ******
@@ -169,7 +168,7 @@ eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id, robu
 eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${other_control}, robust 
 eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${other_control} ${macro_ex_var}, robust 
 }
-foreach mom in Mean Var{
+foreach mom in Mean Var Skew Kurt{
 eststo: reg Inc`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id, robust 
 eststo: reg Inc`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${other_control}, robust 
 eststo: reg Inc`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${other_control} ${macro_ex_var}, robust 

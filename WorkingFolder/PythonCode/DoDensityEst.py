@@ -15,7 +15,7 @@
 
 # ### Estimating Subjective Income Distribution
 #
-# - Following Manski et al.(2009)
+# - Following Manski et al. (2009)
 # - Three cases 
 #    - case 1. 3+ intervales with positive probabilities, to be fitted with a generalized beta distribution
 #    - case 2. exactly 2 adjacent intervals with positive probabilities, to be fitted with a triangle distribution 
@@ -36,7 +36,7 @@ IndSCE=pd.read_stata('../SurveyData/SCE/IncExpSCEProbIndM.dta')
 # monthly income growth 
 # -
 
-IndSCE.head()
+IndSCE.tail()
 
 ## how many observations?
 len(IndSCE)
@@ -76,7 +76,6 @@ for i in range(nobs):
     #if not np.isnan(Inc).any():
         stats_est = SynDensityStat(SCE_bins,Inc)
         if len(stats_est)>0:
-            ct = ct + 1
             IndSCE_moment_est['IncMean'][i] = stats_est['mean']
             print(stats_est['mean'])
             IndSCE_moment_est['IncVar'][i] = stats_est['variance']
@@ -86,7 +85,9 @@ for i in range(nobs):
             IndSCE_moment_est['IncKurt'][i] = stats_est['kurtosis']
             print(stats_est['kurtosis'])
     except:
+        ct = ct + 1
         pass
+print(str(ct) + ' observations are not estimated.')
 # -
 
 ### exporting moments estimates to pkl
@@ -94,16 +95,19 @@ IndSCE_est = pd.concat([IndSCE,IndSCE_moment_est], join='inner', axis=1)
 IndSCE_est.to_pickle("./IndSCEDstIndM.pkl")
 IndSCE_pk = pd.read_pickle('./IndSCEDstIndM.pkl')
 
-IndSCE_pk['IncMean']=pd.to_numeric(IndSCE_pk['IncMean'],errors='coerce')   # income growth from y-1 to y 
-IndSCE_pk['IncVar']=pd.to_numeric(IndSCE_pk['IncVar'],errors='coerce')   
-IndSCE_pk['IncSkew']=pd.to_numeric(IndSCE_pk['IncSkew'],errors='coerce')   
-IndSCE_pk['IncKurt']=pd.to_numeric(IndSCE_pk['IncKurt'],errors='coerce')   
-
-
-IndSCE_pk[bin_name_list].tail()
-
 columns_keep = ['date','year','month','userid','tenure','IncMean','IncVar','IncSkew','IncKurt']
 IndSCE_pk_new = IndSCE_pk[columns_keep]
+
+# +
+#IndSCE_pk_new.head()
+# -
+
+IndSCE_pk_new =IndSCE_pk_new.astype({'IncMean': 'float',
+                                     'IncVar': 'float',
+                                     'IncSkew':'float',
+                                     'IncKurt':'float'})
+
+## export to stata
 IndSCE_pk_new.to_stata('../SurveyData/SCE/IncExpSCEDstIndM.dta')
 
 # + {"code_folding": []}

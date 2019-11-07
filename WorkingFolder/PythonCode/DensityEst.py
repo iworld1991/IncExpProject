@@ -31,7 +31,7 @@ import pandas as pd
 
 # ### Case 1. Generalized Beta Distribution
 
-# + {"code_folding": [0, 27]}
+# + {"code_folding": []}
 def GeneralizedBetaEst(bin,probs):
     """
     This fits a histogram with positive probabilities in at least 3 bins to a generalized beta distribution.
@@ -55,40 +55,40 @@ def GeneralizedBetaEst(bin,probs):
     # n+1 bins and n probs, both are arrays
     if sum([probs[i]>0 for i in range(len(bin)-1)])<3:
         print("Warning: at least three bins with positive probs are needed")
-        para_est=[]
+        para_est = None
     if sum(probs)!=1:
         print("probs need to sum up to 1")
-        para_est=[]
+        para_est = None
     else:
         cdf = np.cumsum(probs)
-        pprob=[i for i in range(len(bin)-1) if probs[i]>0]
-        lb=bin[min(pprob)]
+        pprob = [i for i in range(len(bin)-1) if probs[i]>0]
+        lb = bin[min(pprob)]
         print("lower bound is "+str(lb))
-        ub=bin[max(pprob)+1]
+        ub = bin[max(pprob)+1]
         print("upper bound is "+str(ub))
         x0_2para = (2,1)
         x0_4para = (2,1,0,1) 
         def distance2para(paras2): # if there is no open-ended bin with positive probs 
-            a,b=paras2
-            distance= sum((beta.cdf(bin[1:],a,b,loc=lb,scale=ub-lb)-cdf)**2)
+            a,b = paras2
+            distance = sum((beta.cdf(bin[1:],a,b,loc=lb,scale=ub-lb)-cdf)**2)
             return distance
         def distance4para(paras4): # if either on the left or right side one open-ended bin is with postive probs
-            a,b,lb,ub=paras4
-            distance= sum((beta.cdf(bin[1:],a,b,loc=lb,scale=ub-lb)-cdf)**2)
+            a,b,lb,ub = paras4
+            distance = sum((beta.cdf(bin[1:],a,b,loc=lb,scale=ub-lb)-cdf)**2)
             return distance
-        if lb==bin[0] and ub==bin[-1]:
-            para_est = minimize(distance4para,x0_4para,
-                                method='CG',
-                                option={'disp':True})['x']
+        if lb == bin[0] and ub == bin[-1]:
+            para_est = minimize(distance4para,
+                                x0_4para,
+                                method='CG')['x']
         else:
-            para_est = minimize(distance2para,x0_2para,
-                                method='CG',
-                                option={'disp':True})['x']
+            para_est = minimize(distance2para,
+                                x0_2para,
+                                method='CG')['x']
         return para_est   # could be 2 or 4 parameters 
 
 
-# + {"code_folding": [0]}
-def GeneralizedBetaStats(alpha,beta,lb,ub):
+# + {"code_folding": []}
+def GeneralizedBetaStats(a,b,lb,ub):
     """
     This function computes the moments of a generalized beta distribution, mean and variance for now. 
     
@@ -98,20 +98,21 @@ def GeneralizedBetaStats(alpha,beta,lb,ub):
     
     returns
     -------
-    dict:  2 keys
+    dict:  4 keys
            mean, float 
-           variance, float 
+           variance, float
+           skewness,float
+           kurtosis,float
     """
     # lb=0 and ub=1 for a standard beta distribution
     
-    ## covert to standard beta distribution
-    mean, var, skew, kurt = beta.stats(alpha, beta, loc=lb, scale=ub-lb, moments='mvsk')
-    #mean = lb + (ub-lb)*alpha/(alpha+beta)
-    #var = (ub-lb)**2*alpha*beta/((alpha+beta)**2*(alpha+beta+1))
+    mean, var, skew, kurt = beta.stats(a, b, loc=lb, scale=ub-lb, moments='mvsk')
+    #mean = lb + (ub-lb)*a/(a+b)
+    #var = (ub-lb)**2*a*b/((a+b)**2*(a+b+1))
     return {"mean": mean,
             "variance":var,
-           'skewness':skew,
-           'kurtosis':kurt}
+            "skewness":skew,
+            "kurtosis":kurt}
 
 
 # -
@@ -138,11 +139,11 @@ def GeneralizedBetaStats(alpha,beta,lb,ub):
 # $$\implies h = \frac{2}{t+c-b}$$
 #
 
-# + {"code_folding": []}
+# + {"code_folding": [0, 22]}
 def TriangleEst(bin,probs):
     """
     The function fits histograms with exactly two adjacent 
-       bins with positive probabilitie to a triangular distribution.
+       bins of positive probabilitie to a isosceles triangular distribution.
     It genetes the bounds of the isoceles triangle distribution. 
     
     paramters
@@ -194,9 +195,9 @@ def TriangleEst(bin,probs):
                 lb=bin[pprobadj[0]+2]
                 h = 2/(ub-lb)
         else:
-            lb = []
-            ub = []
-            h = []
+            lb = None
+            ub = None
+            h = None
             print('Warning: the two intervals are not adjacent or are open-ended')
     return {'lb':lb,'ub':ub,"height":h}
 
@@ -217,7 +218,7 @@ def TriangleEst(bin,probs):
 #
 #
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 def TriangleStats(lb,ub):
     """
     parameters
@@ -245,7 +246,7 @@ def TriangleStats(lb,ub):
 
 # ### Case 3. Uniform Distribution
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 def UniformEst(bin,probs):
     """
     This function fits a histogram with only one bin of positive probability to a uniform distribution.
@@ -269,11 +270,11 @@ def UniformEst(bin,probs):
             lb = bin[pprob[0]]
             ub = bin[pprob[0]+1]
         else:
-            lb=[]
-            ub=[]
+            lb=None
+            ub=None
     else:
-        lb=[]
-        ub=[]
+        lb=None
+        ub=None
     return {"lb":lb,"ub":ub}
 
 
@@ -300,10 +301,10 @@ def UniformStats(lb,ub):
         skew = 0
         kurt = -5/6
     else:
-        mean =[]
-        var =[]
-        mean =[]
-        kurt =[]
+        mean = None
+        var = None
+        mean = None
+        kurt = None
     return {"mean":mean,
             "variance":var,
            "skewness":skew,
@@ -316,9 +317,10 @@ def UniformStats(lb,ub):
 
 # + {"code_folding": []}
 ## test 1: GenBeta Dist
-#sim_bins= np.array([0,0.2,0.32,0.5,1,1.2])
+#sim_bins= np.array([0,0.2,0.32,0.5,1,1.3])
 #sim_probs=np.array([0,0.2,0.5,0.3,0])
-#GeneralizedBetaEst(sim_bins,sim_probs)
+#sim_para = GeneralizedBetaEst(sim_bins,sim_probs)
+#GeneralizedBetaStats(sim_para[0],sim_para[1],0,1)
 
 # + {"code_folding": []}
 ## test 2: Triangle Dist
@@ -357,7 +359,7 @@ def UniformStats(lb,ub):
 #plt.hist(sim_data,density=True,label='Dist of Simulated Data')
 #plt.legend(loc=0)
 
-# + {"code_folding": [1]}
+# + {"code_folding": [0, 24]}
 ## This is the synthesized density estimation function
 def SynDensityStat(bin,probs):
     """
@@ -408,15 +410,15 @@ def SynDensityStat(bin,probs):
             print(para_est)
             return UniformStats(para_est['lb'],para_est['ub'])
         else:
-            return {"mean":[],
-                    "variance":[],
-                    "skewness":[],
-                    "kurtosis":[]}
+            return {"mean":None,
+                    "variance":None,
+                    "skewness":None,
+                    "kurtosis":None}
     else:
-        return {"mean":[],
-                "variance":[],
-                "skewness":[],
-                "kurtosis":[]}
+        return {"mean":None,
+                "variance":None,
+                "skewness":None,
+                "kurtosis":None}
 
 # + {"code_folding": []}
 ## testing the synthesized estimator function using an arbitrary example created above
