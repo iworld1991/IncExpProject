@@ -168,6 +168,26 @@ graph export "${sum_graph_folder}/hist/hist_Inc_`mom'_`gp'.png",as(png) replace
 }
 }
 
+*******************
+*** Seasonal ******
+*******************
+
+
+eststo clear
+
+foreach mom in var iqr mean{
+eststo: reg Q24_`mom' i.month, robust 
+}
+foreach mom in Mean Var Skew Kurt{
+eststo: reg Inc`mom' i.month, robust 
+}
+
+esttab using "${sum_table_folder}/month_fe.csv", ///
+             se r2 drop(_cons) ///
+			 label replace
+
+
+
 ********************
 ** Regression ******
 ********************
@@ -194,4 +214,6 @@ esttab using "${sum_table_folder}/mom_group.csv", ///
 			 label replace
 
 
+			 
+			 
 log close 

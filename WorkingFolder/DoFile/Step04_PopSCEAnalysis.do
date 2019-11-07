@@ -31,7 +31,7 @@ rename _merge hh_info_merge
 **  Collapse to Population Series **
 ************************************
 
-collapse (median)  Q24_mean Q24_var Q24_iqr IncMean IncVar, by(year month date) 
+collapse (median)  Q24_mean Q24_var Q24_iqr IncMean IncVar IncSkew IncKurt, by(year month date) 
 order date year month
 duplicates report date 
 
