@@ -99,11 +99,15 @@ def GeneralizedBetaStats(alpha,beta,lb,ub):
            variance, float 
     """
     # lb=0 and ub=1 for a standard beta distribution
-    mean = lb + (ub-lb)*alpha/(alpha+beta)
-    var = (ub-lb)**2*alpha*beta/((alpha+beta)**2*(alpha+beta+1))
-    skewness = 
+    
+    ## covert to standard beta distribution
+    mean, var, skew, kurt = beta.stats(alpha, beta, loc=lb, scale=ub-lb, moments='mvsk')
+    #mean = lb + (ub-lb)*alpha/(alpha+beta)
+    #var = (ub-lb)**2*alpha*beta/((alpha+beta)**2*(alpha+beta+1))
     return {"mean": mean,
-            "variance":var}
+            "variance":var,
+           'skewness':skew,
+           'kurtosis':kurt}
 
 
 # -
@@ -225,7 +229,12 @@ def TriangleStats(lb,ub):
     
     mean = (lb+ub)/2
     var = (lb**2+ub**2+(lb+ub)**2/4-lb*(lb+ub)/2-ub*(lb+ub)/2-lb*ub)/18
-    return {"mean":mean,"variance":var}
+    skew = 0
+    kurt = -3/5
+    return {"mean":mean,
+            "variance":var,
+            'skewness':skew,
+            'kurtosis':kurt}
 
 
 # -
@@ -284,10 +293,17 @@ def UniformStats(lb,ub):
         print("yes")
         mean = (lb+ub)/2
         var = (ub-lb)**2/12
+        skew = 0
+        kurt = -5/6
     else:
-        mean=[]
-        var=[]
-    return {"mean":mean,"variance":var}
+        mean =[]
+        var =[]
+        mean =[]
+        kurt =[]
+    return {"mean":mean,
+            "variance":var,
+           "skewness":skew,
+           "kurtosis":kurt}
 
 
 # -
@@ -358,6 +374,8 @@ def SynDensityStat(bin,probs):
     moments: dict with 2 keys (more to be added in future)
             mean: empty or float, estimated mean 
             variance:  empty or float, estimated variance 
+            skewness:  empty or float, estimated skewness 
+            kurtosis:  empty or float, estimated kurtosis
     
     """
     if sum(probs)==1:
@@ -386,13 +404,16 @@ def SynDensityStat(bin,probs):
             print(para_est)
             return UniformStats(para_est['lb'],para_est['ub'])
         else:
-            return {"mean":[],"variance":[]}
+            return {"mean":[],
+                    "variance":[],
+                    "skewness":[],
+                    "kurtosis":[]}
     else:
-        return {"mean":[],"variance":[]}
+        return {"mean":[],
+                "variance":[],
+                "skewness":[],
+                "kurtosis":[]}
 
 # + {"code_folding": []}
 ## testing the synthesized estimator function using an arbitrary example created above
 #SynDensityStat(sim_bins3,sim_probs3)['mean']
-# -
-
-
