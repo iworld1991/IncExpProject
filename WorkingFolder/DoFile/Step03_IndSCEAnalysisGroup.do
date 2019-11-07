@@ -37,9 +37,23 @@ sort ID year month
 ** Exclude extreme outliers 
 ******************************
 
-keep if Q32 < 100 & Q32 >= 10
+*keep if Q32 < 100 & Q32 >= 10
 
 drop if IncVar < 0
+
+
+*************************
+*** Exclude outliers *****
+*************************
+
+local Moments IncMean IncVar IncSkew IncKurt
+
+foreach var in `Moments'{
+      egen `var'pl=pctile(`var'),p(1)
+	  egen `var'pu=pctile(`var'),p(99)
+	  replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
+}
+
 
 *****************************
 *** generate other vars *****

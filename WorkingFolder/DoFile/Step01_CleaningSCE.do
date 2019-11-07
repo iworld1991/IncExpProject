@@ -254,8 +254,8 @@ global keeplist date year month userid tenure weight ///
 	   DHH2_1 DHH2_2 DHH2_3 DHH2_4 DHH2_5 DHH2_6 DHH2_7 DHH2_8 DHH2_9 DHH2_10 DHH2_11 DHH2_11_other D5b Q48 QRA1 QRA2 ///
 	   _AGE_CAT _NUM_CAT _REGION_CAT _COMMUTING_ZONE _EDU_CAT _HH_INC_CAT ///
 	   Q1 Q2 Q3 Q4new Q5new Q6new Q9_mean  ///
-	   Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 Q12new Q13new Q14new
-	   Q25v2 Q25v2part2 Q31v2 Q31v2part2
+	   Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 Q12new Q13new Q14new ///
+	   Q25v2 Q25v2part2 Q31v2 Q31v2part2 C1_mean C1_var 
  
 keep ${keeplist}
 
@@ -267,9 +267,9 @@ keep ${keeplist}
 local Moments Q24_mean Q24_var
 
 foreach var in `Moments'{
-      egen `var'p5=pctile(`var'),p(5)
-	  egen `var'p95=pctile(`var'),p(95)
-	  replace `var' = . if `var' <`var'p5 | (`var' >`var'p95 & `var'!=.)
+      egen `var'pl=pctile(`var'),p(5)
+	  egen `var'pu=pctile(`var'),p(95)
+	  replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
 }
 
 
@@ -357,7 +357,6 @@ label var Q24_var "Average Uncertainty of 1-yr-ahead expected income growth"
 label var Q24_iqr "Average 25/75 IQR of 1-yr-ahead expected income growth(%)"
 label var Q24_cent50 "Average Median of 1-yr-ahead expected income growth(%)"
 label var Q24_disg "Disagreements of 1-yr-ahead expected income growth"
-
 
 
 save "${folder}/SCE/IncExpSCEProbPopM",replace 
