@@ -13,7 +13,7 @@
 #     name: python3
 # ---
 
-# ### Density Estimation of Income Risks
+# ### Estimating Subjective Income Distribution
 #
 # - Following Manski et al.(2009)
 # - Three cases 
@@ -21,10 +21,10 @@
 #    - case 2. exactly 2 adjacent intervals with positive probabilities, to be fitted with a triangle distribution 
 #    - case 3. one interval only, to be fitted with a uniform distribution
 
-from scipy.stats import gamma
-from scipy.stats import beta 
+#from scipy.stats import gamma
+#from scipy.stats import beta 
 import matplotlib.pyplot as plt
-from scipy.optimize import minimize
+#from scipy.optimize import minimize
 import numpy as np
 import pandas as pd
 
@@ -54,7 +54,7 @@ nobs = len(IndSCE)
 SCE_bins = np.array([-20,-12,-8,-4,-2,0,2,4,8,12,20])
 print("There are "+str(len(SCE_bins)-1)+" bins in SCE")
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ##############################################
 ### attention: the estimation happens here!!!!!
 ###################################################
@@ -62,7 +62,7 @@ print("There are "+str(len(SCE_bins)-1)+" bins in SCE")
 
 ## creating positions 
 index  = IndSCE.index
-columns = ['IncMean','IncVar']
+columns = ['IncMean','IncVar','IncSkew','IncKurt']
 IndSCE_moment_est = pd.DataFrame(index = index,
                                  columns = columns)
 ct = 0
@@ -81,6 +81,10 @@ for i in range(nobs):
             print(stats_est['mean'])
             IndSCE_moment_est['IncVar'][i] = stats_est['variance']
             print(stats_est['variance'])
+            IndSCE_moment_est['IncSkew'][i] = stats_est['skewness']
+            print(stats_est['skewness'])
+            IndSCE_moment_est['IncKurt'][i] = stats_est['kurtosis']
+            print(stats_est['kurtosis'])
     except:
         pass
 # -
@@ -92,15 +96,17 @@ IndSCE_pk = pd.read_pickle('./IndSCEDstIndM.pkl')
 
 IndSCE_pk['IncMean']=pd.to_numeric(IndSCE_pk['IncMean'],errors='coerce')   # income growth from y-1 to y 
 IndSCE_pk['IncVar']=pd.to_numeric(IndSCE_pk['IncVar'],errors='coerce')   
+IndSCE_pk['IncSkew']=pd.to_numeric(IndSCE_pk['IncSkew'],errors='coerce')   
+IndSCE_pk['IncKurt']=pd.to_numeric(IndSCE_pk['IncKurt'],errors='coerce')   
 
 
 IndSCE_pk[bin_name_list].tail()
 
-columns_keep = ['date','year','month','userid','tenure','IncMean','IncVar']
+columns_keep = ['date','year','month','userid','tenure','IncMean','IncVar','IncSkew','IncKurt']
 IndSCE_pk_new = IndSCE_pk[columns_keep]
 IndSCE_pk_new.to_stata('../SurveyData/SCE/IncExpSCEDstIndM.dta')
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ### Robustness checks: focus on big negative mean estimates 
 sim_bins_data = SCE_bins
 print(str(sum(IndSCE_pk['IncMean']<-6))+' abnormals')

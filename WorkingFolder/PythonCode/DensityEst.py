@@ -13,10 +13,10 @@
 #     name: python3
 # ---
 
-# ### Density Estimation of Income Risks
+# ### Density Estimation of Subjective Distribution of Income Growth
 #
 # - Following Manski et al.(2009)
-# - Three cases 
+# - Depending on the locations and number of bins, there are three cases 
 #    - case 1. 3+ intervales with positive probabilities, to be fitted with a generalized beta distribution
 #    - case 2. exactly 2 adjacent intervals with positive probabilities, to be fitted with a triangle distribution 
 #    - case 3. one interval only, to be fitted with a uniform distribution
@@ -31,7 +31,7 @@ import pandas as pd
 
 # ### Case 1. Generalized Beta Distribution
 
-# + {"code_folding": [0]}
+# + {"code_folding": [0, 27]}
 def GeneralizedBetaEst(bin,probs):
     """
     This fits a histogram with positive probabilities in at least 3 bins to a generalized beta distribution.
@@ -77,9 +77,13 @@ def GeneralizedBetaEst(bin,probs):
             distance= sum((beta.cdf(bin[1:],a,b,loc=lb,scale=ub-lb)-cdf)**2)
             return distance
         if lb==bin[0] and ub==bin[-1]:
-            para_est = minimize(distance4para,x0_4para,method='CG')['x']
+            para_est = minimize(distance4para,x0_4para,
+                                method='CG',
+                                option={'disp':True})['x']
         else:
-            para_est = minimize(distance2para,x0_2para,method='CG')['x']
+            para_est = minimize(distance2para,x0_2para,
+                                method='CG',
+                                option={'disp':True})['x']
         return para_est   # could be 2 or 4 parameters 
 
 
@@ -134,7 +138,7 @@ def GeneralizedBetaStats(alpha,beta,lb,ub):
 # $$\implies h = \frac{2}{t+c-b}$$
 #
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 def TriangleEst(bin,probs):
     """
     The function fits histograms with exactly two adjacent 
@@ -213,7 +217,7 @@ def TriangleEst(bin,probs):
 #
 #
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 def TriangleStats(lb,ub):
     """
     parameters
