@@ -75,8 +75,9 @@ for i in range(nobs):
     print(Inc)
     try:
     #if not np.isnan(Inc).any():
-        stats_est = SynDensityStat(SCE_bins,Inc)
-        if len(stats_est)>0:
+        stats_est = SynDensityStat(SCE_bins,Inc)     
+        if not np.isnan(stats_est).any():
+            ct = ct+1
             IndSCE_moment_est['IncMean'][i] = stats_est['mean']
             print(stats_est['mean'])
             IndSCE_moment_est['IncVar'][i] = stats_est['variance']
@@ -86,36 +87,36 @@ for i in range(nobs):
             IndSCE_moment_est['IncKurt'][i] = stats_est['kurtosis']
             print(stats_est['kurtosis'])
     except:
-        ct = ct + 1
-        print(str(ct) + ' skipped')
         pass
-print(str(ct) + ' observations are not estimated.')
+# -
 
-# + {"code_folding": [0, 5, 23]}
+print(str(ct) + ' observations are estimated.')
+
+# + {"code_folding": []}
 ## redo the estimation for those failed the first time 
 
 ct_nan = 0
 for i in range(nobs):
     #Inc = np.flip(np.array([IndSCE.iloc[i,:]['Q24_bin'+str(n)]/100 for n in range(1,11)]))
-    if IndSCE_moment_est['IncMean'][i]== None and np.isnan(IndSCE.iloc[i,:]['Q24_bin1']) == False:
-        ct_nan = ct_nan+1
-        print(i)
-        print(Inc)
-        print(IndSCE_moment_est['IncMean'][i])
-        try:
-            stats_est = SynDensityStat(SCE_bins,Inc)
-            if len(stats_est)>0:
-                IndSCE_moment_est['IncMean'][i] = stats_est['mean']
-                print(stats_est['mean'])
-                IndSCE_moment_est['IncVar'][i] = stats_est['variance']
-                print(stats_est['variance'])
-                IndSCE_moment_est['IncSkew'][i] = stats_est['skewness']
-                print(stats_est['skewness'])
-                IndSCE_moment_est['IncKurt'][i] = stats_est['kurtosis']
-                print(stats_est['kurtosis'])
-        except:
-            pass
-    elif IndSCE_moment_est['IncMean'][i]!= None and np.isnan(IndSCE_moment_est['IncMean'][i]) and np.isnan(IndSCE.iloc[i,:]['Q24_bin1']) == False:
+    #if IndSCE_moment_est['IncMean'][i]== None and np.isnan(IndSCE.iloc[i,:]['Q24_bin1']) == False:
+    #    ct_nan = ct_nan+1
+    #    print(i)
+    #    print(Inc)
+    #    print(IndSCE_moment_est['IncMean'][i])
+    #    try:
+    #        stats_est = SynDensityStat(SCE_bins,Inc)
+    #        if len(stats_est)>0:
+    #            IndSCE_moment_est['IncMean'][i] = stats_est['mean']
+    #            print(stats_est['mean'])
+    #            IndSCE_moment_est['IncVar'][i] = stats_est['variance']
+    #            print(stats_est['variance'])
+    #            IndSCE_moment_est['IncSkew'][i] = stats_est['skewness']
+    #            print(stats_est['skewness'])
+    #            IndSCE_moment_est['IncKurt'][i] = stats_est['kurtosis']
+    #            print(stats_est['kurtosis'])
+    #    except:
+    #        pass
+    if IndSCE_moment_est['IncMean'][i]!= None and np.isnan(IndSCE_moment_est['IncMean'][i]) and np.isnan(IndSCE.iloc[i,:]['Q24_bin1']) == False:
         ct_nan = ct_nan+1
         print(i)
         print(Inc)

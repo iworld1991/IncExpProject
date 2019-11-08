@@ -26,6 +26,7 @@ duplicates report year month userid
 merge 1:1 year month userid using "${folder}/SCE/IncExpSCEProbIndM",keep(master match) 
 rename _merge hh_info_merge
 
+
 *******************************
 **  Set Panel Data Structure **
 *******************************
@@ -49,9 +50,18 @@ drop if IncVar < 0
 local Moments IncMean IncVar IncSkew IncKurt
 
 foreach var in `Moments'{
-      egen `var'pl=pctile(`var'),p(5)
-	  egen `var'pu=pctile(`var'),p(95)
+      egen `var'pl=pctile(`var'),p(10)
+	  egen `var'pu=pctile(`var'),p(90)
 	  replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
+}
+
+* other thresholds 
+
+
+foreach var in `Moments'{
+      egen `var'l_truc=pctile(`var'),p(8)
+	  egen `var'u_truc=pctile(`var'),p(92)
+	  replace `var' = . if `var' <`var'l_truc | (`var' >`var'u_truc & `var'!=.)
 }
 
 
@@ -145,13 +155,15 @@ graph export "${sum_graph_folder}/hist/hist_`mom'_`gp'.png",as(png) replace
 
 foreach mom in Mean Var Skew Kurt{
 
-twoway (hist Inc`mom',fcolor(ltblue) lcolor(none)), ///
+twoway (hist Inc`mom' if Inc`mom'<Inc`mom'u_truc & Inc`mom'>Inc`mom'l_truc, ///
+		fcolor(ltblue) lcolor(none)), ///
 	   ytitle("") ///
 	   title("`mom'")
 graph export "${sum_graph_folder}/hist/hist_Inc`mom'.png",as(png) replace  
 
 }
 
+/*
 foreach gp in `group_vars' {
 foreach mom in Mean Var Skew Kurt{
 
@@ -167,7 +179,7 @@ graph export "${sum_graph_folder}/hist/hist_Inc_`mom'_`gp'.png",as(png) replace
 
 }
 }
-
+*/
 *******************
 *** Seasonal ******
 *******************
