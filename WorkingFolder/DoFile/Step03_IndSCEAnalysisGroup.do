@@ -49,8 +49,8 @@ drop if IncVar < 0
 local Moments IncMean IncVar IncSkew IncKurt
 
 foreach var in `Moments'{
-      egen `var'pl=pctile(`var'),p(1)
-	  egen `var'pu=pctile(`var'),p(99)
+      egen `var'pl=pctile(`var'),p(5)
+	  egen `var'pu=pctile(`var'),p(95)
 	  replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
 }
 
@@ -212,7 +212,6 @@ eststo: reg Inc`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${othe
 esttab using "${sum_table_folder}/mom_group.csv", ///
              se r2 drop(0.age_g 0.edu_g 0.inc_g 0.cohort_g  *.year *state_id 1.Q33 1.Q34 _cons) ///
 			 label replace
-
 
 			 
 			 

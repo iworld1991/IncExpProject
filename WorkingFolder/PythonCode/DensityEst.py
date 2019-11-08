@@ -31,7 +31,7 @@ import pandas as pd
 
 # ### Case 1. Generalized Beta Distribution
 
-# + {"code_folding": []}
+# + {"code_folding": [21, 24]}
 def GeneralizedBetaEst(bin,probs):
     """
     This fits a histogram with positive probabilities in at least 3 bins to a generalized beta distribution.
@@ -77,24 +77,36 @@ def GeneralizedBetaEst(bin,probs):
             distance = sum((beta.cdf(bin[1:],a,b,loc=lb,scale=ub-lb)-cdf)**2)
             return distance
         if lb == bin[0] and ub == bin[-1]:
-            para_est = minimize(distance4para,
-                                x0_4para,
-                                method='CG')['x']
+            attmp = 0 
+            while attmp < 5:
+                attmp = attmp+1
+                try:
+                    para_est = minimize(distance4para,
+                                        x0_4para,
+                                        method='BFGS')['x']
+                except:
+                    continue
         else:
-            para_est = minimize(distance2para,
-                                x0_2para,
-                                method='CG')['x']
+            attmp = 0
+            while attmp < 5:
+                attmp = attmp+1
+                try:
+                    para_est = minimize(distance2para,
+                                        x0_2para,
+                                        method='BFGS')['x']
+                except:
+                    continue 
         return para_est   # could be 2 or 4 parameters 
 
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 def GeneralizedBetaStats(a,b,lb,ub):
     """
     This function computes the moments of a generalized beta distribution, mean and variance for now. 
     
     parameters
     ----------
-    alpha, beta, lb, ub: floats 
+    a, b, lb, ub: floats
     
     returns
     -------
@@ -116,6 +128,11 @@ def GeneralizedBetaStats(a,b,lb,ub):
 
 
 # -
+
+x0 = np.empty(2)
+x1 = np.array([1,2])
+x0+x1
+
 
 # ### Case 2. Isosceles Triangle distribution
 #
@@ -246,7 +263,7 @@ def TriangleStats(lb,ub):
 
 # ### Case 3. Uniform Distribution
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 def UniformEst(bin,probs):
     """
     This function fits a histogram with only one bin of positive probability to a uniform distribution.
@@ -343,7 +360,7 @@ def UniformStats(lb,ub):
 
 # + {"code_folding": []}
 ## simulate a generalized distribution
-#sim_n=1000
+#sim_n=200
 #true_alpha,true_beta,true_loc,true_scale=1.4,2.2,0,1
 #sim_data = beta.rvs(true_alpha,true_beta,loc=true_loc,scale=true_scale,size=sim_n)
 #sim_bins2=plt.hist(sim_data)[1]
