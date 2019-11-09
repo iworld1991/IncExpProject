@@ -26,7 +26,6 @@ duplicates report year month userid
 merge 1:1 year month userid using "${folder}/SCE/IncExpSCEProbIndM",keep(master match) 
 rename _merge hh_info_merge
 
-
 *******************************
 **  Set Panel Data Structure **
 *******************************
