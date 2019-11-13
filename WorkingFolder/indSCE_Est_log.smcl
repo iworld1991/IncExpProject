@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Est_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res} 9 Nov 2019, 00:48:21
+ {txt}opened on:  {res} 9 Nov 2019, 00:58:04
 {txt}
 {com}. 
 . 
@@ -39,8 +39,7 @@
 
 {com}. rename _merge hh_info_merge
 {res}{txt}
-{com}. 
-. ddd
+{com}. ddd
 {err}unrecognized command:  ddd
 {txt}{search r(199):r(199);}
 
@@ -48,39 +47,86 @@ end of do-file
 
 {search r(199):r(199);}
 
-{com}. corr InvVar Q24_var if IncSkew!=0
-{err}variable InvVar not found
+{com}. twoway (scatter IncVar Q24_var) if IncSkew!=0
+{res}
+{com}. twoway (scatter IncVar Q24_var) if IncSkew==0
+{res}
+{com}. twoway (scatter IncVar Q24_var) if IncSkew==0 & IncVar!=. & Q24_var !=.
+{res}
+{com}. clear
+
+. clear
+
+. use "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/IncExpSCEProbIndM.dta"
+
+. pwcorr Q6new IncMean IncVar
+{err}variable IncMean not found
 {txt}{search r(111):r(111);}
 
-{com}. corr IncVar Q24_var if IncSkew!=0
-{txt}(obs=20138)
+{com}. pwcorr Q6new Q24_mean Q24_var
 
-             {c |}   IncVar  Q24_var
-{hline 13}{c +}{hline 18}
-      IncVar {c |}{res}   1.0000
-     {txt}Q24_var {c |}{res}   0.4635   1.0000
+             {txt}{c |}    Q6new Q24_mean  Q24_var
+{hline 13}{c +}{hline 27}
+       Q6new {c |} {res}  1.0000 
+    {txt}Q24_mean {c |} {res}  0.0830   1.0000 
+     {txt}Q24_var {c |} {res}  0.0236   0.3372   1.0000 
 
+{com}. xtset useride date
+{err}variable useride not found
+{txt}{search r(111):r(111);}
 
-{com}. corr IncVar Q24_var if IncSkew==0
-{txt}(obs=26748)
+{com}. xtset userid date
+{res}{txt}{col 8}panel variable:  {res}userid (unbalanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2018m5, but with gaps
+{txt}{col 17}delta:  {res}1 month
 
-             {c |}   IncVar  Q24_var
-{hline 13}{c +}{hline 18}
-      IncVar {c |}{res}   1.0000
-     {txt}Q24_var {c |}{res}   0.6567   1.0000
+{com}. reg Q24_var l(1/3).Q6new
 
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   24227
+{txt}{hline 13}{char +}{hline 30}           F(  3, 24223) ={res}    7.67
+    {txt}   Model {char |} {res} 2593.53672     3  864.512241           {txt}Prob > F      = {res} 0.0000
+    {txt}Residual {char |} {res} 2730511.04 24223    112.7239           {txt}R-squared     = {res} 0.0009
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0008
+    {txt}   Total {char |} {res} 2733104.58 24226  112.816997           {txt}Root MSE      = {res} 10.617
 
-{com}. corr IncVar Q24_var if IncKurt==0
-{err}no observations
-{txt}{search r(2000):r(2000);}
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}Q6new {c |}
+{space 9}L1. {c |}{col 14}{res}{space 2} .0014429{col 26}{space 2} .0040794{col 37}{space 1}    0.35{col 46}{space 3}0.724{col 54}{space 4} -.006553{col 67}{space 3} .0094387
+{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .0044923{col 26}{space 2} .0041891{col 37}{space 1}    1.07{col 46}{space 3}0.284{col 54}{space 4}-.0037186{col 67}{space 3} .0127033
+{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .0101301{col 26}{space 2} .0040602{col 37}{space 1}    2.49{col 46}{space 3}0.013{col 54}{space 4} .0021719{col 67}{space 3} .0180884
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 4.453735{col 26}{space 2} .1659463{col 37}{space 1}   26.84{col 46}{space 3}0.000{col 54}{space 4}  4.12847{col 67}{space 3}    4.779
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg Q24_var l(1/3).Q6new i.year 
 
-{com}. corr IncVar Q24_var
-{txt}(obs=46886)
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   24227
+{txt}{hline 13}{char +}{hline 30}           F(  8, 24218) ={res}    5.42
+    {txt}   Model {char |} {res} 4883.49533     8  610.436916           {txt}Prob > F      = {res} 0.0000
+    {txt}Residual {char |} {res} 2728221.08 24218  112.652617           {txt}R-squared     = {res} 0.0018
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0015
+    {txt}   Total {char |} {res} 2733104.58 24226  112.816997           {txt}Root MSE      = {res} 10.614
 
-             {c |}   IncVar  Q24_var
-{hline 13}{c +}{hline 18}
-      IncVar {c |}{res}   1.0000
-     {txt}Q24_var {c |}{res}   0.3717   1.0000
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}Q6new {c |}
+{space 9}L1. {c |}{col 14}{res}{space 2} .0017465{col 26}{space 2} .0040806{col 37}{space 1}    0.43{col 46}{space 3}0.669{col 54}{space 4}-.0062517{col 67}{space 3} .0097447
+{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .0044709{col 26}{space 2} .0041886{col 37}{space 1}    1.07{col 46}{space 3}0.286{col 54}{space 4}-.0037391{col 67}{space 3} .0126808
+{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .0099205{col 26}{space 2} .0040597{col 37}{space 1}    2.44{col 46}{space 3}0.015{col 54}{space 4} .0019633{col 67}{space 3} .0178777
+{txt}{space 12} {c |}
+{space 8}year {c |}
+{space 7}2014  {c |}{col 14}{res}{space 2}  .483133{col 26}{space 2} .3266834{col 37}{space 1}    1.48{col 46}{space 3}0.139{col 54}{space 4}-.1571866{col 67}{space 3} 1.123453
+{txt}{space 7}2015  {c |}{col 14}{res}{space 2}-.2564106{col 26}{space 2} .3276917{col 37}{space 1}   -0.78{col 46}{space 3}0.434{col 54}{space 4}-.8987066{col 67}{space 3} .3858854
+{txt}{space 7}2016  {c |}{col 14}{res}{space 2}-.1833498{col 26}{space 2} .3265262{col 37}{space 1}   -0.56{col 46}{space 3}0.574{col 54}{space 4}-.8233614{col 67}{space 3} .4566618
+{txt}{space 7}2017  {c |}{col 14}{res}{space 2}-.2967676{col 26}{space 2} .3252022{col 37}{space 1}   -0.91{col 46}{space 3}0.361{col 54}{space 4} -.934184{col 67}{space 3} .3406488
+{txt}{space 7}2018  {c |}{col 14}{res}{space 2} .2504836{col 26}{space 2}   .37181{col 37}{space 1}    0.67{col 46}{space 3}0.501{col 54}{space 4}-.4782871{col 67}{space 3} .9792542
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 4.484977{col 26}{space 2} .3289215{col 37}{space 1}   13.64{col 46}{space 3}0.000{col 54}{space 4} 3.840271{col 67}{space 3} 5.129684
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. clear
 
-
-{com}. 
+. 
