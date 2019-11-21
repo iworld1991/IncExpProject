@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Est_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res} 9 Nov 2019, 00:58:04
+ {txt}opened on:  {res}21 Nov 2019, 16:23:16
 {txt}
 {com}. 
 . 
@@ -39,6 +39,328 @@
 
 {com}. rename _merge hh_info_merge
 {res}{txt}
+{com}. 
+. *******************************
+. **  Set Panel Data Structure **
+. *******************************
+. rename userid ID 
+{res}{txt}
+{com}. xtset ID date   /* this is not correct. ID is unique here.*/
+{res}{txt}{col 8}panel variable:  {res}ID (unbalanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 01jun2013 00:00:00 to 01may2018 00:00:00
+{col 25}but with gaps
+{txt}{col 17}delta:  {res}.001 seconds
+{txt}
+{com}. sort ID year month 
+{txt}
+{com}. 
+. *******************************
+. ** Exclude extreme outliers 
+. ******************************
+. 
+. *keep if Q32 < 100 & Q32 >= 10
+. 
+. drop if IncVar < 0
+{txt}(0 observations deleted)
+
+{com}. 
+. 
+. *************************
+. *** Exclude outliers *****
+. *************************
+. 
+. local Moments IncMean IncVar IncSkew IncKurt
+{txt}
+{com}. 
+. foreach var in `Moments'{c -(}
+{txt}  2{com}.       egen `var'pl=pctile(`var'),p(10)
+{txt}  3{com}.           egen `var'pu=pctile(`var'),p(90)
+{txt}  4{com}.           replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
+{txt}  5{com}. {c )-}
+{txt}(9972 real changes made, 9972 to missing)
+(10175 real changes made, 10175 to missing)
+(10441 real changes made, 10441 to missing)
+(21466 real changes made, 21466 to missing)
+
+{com}. 
+. * other thresholds 
+. 
+. 
+. foreach var in `Moments'{c -(}
+{txt}  2{com}.       egen `var'l_truc=pctile(`var'),p(8)
+{txt}  3{com}.           egen `var'u_truc=pctile(`var'),p(92)
+{txt}  4{com}.           replace `var' = . if `var' <`var'l_truc | (`var' >`var'u_truc & `var'!=.)
+{txt}  5{com}. {c )-}
+{txt}(3374 real changes made, 3374 to missing)
+(3747 real changes made, 3747 to missing)
+(6146 real changes made, 6146 to missing)
+(5025 real changes made, 5025 to missing)
+
+{com}. 
+. 
+. *****************************
+. *** generate other vars *****
+. *****************************
+. 
+. gen age_sq = (Q32-30)^2
+{txt}(67434 missing values generated)
+
+{com}. label var age_sq "Age-squared"
+{txt}
+{com}. 
+. encode _STATE, gen(state_id)
+{txt}
+{com}. label var state_id "state id"
+{txt}
+{com}. 
+. *****************************
+. *** generate group vars *****
+. *****************************
+. 
+. gen cohort = year-Q32
+{txt}(67434 missing values generated)
+
+{com}. label var cohort "cohort by year of birth"
+{txt}
+{com}. egen cohort_g = cut(cohort), group(3)
+{txt}(67434 missing values generated)
+
+{com}. label define cohortlb 0 "1915-1956" 1 "1957-1972" 2 "1973-2000"
+{txt}
+{com}. label value cohort_g cohortlb
+{txt}
+{com}. 
+. egen age_g = cut(Q32), group(3)  
+{txt}(67434 missing values generated)
+
+{com}. label var age_g "age group"
+{txt}
+{com}. label define agelb 0 "Young" 1 "Middle-age" 2 "Old"
+{txt}
+{com}. label value age_g agelb
+{txt}
+{com}. 
+. egen edu_g = cut(Q36), group(3) 
+{txt}(67406 missing values generated)
+
+{com}. label var edu_g "education group"
+{txt}
+{com}. label define edulb 0 "Low Education" 1 "Medium Education" 2 "High Education"
+{txt}
+{com}. label value edu_g edulb
+{txt}
+{com}. 
+. gen gender_g = Q33 
+{txt}(67408 missing values generated)
+
+{com}. label var gender_g "gender_grou"
+{txt}
+{com}. label define gdlb 0 "Male" 1 "Female" 
+{txt}
+{com}. label value gender_g gdlb
+{txt}
+{com}. 
+. egen inc_g = cut(Q47), group(3)
+{txt}(67541 missing values generated)
+
+{com}. label var inc_g "income_g"
+{txt}
+{com}. label define inclb 0 "Low income" 1 "Middle Income" 2 "High Income"
+{txt}
+{com}. label value inc_g inclb
+{txt}
+{com}. 
+. local group_vars age_g edu_g inc_g cohort_g
+{txt}
+{com}. 
+. ddd
+{err}unrecognized command:  ddd
+{txt}{search r(199):r(199);}
+
+end of do-file
+
+{search r(199):r(199);}
+
+{com}. reg Q24_var Q13new
+
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   41185
+{txt}{hline 13}{char +}{hline 30}           F(  1, 41183) ={res}  116.41
+    {txt}   Model {char |} {res} 11130.2057     1  11130.2057           {txt}Prob > F      = {res} 0.0000
+    {txt}Residual {char |} {res} 3937523.49 41183  95.6104094           {txt}R-squared     = {res} 0.0028
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0028
+    {txt}   Total {char |} {res}  3948653.7 41184  95.8783435           {txt}Root MSE      = {res} 9.7781
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 6}Q13new {c |}{col 14}{res}{space 2} .0257966{col 26}{space 2} .0023909{col 37}{space 1}   10.79{col 46}{space 3}0.000{col 54}{space 4} .0211104{col 67}{space 3} .0304828
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 4.231645{col 26}{space 2} .0595528{col 37}{space 1}   71.06{col 46}{space 3}0.000{col 54}{space 4}  4.11492{col 67}{space 3}  4.34837
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg Q24_var Q13new
+
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   41185
+{txt}{hline 13}{char +}{hline 30}           F(  1, 41183) ={res}  116.41
+    {txt}   Model {char |} {res} 11130.2057     1  11130.2057           {txt}Prob > F      = {res} 0.0000
+    {txt}Residual {char |} {res} 3937523.49 41183  95.6104094           {txt}R-squared     = {res} 0.0028
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0028
+    {txt}   Total {char |} {res}  3948653.7 41184  95.8783435           {txt}Root MSE      = {res} 9.7781
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 6}Q13new {c |}{col 14}{res}{space 2} .0257966{col 26}{space 2} .0023909{col 37}{space 1}   10.79{col 46}{space 3}0.000{col 54}{space 4} .0211104{col 67}{space 3} .0304828
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 4.231645{col 26}{space 2} .0595528{col 37}{space 1}   71.06{col 46}{space 3}0.000{col 54}{space 4}  4.11492{col 67}{space 3}  4.34837
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg Q24_var Q13n Q14new
+
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   41181
+{txt}{hline 13}{char +}{hline 30}           F(  2, 41178) ={res}   81.07
+    {txt}   Model {char |} {res} 15487.1982     2  7743.59911           {txt}Prob > F      = {res} 0.0000
+    {txt}Residual {char |} {res} 3933065.67 41178  95.5137616           {txt}R-squared     = {res} 0.0039
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0039
+    {txt}   Total {char |} {res} 3948552.87 41180  95.8852082           {txt}Root MSE      = {res} 9.7731
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 6}Q13new {c |}{col 14}{res}{space 2} .0200744{col 26}{space 2} .0025333{col 37}{space 1}    7.92{col 46}{space 3}0.000{col 54}{space 4}  .015109{col 67}{space 3} .0250399
+{txt}{space 6}Q14new {c |}{col 14}{res}{space 2} .0127189{col 26}{space 2} .0018764{col 37}{space 1}    6.78{col 46}{space 3}0.000{col 54}{space 4} .0090411{col 67}{space 3} .0163967
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 4.031691{col 26}{space 2} .0664723{col 37}{space 1}   60.65{col 46}{space 3}0.000{col 54}{space 4} 3.901404{col 67}{space 3} 4.161978
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. coujnt if Q24_var!=. & Q10_1==1
+{err}unrecognized command:  coujnt
+{txt}{search r(199):r(199);}
+
+{com}. count if Q24_var!=. & Q10_1==1
+{res}39012
+
+{com}. gen real_inc_mean = Q24_mean-Q9_mean
+{txt}(32145 missing values generated)
+
+{com}. count if real_inc_mean!=.
+{res}46919
+
+{com}. hist real_inc_mean
+{txt}(bin={res}46{txt}, start={res}-27{txt}, width={res}1.3478261{txt})
+{res}
+{com}. twoway (hist real_inc_mean) (hist Q24_mean)
+{res}
+{com}. twoway (hist real_inc_mean) (hist Q24_mean,fcolor=grey)
+{err}option {bf:fcolor} not allowed
+{txt}{search r(198):r(198);}
+
+{com}. twoway (hist real_inc_mean) (hist Q24_mean,color=grey)
+{err}option {bf:color} not allowed
+{txt}{search r(198):r(198);}
+
+{com}. twoway (hist real_inc_mean) (hist Q24_mean,color='red')
+{err}option {bf:color} not allowed
+{txt}{search r(198):r(198);}
+
+{com}. twoway (hist real_inc_mean) (hist Q24_mean,lcolor=red)
+{err}option {bf:lcolor} not allowed
+{txt}{search r(198):r(198);}
+
+{com}. twoway (hist real_inc_mean, fcolor(gs15) lcolor("")) /// 
+{err}/ / / is not a twoway plot type
+{txt}{search r(198):r(198);}
+
+{com}.        (hist Q24_mean, fcolor(ltblue) lcolor("")) ///
+{err}unrecognized command:  ( invalid command name
+{txt}{search r(199):r(199);}
+
+{com}. twoway (hist real_inc_mean, fcolor(gs15) lcolor("")) (hist Q24_mean, fcolor(ltblue) lcolor("")) 
+{res}
+{com}. twoway (hist real_inc_mean, fcolor(gs15) lcolor("")) (hist Q24_mean, fcolor(ltblue) lcolor("")), legend(label(1 "real") label(2 "nominal"))
+{res}
+{com}. twoway (hist real_inc_mean, fcolor(red) lcolor("")) (hist Q24_mean, fcolor(ltblue) lcolor("")), legend(label(1 "real") label(2 "nominal"))
+{res}
+{com}. count if real_inc_mean <0
+{res}24064
+
+{com}. count if real_inc_mean >0
+{res}51580
+
+{com}. count if Q9_var > Q24_var 
+{err}Q9_var not found
+{txt}{search r(111):r(111);}
+
+{com}. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD01666.000000"
+{txt}
+{com}. ****************************************************
+. ***   This do files cleans SCE individual density **
+. ***   forecasts and moments. It exclude the top and *
+. ***   bottom 5 percentiles of mean and uncertainty. *
+. ***   It also plots histograms of mean forecast and *
+. ***   uncertainty. **********************************
+. *****************************************************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
+{txt}
+{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/pop"
+{txt}
+{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
+{txt}
+{com}. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. 
+. use "${c -(}folder{c )-}/SCE/NYFED_SCE_2013.dta",clear
+{txt}
+{com}. append using "${c -(}folder{c )-}/SCE/NYFED_SCE_2014_2016.dta",force
+{txt}{p 0 7 2}
+(note: variable
+DHH2_11_other was str48 in the using data, but will be
+byte now)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q13new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q19 was 
+int, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q32 was 
+byte, now int to accommodate using data's values)
+{p_end}
+
+{com}. append using  "${c -(}folder{c )-}/SCE/NYFED_SCE_post2016.dta",force
+{txt}{p 0 7 2}
+(note: variable
+DHH2_11_other was str83 in the using data, but will be
+byte now)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q3 was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q32 was 
+int, now double to accommodate using data's values)
+{p_end}
+
 {com}. ddd
 {err}unrecognized command:  ddd
 {txt}{search r(199):r(199);}
@@ -47,86 +369,2636 @@ end of do-file
 
 {search r(199):r(199);}
 
-{com}. twoway (scatter IncVar Q24_var) if IncSkew!=0
-{res}
-{com}. twoway (scatter IncVar Q24_var) if IncSkew==0
-{res}
-{com}. twoway (scatter IncVar Q24_var) if IncSkew==0 & IncVar!=. & Q24_var !=.
-{res}
-{com}. clear
+{com}. count if Q32!-.
+{err}Q32! invalid name
+{txt}{search r(198):r(198);}
 
+{com}. count if Q32!=.
+{res}11630
+
+{com}. count if Q36!=.
+{res}11658
+
+{com}. count Q47!=.
+{err}varlist not allowed
+{txt}{search r(101):r(101);}
+
+{com}. count if Q47!=.
+{res}11523
+
+{com}. count if D6!-.
+{err}D6! invalid name
+{txt}{search r(198):r(198);}
+
+{com}. count if D6!=.
+{res}67901
+
+{com}. reg Q24_var D6
+
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   45291
+{txt}{hline 13}{char +}{hline 30}           F(  1, 45289) ={res} 1145.01
+    {txt}   Model {char |} {res} 920722.014     1  920722.014           {txt}Prob > F      = {res} 0.0000
+    {txt}Residual {char |} {res} 36417812.5 45289  804.120481           {txt}R-squared     = {res} 0.0247
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0246
+    {txt}   Total {char |} {res} 37338534.5 45290  824.432203           {txt}Root MSE      = {res} 28.357
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 10}D6 {c |}{col 14}{res}{space 2}-1.788694{col 26}{space 2} .0528606{col 37}{space 1}  -33.84{col 46}{space 3}0.000{col 54}{space 4}-1.892302{col 67}{space 3}-1.685087
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 22.48845{col 26}{space 2} .3951814{col 37}{space 1}   56.91{col 46}{space 3}0.000{col 54}{space 4} 21.71389{col 67}{space 3} 23.26301
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. reg Q24_var i.D6
+
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   45291
+{txt}{hline 13}{char +}{hline 30}           F( 10, 45280) ={res}  186.08
+    {txt}   Model {char |} {res} 1473854.03    10  147385.403           {txt}Prob > F      = {res} 0.0000
+    {txt}Residual {char |} {res} 35864680.5 45280  792.064498           {txt}R-squared     = {res} 0.0395
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0393
+    {txt}   Total {char |} {res} 37338534.5 45290  824.432203           {txt}Root MSE      = {res} 28.144
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 10}D6 {c |}
+{space 10}2  {c |}{col 14}{res}{space 2}-16.19133{col 26}{space 2} 1.298704{col 37}{space 1}  -12.47{col 46}{space 3}0.000{col 54}{space 4}-18.73681{col 67}{space 3}-13.64584
+{txt}{space 10}3  {c |}{col 14}{res}{space 2}-22.72074{col 26}{space 2} 1.206358{col 37}{space 1}  -18.83{col 46}{space 3}0.000{col 54}{space 4}-25.08522{col 67}{space 3}-20.35626
+{txt}{space 10}4  {c |}{col 14}{res}{space 2}-25.77494{col 26}{space 2} 1.192481{col 37}{space 1}  -21.61{col 46}{space 3}0.000{col 54}{space 4}-28.11222{col 67}{space 3}-23.43766
+{txt}{space 10}5  {c |}{col 14}{res}{space 2}-29.37578{col 26}{space 2} 1.183543{col 37}{space 1}  -24.82{col 46}{space 3}0.000{col 54}{space 4}-31.69554{col 67}{space 3}-27.05601
+{txt}{space 10}6  {c |}{col 14}{res}{space 2}-30.35018{col 26}{space 2} 1.181354{col 37}{space 1}  -25.69{col 46}{space 3}0.000{col 54}{space 4}-32.66565{col 67}{space 3}-28.03471
+{txt}{space 10}7  {c |}{col 14}{res}{space 2}-32.95396{col 26}{space 2}  1.15257{col 37}{space 1}  -28.59{col 46}{space 3}0.000{col 54}{space 4}-35.21302{col 67}{space 3}-30.69491
+{txt}{space 10}8  {c |}{col 14}{res}{space 2}-33.63434{col 26}{space 2} 1.140334{col 37}{space 1}  -29.50{col 46}{space 3}0.000{col 54}{space 4}-35.86941{col 67}{space 3}-31.39926
+{txt}{space 10}9  {c |}{col 14}{res}{space 2}-34.08589{col 26}{space 2} 1.134869{col 37}{space 1}  -30.04{col 46}{space 3}0.000{col 54}{space 4}-36.31025{col 67}{space 3}-31.86153
+{txt}{space 9}10  {c |}{col 14}{res}{space 2}-33.91836{col 26}{space 2} 1.187074{col 37}{space 1}  -28.57{col 46}{space 3}0.000{col 54}{space 4}-36.24505{col 67}{space 3}-31.59168
+{txt}{space 9}11  {c |}{col 14}{res}{space 2}-30.70343{col 26}{space 2} 1.203958{col 37}{space 1}  -25.50{col 46}{space 3}0.000{col 54}{space 4}-33.06321{col 67}{space 3}-28.34366
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 40.25497{col 26}{space 2} 1.093008{col 37}{space 1}   36.83{col 46}{space 3}0.000{col 54}{space 4} 38.11266{col 67}{space 3} 42.39729
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. count if Q33!=.
+{res}11656
+
+{com}. hist D6
+{txt}(bin={res}48{txt}, start={res}1{txt}, width={res}.20833333{txt})
+{res}
+{com}. corr Q24_var Q9_var
+{txt}(obs=52005)
+
+             {c |}  Q24_var   Q9_var
+{hline 13}{c +}{hline 18}
+     Q24_var {c |}{res}   1.0000
+      {txt}Q9_var {c |}{res}   0.6132   1.0000
+
+
+{com}. gen real_inc_var = Q24_var+Q9_var 
+{txt}(27059 missing values generated)
+
+{com}. count if real_inc_var!=.
+{res}52005
+
+{com}. twoway (hist real_inc_var, fcolor(red) lcolor("")) (hist Q24_var, fcolor(ltblue) lcolor("")), legend(label(1 "real") label(2 "nominal"))
+{res}
+{com}. hist real_inc_var
+{txt}(bin={res}47{txt}, start={res}.34635848{txt}, width={res}18.858174{txt})
+{res}
+{com}. do "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/DoFile/Step01_CleaningSCE.do"
+{txt}
+{com}. ****************************************************
+. ***   This do files cleans SCE individual density **
+. ***   forecasts and moments. It exclude the top and *
+. ***   bottom 5 percentiles of mean and uncertainty. *
+. ***   It also plots histograms of mean forecast and *
+. ***   uncertainty. **********************************
+. *****************************************************
+. 
+. 
 . clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
+{txt}
+{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/pop"
+{txt}
+{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
+{txt}
+{com}. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. 
+. use "${c -(}folder{c )-}/SCE/NYFED_SCE_2013.dta",clear
+{txt}
+{com}. append using "${c -(}folder{c )-}/SCE/NYFED_SCE_2014_2016.dta",force
+{txt}{p 0 7 2}
+(note: variable
+DHH2_11_other was str48 in the using data, but will be
+byte now)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q13new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q19 was 
+int, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q32 was 
+byte, now int to accommodate using data's values)
+{p_end}
 
-. use "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/IncExpSCEProbIndM.dta"
+{com}. append using  "${c -(}folder{c )-}/SCE/NYFED_SCE_post2016.dta",force
+{txt}{p 0 7 2}
+(note: variable
+DHH2_11_other was str83 in the using data, but will be
+byte now)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q3 was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q32 was 
+int, now double to accommodate using data's values)
+{p_end}
 
-. pwcorr Q6new IncMean IncVar
-{err}variable IncMean not found
-{txt}{search r(111):r(111);}
-
-{com}. pwcorr Q6new Q24_mean Q24_var
-
-             {txt}{c |}    Q6new Q24_mean  Q24_var
-{hline 13}{c +}{hline 27}
-       Q6new {c |} {res}  1.0000 
-    {txt}Q24_mean {c |} {res}  0.0830   1.0000 
-     {txt}Q24_var {c |} {res}  0.0236   0.3372   1.0000 
-
-{com}. xtset useride date
-{err}variable useride not found
-{txt}{search r(111):r(111);}
-
+{com}. 
+. 
+. sort date
+{txt}
+{com}. unique userid
+{txt}Number of unique values of userid is  {res}11664
+{txt}Number of records is  {res}79064
+{txt}
+{com}. 
+. ********************
+. *** Date format ****
+. ********************
+. gen date_str = string(date)
+{txt}
+{com}. gen year = substr(date_str,1,4)
+{txt}
+{com}. gen month = substr(date_str,5,2)
+{txt}
+{com}. gen date2=year+"m"+month
+{txt}
+{com}. gen date3= monthly(date2,"YM")
+{txt}
+{com}. format date3 %tm
+{txt}
+{com}. drop date_str date2 date
+{txt}
+{com}. rename date3 date
+{res}{txt}
+{com}. destring year, replace
+{txt}year has all characters numeric; {res}replaced {txt}as {res}int
+{txt}
+{com}. destring month, replace 
+{txt}month has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}
+{com}. order date year month
+{txt}
 {com}. xtset userid date
 {res}{txt}{col 8}panel variable:  {res}userid (unbalanced)
 {txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2018m5, but with gaps
 {txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. **********************
+. ** Label variables ***
+. **********************
+. 
+. label var Q1 "finance better or worse(5 vals) from y-1 to y"
+{txt}
+{com}. label var Q2 "finance better or worse(5 vals) from y to y+1"
+{txt}
+{com}. label var Q3 "chance of moving (%)"
+{txt}
+{com}. label var Q4new "chance of UE higher from y to y+1(0-1)"
+{txt}
+{com}. label var Q5new "chance of saving interest rate higher from y to y+1(%)"
+{txt}
+{com}. label var Q6new "chance of stock market up from y to y+1(%)"
+{txt}
+{com}. label var Q8v2 "inflation or deflation from y to y+1 (1/0)"
+{txt}
+{com}. label var Q8v2part2 "inflation(or deflation) from y to y+1 (%) "
+{txt}
+{com}. label var Q9_cent25 "25 percentile of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_cent50 "50 percentile of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_cent75 "75 percentile of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_var "var of inflation from y to y+1"
+{txt}
+{com}. label var Q9_iqr "25/75 inter-quantile range of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_mean "mean of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_probdeflation "prob of deflation from y to y+1 (0-1)"
+{txt}
+{com}. label var Q9_bin1 "density: >12% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin2 "density: 8%-12% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin3 "density: 4%-8% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin4 "density: 2%-4% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin5 "density: 0%-2% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin6 "density: -2%-0% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin7 "density: -4%- -2% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin8 "density: -8%--4% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin9 "density: -12%- -8% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin10 "density: <-12% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9bv2 "inflation or deflation from y+1 to y+2 (1/0)"
+{txt}
+{com}. label var Q9bv2part2 "inflation(or deflation) from y+1 to y+2 (%)"
+{txt}
+{com}. label var Q9c_cent25 "25 percentile of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_cent50 "50 percentile of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_cent75 "75 percentile of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_var "var of inflation from y+1 to y+2"
+{txt}
+{com}. label var Q9c_mean "mean of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_iqr "25/75 inter-quantile range of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_probdeflation "prob of deflation from y+1 to y+2 (0-1)"
+{txt}
+{com}. label var Q9c_bin1 "density: >12% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin2 "density: 8%-12% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin3 "density: 4%-8% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin4 "density: 2%-4% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin5 "density: 0%-2% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin6 "density: -2%-0% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin7 "density: -4%- -2% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin8 "density: -8%--4% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin9 "density: -12%- -8% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin10 "density: <-12% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q10_1 "current emp situations:full-time"
+{txt}
+{com}. label var Q10_2 "current emp situations:part-time"
+{txt}
+{com}. label var Q10_3 "current emp situations: not working but wants to work"
+{txt}
+{com}. label var Q10_4 "current emp situations: temporary laid-off"
+{txt}
+{com}. label var Q10_5 "current emp situations: on sick or other leave"
+{txt}
+{com}. label var Q10_6 "current emp situations: permanently disabled/unable to work"
+{txt}
+{com}. label var Q10_7 "current emp situations: retiree or early retiree"
+{txt}
+{com}. label var Q10_8 "current emp situations: student or in training"
+{txt}
+{com}. label var Q10_9 "current emp situations: homemaker"
+{txt}
+{com}. label var Q10_10 "current emp situations: others"
+{txt}
+{com}. label var Q11 "number of jobs"
+{txt}
+{com}. label var Q12new "work for someone or self-employed(1/0)"
+{txt}
+{com}. label var ES1_1 ""
+{txt}
+{com}. label var ES1_2 ""
+{txt}
+{com}. label var ES1_3 ""
+{txt}
+{com}. label var ES1_4 ""
+{txt}
+{com}. label var ES2 ""
+{txt}
+{com}. label var ES3new ""
+{txt}
+{com}. label var ES4 ""
+{txt}
+{com}. label var ES5 ""
+{txt}
+{com}. label var Q13new "chance of losing job from y to y+1(%)"
+{txt}
+{com}. label var Q14new "chance of voluntarily leaving the job from y to y+1(%)"
+{txt}
+{com}. label var Q15 "currently looking for a job (1/0)"
+{txt}
+{com}. label var Q16 "duration of unemployment (months)"
+{txt}
+{com}. label var Q17new "chance of finding and accepting a job from y to y+1(%)"
+{txt}
+{com}. label var Q18new "chance of finding and accepting a job from m to m+3"
+{txt}
+{com}. label var Q19 "duration of out of work(%)"
+{txt}
+{com}. label var Q20new "chance of starting looking for a job from y to y+1(%)"
+{txt}
+{com}. label var Q21new "chance of starting looking for a job from m to m+3(%)"
+{txt}
+{com}. label var Q22new "chance of finding a new job if losing the current one within 3 months"
+{txt}
+{com}. label var Q23v2 "earning increase/decrease from the same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q23v2part2 "change of earning from the same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_cent25 "25 percentile of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_cent50 "50 percentile of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_cent75 "75 percentile of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_var "var of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_mean "mean of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_iqr "25/75 inter-quantile range of earning growth of same job/time/place from y to y+1(%)"
+{txt}note: label truncated to 80 characters
 
-{com}. reg Q24_var l(1/3).Q6new
+{com}. label var Q24_probdeflation "???"
+{txt}
+{com}. label var Q24_bin1 ">12% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin2 "8%-12% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin3 "4%-8% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin4 "2%-4% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin5 "0-2% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin6 "-2%-0 earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin7 "-4%- -2% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin8 "-8% - -4% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin9 "-12%- -8% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin10 "<-12% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q25v2 "increase/decrease of total household income from y to y+1(1/0)"
+{txt}
+{com}. label var Q25v2part2 "increase of total household income from y to y+1(%)"
+{txt}
+{com}. label var Q26v2 "increase/decrease of total household spending from y to y+1(1/0)"
+{txt}
+{com}. label var Q26v2part2 "increase of total household spending from y to y+1(%)"
+{txt}
+{com}. label var Q27v2 "increase/decrease of total household tax payment given the same income (1/0)"
+{txt}
+{com}. label var Q27v2part2 "increase of total household tax payment given the same income (%)"
+{txt}
+{com}. label var Q28 "easier/harder to get credit/loan from y-1 to y(1-5)"
+{txt}
+{com}. label var Q29 "easier/harder to get credit/loan from y to y+1(1-5)"
+{txt}
+{com}. label var Q30new "chance of non-payment of debt from m to m+3(%)"
+{txt}
+{com}. label var Q31v2 "increase/decrease of nationwide house price(1/0)"
+{txt}
+{com}. label var Q31v2part2 "increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_cent25 "25 percentile of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_cent50 "50 percentile of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_cent75 "75 percentile of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_var "var of increase of nationwide house price"
+{txt}
+{com}. label var C1_mean "mean of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_iqr "25/75 inter-quantile range  of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_probdeflation "??"
+{txt}
+{com}. label var C1_bin1 ">12% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin2 "8%-12% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin3 "4%-8% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin4 "2%-4% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin5 "0-2% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin6 "-2%-0% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin7 "-4%- -2% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin8 "-8%- -4% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin9 "-12%- -8% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin10 "<-12% increase in nationwide house price(%)"
+{txt}
+{com}. label var C2 "increase/decrease in nationwide house price from y+1 to y+2(1/0)"
+{txt}
+{com}. label var C2part2 "increase in nationwide house price from y+1 to y+2(%)"
+{txt}
+{com}. label var C3 "increase/decrease of U.S. gov debt from y to y+1(1/0)"
+{txt}
+{com}. label var C3part2"increase of U.S. gov debt from y to y+1(%)"
+{txt}
+{com}. label var C4_1 "increase of a gallon of gas from y to y+1(%)"
+{txt}
+{com}. label var C4_2 "increase of food price from y to y+1(%)"
+{txt}
+{com}. label var C4_3 "increase of a medical care from y to y+1(%)"
+{txt}
+{com}. label var C4_4 "increase of college education from y to y+1(%)"
+{txt}
+{com}. label var C4_5 "increase of price of renting a typical house/apt from y to y+1(%)"
+{txt}
+{com}. label var C4_6  "increase of gold price from y to y+1(%)"
+{txt}
+{com}. label var QNUM1 "num q 1: (correct if ==150)"
+{txt}
+{com}. label var QNUM2 ""
+{txt}
+{com}. label var QNUM3 ""
+{txt}
+{com}. label var QNUM5 ""
+{txt}
+{com}. label var QNUM6 ""
+{txt}
+{com}. label var QNUM8 ""
+{txt}
+{com}. label var QNUM9 ""
+{txt}
+{com}. label var Q32 "age(in years)"
+{txt}
+{com}. label var Q33 "gender"
+{txt}
+{com}. label var Q34 "hispanic/latino/spanish(1/0)"
+{txt}
+{com}. label var Q35_1 "race: white"
+{txt}
+{com}. label var Q35_2 "race: black/african american"
+{txt}
+{com}. label var Q35_3 "race: american indian/alaska native"
+{txt}
+{com}. label var Q35_4 "race: asian"
+{txt}
+{com}. label var Q35_5 "race: native hawaiian or other pacific islander"
+{txt}
+{com}. label var Q35_6 "race: other"
+{txt}
+{com}. label var Q36 "education (1-8 low to high, 9 other)"
+{txt}
+{com}. label var Q37 "months of current work"
+{txt}
+{com}. label var Q38 "living with partner/not (1/0)"
+{txt}
+{com}. label var HH2_1 "emp of partner: full-time for someone"
+{txt}
+{com}. label var HH2_2 "emp of partner: part-time for someone"
+{txt}
+{com}. label var HH2_3 "emp of partner: self-employed"
+{txt}
+{com}. label var HH2_4 "emp of partner: not working but wants to work"
+{txt}
+{com}. label var HH2_5 "emp of partner: temporary laid-off"
+{txt}
+{com}. label var HH2_6 "emp of partner: on sick or other leave"
+{txt}
+{com}. label var HH2_7 "emp of partner: permanently disabled/unable to work"
+{txt}
+{com}. label var HH2_8 "emp of partner: retiree or early retiree"
+{txt}
+{com}. label var HH2_9 "emp of partner: student or in training"
+{txt}
+{com}. label var HH2_10 "emp of partner: homemaker"
+{txt}
+{com}. label var HH2_10 "emp of partner: other"
+{txt}
+{com}. label var _STATE "state (2-digit code)"
+{txt}
+{com}. label var Q41 "years of living in the current residence"
+{txt}
+{com}. label var Q42 "years of living in the current states"
+{txt}
+{com}. label var Q43 "own/rent/other a house(1/2/3)"
+{txt}
+{com}. label var Q43a "my/spounser/both's name under which current residence is owned/rent"
+{txt}
+{com}. label var Q44 "own other homes(1/0)"
+{txt}
+{com}. label var Q45b "health condition(1-5 from good to poor)"
+{txt}
+{com}. label var Q45new_1 ""
+{txt}
+{com}. label var Q45new_2 ""
+{txt}
+{com}. label var Q45new_3 ""
+{txt}
+{com}. label var Q45new_4 ""
+{txt}
+{com}. label var Q45new_5 ""
+{txt}
+{com}. label var Q45new_6 ""
+{txt}
+{com}. label var Q45new_7 ""
+{txt}
+{com}. label var Q45new_8 ""
+{txt}
+{com}. label var Q45new_9 ""
+{txt}
+{com}. label var Q46 "financial decision making of household(1-5, together to individual)"
+{txt}
+{com}. label var Q47 "total pre-tax household income from y-1 to y(1-11, low to high)"
+{txt}
+{com}. label var D1 "same household as last year(1/0)"
+{txt}
+{com}. label var D3 "date of moving to the current residence(month/year)"
+{txt}
+{com}. label var D6 "total pre-tax household income from y-1 to y(1-11,low to high)"
+{txt}
+{com}. label var D2new_1 "memeber in the current resident:spounse/partner"
+{txt}
+{com}. label var D2new_2 "memeber in the current resident: child >25"
+{txt}
+{com}. label var D2new_3 "memeber in the current resident: child 18-24"
+{txt}
+{com}. label var D2new_4 "memeber in the current resident: child 6-17"
+{txt}
+{com}. label var D2new_5 "memeber in the current resident: child <=5 "
+{txt}
+{com}. label var D2new_6 "memeber in the current resident: own/sponse's parents"
+{txt}
+{com}. label var D2new_7 "memeber in the current resident:other relatives"
+{txt}
+{com}. label var D2new_8 "memeber in the current resident:non-relatives"
+{txt}
+{com}. label var DSAME "same job as last year in survey"
+{txt}
+{com}. label var DQ38 "living as a partner or married with some one(1/0)"
+{txt}
+{com}. label var Q48 "interesting/uninteresting of the questions in the survey(1/0)"
+{txt}
+{com}. 
+. 
+. ** Only keep useful variables so that the data file is smaller. 
+. 
+. global keeplist date year month userid tenure weight ///        
+>        Q24_cent25 Q24_cent50 Q24_cent75 Q24_var Q24_mean Q24_iqr ///
+>            Q24_bin1 Q24_bin2 Q24_bin3 Q24_bin4 Q24_bin5 Q24_bin6 Q24_bin7 Q24_bin8 Q24_bin9 Q24_bin10 ///
+>            Q32 Q33 Q34 Q35_1 Q35_2 Q35_3 Q35_4 Q35_5 Q35_6 Q36 Q37 Q38 ///
+>            HH2_1 HH2_2 HH2_3 HH2_4 HH2_5 HH2_6 HH2_7 HH2_8 HH2_9 HH2_10 HH2_11 ///
+>            _STATE Q41 Q42 Q43 Q43a Q44 Q45b ///
+>            Q45new_1 Q45new_2 Q45new_3 Q45new_4 Q45new_5 Q45new_6 Q45new_7 Q45new_8 Q45new_9 ///
+>            Q46 Q47 D1 D3 D6 D2new_1 D2new_2 D2new_3 D2new_4 D2new_5 D2new_6 D2new_7 D2new_8 D2newdk_1 DSAME DQ38 ///
+>            DHH2_1 DHH2_2 DHH2_3 DHH2_4 DHH2_5 DHH2_6 DHH2_7 DHH2_8 DHH2_9 DHH2_10 DHH2_11 DHH2_11_other D5b Q48 QRA1 QRA2 ///
+>            _AGE_CAT _NUM_CAT _REGION_CAT _COMMUTING_ZONE _EDU_CAT _HH_INC_CAT ///
+>            Q1 Q2 Q3 Q4new Q5new Q6new Q9_mean Q9_var ///
+>            Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 Q12new Q13new Q14new ///
+>            Q25v2 Q25v2part2 Q31v2 Q31v2part2 C1_mean C1_var 
+{txt}
+{com}.  
+. keep ${c -(}keeplist{c )-}
+{txt}
+{com}. 
+. 
+. *************************
+. *** Exclude outliers *****
+. *************************
+. 
+. local Moments Q24_mean Q24_var
+{txt}
+{com}. 
+. foreach var in `Moments'{c -(}
+{txt}  2{com}.       egen `var'pl=pctile(`var'),p(5)
+{txt}  3{com}.           egen `var'pu=pctile(`var'),p(95)
+{txt}  4{com}.           replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
+{txt}  5{com}. {c )-}
+{txt}(5177 real changes made, 5177 to missing)
+(5068 real changes made, 5068 to missing)
 
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   24227
-{txt}{hline 13}{char +}{hline 30}           F(  3, 24223) ={res}    7.67
-    {txt}   Model {char |} {res} 2593.53672     3  864.512241           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 2730511.04 24223    112.7239           {txt}R-squared     = {res} 0.0009
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0008
-    {txt}   Total {char |} {res} 2733104.58 24226  112.816997           {txt}Root MSE      = {res} 10.617
+{com}. 
+. 
+. 
+. *************************
+. *** Other Measures *****
+. *************************
+. 
+. 
+. egen Q24_sd = sd(Q24_mean), by(date)
+{txt}
+{com}. gen Q24_disg = Q24_sd^2
+{txt}
+{com}. label var Q24_disg "Disagreements of 1-yr-ahead expted income growth"
+{txt}
+{com}. 
+. 
+. egen Q24_rsd = sd(Q24_rmean), by(date)
+{err}Q24_rmean not found
+{txt}{search r(111):r(111);}
 
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 7}Q6new {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .0014429{col 26}{space 2} .0040794{col 37}{space 1}    0.35{col 46}{space 3}0.724{col 54}{space 4} -.006553{col 67}{space 3} .0094387
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .0044923{col 26}{space 2} .0041891{col 37}{space 1}    1.07{col 46}{space 3}0.284{col 54}{space 4}-.0037186{col 67}{space 3} .0127033
-{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .0101301{col 26}{space 2} .0040602{col 37}{space 1}    2.49{col 46}{space 3}0.013{col 54}{space 4} .0021719{col 67}{space 3} .0180884
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} 4.453735{col 26}{space 2} .1659463{col 37}{space 1}   26.84{col 46}{space 3}0.000{col 54}{space 4}  4.12847{col 67}{space 3}    4.779
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{com}. reg Q24_var l(1/3).Q6new i.year 
+end of do-file
 
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   24227
-{txt}{hline 13}{char +}{hline 30}           F(  8, 24218) ={res}    5.42
-    {txt}   Model {char |} {res} 4883.49533     8  610.436916           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 2728221.08 24218  112.652617           {txt}R-squared     = {res} 0.0018
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0015
-    {txt}   Total {char |} {res} 2733104.58 24226  112.816997           {txt}Root MSE      = {res} 10.614
+{search r(111):r(111);}
 
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 7}Q6new {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .0017465{col 26}{space 2} .0040806{col 37}{space 1}    0.43{col 46}{space 3}0.669{col 54}{space 4}-.0062517{col 67}{space 3} .0097447
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .0044709{col 26}{space 2} .0041886{col 37}{space 1}    1.07{col 46}{space 3}0.286{col 54}{space 4}-.0037391{col 67}{space 3} .0126808
-{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .0099205{col 26}{space 2} .0040597{col 37}{space 1}    2.44{col 46}{space 3}0.015{col 54}{space 4} .0019633{col 67}{space 3} .0178777
-{txt}{space 12} {c |}
-{space 8}year {c |}
-{space 7}2014  {c |}{col 14}{res}{space 2}  .483133{col 26}{space 2} .3266834{col 37}{space 1}    1.48{col 46}{space 3}0.139{col 54}{space 4}-.1571866{col 67}{space 3} 1.123453
-{txt}{space 7}2015  {c |}{col 14}{res}{space 2}-.2564106{col 26}{space 2} .3276917{col 37}{space 1}   -0.78{col 46}{space 3}0.434{col 54}{space 4}-.8987066{col 67}{space 3} .3858854
-{txt}{space 7}2016  {c |}{col 14}{res}{space 2}-.1833498{col 26}{space 2} .3265262{col 37}{space 1}   -0.56{col 46}{space 3}0.574{col 54}{space 4}-.8233614{col 67}{space 3} .4566618
-{txt}{space 7}2017  {c |}{col 14}{res}{space 2}-.2967676{col 26}{space 2} .3252022{col 37}{space 1}   -0.91{col 46}{space 3}0.361{col 54}{space 4} -.934184{col 67}{space 3} .3406488
-{txt}{space 7}2018  {c |}{col 14}{res}{space 2} .2504836{col 26}{space 2}   .37181{col 37}{space 1}    0.67{col 46}{space 3}0.501{col 54}{space 4}-.4782871{col 67}{space 3} .9792542
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} 4.484977{col 26}{space 2} .3289215{col 37}{space 1}   13.64{col 46}{space 3}0.000{col 54}{space 4} 3.840271{col 67}{space 3} 5.129684
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
+{com}. do "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/DoFile/Step01_CleaningSCE.do"
+{txt}
+{com}. ****************************************************
+. ***   This do files cleans SCE individual density **
+. ***   forecasts and moments. It exclude the top and *
+. ***   bottom 5 percentiles of mean and uncertainty. *
+. ***   It also plots histograms of mean forecast and *
+. ***   uncertainty. **********************************
+. *****************************************************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
+{txt}
+{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/pop"
+{txt}
+{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
+{txt}
+{com}. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. 
+. use "${c -(}folder{c )-}/SCE/NYFED_SCE_2013.dta",clear
+{txt}
+{com}. append using "${c -(}folder{c )-}/SCE/NYFED_SCE_2014_2016.dta",force
+{txt}{p 0 7 2}
+(note: variable
+DHH2_11_other was str48 in the using data, but will be
+byte now)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q13new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q19 was 
+int, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q32 was 
+byte, now int to accommodate using data's values)
+{p_end}
+
+{com}. append using  "${c -(}folder{c )-}/SCE/NYFED_SCE_post2016.dta",force
+{txt}{p 0 7 2}
+(note: variable
+DHH2_11_other was str83 in the using data, but will be
+byte now)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q3 was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q32 was 
+int, now double to accommodate using data's values)
+{p_end}
+
+{com}. 
+. 
+. sort date
+{txt}
+{com}. unique userid
+{txt}Number of unique values of userid is  {res}11664
+{txt}Number of records is  {res}79064
+{txt}
+{com}. 
+. ********************
+. *** Date format ****
+. ********************
+. gen date_str = string(date)
+{txt}
+{com}. gen year = substr(date_str,1,4)
+{txt}
+{com}. gen month = substr(date_str,5,2)
+{txt}
+{com}. gen date2=year+"m"+month
+{txt}
+{com}. gen date3= monthly(date2,"YM")
+{txt}
+{com}. format date3 %tm
+{txt}
+{com}. drop date_str date2 date
+{txt}
+{com}. rename date3 date
+{res}{txt}
+{com}. destring year, replace
+{txt}year has all characters numeric; {res}replaced {txt}as {res}int
+{txt}
+{com}. destring month, replace 
+{txt}month has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}
+{com}. order date year month
+{txt}
+{com}. xtset userid date
+{res}{txt}{col 8}panel variable:  {res}userid (unbalanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2018m5, but with gaps
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. **********************
+. ** Label variables ***
+. **********************
+. 
+. label var Q1 "finance better or worse(5 vals) from y-1 to y"
+{txt}
+{com}. label var Q2 "finance better or worse(5 vals) from y to y+1"
+{txt}
+{com}. label var Q3 "chance of moving (%)"
+{txt}
+{com}. label var Q4new "chance of UE higher from y to y+1(0-1)"
+{txt}
+{com}. label var Q5new "chance of saving interest rate higher from y to y+1(%)"
+{txt}
+{com}. label var Q6new "chance of stock market up from y to y+1(%)"
+{txt}
+{com}. label var Q8v2 "inflation or deflation from y to y+1 (1/0)"
+{txt}
+{com}. label var Q8v2part2 "inflation(or deflation) from y to y+1 (%) "
+{txt}
+{com}. label var Q9_cent25 "25 percentile of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_cent50 "50 percentile of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_cent75 "75 percentile of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_var "var of inflation from y to y+1"
+{txt}
+{com}. label var Q9_iqr "25/75 inter-quantile range of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_mean "mean of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_probdeflation "prob of deflation from y to y+1 (0-1)"
+{txt}
+{com}. label var Q9_bin1 "density: >12% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin2 "density: 8%-12% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin3 "density: 4%-8% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin4 "density: 2%-4% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin5 "density: 0%-2% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin6 "density: -2%-0% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin7 "density: -4%- -2% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin8 "density: -8%--4% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin9 "density: -12%- -8% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin10 "density: <-12% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9bv2 "inflation or deflation from y+1 to y+2 (1/0)"
+{txt}
+{com}. label var Q9bv2part2 "inflation(or deflation) from y+1 to y+2 (%)"
+{txt}
+{com}. label var Q9c_cent25 "25 percentile of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_cent50 "50 percentile of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_cent75 "75 percentile of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_var "var of inflation from y+1 to y+2"
+{txt}
+{com}. label var Q9c_mean "mean of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_iqr "25/75 inter-quantile range of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_probdeflation "prob of deflation from y+1 to y+2 (0-1)"
+{txt}
+{com}. label var Q9c_bin1 "density: >12% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin2 "density: 8%-12% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin3 "density: 4%-8% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin4 "density: 2%-4% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin5 "density: 0%-2% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin6 "density: -2%-0% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin7 "density: -4%- -2% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin8 "density: -8%--4% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin9 "density: -12%- -8% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin10 "density: <-12% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q10_1 "current emp situations:full-time"
+{txt}
+{com}. label var Q10_2 "current emp situations:part-time"
+{txt}
+{com}. label var Q10_3 "current emp situations: not working but wants to work"
+{txt}
+{com}. label var Q10_4 "current emp situations: temporary laid-off"
+{txt}
+{com}. label var Q10_5 "current emp situations: on sick or other leave"
+{txt}
+{com}. label var Q10_6 "current emp situations: permanently disabled/unable to work"
+{txt}
+{com}. label var Q10_7 "current emp situations: retiree or early retiree"
+{txt}
+{com}. label var Q10_8 "current emp situations: student or in training"
+{txt}
+{com}. label var Q10_9 "current emp situations: homemaker"
+{txt}
+{com}. label var Q10_10 "current emp situations: others"
+{txt}
+{com}. label var Q11 "number of jobs"
+{txt}
+{com}. label var Q12new "work for someone or self-employed(1/0)"
+{txt}
+{com}. label var ES1_1 ""
+{txt}
+{com}. label var ES1_2 ""
+{txt}
+{com}. label var ES1_3 ""
+{txt}
+{com}. label var ES1_4 ""
+{txt}
+{com}. label var ES2 ""
+{txt}
+{com}. label var ES3new ""
+{txt}
+{com}. label var ES4 ""
+{txt}
+{com}. label var ES5 ""
+{txt}
+{com}. label var Q13new "chance of losing job from y to y+1(%)"
+{txt}
+{com}. label var Q14new "chance of voluntarily leaving the job from y to y+1(%)"
+{txt}
+{com}. label var Q15 "currently looking for a job (1/0)"
+{txt}
+{com}. label var Q16 "duration of unemployment (months)"
+{txt}
+{com}. label var Q17new "chance of finding and accepting a job from y to y+1(%)"
+{txt}
+{com}. label var Q18new "chance of finding and accepting a job from m to m+3"
+{txt}
+{com}. label var Q19 "duration of out of work(%)"
+{txt}
+{com}. label var Q20new "chance of starting looking for a job from y to y+1(%)"
+{txt}
+{com}. label var Q21new "chance of starting looking for a job from m to m+3(%)"
+{txt}
+{com}. label var Q22new "chance of finding a new job if losing the current one within 3 months"
+{txt}
+{com}. label var Q23v2 "earning increase/decrease from the same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q23v2part2 "change of earning from the same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_cent25 "25 percentile of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_cent50 "50 percentile of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_cent75 "75 percentile of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_var "var of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_mean "mean of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_iqr "25/75 inter-quantile range of earning growth of same job/time/place from y to y+1(%)"
+{txt}note: label truncated to 80 characters
+
+{com}. label var Q24_probdeflation "???"
+{txt}
+{com}. label var Q24_bin1 ">12% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin2 "8%-12% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin3 "4%-8% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin4 "2%-4% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin5 "0-2% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin6 "-2%-0 earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin7 "-4%- -2% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin8 "-8% - -4% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin9 "-12%- -8% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin10 "<-12% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q25v2 "increase/decrease of total household income from y to y+1(1/0)"
+{txt}
+{com}. label var Q25v2part2 "increase of total household income from y to y+1(%)"
+{txt}
+{com}. label var Q26v2 "increase/decrease of total household spending from y to y+1(1/0)"
+{txt}
+{com}. label var Q26v2part2 "increase of total household spending from y to y+1(%)"
+{txt}
+{com}. label var Q27v2 "increase/decrease of total household tax payment given the same income (1/0)"
+{txt}
+{com}. label var Q27v2part2 "increase of total household tax payment given the same income (%)"
+{txt}
+{com}. label var Q28 "easier/harder to get credit/loan from y-1 to y(1-5)"
+{txt}
+{com}. label var Q29 "easier/harder to get credit/loan from y to y+1(1-5)"
+{txt}
+{com}. label var Q30new "chance of non-payment of debt from m to m+3(%)"
+{txt}
+{com}. label var Q31v2 "increase/decrease of nationwide house price(1/0)"
+{txt}
+{com}. label var Q31v2part2 "increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_cent25 "25 percentile of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_cent50 "50 percentile of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_cent75 "75 percentile of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_var "var of increase of nationwide house price"
+{txt}
+{com}. label var C1_mean "mean of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_iqr "25/75 inter-quantile range  of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_probdeflation "??"
+{txt}
+{com}. label var C1_bin1 ">12% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin2 "8%-12% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin3 "4%-8% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin4 "2%-4% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin5 "0-2% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin6 "-2%-0% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin7 "-4%- -2% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin8 "-8%- -4% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin9 "-12%- -8% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin10 "<-12% increase in nationwide house price(%)"
+{txt}
+{com}. label var C2 "increase/decrease in nationwide house price from y+1 to y+2(1/0)"
+{txt}
+{com}. label var C2part2 "increase in nationwide house price from y+1 to y+2(%)"
+{txt}
+{com}. label var C3 "increase/decrease of U.S. gov debt from y to y+1(1/0)"
+{txt}
+{com}. label var C3part2"increase of U.S. gov debt from y to y+1(%)"
+{txt}
+{com}. label var C4_1 "increase of a gallon of gas from y to y+1(%)"
+{txt}
+{com}. label var C4_2 "increase of food price from y to y+1(%)"
+{txt}
+{com}. label var C4_3 "increase of a medical care from y to y+1(%)"
+{txt}
+{com}. label var C4_4 "increase of college education from y to y+1(%)"
+{txt}
+{com}. label var C4_5 "increase of price of renting a typical house/apt from y to y+1(%)"
+{txt}
+{com}. label var C4_6  "increase of gold price from y to y+1(%)"
+{txt}
+{com}. label var QNUM1 "num q 1: (correct if ==150)"
+{txt}
+{com}. label var QNUM2 ""
+{txt}
+{com}. label var QNUM3 ""
+{txt}
+{com}. label var QNUM5 ""
+{txt}
+{com}. label var QNUM6 ""
+{txt}
+{com}. label var QNUM8 ""
+{txt}
+{com}. label var QNUM9 ""
+{txt}
+{com}. label var Q32 "age(in years)"
+{txt}
+{com}. label var Q33 "gender"
+{txt}
+{com}. label var Q34 "hispanic/latino/spanish(1/0)"
+{txt}
+{com}. label var Q35_1 "race: white"
+{txt}
+{com}. label var Q35_2 "race: black/african american"
+{txt}
+{com}. label var Q35_3 "race: american indian/alaska native"
+{txt}
+{com}. label var Q35_4 "race: asian"
+{txt}
+{com}. label var Q35_5 "race: native hawaiian or other pacific islander"
+{txt}
+{com}. label var Q35_6 "race: other"
+{txt}
+{com}. label var Q36 "education (1-8 low to high, 9 other)"
+{txt}
+{com}. label var Q37 "months of current work"
+{txt}
+{com}. label var Q38 "living with partner/not (1/0)"
+{txt}
+{com}. label var HH2_1 "emp of partner: full-time for someone"
+{txt}
+{com}. label var HH2_2 "emp of partner: part-time for someone"
+{txt}
+{com}. label var HH2_3 "emp of partner: self-employed"
+{txt}
+{com}. label var HH2_4 "emp of partner: not working but wants to work"
+{txt}
+{com}. label var HH2_5 "emp of partner: temporary laid-off"
+{txt}
+{com}. label var HH2_6 "emp of partner: on sick or other leave"
+{txt}
+{com}. label var HH2_7 "emp of partner: permanently disabled/unable to work"
+{txt}
+{com}. label var HH2_8 "emp of partner: retiree or early retiree"
+{txt}
+{com}. label var HH2_9 "emp of partner: student or in training"
+{txt}
+{com}. label var HH2_10 "emp of partner: homemaker"
+{txt}
+{com}. label var HH2_10 "emp of partner: other"
+{txt}
+{com}. label var _STATE "state (2-digit code)"
+{txt}
+{com}. label var Q41 "years of living in the current residence"
+{txt}
+{com}. label var Q42 "years of living in the current states"
+{txt}
+{com}. label var Q43 "own/rent/other a house(1/2/3)"
+{txt}
+{com}. label var Q43a "my/spounser/both's name under which current residence is owned/rent"
+{txt}
+{com}. label var Q44 "own other homes(1/0)"
+{txt}
+{com}. label var Q45b "health condition(1-5 from good to poor)"
+{txt}
+{com}. label var Q45new_1 ""
+{txt}
+{com}. label var Q45new_2 ""
+{txt}
+{com}. label var Q45new_3 ""
+{txt}
+{com}. label var Q45new_4 ""
+{txt}
+{com}. label var Q45new_5 ""
+{txt}
+{com}. label var Q45new_6 ""
+{txt}
+{com}. label var Q45new_7 ""
+{txt}
+{com}. label var Q45new_8 ""
+{txt}
+{com}. label var Q45new_9 ""
+{txt}
+{com}. label var Q46 "financial decision making of household(1-5, together to individual)"
+{txt}
+{com}. label var Q47 "total pre-tax household income from y-1 to y(1-11, low to high)"
+{txt}
+{com}. label var D1 "same household as last year(1/0)"
+{txt}
+{com}. label var D3 "date of moving to the current residence(month/year)"
+{txt}
+{com}. label var D6 "total pre-tax household income from y-1 to y(1-11,low to high)"
+{txt}
+{com}. label var D2new_1 "memeber in the current resident:spounse/partner"
+{txt}
+{com}. label var D2new_2 "memeber in the current resident: child >25"
+{txt}
+{com}. label var D2new_3 "memeber in the current resident: child 18-24"
+{txt}
+{com}. label var D2new_4 "memeber in the current resident: child 6-17"
+{txt}
+{com}. label var D2new_5 "memeber in the current resident: child <=5 "
+{txt}
+{com}. label var D2new_6 "memeber in the current resident: own/sponse's parents"
+{txt}
+{com}. label var D2new_7 "memeber in the current resident:other relatives"
+{txt}
+{com}. label var D2new_8 "memeber in the current resident:non-relatives"
+{txt}
+{com}. label var DSAME "same job as last year in survey"
+{txt}
+{com}. label var DQ38 "living as a partner or married with some one(1/0)"
+{txt}
+{com}. label var Q48 "interesting/uninteresting of the questions in the survey(1/0)"
+{txt}
+{com}. 
+. 
+. ** Only keep useful variables so that the data file is smaller. 
+. 
+. global keeplist date year month userid tenure weight ///        
+>        Q24_cent25 Q24_cent50 Q24_cent75 Q24_var Q24_mean Q24_iqr ///
+>            Q24_bin1 Q24_bin2 Q24_bin3 Q24_bin4 Q24_bin5 Q24_bin6 Q24_bin7 Q24_bin8 Q24_bin9 Q24_bin10 ///
+>            Q32 Q33 Q34 Q35_1 Q35_2 Q35_3 Q35_4 Q35_5 Q35_6 Q36 Q37 Q38 ///
+>            HH2_1 HH2_2 HH2_3 HH2_4 HH2_5 HH2_6 HH2_7 HH2_8 HH2_9 HH2_10 HH2_11 ///
+>            _STATE Q41 Q42 Q43 Q43a Q44 Q45b ///
+>            Q45new_1 Q45new_2 Q45new_3 Q45new_4 Q45new_5 Q45new_6 Q45new_7 Q45new_8 Q45new_9 ///
+>            Q46 Q47 D1 D3 D6 D2new_1 D2new_2 D2new_3 D2new_4 D2new_5 D2new_6 D2new_7 D2new_8 D2newdk_1 DSAME DQ38 ///
+>            DHH2_1 DHH2_2 DHH2_3 DHH2_4 DHH2_5 DHH2_6 DHH2_7 DHH2_8 DHH2_9 DHH2_10 DHH2_11 DHH2_11_other D5b Q48 QRA1 QRA2 ///
+>            _AGE_CAT _NUM_CAT _REGION_CAT _COMMUTING_ZONE _EDU_CAT _HH_INC_CAT ///
+>            Q1 Q2 Q3 Q4new Q5new Q6new Q9_mean Q9_var ///
+>            Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 Q12new Q13new Q14new ///
+>            Q25v2 Q25v2part2 Q31v2 Q31v2part2 C1_mean C1_var 
+{txt}
+{com}.  
+. keep ${c -(}keeplist{c )-}
+{txt}
+{com}. 
+. 
+. *************************
+. *** Exclude outliers *****
+. *************************
+. 
+. local Moments Q24_mean Q24_var
+{txt}
+{com}. 
+. foreach var in `Moments'{c -(}
+{txt}  2{com}.       egen `var'pl=pctile(`var'),p(5)
+{txt}  3{com}.           egen `var'pu=pctile(`var'),p(95)
+{txt}  4{com}.           replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
+{txt}  5{com}. {c )-}
+{txt}(5177 real changes made, 5177 to missing)
+(5068 real changes made, 5068 to missing)
+
+{com}. 
+. 
+. 
+. foreach var in Q24{c -(}
+{txt}  2{com}. foreach mom in mean var{c -(}
+{txt}  3{com}.     * nominal 
+.      egen `var'_`mom'p75 =pctile(`var'_`mom'),p(75) by(year month)
+{txt}  4{com}.          egen `var'_`mom'p25 =pctile(`var'_`mom'),p(25) by(year month)
+{txt}  5{com}.          egen `var'_`mom'p50 =pctile(`var'_`mom'),p(50) by(year month)
+{txt}  6{com}.          local lb: variable label `var'_`mom'
+{txt}  7{com}.          label var `var'_`mom'p75 "`lb': 75 pctile"
+{txt}  8{com}.          label var `var'_`mom'p25 "`lb': 25 pctile"
+{txt}  9{com}.          label var `var'_`mom'p50 "`lb': 50 pctile"
+{txt} 10{com}. {c )-}
+{txt} 11{com}. {c )-}
+{txt}
+{com}. 
+. 
+. *************************
+. *** Nominal to real *****
+. *************************
+. 
+. real Q24_rmean = Q24_mean - Q9_mean 
+{err}unrecognized command:  real
+{txt}{search r(199):r(199);}
+
+end of do-file
+
+{search r(199):r(199);}
+
+{com}. do "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/DoFile/Step01_CleaningSCE.do"
+{txt}
+{com}. ****************************************************
+. ***   This do files cleans SCE individual density **
+. ***   forecasts and moments. It exclude the top and *
+. ***   bottom 5 percentiles of mean and uncertainty. *
+. ***   It also plots histograms of mean forecast and *
+. ***   uncertainty. **********************************
+. *****************************************************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
+{txt}
+{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/pop"
+{txt}
+{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
+{txt}
+{com}. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. 
+. use "${c -(}folder{c )-}/SCE/NYFED_SCE_2013.dta",clear
+{txt}
+{com}. append using "${c -(}folder{c )-}/SCE/NYFED_SCE_2014_2016.dta",force
+{txt}{p 0 7 2}
+(note: variable
+DHH2_11_other was str48 in the using data, but will be
+byte now)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q13new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q19 was 
+int, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q32 was 
+byte, now int to accommodate using data's values)
+{p_end}
+
+{com}. append using  "${c -(}folder{c )-}/SCE/NYFED_SCE_post2016.dta",force
+{txt}{p 0 7 2}
+(note: variable
+DHH2_11_other was str83 in the using data, but will be
+byte now)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q3 was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q32 was 
+int, now double to accommodate using data's values)
+{p_end}
+
+{com}. 
+. 
+. sort date
+{txt}
+{com}. unique userid
+{txt}Number of unique values of userid is  {res}11664
+{txt}Number of records is  {res}79064
+{txt}
+{com}. 
+. ********************
+. *** Date format ****
+. ********************
+. gen date_str = string(date)
+{txt}
+{com}. gen year = substr(date_str,1,4)
+{txt}
+{com}. gen month = substr(date_str,5,2)
+{txt}
+{com}. gen date2=year+"m"+month
+{txt}
+{com}. gen date3= monthly(date2,"YM")
+{txt}
+{com}. format date3 %tm
+{txt}
+{com}. drop date_str date2 date
+{txt}
+{com}. rename date3 date
+{res}{txt}
+{com}. destring year, replace
+{txt}year has all characters numeric; {res}replaced {txt}as {res}int
+{txt}
+{com}. destring month, replace 
+{txt}month has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}
+{com}. order date year month
+{txt}
+{com}. xtset userid date
+{res}{txt}{col 8}panel variable:  {res}userid (unbalanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2018m5, but with gaps
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. **********************
+. ** Label variables ***
+. **********************
+. 
+. label var Q1 "finance better or worse(5 vals) from y-1 to y"
+{txt}
+{com}. label var Q2 "finance better or worse(5 vals) from y to y+1"
+{txt}
+{com}. label var Q3 "chance of moving (%)"
+{txt}
+{com}. label var Q4new "chance of UE higher from y to y+1(0-1)"
+{txt}
+{com}. label var Q5new "chance of saving interest rate higher from y to y+1(%)"
+{txt}
+{com}. label var Q6new "chance of stock market up from y to y+1(%)"
+{txt}
+{com}. label var Q8v2 "inflation or deflation from y to y+1 (1/0)"
+{txt}
+{com}. label var Q8v2part2 "inflation(or deflation) from y to y+1 (%) "
+{txt}
+{com}. label var Q9_cent25 "25 percentile of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_cent50 "50 percentile of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_cent75 "75 percentile of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_var "var of inflation from y to y+1"
+{txt}
+{com}. label var Q9_iqr "25/75 inter-quantile range of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_mean "mean of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_probdeflation "prob of deflation from y to y+1 (0-1)"
+{txt}
+{com}. label var Q9_bin1 "density: >12% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin2 "density: 8%-12% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin3 "density: 4%-8% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin4 "density: 2%-4% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin5 "density: 0%-2% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin6 "density: -2%-0% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin7 "density: -4%- -2% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin8 "density: -8%--4% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin9 "density: -12%- -8% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin10 "density: <-12% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9bv2 "inflation or deflation from y+1 to y+2 (1/0)"
+{txt}
+{com}. label var Q9bv2part2 "inflation(or deflation) from y+1 to y+2 (%)"
+{txt}
+{com}. label var Q9c_cent25 "25 percentile of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_cent50 "50 percentile of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_cent75 "75 percentile of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_var "var of inflation from y+1 to y+2"
+{txt}
+{com}. label var Q9c_mean "mean of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_iqr "25/75 inter-quantile range of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_probdeflation "prob of deflation from y+1 to y+2 (0-1)"
+{txt}
+{com}. label var Q9c_bin1 "density: >12% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin2 "density: 8%-12% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin3 "density: 4%-8% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin4 "density: 2%-4% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin5 "density: 0%-2% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin6 "density: -2%-0% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin7 "density: -4%- -2% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin8 "density: -8%--4% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin9 "density: -12%- -8% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin10 "density: <-12% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q10_1 "current emp situations:full-time"
+{txt}
+{com}. label var Q10_2 "current emp situations:part-time"
+{txt}
+{com}. label var Q10_3 "current emp situations: not working but wants to work"
+{txt}
+{com}. label var Q10_4 "current emp situations: temporary laid-off"
+{txt}
+{com}. label var Q10_5 "current emp situations: on sick or other leave"
+{txt}
+{com}. label var Q10_6 "current emp situations: permanently disabled/unable to work"
+{txt}
+{com}. label var Q10_7 "current emp situations: retiree or early retiree"
+{txt}
+{com}. label var Q10_8 "current emp situations: student or in training"
+{txt}
+{com}. label var Q10_9 "current emp situations: homemaker"
+{txt}
+{com}. label var Q10_10 "current emp situations: others"
+{txt}
+{com}. label var Q11 "number of jobs"
+{txt}
+{com}. label var Q12new "work for someone or self-employed(1/0)"
+{txt}
+{com}. label var ES1_1 ""
+{txt}
+{com}. label var ES1_2 ""
+{txt}
+{com}. label var ES1_3 ""
+{txt}
+{com}. label var ES1_4 ""
+{txt}
+{com}. label var ES2 ""
+{txt}
+{com}. label var ES3new ""
+{txt}
+{com}. label var ES4 ""
+{txt}
+{com}. label var ES5 ""
+{txt}
+{com}. label var Q13new "chance of losing job from y to y+1(%)"
+{txt}
+{com}. label var Q14new "chance of voluntarily leaving the job from y to y+1(%)"
+{txt}
+{com}. label var Q15 "currently looking for a job (1/0)"
+{txt}
+{com}. label var Q16 "duration of unemployment (months)"
+{txt}
+{com}. label var Q17new "chance of finding and accepting a job from y to y+1(%)"
+{txt}
+{com}. label var Q18new "chance of finding and accepting a job from m to m+3"
+{txt}
+{com}. label var Q19 "duration of out of work(%)"
+{txt}
+{com}. label var Q20new "chance of starting looking for a job from y to y+1(%)"
+{txt}
+{com}. label var Q21new "chance of starting looking for a job from m to m+3(%)"
+{txt}
+{com}. label var Q22new "chance of finding a new job if losing the current one within 3 months"
+{txt}
+{com}. label var Q23v2 "earning increase/decrease from the same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q23v2part2 "change of earning from the same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_cent25 "25 percentile of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_cent50 "50 percentile of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_cent75 "75 percentile of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_var "var of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_mean "mean of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_iqr "25/75 inter-quantile range of earning growth of same job/time/place from y to y+1(%)"
+{txt}note: label truncated to 80 characters
+
+{com}. label var Q24_probdeflation "???"
+{txt}
+{com}. label var Q24_bin1 ">12% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin2 "8%-12% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin3 "4%-8% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin4 "2%-4% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin5 "0-2% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin6 "-2%-0 earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin7 "-4%- -2% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin8 "-8% - -4% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin9 "-12%- -8% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin10 "<-12% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q25v2 "increase/decrease of total household income from y to y+1(1/0)"
+{txt}
+{com}. label var Q25v2part2 "increase of total household income from y to y+1(%)"
+{txt}
+{com}. label var Q26v2 "increase/decrease of total household spending from y to y+1(1/0)"
+{txt}
+{com}. label var Q26v2part2 "increase of total household spending from y to y+1(%)"
+{txt}
+{com}. label var Q27v2 "increase/decrease of total household tax payment given the same income (1/0)"
+{txt}
+{com}. label var Q27v2part2 "increase of total household tax payment given the same income (%)"
+{txt}
+{com}. label var Q28 "easier/harder to get credit/loan from y-1 to y(1-5)"
+{txt}
+{com}. label var Q29 "easier/harder to get credit/loan from y to y+1(1-5)"
+{txt}
+{com}. label var Q30new "chance of non-payment of debt from m to m+3(%)"
+{txt}
+{com}. label var Q31v2 "increase/decrease of nationwide house price(1/0)"
+{txt}
+{com}. label var Q31v2part2 "increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_cent25 "25 percentile of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_cent50 "50 percentile of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_cent75 "75 percentile of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_var "var of increase of nationwide house price"
+{txt}
+{com}. label var C1_mean "mean of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_iqr "25/75 inter-quantile range  of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_probdeflation "??"
+{txt}
+{com}. label var C1_bin1 ">12% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin2 "8%-12% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin3 "4%-8% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin4 "2%-4% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin5 "0-2% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin6 "-2%-0% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin7 "-4%- -2% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin8 "-8%- -4% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin9 "-12%- -8% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin10 "<-12% increase in nationwide house price(%)"
+{txt}
+{com}. label var C2 "increase/decrease in nationwide house price from y+1 to y+2(1/0)"
+{txt}
+{com}. label var C2part2 "increase in nationwide house price from y+1 to y+2(%)"
+{txt}
+{com}. label var C3 "increase/decrease of U.S. gov debt from y to y+1(1/0)"
+{txt}
+{com}. label var C3part2"increase of U.S. gov debt from y to y+1(%)"
+{txt}
+{com}. label var C4_1 "increase of a gallon of gas from y to y+1(%)"
+{txt}
+{com}. label var C4_2 "increase of food price from y to y+1(%)"
+{txt}
+{com}. label var C4_3 "increase of a medical care from y to y+1(%)"
+{txt}
+{com}. label var C4_4 "increase of college education from y to y+1(%)"
+{txt}
+{com}. label var C4_5 "increase of price of renting a typical house/apt from y to y+1(%)"
+{txt}
+{com}. label var C4_6  "increase of gold price from y to y+1(%)"
+{txt}
+{com}. label var QNUM1 "num q 1: (correct if ==150)"
+{txt}
+{com}. label var QNUM2 ""
+{txt}
+{com}. label var QNUM3 ""
+{txt}
+{com}. label var QNUM5 ""
+{txt}
+{com}. label var QNUM6 ""
+{txt}
+{com}. label var QNUM8 ""
+{txt}
+{com}. label var QNUM9 ""
+{txt}
+{com}. label var Q32 "age(in years)"
+{txt}
+{com}. label var Q33 "gender"
+{txt}
+{com}. label var Q34 "hispanic/latino/spanish(1/0)"
+{txt}
+{com}. label var Q35_1 "race: white"
+{txt}
+{com}. label var Q35_2 "race: black/african american"
+{txt}
+{com}. label var Q35_3 "race: american indian/alaska native"
+{txt}
+{com}. label var Q35_4 "race: asian"
+{txt}
+{com}. label var Q35_5 "race: native hawaiian or other pacific islander"
+{txt}
+{com}. label var Q35_6 "race: other"
+{txt}
+{com}. label var Q36 "education (1-8 low to high, 9 other)"
+{txt}
+{com}. label var Q37 "months of current work"
+{txt}
+{com}. label var Q38 "living with partner/not (1/0)"
+{txt}
+{com}. label var HH2_1 "emp of partner: full-time for someone"
+{txt}
+{com}. label var HH2_2 "emp of partner: part-time for someone"
+{txt}
+{com}. label var HH2_3 "emp of partner: self-employed"
+{txt}
+{com}. label var HH2_4 "emp of partner: not working but wants to work"
+{txt}
+{com}. label var HH2_5 "emp of partner: temporary laid-off"
+{txt}
+{com}. label var HH2_6 "emp of partner: on sick or other leave"
+{txt}
+{com}. label var HH2_7 "emp of partner: permanently disabled/unable to work"
+{txt}
+{com}. label var HH2_8 "emp of partner: retiree or early retiree"
+{txt}
+{com}. label var HH2_9 "emp of partner: student or in training"
+{txt}
+{com}. label var HH2_10 "emp of partner: homemaker"
+{txt}
+{com}. label var HH2_10 "emp of partner: other"
+{txt}
+{com}. label var _STATE "state (2-digit code)"
+{txt}
+{com}. label var Q41 "years of living in the current residence"
+{txt}
+{com}. label var Q42 "years of living in the current states"
+{txt}
+{com}. label var Q43 "own/rent/other a house(1/2/3)"
+{txt}
+{com}. label var Q43a "my/spounser/both's name under which current residence is owned/rent"
+{txt}
+{com}. label var Q44 "own other homes(1/0)"
+{txt}
+{com}. label var Q45b "health condition(1-5 from good to poor)"
+{txt}
+{com}. label var Q45new_1 ""
+{txt}
+{com}. label var Q45new_2 ""
+{txt}
+{com}. label var Q45new_3 ""
+{txt}
+{com}. label var Q45new_4 ""
+{txt}
+{com}. label var Q45new_5 ""
+{txt}
+{com}. label var Q45new_6 ""
+{txt}
+{com}. label var Q45new_7 ""
+{txt}
+{com}. label var Q45new_8 ""
+{txt}
+{com}. label var Q45new_9 ""
+{txt}
+{com}. label var Q46 "financial decision making of household(1-5, together to individual)"
+{txt}
+{com}. label var Q47 "total pre-tax household income from y-1 to y(1-11, low to high)"
+{txt}
+{com}. label var D1 "same household as last year(1/0)"
+{txt}
+{com}. label var D3 "date of moving to the current residence(month/year)"
+{txt}
+{com}. label var D6 "total pre-tax household income from y-1 to y(1-11,low to high)"
+{txt}
+{com}. label var D2new_1 "memeber in the current resident:spounse/partner"
+{txt}
+{com}. label var D2new_2 "memeber in the current resident: child >25"
+{txt}
+{com}. label var D2new_3 "memeber in the current resident: child 18-24"
+{txt}
+{com}. label var D2new_4 "memeber in the current resident: child 6-17"
+{txt}
+{com}. label var D2new_5 "memeber in the current resident: child <=5 "
+{txt}
+{com}. label var D2new_6 "memeber in the current resident: own/sponse's parents"
+{txt}
+{com}. label var D2new_7 "memeber in the current resident:other relatives"
+{txt}
+{com}. label var D2new_8 "memeber in the current resident:non-relatives"
+{txt}
+{com}. label var DSAME "same job as last year in survey"
+{txt}
+{com}. label var DQ38 "living as a partner or married with some one(1/0)"
+{txt}
+{com}. label var Q48 "interesting/uninteresting of the questions in the survey(1/0)"
+{txt}
+{com}. 
+. 
+. ** Only keep useful variables so that the data file is smaller. 
+. 
+. global keeplist date year month userid tenure weight ///        
+>        Q24_cent25 Q24_cent50 Q24_cent75 Q24_var Q24_mean Q24_iqr ///
+>            Q24_bin1 Q24_bin2 Q24_bin3 Q24_bin4 Q24_bin5 Q24_bin6 Q24_bin7 Q24_bin8 Q24_bin9 Q24_bin10 ///
+>            Q32 Q33 Q34 Q35_1 Q35_2 Q35_3 Q35_4 Q35_5 Q35_6 Q36 Q37 Q38 ///
+>            HH2_1 HH2_2 HH2_3 HH2_4 HH2_5 HH2_6 HH2_7 HH2_8 HH2_9 HH2_10 HH2_11 ///
+>            _STATE Q41 Q42 Q43 Q43a Q44 Q45b ///
+>            Q45new_1 Q45new_2 Q45new_3 Q45new_4 Q45new_5 Q45new_6 Q45new_7 Q45new_8 Q45new_9 ///
+>            Q46 Q47 D1 D3 D6 D2new_1 D2new_2 D2new_3 D2new_4 D2new_5 D2new_6 D2new_7 D2new_8 D2newdk_1 DSAME DQ38 ///
+>            DHH2_1 DHH2_2 DHH2_3 DHH2_4 DHH2_5 DHH2_6 DHH2_7 DHH2_8 DHH2_9 DHH2_10 DHH2_11 DHH2_11_other D5b Q48 QRA1 QRA2 ///
+>            _AGE_CAT _NUM_CAT _REGION_CAT _COMMUTING_ZONE _EDU_CAT _HH_INC_CAT ///
+>            Q1 Q2 Q3 Q4new Q5new Q6new Q9_mean Q9_var ///
+>            Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 Q12new Q13new Q14new ///
+>            Q25v2 Q25v2part2 Q31v2 Q31v2part2 C1_mean C1_var 
+{txt}
+{com}.  
+. keep ${c -(}keeplist{c )-}
+{txt}
+{com}. 
+. 
+. *************************
+. *** Exclude outliers *****
+. *************************
+. 
+. local Moments Q24_mean Q24_var
+{txt}
+{com}. 
+. foreach var in `Moments'{c -(}
+{txt}  2{com}.       egen `var'pl=pctile(`var'),p(5)
+{txt}  3{com}.           egen `var'pu=pctile(`var'),p(95)
+{txt}  4{com}.           replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
+{txt}  5{com}. {c )-}
+{txt}(5177 real changes made, 5177 to missing)
+(5068 real changes made, 5068 to missing)
+
+{com}. 
+. 
+. 
+. foreach var in Q24{c -(}
+{txt}  2{com}. foreach mom in mean var{c -(}
+{txt}  3{com}.     * nominal 
+.      egen `var'_`mom'p75 =pctile(`var'_`mom'),p(75) by(year month)
+{txt}  4{com}.          egen `var'_`mom'p25 =pctile(`var'_`mom'),p(25) by(year month)
+{txt}  5{com}.          egen `var'_`mom'p50 =pctile(`var'_`mom'),p(50) by(year month)
+{txt}  6{com}.          local lb: variable label `var'_`mom'
+{txt}  7{com}.          label var `var'_`mom'p75 "`lb': 75 pctile"
+{txt}  8{com}.          label var `var'_`mom'p25 "`lb': 25 pctile"
+{txt}  9{com}.          label var `var'_`mom'p50 "`lb': 50 pctile"
+{txt} 10{com}. {c )-}
+{txt} 11{com}. {c )-}
+{txt}
+{com}. 
+. 
+. *************************
+. *** Nominal to real *****
+. *************************
+. 
+. gen Q24_rmean = Q24_mean - Q9_mean 
+{txt}(32145 missing values generated)
+
+{com}. label var Q24_rmean "mean of real earning growth of same job/time/place from y to y+1(%) "
+{txt}
+{com}. 
+. gen Q24_rvar = Q24_var + Q9_var 
+{txt}(32081 missing values generated)
+
+{com}. label var Q24_rvar "variance of real earning growth of same job/time/place from y to y+1(%) "
+{txt}
+{com}. 
+. 
+. *************************
+. *** Other Measures *****
+. *************************
+. 
+. 
+. egen Q24_sd = sd(Q24_mean), by(date)
+{txt}
+{com}. gen Q24_disg = Q24_sd^2
+{txt}
+{com}. label var Q24_disg "Disagreements of 1-yr-ahead expted income growth"
+{txt}
+{com}. 
+. 
+. egen Q24_rsd = sd(Q24_rmean), by(date)
+{txt}
+{com}. gen Q24_rdisg = Q24_rsd^2
+{txt}
+{com}. label var Q24_rdisg "Disagreements of 1-yr-ahead real expted income growth"
+{txt}
+{com}. 
+. 
+. save "${c -(}folder{c )-}/SCE/IncExpSCEProbIndM",replace 
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData//SCE/IncExpSCEProbIndM.dta saved
+
+{com}. 
+. ***************************************
+. **   Histograms of Moments  ***********
+. ** Maybe replaced by kernel desntiy **
+. ***************************************
+. 
+. * for forecasting
+. 
+. gen SCE_mean = .
+{txt}(79064 missing values generated)
+
+{com}. gen SCE_var = .
+{txt}(79064 missing values generated)
+
+{com}. 
+. /*
+> * Kernal density plot only 
+> 
+> label var Q24_mean "1-yr-ahead forecast of income growth "
+> 
+>  foreach var in SCE{c -(}
+>  foreach mom in mean{c -(}
+>     replace `var'_`mom' = Q24_`mom'
+>         local lb: variable label Q24_`mom'
+>     twoway (kdensity `var'_`mom',lcolor(red) lwidth(thick) ), ///
+>                by(year,title("Distribution of `lb'",size(med)) note("")) xtitle("Mean forecast") ///
+>                    ytitle("Fraction of population")
+>         graph export "${c -(}sum_graph_folder{c )-}/hist/`var'`mom'_hist", as(png) replace 
+> {c )-}
+> {c )-}
+> 
+> * Kernal density plot only 
+> 
+> 
+> label var Q24_var "1-yr-ahead uncertainty of income growth"
+> 
+> foreach mom in var{c -(}
+> foreach var in SCE{c -(}
+>     replace `var'_`mom' = Q24_`mom'
+>         local lb: variable label Q24_`mom'
+>     twoway (kdensity `var'_`mom',lcolor(blue) lwidth(thick)), ///
+>                by(year,title("Distribution of `lb'",size(med)) note("")) xtitle("Uncertainty") ///
+>                    ytitle("Fraction of population")
+>         graph export "${c -(}sum_graph_folder{c )-}/hist/`var'`mom'_hist", as(png) replace 
+> {c )-}
+> {c )-}
+> 
+> */
+. 
+. *************************
+. *** Population SCE ******
+. *************************
+. 
+. local Moments Q24_mean Q24_var Q24_iqr Q24_cent50 Q24_disg 
+{txt}
+{com}. local rMoments Q24_rmean Q24_rvar Q24_rdisg 
+{txt}
+{com}. local MomentsMom Q24_meanp25 Q24_meanp50 Q24_meanp75 Q24_varp25 Q24_varp50 Q24_varp75
+{txt}
+{com}. 
+. 
+. collapse (mean) `Moments' `rMoments' `MomentsMom', by(date year month)
+{txt}
+{com}. 
+. label var Q24_mean "Average 1-yr-ahead expected earning growth(%)"
+{txt}
+{com}. label var Q24_var "Average Uncertainty of 1-yr-ahead expected earning growth"
+{txt}
+{com}. label var Q24_iqr "Average 25/75 IQR of 1-yr-ahead expected earning growth(%)"
+{txt}
+{com}. label var Q24_cent50 "Average Median of 1-yr-ahead expected earning growth(%)"
+{txt}
+{com}. label var Q24_disg "Disagreements of 1-yr-ahead expected earning growth"
+{txt}
+{com}. 
+. 
+. label var Q24_rmean "Average 1-yr-ahead expected earning growth(%)"
+{txt}
+{com}. label var Q24_rvar "Average Uncertainty of 1-yr-ahead expected earning growth"
+{txt}
+{com}. label var Q24_rdisg "Disagreements of 1-yr-ahead expected earning growth"
+{txt}
+{com}. 
+. 
+. save "${c -(}folder{c )-}/SCE/IncExpSCEProbPopM",replace 
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData//SCE/IncExpSCEProbPopM.dta saved
+
+{com}. 
+. 
+. 
+. 
+. 
+. 
+{txt}end of do-file
+
+{com}. do "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/DoFile/Step01_CleaningSCE.do"
+{txt}
+{com}. ****************************************************
+. ***   This do files cleans SCE individual density **
+. ***   forecasts and moments. It exclude the top and *
+. ***   bottom 5 percentiles of mean and uncertainty. *
+. ***   It also plots histograms of mean forecast and *
+. ***   uncertainty. **********************************
+. *****************************************************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
+{txt}
+{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/pop"
+{txt}
+{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
+{txt}
+{com}. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. 
+. use "${c -(}folder{c )-}/SCE/NYFED_SCE_2013.dta",clear
+{txt}
+{com}. append using "${c -(}folder{c )-}/SCE/NYFED_SCE_2014_2016.dta",force
+{txt}{p 0 7 2}
+(note: variable
+DHH2_11_other was str48 in the using data, but will be
+byte now)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q13new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q19 was 
+int, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q32 was 
+byte, now int to accommodate using data's values)
+{p_end}
+
+{com}. append using  "${c -(}folder{c )-}/SCE/NYFED_SCE_post2016.dta",force
+{txt}{p 0 7 2}
+(note: variable
+DHH2_11_other was str83 in the using data, but will be
+byte now)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q3 was 
+byte, now int to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q32 was 
+int, now double to accommodate using data's values)
+{p_end}
+
+{com}. 
+. 
+. sort date
+{txt}
+{com}. unique userid
+{txt}Number of unique values of userid is  {res}11664
+{txt}Number of records is  {res}79064
+{txt}
+{com}. 
+. ********************
+. *** Date format ****
+. ********************
+. gen date_str = string(date)
+{txt}
+{com}. gen year = substr(date_str,1,4)
+{txt}
+{com}. gen month = substr(date_str,5,2)
+{txt}
+{com}. gen date2=year+"m"+month
+{txt}
+{com}. gen date3= monthly(date2,"YM")
+{txt}
+{com}. format date3 %tm
+{txt}
+{com}. drop date_str date2 date
+{txt}
+{com}. rename date3 date
+{res}{txt}
+{com}. destring year, replace
+{txt}year has all characters numeric; {res}replaced {txt}as {res}int
+{txt}
+{com}. destring month, replace 
+{txt}month has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}
+{com}. order date year month
+{txt}
+{com}. xtset userid date
+{res}{txt}{col 8}panel variable:  {res}userid (unbalanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2018m5, but with gaps
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. **********************
+. ** Label variables ***
+. **********************
+. 
+. label var Q1 "finance better or worse(5 vals) from y-1 to y"
+{txt}
+{com}. label var Q2 "finance better or worse(5 vals) from y to y+1"
+{txt}
+{com}. label var Q3 "chance of moving (%)"
+{txt}
+{com}. label var Q4new "chance of UE higher from y to y+1(0-1)"
+{txt}
+{com}. label var Q5new "chance of saving interest rate higher from y to y+1(%)"
+{txt}
+{com}. label var Q6new "chance of stock market up from y to y+1(%)"
+{txt}
+{com}. label var Q8v2 "inflation or deflation from y to y+1 (1/0)"
+{txt}
+{com}. label var Q8v2part2 "inflation(or deflation) from y to y+1 (%) "
+{txt}
+{com}. label var Q9_cent25 "25 percentile of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_cent50 "50 percentile of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_cent75 "75 percentile of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_var "var of inflation from y to y+1"
+{txt}
+{com}. label var Q9_iqr "25/75 inter-quantile range of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_mean "mean of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_probdeflation "prob of deflation from y to y+1 (0-1)"
+{txt}
+{com}. label var Q9_bin1 "density: >12% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin2 "density: 8%-12% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin3 "density: 4%-8% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin4 "density: 2%-4% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin5 "density: 0%-2% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin6 "density: -2%-0% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin7 "density: -4%- -2% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin8 "density: -8%--4% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin9 "density: -12%- -8% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin10 "density: <-12% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9bv2 "inflation or deflation from y+1 to y+2 (1/0)"
+{txt}
+{com}. label var Q9bv2part2 "inflation(or deflation) from y+1 to y+2 (%)"
+{txt}
+{com}. label var Q9c_cent25 "25 percentile of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_cent50 "50 percentile of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_cent75 "75 percentile of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_var "var of inflation from y+1 to y+2"
+{txt}
+{com}. label var Q9c_mean "mean of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_iqr "25/75 inter-quantile range of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_probdeflation "prob of deflation from y+1 to y+2 (0-1)"
+{txt}
+{com}. label var Q9c_bin1 "density: >12% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin2 "density: 8%-12% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin3 "density: 4%-8% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin4 "density: 2%-4% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin5 "density: 0%-2% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin6 "density: -2%-0% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin7 "density: -4%- -2% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin8 "density: -8%--4% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin9 "density: -12%- -8% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin10 "density: <-12% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q10_1 "current emp situations:full-time"
+{txt}
+{com}. label var Q10_2 "current emp situations:part-time"
+{txt}
+{com}. label var Q10_3 "current emp situations: not working but wants to work"
+{txt}
+{com}. label var Q10_4 "current emp situations: temporary laid-off"
+{txt}
+{com}. label var Q10_5 "current emp situations: on sick or other leave"
+{txt}
+{com}. label var Q10_6 "current emp situations: permanently disabled/unable to work"
+{txt}
+{com}. label var Q10_7 "current emp situations: retiree or early retiree"
+{txt}
+{com}. label var Q10_8 "current emp situations: student or in training"
+{txt}
+{com}. label var Q10_9 "current emp situations: homemaker"
+{txt}
+{com}. label var Q10_10 "current emp situations: others"
+{txt}
+{com}. label var Q11 "number of jobs"
+{txt}
+{com}. label var Q12new "work for someone or self-employed(1/0)"
+{txt}
+{com}. label var ES1_1 ""
+{txt}
+{com}. label var ES1_2 ""
+{txt}
+{com}. label var ES1_3 ""
+{txt}
+{com}. label var ES1_4 ""
+{txt}
+{com}. label var ES2 ""
+{txt}
+{com}. label var ES3new ""
+{txt}
+{com}. label var ES4 ""
+{txt}
+{com}. label var ES5 ""
+{txt}
+{com}. label var Q13new "chance of losing job from y to y+1(%)"
+{txt}
+{com}. label var Q14new "chance of voluntarily leaving the job from y to y+1(%)"
+{txt}
+{com}. label var Q15 "currently looking for a job (1/0)"
+{txt}
+{com}. label var Q16 "duration of unemployment (months)"
+{txt}
+{com}. label var Q17new "chance of finding and accepting a job from y to y+1(%)"
+{txt}
+{com}. label var Q18new "chance of finding and accepting a job from m to m+3"
+{txt}
+{com}. label var Q19 "duration of out of work(%)"
+{txt}
+{com}. label var Q20new "chance of starting looking for a job from y to y+1(%)"
+{txt}
+{com}. label var Q21new "chance of starting looking for a job from m to m+3(%)"
+{txt}
+{com}. label var Q22new "chance of finding a new job if losing the current one within 3 months"
+{txt}
+{com}. label var Q23v2 "earning increase/decrease from the same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q23v2part2 "change of earning from the same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_cent25 "25 percentile of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_cent50 "50 percentile of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_cent75 "75 percentile of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_var "var of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_mean "mean of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_iqr "25/75 inter-quantile range of earning growth of same job/time/place from y to y+1(%)"
+{txt}note: label truncated to 80 characters
+
+{com}. label var Q24_probdeflation "???"
+{txt}
+{com}. label var Q24_bin1 ">12% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin2 "8%-12% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin3 "4%-8% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin4 "2%-4% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin5 "0-2% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin6 "-2%-0 earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin7 "-4%- -2% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin8 "-8% - -4% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin9 "-12%- -8% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin10 "<-12% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q25v2 "increase/decrease of total household income from y to y+1(1/0)"
+{txt}
+{com}. label var Q25v2part2 "increase of total household income from y to y+1(%)"
+{txt}
+{com}. label var Q26v2 "increase/decrease of total household spending from y to y+1(1/0)"
+{txt}
+{com}. label var Q26v2part2 "increase of total household spending from y to y+1(%)"
+{txt}
+{com}. label var Q27v2 "increase/decrease of total household tax payment given the same income (1/0)"
+{txt}
+{com}. label var Q27v2part2 "increase of total household tax payment given the same income (%)"
+{txt}
+{com}. label var Q28 "easier/harder to get credit/loan from y-1 to y(1-5)"
+{txt}
+{com}. label var Q29 "easier/harder to get credit/loan from y to y+1(1-5)"
+{txt}
+{com}. label var Q30new "chance of non-payment of debt from m to m+3(%)"
+{txt}
+{com}. label var Q31v2 "increase/decrease of nationwide house price(1/0)"
+{txt}
+{com}. label var Q31v2part2 "increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_cent25 "25 percentile of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_cent50 "50 percentile of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_cent75 "75 percentile of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_var "var of increase of nationwide house price"
+{txt}
+{com}. label var C1_mean "mean of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_iqr "25/75 inter-quantile range  of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_probdeflation "??"
+{txt}
+{com}. label var C1_bin1 ">12% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin2 "8%-12% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin3 "4%-8% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin4 "2%-4% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin5 "0-2% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin6 "-2%-0% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin7 "-4%- -2% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin8 "-8%- -4% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin9 "-12%- -8% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin10 "<-12% increase in nationwide house price(%)"
+{txt}
+{com}. label var C2 "increase/decrease in nationwide house price from y+1 to y+2(1/0)"
+{txt}
+{com}. label var C2part2 "increase in nationwide house price from y+1 to y+2(%)"
+{txt}
+{com}. label var C3 "increase/decrease of U.S. gov debt from y to y+1(1/0)"
+{txt}
+{com}. label var C3part2"increase of U.S. gov debt from y to y+1(%)"
+{txt}
+{com}. label var C4_1 "increase of a gallon of gas from y to y+1(%)"
+{txt}
+{com}. label var C4_2 "increase of food price from y to y+1(%)"
+{txt}
+{com}. label var C4_3 "increase of a medical care from y to y+1(%)"
+{txt}
+{com}. label var C4_4 "increase of college education from y to y+1(%)"
+{txt}
+{com}. label var C4_5 "increase of price of renting a typical house/apt from y to y+1(%)"
+{txt}
+{com}. label var C4_6  "increase of gold price from y to y+1(%)"
+{txt}
+{com}. label var QNUM1 "num q 1: (correct if ==150)"
+{txt}
+{com}. label var QNUM2 ""
+{txt}
+{com}. label var QNUM3 ""
+{txt}
+{com}. label var QNUM5 ""
+{txt}
+{com}. label var QNUM6 ""
+{txt}
+{com}. label var QNUM8 ""
+{txt}
+{com}. label var QNUM9 ""
+{txt}
+{com}. label var Q32 "age(in years)"
+{txt}
+{com}. label var Q33 "gender"
+{txt}
+{com}. label var Q34 "hispanic/latino/spanish(1/0)"
+{txt}
+{com}. label var Q35_1 "race: white"
+{txt}
+{com}. label var Q35_2 "race: black/african american"
+{txt}
+{com}. label var Q35_3 "race: american indian/alaska native"
+{txt}
+{com}. label var Q35_4 "race: asian"
+{txt}
+{com}. label var Q35_5 "race: native hawaiian or other pacific islander"
+{txt}
+{com}. label var Q35_6 "race: other"
+{txt}
+{com}. label var Q36 "education (1-8 low to high, 9 other)"
+{txt}
+{com}. label var Q37 "months of current work"
+{txt}
+{com}. label var Q38 "living with partner/not (1/0)"
+{txt}
+{com}. label var HH2_1 "emp of partner: full-time for someone"
+{txt}
+{com}. label var HH2_2 "emp of partner: part-time for someone"
+{txt}
+{com}. label var HH2_3 "emp of partner: self-employed"
+{txt}
+{com}. label var HH2_4 "emp of partner: not working but wants to work"
+{txt}
+{com}. label var HH2_5 "emp of partner: temporary laid-off"
+{txt}
+{com}. label var HH2_6 "emp of partner: on sick or other leave"
+{txt}
+{com}. label var HH2_7 "emp of partner: permanently disabled/unable to work"
+{txt}
+{com}. label var HH2_8 "emp of partner: retiree or early retiree"
+{txt}
+{com}. label var HH2_9 "emp of partner: student or in training"
+{txt}
+{com}. label var HH2_10 "emp of partner: homemaker"
+{txt}
+{com}. label var HH2_10 "emp of partner: other"
+{txt}
+{com}. label var _STATE "state (2-digit code)"
+{txt}
+{com}. label var Q41 "years of living in the current residence"
+{txt}
+{com}. label var Q42 "years of living in the current states"
+{txt}
+{com}. label var Q43 "own/rent/other a house(1/2/3)"
+{txt}
+{com}. label var Q43a "my/spounser/both's name under which current residence is owned/rent"
+{txt}
+{com}. label var Q44 "own other homes(1/0)"
+{txt}
+{com}. label var Q45b "health condition(1-5 from good to poor)"
+{txt}
+{com}. label var Q45new_1 ""
+{txt}
+{com}. label var Q45new_2 ""
+{txt}
+{com}. label var Q45new_3 ""
+{txt}
+{com}. label var Q45new_4 ""
+{txt}
+{com}. label var Q45new_5 ""
+{txt}
+{com}. label var Q45new_6 ""
+{txt}
+{com}. label var Q45new_7 ""
+{txt}
+{com}. label var Q45new_8 ""
+{txt}
+{com}. label var Q45new_9 ""
+{txt}
+{com}. label var Q46 "financial decision making of household(1-5, together to individual)"
+{txt}
+{com}. label var Q47 "total pre-tax household income from y-1 to y(1-11, low to high)"
+{txt}
+{com}. label var D1 "same household as last year(1/0)"
+{txt}
+{com}. label var D3 "date of moving to the current residence(month/year)"
+{txt}
+{com}. label var D6 "total pre-tax household income from y-1 to y(1-11,low to high)"
+{txt}
+{com}. label var D2new_1 "memeber in the current resident:spounse/partner"
+{txt}
+{com}. label var D2new_2 "memeber in the current resident: child >25"
+{txt}
+{com}. label var D2new_3 "memeber in the current resident: child 18-24"
+{txt}
+{com}. label var D2new_4 "memeber in the current resident: child 6-17"
+{txt}
+{com}. label var D2new_5 "memeber in the current resident: child <=5 "
+{txt}
+{com}. label var D2new_6 "memeber in the current resident: own/sponse's parents"
+{txt}
+{com}. label var D2new_7 "memeber in the current resident:other relatives"
+{txt}
+{com}. label var D2new_8 "memeber in the current resident:non-relatives"
+{txt}
+{com}. label var DSAME "same job as last year in survey"
+{txt}
+{com}. label var DQ38 "living as a partner or married with some one(1/0)"
+{txt}
+{com}. label var Q48 "interesting/uninteresting of the questions in the survey(1/0)"
+{txt}
+{com}. 
+. 
+. ** Only keep useful variables so that the data file is smaller. 
+. 
+. global keeplist date year month userid tenure weight ///        
+>        Q24_cent25 Q24_cent50 Q24_cent75 Q24_var Q24_mean Q24_iqr ///
+>            Q24_bin1 Q24_bin2 Q24_bin3 Q24_bin4 Q24_bin5 Q24_bin6 Q24_bin7 Q24_bin8 Q24_bin9 Q24_bin10 ///
+>            Q32 Q33 Q34 Q35_1 Q35_2 Q35_3 Q35_4 Q35_5 Q35_6 Q36 Q37 Q38 ///
+>            HH2_1 HH2_2 HH2_3 HH2_4 HH2_5 HH2_6 HH2_7 HH2_8 HH2_9 HH2_10 HH2_11 ///
+>            _STATE Q41 Q42 Q43 Q43a Q44 Q45b ///
+>            Q45new_1 Q45new_2 Q45new_3 Q45new_4 Q45new_5 Q45new_6 Q45new_7 Q45new_8 Q45new_9 ///
+>            Q46 Q47 D1 D3 D6 D2new_1 D2new_2 D2new_3 D2new_4 D2new_5 D2new_6 D2new_7 D2new_8 D2newdk_1 DSAME DQ38 ///
+>            DHH2_1 DHH2_2 DHH2_3 DHH2_4 DHH2_5 DHH2_6 DHH2_7 DHH2_8 DHH2_9 DHH2_10 DHH2_11 DHH2_11_other D5b Q48 QRA1 QRA2 ///
+>            _AGE_CAT _NUM_CAT _REGION_CAT _COMMUTING_ZONE _EDU_CAT _HH_INC_CAT ///
+>            Q1 Q2 Q3 Q4new Q5new Q6new Q9_mean Q9_var ///
+>            Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 Q12new Q13new Q14new ///
+>            Q25v2 Q25v2part2 Q31v2 Q31v2part2 C1_mean C1_var 
+{txt}
+{com}.  
+. keep ${c -(}keeplist{c )-}
+{txt}
+{com}. 
+. 
+. *************************
+. *** Exclude outliers *****
+. *************************
+. 
+. local Moments Q24_mean Q24_var
+{txt}
+{com}. 
+. foreach var in `Moments'{c -(}
+{txt}  2{com}.       egen `var'pl=pctile(`var'),p(5)
+{txt}  3{com}.           egen `var'pu=pctile(`var'),p(95)
+{txt}  4{com}.           replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
+{txt}  5{com}. {c )-}
+{txt}(5177 real changes made, 5177 to missing)
+(5068 real changes made, 5068 to missing)
+
+{com}. 
+. 
+. 
+. foreach var in Q24{c -(}
+{txt}  2{com}. foreach mom in mean var{c -(}
+{txt}  3{com}.     * nominal 
+.      egen `var'_`mom'p75 =pctile(`var'_`mom'),p(75) by(year month)
+{txt}  4{com}.          egen `var'_`mom'p25 =pctile(`var'_`mom'),p(25) by(year month)
+{txt}  5{com}.          egen `var'_`mom'p50 =pctile(`var'_`mom'),p(50) by(year month)
+{txt}  6{com}.          local lb: variable label `var'_`mom'
+{txt}  7{com}.          label var `var'_`mom'p75 "`lb': 75 pctile"
+{txt}  8{com}.          label var `var'_`mom'p25 "`lb': 25 pctile"
+{txt}  9{com}.          label var `var'_`mom'p50 "`lb': 50 pctile"
+{txt} 10{com}. {c )-}
+{txt} 11{com}. {c )-}
+{txt}
+{com}. 
+. 
+. *************************
+. *** Nominal to real *****
+. *************************
+. 
+. gen Q24_rmean = Q24_mean - Q9_mean 
+{txt}(32145 missing values generated)
+
+{com}. label var Q24_rmean "mean of real earning growth of same job/time/place from y to y+1(%) "
+{txt}
+{com}. 
+. gen Q24_rvar = Q24_var + Q9_var 
+{txt}(32081 missing values generated)
+
+{com}. label var Q24_rvar "variance of real earning growth of same job/time/place from y to y+1(%) "
+{txt}
+{com}. 
+. *************************
+. *** Other Measures *****
+. *************************
+. 
+. 
+. egen Q24_sd = sd(Q24_mean), by(date)
+{txt}
+{com}. gen Q24_disg = Q24_sd^2
+{txt}
+{com}. label var Q24_disg "Disagreements of 1-yr-ahead expted income growth"
+{txt}
+{com}. 
+. 
+. egen Q24_rsd = sd(Q24_rmean), by(date)
+{txt}
+{com}. gen Q24_rdisg = Q24_rsd^2
+{txt}
+{com}. label var Q24_rdisg "Disagreements of 1-yr-ahead real expted income growth"
+{txt}
+{com}. 
+. 
+. save "${c -(}folder{c )-}/SCE/IncExpSCEProbIndM",replace 
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData//SCE/IncExpSCEProbIndM.dta saved
+
+{com}. 
+. ***************************************
+. **   Histograms of Moments  ***********
+. ** Maybe replaced by kernel desntiy **
+. ***************************************
+. 
+. * for forecasting
+. 
+. gen SCE_mean = .
+{txt}(79064 missing values generated)
+
+{com}. gen SCE_var = .
+{txt}(79064 missing values generated)
+
+{com}. 
+. /*
+> * Kernal density plot only 
+> 
+> label var Q24_mean "1-yr-ahead forecast of income growth "
+> 
+>  foreach var in SCE{c -(}
+>  foreach mom in mean{c -(}
+>     replace `var'_`mom' = Q24_`mom'
+>         local lb: variable label Q24_`mom'
+>     twoway (kdensity `var'_`mom',lcolor(red) lwidth(thick) ), ///
+>                by(year,title("Distribution of `lb'",size(med)) note("")) xtitle("Mean forecast") ///
+>                    ytitle("Fraction of population")
+>         graph export "${c -(}sum_graph_folder{c )-}/hist/`var'`mom'_hist", as(png) replace 
+> {c )-}
+> {c )-}
+> 
+> * Kernal density plot only 
+> 
+> 
+> label var Q24_var "1-yr-ahead uncertainty of income growth"
+> 
+> foreach mom in var{c -(}
+> foreach var in SCE{c -(}
+>     replace `var'_`mom' = Q24_`mom'
+>         local lb: variable label Q24_`mom'
+>     twoway (kdensity `var'_`mom',lcolor(blue) lwidth(thick)), ///
+>                by(year,title("Distribution of `lb'",size(med)) note("")) xtitle("Uncertainty") ///
+>                    ytitle("Fraction of population")
+>         graph export "${c -(}sum_graph_folder{c )-}/hist/`var'`mom'_hist", as(png) replace 
+> {c )-}
+> {c )-}
+> 
+> */
+. 
+. *************************
+. *** Population SCE ******
+. *************************
+. 
+. local Moments Q24_mean Q24_var Q24_iqr Q24_cent50 Q24_disg 
+{txt}
+{com}. local rMoments Q24_rmean Q24_rvar Q24_rdisg 
+{txt}
+{com}. local MomentsMom Q24_meanp25 Q24_meanp50 Q24_meanp75 Q24_varp25 Q24_varp50 Q24_varp75
+{txt}
+{com}. 
+. 
+. collapse (mean) `Moments' `rMoments' `MomentsMom', by(date year month)
+{txt}
+{com}. 
+. label var Q24_mean "Average 1-yr-ahead expected earning growth(%)"
+{txt}
+{com}. label var Q24_var "Average Uncertainty of 1-yr-ahead expected earning growth"
+{txt}
+{com}. label var Q24_iqr "Average 25/75 IQR of 1-yr-ahead expected earning growth(%)"
+{txt}
+{com}. label var Q24_cent50 "Average Median of 1-yr-ahead expected earning growth(%)"
+{txt}
+{com}. label var Q24_disg "Disagreements of 1-yr-ahead expected earning growth"
+{txt}
+{com}. 
+. 
+. label var Q24_rmean "Average 1-yr-ahead expected real earning growth(%)"
+{txt}
+{com}. label var Q24_rvar "Average Uncertainty of 1-yr-ahead real expected earning growth"
+{txt}
+{com}. label var Q24_rdisg "Disagreements of 1-yr-ahead expected real earning growth"
+{txt}
+{com}. 
+. 
+. save "${c -(}folder{c )-}/SCE/IncExpSCEProbPopM",replace 
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData//SCE/IncExpSCEProbPopM.dta saved
+
+{com}. 
+. 
+. 
+. 
+. 
+. 
+{txt}end of do-file
+
 {com}. clear
 
 . 

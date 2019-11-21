@@ -253,7 +253,7 @@ global keeplist date year month userid tenure weight ///
 	   Q46 Q47 D1 D3 D6 D2new_1 D2new_2 D2new_3 D2new_4 D2new_5 D2new_6 D2new_7 D2new_8 D2newdk_1 DSAME DQ38 ///
 	   DHH2_1 DHH2_2 DHH2_3 DHH2_4 DHH2_5 DHH2_6 DHH2_7 DHH2_8 DHH2_9 DHH2_10 DHH2_11 DHH2_11_other D5b Q48 QRA1 QRA2 ///
 	   _AGE_CAT _NUM_CAT _REGION_CAT _COMMUTING_ZONE _EDU_CAT _HH_INC_CAT ///
-	   Q1 Q2 Q3 Q4new Q5new Q6new Q9_mean  ///
+	   Q1 Q2 Q3 Q4new Q5new Q6new Q9_mean Q9_var ///
 	   Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 Q12new Q13new Q14new ///
 	   Q25v2 Q25v2part2 Q31v2 Q31v2part2 C1_mean C1_var 
  
@@ -274,17 +274,9 @@ foreach var in `Moments'{
 
 
 
-*************************
-*** Other Measures *****
-*************************
-
-egen Q24_sd = sd(Q24_mean), by(date)
-gen Q24_disg = Q24_sd^2
-label var Q24_disg "Disagreements of 1-yr-ahead expted income growth"
-
-
 foreach var in Q24{
 foreach mom in mean var{
+    * nominal 
      egen `var'_`mom'p75 =pctile(`var'_`mom'),p(75) by(year month)
 	 egen `var'_`mom'p25 =pctile(`var'_`mom'),p(25) by(year month)
 	 egen `var'_`mom'p50 =pctile(`var'_`mom'),p(50) by(year month)
@@ -294,6 +286,31 @@ foreach mom in mean var{
 	 label var `var'_`mom'p50 "`lb': 50 pctile"
 }
 }
+
+
+*************************
+*** Nominal to real *****
+*************************
+
+gen Q24_rmean = Q24_mean - Q9_mean 
+label var Q24_rmean "mean of real earning growth of same job/time/place from y to y+1(%) "
+
+gen Q24_rvar = Q24_var + Q9_var 
+label var Q24_rvar "variance of real earning growth of same job/time/place from y to y+1(%) "
+
+*************************
+*** Other Measures *****
+*************************
+
+
+egen Q24_sd = sd(Q24_mean), by(date)
+gen Q24_disg = Q24_sd^2
+label var Q24_disg "Disagreements of 1-yr-ahead expted income growth"
+
+
+egen Q24_rsd = sd(Q24_rmean), by(date)
+gen Q24_rdisg = Q24_rsd^2
+label var Q24_rdisg "Disagreements of 1-yr-ahead real expted income growth"
 
 
 save "${folder}/SCE/IncExpSCEProbIndM",replace 
@@ -347,16 +364,22 @@ foreach var in SCE{
 *************************
 
 local Moments Q24_mean Q24_var Q24_iqr Q24_cent50 Q24_disg 
+local rMoments Q24_rmean Q24_rvar Q24_rdisg 
 local MomentsMom Q24_meanp25 Q24_meanp50 Q24_meanp75 Q24_varp25 Q24_varp50 Q24_varp75
 
 
-collapse (mean) `Moments' `MomentsMom', by(date year month)
+collapse (mean) `Moments' `rMoments' `MomentsMom', by(date year month)
 
-label var Q24_mean "Average 1-yr-ahead expected income growth(%)"
-label var Q24_var "Average Uncertainty of 1-yr-ahead expected income growth"
-label var Q24_iqr "Average 25/75 IQR of 1-yr-ahead expected income growth(%)"
-label var Q24_cent50 "Average Median of 1-yr-ahead expected income growth(%)"
-label var Q24_disg "Disagreements of 1-yr-ahead expected income growth"
+label var Q24_mean "Average 1-yr-ahead expected earning growth(%)"
+label var Q24_var "Average Uncertainty of 1-yr-ahead expected earning growth"
+label var Q24_iqr "Average 25/75 IQR of 1-yr-ahead expected earning growth(%)"
+label var Q24_cent50 "Average Median of 1-yr-ahead expected earning growth(%)"
+label var Q24_disg "Disagreements of 1-yr-ahead expected earning growth"
+
+
+label var Q24_rmean "Average 1-yr-ahead expected real earning growth(%)"
+label var Q24_rvar "Average Uncertainty of 1-yr-ahead real expected earning growth"
+label var Q24_rdisg "Disagreements of 1-yr-ahead expected real earning growth"
 
 
 save "${folder}/SCE/IncExpSCEProbPopM",replace 

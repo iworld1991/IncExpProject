@@ -106,7 +106,6 @@ label value inc_g inclb
 
 local group_vars age_g edu_g inc_g cohort_g
 
-
 **********************************
 *** tables and hists of Vars *****
 **********************************
