@@ -255,7 +255,8 @@ global keeplist date year month userid tenure weight ///
 	   _AGE_CAT _NUM_CAT _REGION_CAT _COMMUTING_ZONE _EDU_CAT _HH_INC_CAT ///
 	   Q1 Q2 Q3 Q4new Q5new Q6new Q9_mean Q9_var ///
 	   Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 Q12new Q13new Q14new ///
-	   Q25v2 Q25v2part2 Q31v2 Q31v2part2 C1_mean C1_var 
+	   Q25v2 Q25v2part2 Q31v2 Q31v2part2 C1_mean C1_var ///
+	   Q26v2 Q26v2part2
  
 keep ${keeplist}
 

@@ -41,7 +41,6 @@ sort ID year month
 
 drop if IncVar < 0
 
-
 *************************
 *** Exclude outliers *****
 *************************
