@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Est_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}22 Nov 2019, 11:03:32
+ {txt}opened on:  {res}22 Nov 2019, 13:20:56
 {txt}
 {com}. 
 . 
@@ -39,138 +39,6 @@
 
 {com}. rename _merge hh_info_merge
 {res}{txt}
-{com}. 
-. *******************************
-. **  Set Panel Data Structure **
-. *******************************
-. rename userid ID 
-{res}{txt}
-{com}. xtset ID date   /* this is not correct. ID is unique here.*/
-{res}{txt}{col 8}panel variable:  {res}ID (unbalanced)
-{txt}{col 9}time variable:  {res}{col 25}date, 01jun2013 00:00:00 to 01may2018 00:00:00
-{col 25}but with gaps
-{txt}{col 17}delta:  {res}.001 seconds
-{txt}
-{com}. sort ID year month 
-{txt}
-{com}. 
-. *******************************
-. ** Exclude extreme outliers 
-. ******************************
-. 
-. *keep if Q32 < 100 & Q32 >= 10
-. 
-. drop if IncVar < 0
-{txt}(0 observations deleted)
-
-{com}. 
-. *************************
-. *** Exclude outliers *****
-. *************************
-. 
-. local Moments IncMean IncVar IncSkew IncKurt
-{txt}
-{com}. 
-. foreach var in `Moments'{c -(}
-{txt}  2{com}.       egen `var'pl=pctile(`var'),p(10)
-{txt}  3{com}.           egen `var'pu=pctile(`var'),p(90)
-{txt}  4{com}.           replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
-{txt}  5{com}. {c )-}
-{txt}(9972 real changes made, 9972 to missing)
-(10175 real changes made, 10175 to missing)
-(10441 real changes made, 10441 to missing)
-(21466 real changes made, 21466 to missing)
-
-{com}. 
-. * other thresholds 
-. 
-. 
-. foreach var in `Moments'{c -(}
-{txt}  2{com}.       egen `var'l_truc=pctile(`var'),p(8)
-{txt}  3{com}.           egen `var'u_truc=pctile(`var'),p(92)
-{txt}  4{com}.           replace `var' = . if `var' <`var'l_truc | (`var' >`var'u_truc & `var'!=.)
-{txt}  5{com}. {c )-}
-{txt}(3374 real changes made, 3374 to missing)
-(3747 real changes made, 3747 to missing)
-(6146 real changes made, 6146 to missing)
-(5025 real changes made, 5025 to missing)
-
-{com}. 
-. 
-. *****************************
-. *** generate other vars *****
-. *****************************
-. 
-. gen age_sq = (Q32-30)^2
-{txt}(67434 missing values generated)
-
-{com}. label var age_sq "Age-squared"
-{txt}
-{com}. 
-. encode _STATE, gen(state_id)
-{txt}
-{com}. label var state_id "state id"
-{txt}
-{com}. 
-. *****************************
-. *** generate group vars *****
-. *****************************
-. 
-. gen cohort = year-Q32
-{txt}(67434 missing values generated)
-
-{com}. label var cohort "cohort by year of birth"
-{txt}
-{com}. egen cohort_g = cut(cohort), group(3)
-{txt}(67434 missing values generated)
-
-{com}. label define cohortlb 0 "1915-1956" 1 "1957-1972" 2 "1973-2000"
-{txt}
-{com}. label value cohort_g cohortlb
-{txt}
-{com}. 
-. egen age_g = cut(Q32), group(3)  
-{txt}(67434 missing values generated)
-
-{com}. label var age_g "age group"
-{txt}
-{com}. label define agelb 0 "Young" 1 "Middle-age" 2 "Old"
-{txt}
-{com}. label value age_g agelb
-{txt}
-{com}. 
-. egen edu_g = cut(Q36), group(3) 
-{txt}(67406 missing values generated)
-
-{com}. label var edu_g "education group"
-{txt}
-{com}. label define edulb 0 "Low Education" 1 "Medium Education" 2 "High Education"
-{txt}
-{com}. label value edu_g edulb
-{txt}
-{com}. 
-. gen gender_g = Q33 
-{txt}(67408 missing values generated)
-
-{com}. label var gender_g "gender_grou"
-{txt}
-{com}. label define gdlb 0 "Male" 1 "Female" 
-{txt}
-{com}. label value gender_g gdlb
-{txt}
-{com}. 
-. egen inc_g = cut(Q47), group(3)
-{txt}(67541 missing values generated)
-
-{com}. label var inc_g "income_g"
-{txt}
-{com}. label define inclb 0 "Low income" 1 "Middle Income" 2 "High Income"
-{txt}
-{com}. label value inc_g inclb
-{txt}
-{com}. 
-. local group_vars age_g edu_g inc_g cohort_g
-{txt}
 {com}. ddd
 {err}unrecognized command:  ddd
 {txt}{search r(199):r(199);}
@@ -192,50 +60,18 @@ me        {c |}      Freq.
         {txt}1 {c |}     {res}43,787
 {txt}{hline 10}{c BT}{hline 11}
 
-{com}. reg Q24_var  Q10_1
+{com}. table Q10_2
 
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   47501
-{txt}{hline 13}{char +}{hline 30}           F(  1, 47499) ={res}  105.27
-    {txt}   Model {char |} {res} 12982.3846     1  12982.3846           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 5858055.95 47499   123.33009           {txt}R-squared     = {res} 0.0022
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0022
-    {txt}   Total {char |} {res} 5871038.33 47500  123.600807           {txt}Root MSE      = {res} 11.105
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 7}Q10_1 {c |}{col 14}{res}{space 2}-1.364587{col 26}{space 2} .1330021{col 37}{space 1}  -10.26{col 46}{space 3}0.000{col 54}{space 4}-1.625273{col 67}{space 3}-1.103901
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 6.680439{col 26}{space 2} .1205331{col 37}{space 1}   55.42{col 46}{space 3}0.000{col 54}{space 4} 6.444193{col 67}{space 3} 6.916686
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{com}. reg Q24_var  Q10_2
-
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   47501
-{txt}{hline 13}{char +}{hline 30}           F(  1, 47499) ={res}   82.44
-    {txt}   Model {char |} {res} 10171.6444     1  10171.6444           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 5860866.69 47499  123.389265           {txt}R-squared     = {res} 0.0017
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0017
-    {txt}   Total {char |} {res} 5871038.33 47500  123.600807           {txt}Root MSE      = {res} 11.108
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 7}Q10_2 {c |}{col 14}{res}{space 2} 1.168331{col 26}{space 2} .1286793{col 37}{space 1}    9.08{col 46}{space 3}0.000{col 54}{space 4} .9161173{col 67}{space 3} 1.420544
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 5.332085{col 26}{space 2} .0567997{col 37}{space 1}   93.88{col 46}{space 3}0.000{col 54}{space 4} 5.220757{col 67}{space 3} 5.443413
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{com}. count if Q10_3==0 & Q24_mean !=.
-{res}47377
-
-{com}.  count if Q10_3==1 & Q24_mean !=.
-{res}   15
-
-{com}. count if Q12new!=.
-{res}51520
-
-{com}. table Q12new!=.
-{err}!= invalid name
-{txt}{search r(198):r(198);}
+{txt}{hline 10}{c TT}{hline 11}
+current   {c |}
+emp       {c |}
+situation {c |}
+s:part-ti {c |}
+me        {c |}      Freq.
+{hline 10}{c +}{hline 11}
+        0 {c |}     {res}68,280
+        {txt}1 {c |}     {res}10,784
+{txt}{hline 10}{c BT}{hline 11}
 
 {com}. table Q12new
 
@@ -250,193 +86,6 @@ oyed(1/0) {c |}      Freq.
         {txt}2 {c |}      {res}6,902
 {txt}{hline 10}{c BT}{hline 11}
 
-{com}. reg Q24_var i.Q12new
-
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   46027
-{txt}{hline 13}{char +}{hline 30}           F(  1, 46025) ={res} 2366.24
-    {txt}   Model {char |} {res} 279455.695     1  279455.695           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 5435614.66 46025  118.101351           {txt}R-squared     = {res} 0.0489
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0489
-    {txt}   Total {char |} {res} 5715070.36 46026  124.170477           {txt}Root MSE      = {res} 10.867
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 4}2.Q12new {c |}{col 14}{res}{space 2} 7.309515{col 26}{space 2} .1502656{col 37}{space 1}   48.64{col 46}{space 3}0.000{col 54}{space 4} 7.014992{col 67}{space 3} 7.604037
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 4.624036{col 26}{space 2} .0543304{col 37}{space 1}   85.11{col 46}{space 3}0.000{col 54}{space 4} 4.517547{col 67}{space 3} 4.730524
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{com}. reg Q24_var Q14new
-
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   41202
-{txt}{hline 13}{char +}{hline 30}           F(  1, 41200) ={res}   98.32
-    {txt}   Model {char |} {res} 9407.89974     1  9407.89974           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 3942456.02 41200    95.69068           {txt}R-squared     = {res} 0.0024
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0024
-    {txt}   Total {char |} {res} 3951863.92 41201   95.916699           {txt}Root MSE      = {res} 9.7822
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 6}Q14new {c |}{col 14}{res}{space 2} .0175671{col 26}{space 2} .0017717{col 37}{space 1}    9.92{col 46}{space 3}0.000{col 54}{space 4} .0140945{col 67}{space 3} .0210396
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2}  4.21789{col 26}{space 2} .0623368{col 37}{space 1}   67.66{col 46}{space 3}0.000{col 54}{space 4} 4.095709{col 67}{space 3} 4.340072
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{com}. reg Q14new Q24_var
-
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   41202
-{txt}{hline 13}{char +}{hline 30}           F(  1, 41200) ={res}   98.32
-    {txt}   Model {char |} {res}  72574.507     1   72574.507           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 30412930.6 41200  738.177927           {txt}R-squared     = {res} 0.0024
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0024
-    {txt}   Total {char |} {res} 30485505.1 41201  739.921484           {txt}Root MSE      = {res} 27.169
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      Q14new{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}Q24_var {c |}{col 14}{res}{space 2} .1355162{col 26}{space 2} .0136672{col 37}{space 1}    9.92{col 46}{space 3}0.000{col 54}{space 4} .1087281{col 67}{space 3} .1623042
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 21.69284{col 26}{space 2} .1479382{col 37}{space 1}  146.63{col 46}{space 3}0.000{col 54}{space 4} 21.40287{col 67}{space 3}  21.9828
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{com}. reg Q14new Q24_rvar
-
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   40754
-{txt}{hline 13}{char +}{hline 30}           F(  1, 40752) ={res}   16.54
-    {txt}   Model {char |} {res} 12217.5382     1  12217.5382           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 30102225.9 40752  738.668675           {txt}R-squared     = {res} 0.0004
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0004
-    {txt}   Total {char |} {res} 30114443.4 40753  738.950345           {txt}Root MSE      = {res} 27.178
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      Q14new{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 4}Q24_rvar {c |}{col 14}{res}{space 2} .0188845{col 26}{space 2} .0046434{col 37}{space 1}    4.07{col 46}{space 3}0.000{col 54}{space 4} .0097833{col 67}{space 3} .0279858
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 22.05052{col 26}{space 2} .1527748{col 37}{space 1}  144.33{col 46}{space 3}0.000{col 54}{space 4} 21.75107{col 67}{space 3} 22.34996
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{com}. reg Q24_rvar i.Q12new
-
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   45531
-{txt}{hline 13}{char +}{hline 30}           F(  1, 45529) ={res}  156.35
-    {txt}   Model {char |} {res} 130196.019     1  130196.019           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res}   37913529 45529  832.733621           {txt}R-squared     = {res} 0.0034
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0034
-    {txt}   Total {char |} {res}   38043725 45530  835.574896           {txt}Root MSE      = {res} 28.857
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}    Q24_rvar{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 4}2.Q12new {c |}{col 14}{res}{space 2} 5.014927{col 26}{space 2} .4010688{col 37}{space 1}   12.50{col 46}{space 3}0.000{col 54}{space 4} 4.228826{col 67}{space 3} 5.801029
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 15.65854{col 26}{space 2} .1450583{col 37}{space 1}  107.95{col 46}{space 3}0.000{col 54}{space 4} 15.37422{col 67}{space 3} 15.94286
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{com}. reg Q24_var i.Q36
-
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}    6873
-{txt}{hline 13}{char +}{hline 30}           F(  8,  6864) ={res}    3.22
-    {txt}   Model {char |} {res} 3788.04453     8  473.505567           {txt}Prob > F      = {res} 0.0012
-    {txt}Residual {char |} {res} 1010030.75  6864  147.149002           {txt}R-squared     = {res} 0.0037
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0026
-    {txt}   Total {char |} {res}  1013818.8  6872  147.528928           {txt}Root MSE      = {res}  12.13
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 9}Q36 {c |}
-{space 10}2  {c |}{col 14}{res}{space 2}-4.907863{col 26}{space 2} 1.980188{col 37}{space 1}   -2.48{col 46}{space 3}0.013{col 54}{space 4}-8.789645{col 67}{space 3}-1.026081
-{txt}{space 10}3  {c |}{col 14}{res}{space 2}-5.851229{col 26}{space 2}  1.94665{col 37}{space 1}   -3.01{col 46}{space 3}0.003{col 54}{space 4}-9.667266{col 67}{space 3}-2.035192
-{txt}{space 10}4  {c |}{col 14}{res}{space 2}-6.306587{col 26}{space 2} 1.963189{col 37}{space 1}   -3.21{col 46}{space 3}0.001{col 54}{space 4}-10.15505{col 67}{space 3}-2.458129
-{txt}{space 10}5  {c |}{col 14}{res}{space 2}-6.156786{col 26}{space 2} 1.934401{col 37}{space 1}   -3.18{col 46}{space 3}0.001{col 54}{space 4} -9.94881{col 67}{space 3}-2.364761
-{txt}{space 10}6  {c |}{col 14}{res}{space 2}-6.809717{col 26}{space 2} 1.947487{col 37}{space 1}   -3.50{col 46}{space 3}0.000{col 54}{space 4} -10.6274{col 67}{space 3} -2.99204
-{txt}{space 10}7  {c |}{col 14}{res}{space 2}-6.562267{col 26}{space 2} 2.121506{col 37}{space 1}   -3.09{col 46}{space 3}0.002{col 54}{space 4}-10.72108{col 67}{space 3}-2.403459
-{txt}{space 10}8  {c |}{col 14}{res}{space 2}-4.565664{col 26}{space 2} 2.072296{col 37}{space 1}   -2.20{col 46}{space 3}0.028{col 54}{space 4}-8.628006{col 67}{space 3}-.5033214
-{txt}{space 10}9  {c |}{col 14}{res}{space 2} -8.04017{col 26}{space 2} 3.322074{col 37}{space 1}   -2.42{col 46}{space 3}0.016{col 54}{space 4}-14.55246{col 67}{space 3}-1.527877
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} 12.55784{col 26}{space 2}    1.918{col 37}{space 1}    6.55{col 46}{space 3}0.000{col 54}{space 4} 8.797963{col 67}{space 3} 16.31771
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{com}. reg Q24_var Q33
-
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}    6873
-{txt}{hline 13}{char +}{hline 30}           F(  1,  6871) ={res}    8.53
-    {txt}   Model {char |} {res} 1256.55147     1  1256.55147           {txt}Prob > F      = {res} 0.0035
-    {txt}Residual {char |} {res} 1012562.53  6871  147.367564           {txt}R-squared     = {res} 0.0012
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0011
-    {txt}   Total {char |} {res} 1013819.08  6872   147.52897           {txt}Root MSE      = {res}  12.14
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 9}Q33 {c |}{col 14}{res}{space 2} .8574038{col 26}{space 2} .2936272{col 37}{space 1}    2.92{col 46}{space 3}0.004{col 54}{space 4} .2818038{col 67}{space 3} 1.433004
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 5.187516{col 26}{space 2} .4742299{col 37}{space 1}   10.94{col 46}{space 3}0.000{col 54}{space 4} 4.257879{col 67}{space 3} 6.117153
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{com}. table Q33
-
-{txt}{hline 10}{c TT}{hline 11}
-   gender {c |}      Freq.
-{hline 10}{c +}{hline 11}
-        1 {c |}      {res}5,651
-        {txt}2 {c |}      {res}6,005
-{txt}{hline 10}{c BT}{hline 11}
-
-{com}. table Q33
-
-{txt}{hline 10}{c TT}{hline 11}
-   gender {c |}      Freq.
-{hline 10}{c +}{hline 11}
-        1 {c |}      {res}5,651
-        {txt}2 {c |}      {res}6,005
-{txt}{hline 10}{c BT}{hline 11}
-
-{com}. table Q35_3
-
-{txt}{hline 10}{c TT}{hline 11}
-race:     {c |}
-american  {c |}
-indian/al {c |}
-aska      {c |}
-native    {c |}      Freq.
-{hline 10}{c +}{hline 11}
-        0 {c |}     {res}11,392
-        {txt}1 {c |}        {res}272
-{txt}{hline 10}{c BT}{hline 11}
-
-{com}. reg Q24_var Q35_3
-
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}    6874
-{txt}{hline 13}{char +}{hline 30}           F(  1,  6872) ={res}    0.06
-    {txt}   Model {char |} {res} 8.46349569     1  8.46349569           {txt}Prob > F      = {res} 0.8107
-    {txt}Residual {char |} {res} 1013848.41  6872  147.533238           {txt}R-squared     = {res} 0.0000
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res}-0.0001
-    {txt}   Total {char |} {res} 1013856.88  6873  147.513004           {txt}Root MSE      = {res} 12.146
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 7}Q35_3 {c |}{col 14}{res}{space 2} .2417522{col 26}{space 2} 1.009347{col 37}{space 1}    0.24{col 46}{space 3}0.811{col 54}{space 4} -1.73688{col 67}{space 3} 2.220384
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 6.498523{col 26}{space 2} .1481039{col 37}{space 1}   43.88{col 46}{space 3}0.000{col 54}{space 4} 6.208193{col 67}{space 3} 6.788852
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{com}. reg Q24_var i.age_g
-
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}    6868
-{txt}{hline 13}{char +}{hline 30}           F(  2,  6865) ={res}    7.02
-    {txt}   Model {char |} {res} 2069.42229     2  1034.71114           {txt}Prob > F      = {res} 0.0009
-    {txt}Residual {char |} {res} 1011559.38  6865  147.350238           {txt}R-squared     = {res} 0.0020
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0018
-    {txt}   Total {char |} {res}  1013628.8  6867   147.60868           {txt}Root MSE      = {res} 12.139
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     Q24_var{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 7}age_g {c |}
-{space 1}Middle-age  {c |}{col 14}{res}{space 2}-1.220283{col 26}{space 2} .3285017{col 37}{space 1}   -3.71{col 46}{space 3}0.000{col 54}{space 4}-1.864248{col 67}{space 3}-.5763181
-{txt}{space 8}Old  {c |}{col 14}{res}{space 2}-.4212585{col 26}{space 2} .3975327{col 37}{space 1}   -1.06{col 46}{space 3}0.289{col 54}{space 4}-1.200546{col 67}{space 3} .3580287
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} 7.073417{col 26}{space 2} .2305573{col 37}{space 1}   30.68{col 46}{space 3}0.000{col 54}{space 4} 6.621453{col 67}{space 3}  7.52538
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
 {com}. clear
 
 . 
