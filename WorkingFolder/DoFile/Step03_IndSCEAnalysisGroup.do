@@ -226,12 +226,14 @@ eststo clear
 
 label var D6 "HH income group"
 label var Q10_1 "full-time"
-label var Q10_1 "part-time"
+label var Q10_2 "part-time"
+label var Q36 "education"
 	
 foreach mom in mean var iqr rmean rvar{
-eststo: xtreg Q24_`mom' i.Q10_1 i.Q10_2 i.Q12new i.month, fe 
-eststo: xtreg Q24_`mom' i.Q10_1 i.Q10_2 i.Q12new i.D6 i.month, fe 
-eststo: xtreg Q24_`mom' i.Q10_1 i.Q10_2 i.Q12new i.D6 Q4new Q13new Q6new i.month, fe 
+eststo: reg Q24_`mom' i.Q10_2 i.Q12new i.month, vce(cl ID)
+eststo: reg Q24_`mom' i.Q10_2 i.Q12new i.D6 i.month,vce(cl ID)
+eststo: reg Q24_`mom' i.Q10_2 i.Q12new i.D6 Q4new Q13new Q6new i.month,vce(cl ID)
+eststo: reg Q24_`mom' i.Q36 i.age_g i.month,vce(cl ID)
 }
 
 /*
@@ -243,7 +245,7 @@ eststo: xtreg Inc`mom' i.Q10_1 i.Q10_2 i.Q12new i.Q47 Q4new Q13new Q6new, fe rob
 */
 
 esttab using "${sum_table_folder}/mom_ind_reg.csv", ///
-             se r2 drop(0.Q10_1 0.Q10_2 1.Q12new 1.D6 *.month _cons) ///
+             se r2 drop(0.age_g 1.Q36 0.Q10_2 1.Q12new 1.D6 *.month _cons) ///
 			 label replace
 			
 log close 
