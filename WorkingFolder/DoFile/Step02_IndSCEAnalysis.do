@@ -116,39 +116,4 @@ foreach var in SCE{
 esttab using "${sum_table_folder}/ind/ChEfficiencySCEIndQ.csv", mtitles b(%8.3f) se(%8.3f) scalars(N r2) sfmt(%8.3f %8.3f %8.3f) replace
 
 
-
-/*
-** There is no revision in income growth in SCE.  
-** Use 2-year inflation forecast 10 months ago and 1-year forecast now
-
-***************************************************
-*** Revision Efficiency Test Using Mean Revision **
-***************************************************
-
-
-eststo clear
-
-foreach var in SCE{
-  foreach mom in Mean{
-     replace IncExp_`mom'_rv =  `var'_`mom' - l10.`var'_`mom'1
-	 eststo `var'`mom'rvlv0: reg IncExp_`mom'_rv, vce(cluster date)
-     eststo `var'`mom'rvlv1: reg IncExp_`mom'_rv l1.IncExp_`mom'_rv `var'_`mom'_ct50, vce(cluster date)
-	 *eststo `var'`mom'rvlv2: reg  InfExp_`mom'_rv l(1/2).InfExp_`mom'_rv `var'_`mom'_ct50, vce(cluster date)
-	 *eststo `var'`mom'rvlv3: reg  InfExp_`mom'_rv l(1/3).InfExp_`mom'_rv `var'_`mom'_ct50, vce(cluster date)
- }
-}
-
-foreach var in SCE{
-  foreach mom in Var{
-     replace IncExp_`mom'_rv =  `var'_`mom' - l10.`var'_`mom'1
-	 eststo `var'`mom'rvlv0: reg IncExp_`mom'_rv, vce(cluster date) 
-     eststo `var'`mom'rvlv1: reg IncExp_`mom'_rv l1.IncExp_`mom'_rv, vce(cluster date) 
-	 *eststo `var'`mom'rvlv2: reg  InfExp_`mom'_rv l(1/2).InfExp_`mom'_rv, vce(cluster date) 
-	 *eststo `var'`mom'rvlv3: reg  InfExp_`mom'_rv l(1/3).InfExp_`mom'_rv, vce(cluster date)
- }
-}
-
-esttab using "${sum_table_folder}/ind/RVEfficiencySCEIndQ.csv", mtitles b(%8.3f) se(%8.3f) scalars(N r2) sfmt(%8.3f %8.3f %8.3f) replace
-*/
-
 log close 

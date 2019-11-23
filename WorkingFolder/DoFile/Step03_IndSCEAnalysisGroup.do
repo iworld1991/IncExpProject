@@ -147,9 +147,6 @@ graph export "${sum_graph_folder}/hist/hist_`mom'_`gp'.png",as(png) replace
 }
 }
 
-
-*/
-
 foreach mom in Mean Var Skew Kurt{
 
 twoway (hist Inc`mom' if Inc`mom'<Inc`mom'u_truc & Inc`mom'>Inc`mom'l_truc, ///
@@ -160,7 +157,6 @@ graph export "${sum_graph_folder}/hist/hist_Inc`mom'.png",as(png) replace
 
 }
 
-/*
 foreach gp in `group_vars' {
 foreach mom in Mean Var Skew Kurt{
 
@@ -222,6 +218,32 @@ esttab using "${sum_table_folder}/mom_group.csv", ///
              se r2 drop(0.age_g 0.edu_g 0.inc_g 0.cohort_g  *.year *state_id 1.Q33 1.Q34 _cons) ///
 			 label replace
 
+*****************************
+** Regression Full-table ******
+*******************************
 			 
-			 
+eststo clear
+
+label var D6 "HH income group"
+label var Q10_1 "full-time"
+label var Q10_1 "part-time"
+	
+foreach mom in mean var iqr rmean rvar{
+eststo: xtreg Q24_`mom' i.Q10_1 i.Q10_2 i.Q12new i.month, fe 
+eststo: xtreg Q24_`mom' i.Q10_1 i.Q10_2 i.Q12new i.D6 i.month, fe 
+eststo: xtreg Q24_`mom' i.Q10_1 i.Q10_2 i.Q12new i.D6 Q4new Q13new Q6new i.month, fe 
+}
+
+/*
+foreach mom in Mean Var Skew Kurt{
+eststo: xtreg Inc`mom' i.Q10_1 i.Q10_2 i.Q12new, fe robust 
+eststo: xtreg Inc`mom' i.Q10_1 i.Q10_2 i.Q12new i.Q47, fe robust 
+eststo: xtreg Inc`mom' i.Q10_1 i.Q10_2 i.Q12new i.Q47 Q4new Q13new Q6new, fe robust 
+}
+*/
+
+esttab using "${sum_table_folder}/mom_ind_reg.csv", ///
+             se r2 drop(0.Q10_1 0.Q10_2 1.Q12new 1.D6 *.month _cons) ///
+			 label replace
+			
 log close 
