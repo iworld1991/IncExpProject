@@ -291,7 +291,6 @@ foreach mom in mean var{
 *************************
 *** Nominal to real *****
 *************************
-
 gen Q24_rmean = Q24_mean - Q9_mean 
 label var Q24_rmean "mean of real earning growth of same job/time/place from y to y+1(%) "
 
