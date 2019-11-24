@@ -265,14 +265,13 @@ keep ${keeplist}
 *** Exclude outliers *****
 *************************
 
-local Moments Q24_mean Q24_var
+local Moments Q24_mean Q24_var Q9_mean Q9_var 
 
 foreach var in `Moments'{
       egen `var'pl=pctile(`var'),p(5)
 	  egen `var'pu=pctile(`var'),p(95)
 	  replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
 }
-
 
 
 foreach var in Q24{
