@@ -1,7 +1,9 @@
-\documentclass{report}
-\usepackage{booktabs}
-\begin{document}
-\begin{table}\begin{tabular}{lllllllll}
+
+\begin{table}[ht]
+\begin{adjustbox}{width={15cm},totalheight={20cm}}
+\begin{threeparttable}
+\caption{Perceived Income Risks and Individual Characteristics}
+\label{micro_reg}\begin{tabular}{lllllllll}
 \toprule
 {} & Q24\_var I & Q24\_var II & Q24\_var III & Q24\_var IIII & Q24\_rvar I & Q24\_rvar II & Q24\_rvar III & Q24\_rvar IIII \\
 \midrule
@@ -42,4 +44,8 @@ N                  &     46027 &      39868 &       34475 &         6872 &      
 R2                 &      0.05 &       0.00 &        0.01 &         0.00 &       0.01 &        0.01 &         0.04 &          0.03 \\
 \bottomrule
 \end{tabular}
-\end{table}\end{document}
+\begin{tablenotes}\item Standard errors are clustered by date. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\end{tablenotes}
+\end{threeparttable}
+\end{adjustbox}
+\end{table}

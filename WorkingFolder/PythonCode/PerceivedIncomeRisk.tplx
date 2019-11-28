@@ -63,6 +63,13 @@
 \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
                             % normalem makes italics be italics, not underlines
 \usepackage{braket}
+
+
+
+\usepackage{rotating}   % roating table 
+\usepackage{threeparttable}  % to add notes to the table 
+\usepackage{subcaption}  % caption to sub tables
+
 ((* endblock packages *))
 
 %===============================================================================

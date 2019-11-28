@@ -63,6 +63,13 @@
 \usepackage{braket}
 
 
+
+\usepackage{rotating}   % roating table 
+\usepackage{threeparttable}  % to add notes to the table 
+\usepackage{subcaption}  % caption to sub tables
+
+
+
     
     
     % Colors for the hyperref package
@@ -456,7 +463,7 @@ propensity to consume(MPCs) across the population.
 \cite{carroll_sticky_2018} reconciles the low micro-MPC and high
 macro-MPCs by introducing to the model an information rigidity of
 households in learning about macro news while being updated about micro
-news. \cite{Lian_imperfect_2019} shows that an imperfect perception of
+news. \cite{lian2019imperfect} shows that an imperfect perception of
 wealth accounts such phenomenon as excess sensitivity to current income
 and higher MPCs out of wealth than current income and so forth.
 \_\textbf{My paper has a similar flavor to all of these works by
@@ -774,16 +781,16 @@ return.
 
 The first is the time-average or time-aggregation problem documented in
 both empirical asset pricing and consumption insurance literature
-\cite{working_note_1960}, \cite{jagannathan_lazy_2007}, (Crawley, 2019).
-Variables such as consumption and earning are interval measures,
-reported as an average over a period, while the stock return is a spot
-measure computed between two points of the time. As a result, if the
-unit of the time for the underlying income process is at a higher
-frequency than the measured interval (an extreme case being the
-continuous-time), the measured variable will exhibit upward biased
-autocorrelation and correlation with other underlying random walk series
-in the same frequency. In my context, such a problem can be partly
-mitigated by the availability of monthly frequency of earning
+(\cite{working_note_1960}, \cite{jagannathan_lazy_2007},
+\cite{crawley_search_2019}). Variables such as consumption and earning
+are interval measures, reported as an average over a period, while the
+stock return is a spot measure computed between two points of the time.
+As a result, if the unit of the time for the underlying income process
+is at a higher frequency than the measured interval (an extreme case
+being the continuous-time), the measured variable will exhibit upward
+biased autocorrelation and correlation with other underlying random walk
+series in the same frequency. In my context, such a problem can be
+partly mitigated by the availability of monthly frequency of earning
 expectations, if we assume the unit of time of the underlying stochastic
 process is a month. Then the directly observed monthly correlation of
 the two cannot be driven by the time aggregation problem. What also
@@ -841,18 +848,6 @@ conditional on more individual characteristics.
     \end{figure*}
     
 
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}17}]:}     Unnamed: 0     0     1        2        3      4        5
-         0   median:var -0.08 -0.14  -0.33**    -0.17  -0.08    -0.15
-         1   median:iqr  -0.1 -0.13  -0.33**    -0.15  -0.08    -0.19
-         2  median:rvar -0.07 -0.01    -0.17    -0.09  -0.13  -0.33**
-         3    mean:skew                                              
-         4     mean:var -0.03 -0.09   -0.24*    -0.08  -0.13     -0.2
-         5     mean:iqr -0.05 -0.07  -0.29**    -0.16  -0.12    -0.18
-         6    mean:rvar -0.09 -0.01    -0.08    -0.12  -0.12   -0.23*
-         7    mean:skew -0.07 -0.12     -0.0  -0.27**  0.24*    -0.02
-\end{Verbatim}
-            
     \hypertarget{role-of-individual-characteristics}{%
 \subsection{\texorpdfstring{\href{MicroRiskProfile.ipynb}{Role of
 individual
@@ -990,82 +985,6 @@ environment? This will be the focus of the coming sections.
     
 
 
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}10}]:}             Unnamed: 0 Q24\_var I Q24\_var II Q24\_var III Q24\_var IIII  \textbackslash{}
-         0     C(HHinc)[T.10.0]                         -4.32***                
-         1                                                (0.54)                
-         2     C(HHinc)[T.11.0]                         -2.23***                
-         3                                                (0.55)                
-         4      C(HHinc)[T.2.0]                          -1.25**                
-         5                                                (0.59)                
-         6      C(HHinc)[T.3.0]                         -1.63***                
-         7                                                (0.55)                
-         8      C(HHinc)[T.4.0]                         -2.27***                
-         9                                                (0.55)                
-         10     C(HHinc)[T.5.0]                         -3.61***                
-         11                                               (0.54)                
-         12     C(HHinc)[T.6.0]                         -3.70***                
-         13                                               (0.54)                
-         14     C(HHinc)[T.7.0]                         -4.15***                
-         15                                               (0.53)                
-         16     C(HHinc)[T.8.0]                         -4.24***                
-         17                                               (0.53)                
-         18     C(HHinc)[T.9.0]                         -4.47***                
-         19                                               (0.53)                
-         20   C(gender)[T.male]                                      -0.88***   
-         21                                                            (0.29)   
-         22  C(parttime)[T.yes]     -0.19      -0.01    -0.81***                
-         23                        (0.13)     (0.13)      (0.15)                
-         24   C(selfemp)[T.yes]   7.36***   -0.00***     0.00***                
-         25                        (0.15)     (0.00)      (0.00)                
-         26                        (0.06)     (0.11)      (0.52)       (0.49)   
-         27             Stkprob               0.01**     0.01***                
-         28                                   (0.00)      (0.00)                
-         29           UEprobInd              0.03***     0.03***                
-         30                                   (0.00)      (0.00)                
-         31                educ                                       -0.25**   
-         32                                                            (0.10)   
-         33                   N     46027      39868       34475         6872   
-         34                  R2      0.05       0.00        0.01         0.00   
-         
-            Q24\_rvar I Q24\_rvar II Q24\_rvar III Q24\_rvar IIII  
-         0                            -13.64***                
-         1                               (1.08)                
-         2                            -11.70***                
-         3                               (1.10)                
-         4                             -3.52***                
-         5                               (1.18)                
-         6                              -2.67**                
-         7                               (1.09)                
-         8                             -4.56***                
-         9                               (1.09)                
-         10                            -8.25***                
-         11                              (1.08)                
-         12                            -8.55***                
-         13                              (1.08)                
-         14                           -10.43***                
-         15                              (1.06)                
-         16                           -11.33***                
-         17                              (1.05)                
-         18                           -12.91***                
-         19                              (1.05)                
-         20                                           4.47***  
-         21                                            (0.57)  
-         22    0.91***     1.28***     -1.53***                
-         23     (0.25)      (0.27)       (0.29)                
-         24    6.16***     0.00***     -0.00***                
-         25     (0.29)      (0.00)       (0.00)                
-         26     (0.11)      (0.23)       (1.04)        (0.97)  
-         27               -0.05***     -0.04***                
-         28                 (0.00)       (0.00)                
-         29                0.06***      0.05***                
-         30                 (0.01)       (0.01)                
-         31                                          -2.09***  
-         32                                            (0.19)  
-         33      43237       37397        32614          6165  
-         34       0.01        0.01         0.04          0.03  
-\end{Verbatim}
-            
     \hypertarget{perceived-income-risks-and-decision-preliminary}{%
 \subsection{Perceived income risks and decision
 (preliminary)}\label{perceived-income-risks-and-decision-preliminary}}
@@ -1318,7 +1237,79 @@ This is again, different from the econometrician's problem.
 \section{Reference}\label{reference}}
 
 
-    % Add a bibliography block to the postdoc
+       
+\begin{table}[ht]
+\begin{adjustbox}{width={15cm},totalheight={20cm}}
+\begin{threeparttable}
+\caption{Perceived Income Risks and Individual Characteristics}
+\label{micro_reg}\begin{tabular}{lllllllll}
+\toprule
+{} & Q24\_var I & Q24\_var II & Q24\_var III & Q24\_var IIII & Q24\_rvar I & Q24\_rvar II & Q24\_rvar III & Q24\_rvar IIII \\
+\midrule
+C(HHinc)[T.<10k]   &           &            &     4.24*** &              &            &             &     11.33*** &               \\
+                   &           &            &      (0.53) &              &            &             &       (1.05) &               \\
+C(HHinc)[T.<150k]  &           &            &       -0.23 &              &            &             &     -1.58*** &               \\
+                   &           &            &      (0.17) &              &            &             &       (0.33) &               \\
+C(HHinc)[T.<200k]  &           &            &       -0.07 &              &            &             &     -2.31*** &               \\
+                   &           &            &      (0.22) &              &            &             &       (0.42) &               \\
+C(HHinc)[T.<20k]   &           &            &     2.99*** &              &            &             &      7.81*** &               \\
+                   &           &            &      (0.34) &              &            &             &       (0.68) &               \\
+C(HHinc)[T.<30k]   &           &            &     2.61*** &              &            &             &      8.66*** &               \\
+                   &           &            &      (0.24) &              &            &             &       (0.49) &               \\
+C(HHinc)[T.<40k]   &           &            &     1.97*** &              &            &             &      6.77*** &               \\
+                   &           &            &      (0.23) &              &            &             &       (0.46) &               \\
+C(HHinc)[T.<50k]   &           &            &     0.63*** &              &            &             &      3.07*** &               \\
+                   &           &            &      (0.22) &              &            &             &       (0.43) &               \\
+C(HHinc)[T.<60k]   &           &            &      0.54** &              &            &             &      2.77*** &               \\
+                   &           &            &      (0.22) &              &            &             &       (0.43) &               \\
+C(HHinc)[T.<75k]   &           &            &        0.09 &              &            &             &       0.89** &               \\
+                   &           &            &      (0.19) &              &            &             &       (0.37) &               \\
+C(HHinc)[T.>200k]  &           &            &     2.01*** &              &            &             &        -0.38 &               \\
+                   &           &            &      (0.23) &              &            &             &       (0.45) &               \\
+C(gender)[T.male]  &           &            &             &     -0.88*** &            &             &              &       4.47*** \\
+                   &           &            &             &       (0.29) &            &             &              &        (0.57) \\
+C(parttime)[T.yes] &     -0.19 &      -0.01 &    -0.81*** &              &    0.91*** &     1.28*** &     -1.53*** &               \\
+                   &    (0.13) &     (0.13) &      (0.15) &              &     (0.25) &      (0.27) &       (0.29) &               \\
+C(selfemp)[T.yes]  &   7.36*** &   -0.00*** &       -0.00 &              &    6.16*** &     0.00*** &      0.00*** &               \\
+                   &    (0.15) &     (0.00) &      (0.00) &              &     (0.29) &      (0.00) &       (0.00) &               \\
+                   &    (0.06) &     (0.11) &      (0.16) &       (0.49) &     (0.11) &      (0.23) &       (0.32) &        (0.97) \\
+Stkprob            &           &     0.01** &     0.01*** &              &            &    -0.05*** &     -0.04*** &               \\
+                   &           &     (0.00) &      (0.00) &              &            &      (0.00) &       (0.00) &               \\
+UEprobInd          &           &    0.03*** &     0.03*** &              &            &     0.06*** &      0.05*** &               \\
+                   &           &     (0.00) &      (0.00) &              &            &      (0.01) &       (0.01) &               \\
+educ               &           &            &             &      -0.25** &            &             &              &      -2.09*** \\
+                   &           &            &             &       (0.10) &            &             &              &        (0.19) \\
+N                  &     46027 &      39868 &       34475 &         6872 &      43237 &       37397 &        32614 &          6165 \\
+R2                 &      0.05 &       0.00 &        0.01 &         0.00 &       0.01 &        0.01 &         0.04 &          0.03 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\item Standard errors are clustered by date. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\end{tablenotes}
+\end{threeparttable}
+\end{adjustbox}
+\end{table}
+\begin{table}[ht]
+\begin{threeparttable}
+\caption{Correlation between Perceived Income Risks and Stock Market Return}
+\label{macro_corr}\begin{tabular}{lllllll}
+\toprule
+{} &      0 &      1 &        2 &        3 &      4 &        5 \\
+\midrule
+median:var  &  -0.08 &  -0.14 &  -0.33** &    -0.17 &  -0.08 &    -0.15 \\
+median:iqr  &   -0.1 &  -0.13 &  -0.33** &    -0.15 &  -0.08 &    -0.19 \\
+median:rvar &  -0.07 &  -0.01 &    -0.17 &    -0.09 &  -0.13 &  -0.33** \\
+mean:skew   &    nan &    nan &      nan &      nan &    nan &      nan \\
+mean:var    &  -0.03 &  -0.09 &   -0.24* &    -0.08 &  -0.13 &     -0.2 \\
+mean:iqr    &  -0.05 &  -0.07 &  -0.29** &    -0.16 &  -0.12 &    -0.18 \\
+mean:rvar   &  -0.09 &  -0.01 &    -0.08 &    -0.12 &  -0.12 &   -0.23* \\
+mean:skew   &  -0.07 &  -0.12 &     -0.0 &  -0.27** &  0.24* &    -0.02 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Standard errors are clustered by date. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\end{tablenotes}
+\end{threeparttable}
+\end{table}       % Add a bibliography block to the postdoc
     
     
 \bibliographystyle{apalike}

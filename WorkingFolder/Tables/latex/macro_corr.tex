@@ -1,7 +1,8 @@
-\documentclass{report}
-\usepackage{booktabs}
-\begin{document}
-\begin{table}\begin{tabular}{lllllll}
+
+\begin{table}[ht]
+\begin{threeparttable}
+\caption{Correlation between Perceived Income Risks and Stock Market Return}
+\label{macro_corr}\begin{tabular}{lllllll}
 \toprule
 {} &      0 &      1 &        2 &        3 &      4 &        5 \\
 \midrule
@@ -15,4 +16,8 @@ mean:rvar   &  -0.09 &  -0.01 &    -0.08 &    -0.12 &  -0.12 &   -0.23* \\
 mean:skew   &  -0.07 &  -0.12 &     -0.0 &  -0.27** &  0.24* &    -0.02 \\
 \bottomrule
 \end{tabular}
-\end{table}\end{document}
+\begin{tablenotes}
+\item Standard errors are clustered by date. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
