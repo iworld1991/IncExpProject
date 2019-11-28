@@ -524,6 +524,7 @@ specific mechanisms of expectation formation into a full-fledged
 structural model that contains optimizing decisions and general
 equilibrium forces.
 
+
     \hypertarget{data-variables-and-density-estimation}{%
 \section{Data, variables and density
 estimation}\label{data-variables-and-density-estimation}}
@@ -712,13 +713,14 @@ the skewness at zero.) Therefore, the non-zero skewness estimates in our
 sample are both from the beta distribution cases, which is flexible
 enough to allow both.
 
-\includegraphics{attachment:hist_Q24_mean.jpg}
-\includegraphics{attachment:hist_Q24_var.jpg}
-\includegraphics{attachment:histIncSkew.jpg}
-\includegraphics{attachment:hist_Q24_rmean.jpg}
-\includegraphics{attachment:hist_Q24_rvar.jpg}
 
-\hypertarget{correlation-with-asset-returns}{%
+    \begin{figure}
+        \begin{center}\adjustimage{max size={0.9\linewidth}{0.4\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_4_0.png}\end{center}
+        \caption{Distribution of Inidivudal Momnets}
+        \label{fig:histmoms}
+    \end{figure}
+    
+    \hypertarget{correlation-with-asset-returns}{%
 \subsection{\texorpdfstring{\href{MacroRiskProfile.ipynb}{Correlation
 with asset
 returns}}{Correlation with asset returns}}\label{correlation-with-asset-returns}}
@@ -831,11 +833,14 @@ consumers/investors who at least have access to the stock market in the
 first place. Therefore, it is worth exploring the correlation above
 conditional on more individual characteristics.
 
-\includegraphics{attachment:tsMed3mvmean.jpg}
-\includegraphics{attachment:tsMed3mvvar.jpg}
-\includegraphics{attachment:tsEstMean3mvskew.jpg}
 
-\hypertarget{role-of-individual-characteristics}{%
+    \begin{figure*}
+        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_6_0.png}\end{center}
+        \caption{Perceived Income Risks and Stock Market Return}
+        \label{fig:tssp500}
+    \end{figure*}
+    
+    \hypertarget{role-of-individual-characteristics}{%
 \subsection{\texorpdfstring{\href{MicroRiskProfile.ipynb}{Role of
 individual
 characteristics}}{Role of individual characteristics}}\label{role-of-individual-characteristics}}
@@ -963,14 +968,8 @@ the true risk profile. Second, how are individual earning risk is
 correlated with asset return expectations and broadly the macro economic
 environment? This will be the focus of the coming sections.
 
-\begin{verbatim}
- ![boxplotvar_HHinc.jpg](attachment:boxplotvar_HHinc.jpg)
- ![boxplotrvar_HHinc.jpg](attachment:boxplotrvar_HHinc.jpg)
- 
- 
-\end{verbatim}
 
-\hypertarget{perceived-income-risks-and-decision-preliminary}{%
+    \hypertarget{perceived-income-risks-and-decision-preliminary}{%
 \subsection{Perceived income risks and decision
 (preliminary)}\label{perceived-income-risks-and-decision-preliminary}}
 
@@ -1220,7 +1219,6 @@ This is again, different from the econometrician's problem.
 
     \hypertarget{reference}{%
 \section{Reference}\label{reference}}
-
 
 
     % Add a bibliography block to the postdoc
