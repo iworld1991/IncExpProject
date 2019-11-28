@@ -76,6 +76,7 @@ import numpy as np
 from IPython.display import display, Image
 import matplotlib.image as mpimg
 import os
+import pandas as pd
 
 path = os.getcwd()
 
@@ -226,6 +227,9 @@ for i in range(nb_fig):
 plt.tight_layout(pad =0, w_pad=0, h_pad=0)
 # -
 
+macro_corr  = pd.read_excel('../Tables/macro_corr.xlsx')
+macro_corr.replace(np.nan,'')
+
 #
 #
 # ##  [Role of individual characteristics](MicroRiskProfile.ipynb)
@@ -285,6 +289,10 @@ for i in range(nb_fig):
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
 # -
+
+reg_tb = pd.read_excel('../Tables/micro_reg.xlsx').replace(np.nan,'')
+
+reg_tb
 
 # ##  Perceived income risks and decision (preliminary)
 #
