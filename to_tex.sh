@@ -2,8 +2,17 @@
 
 cd WorkingFolder/PythonCode/
 
-jupyter nbconvert PerceivedIncomeRisk.ipynb --to latex
-sed -r -i 's/documentclass\[15pt\]\{article\}/documentclass[8pt]{extarticle}/' PerceivedIncomeRisk.tex
-sed -r -i 's/geometry\{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}/geometry{verbose,tmargin=1in,bmargin=1in,lmargin=0.2in,rmargin=0.2in}/' PerceivedIncomeRisk.tex
+
+ipython PerceivedIncomeRisk.py
+jupyter nbconvert --to=latex --LatexExporter.template_file=./PerceivedIncomeRisk.tplx PerceivedIncomeRisk.ipynb
 
 pdflatex PerceivedIncomeRisk.tex
+
+bibtex PerceivedIncomeRisk.aux
+pdflatex PerceivedIncomeRisk.tex
+pdflatex PerceivedIncomeRisk.tex
+
+rm *.bbl *.aux *.blg *.log *.out *Notes.bib #*.tex
+
+cd ..
+cd .. 

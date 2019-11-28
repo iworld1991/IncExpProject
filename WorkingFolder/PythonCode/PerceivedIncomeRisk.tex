@@ -10,63 +10,58 @@
 
 
     
-\documentclass[11pt]{article}
+\documentclass[12pt,notitlepage,onecolumn,aps,pra]{revtex4-1}
 
     
     
-    \usepackage[T1]{fontenc}
-    % Nicer default font (+ math font) than Computer Modern for most use cases
-    \usepackage{mathpazo}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+% We will generate all images so they have a width \maxwidth. This means
+% that they will get their normal width if they fit onto the page, but
+% are scaled down if they would overflow the margins.
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+\else\Gin@nat@width\fi}
+\makeatother
+\let\Oldincludegraphics\includegraphics
+% Set max figure width to be 80% of text width, for now hardcoded.
+\renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+% Ensure that by default, figures have no caption (until we provide a
+% proper Figure object with a Caption API and a way to capture that
+% in the conversion process - todo).
+\usepackage{caption}
+\DeclareCaptionLabelFormat{nolabel}{}
+\captionsetup{labelformat=nolabel}
 
-    % Basic figure setup, for now with no caption control since it's done
-    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
-    \usepackage{graphicx}
-    % We will generate all images so they have a width \maxwidth. This means
-    % that they will get their normal width if they fit onto the page, but
-    % are scaled down if they would overflow the margins.
-    \makeatletter
-    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
-    \else\Gin@nat@width\fi}
-    \makeatother
-    \let\Oldincludegraphics\includegraphics
-    % Set max figure width to be 80% of text width, for now hardcoded.
-    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
-    % Ensure that by default, figures have no caption (until we provide a
-    % proper Figure object with a Caption API and a way to capture that
-    % in the conversion process - todo).
-    \usepackage{caption}
-    \DeclareCaptionLabelFormat{nolabel}{}
-    \captionsetup{labelformat=nolabel}
+\usepackage{adjustbox} % Used to constrain images to a maximum size
+\usepackage{xcolor} % Allow colors to be defined
+\usepackage{enumerate} % Needed for markdown enumerations to work
+\usepackage{geometry} % Used to adjust the document margins
+\usepackage{amsmath} % Equations
+\usepackage{amssymb} % Equations
+\usepackage{textcomp} % defines textquotesingle
+% Hack from http://tex.stackexchange.com/a/47451/13684:
+\AtBeginDocument{%
+    \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+}
+\usepackage{upquote} % Upright quotes for verbatim code
+\usepackage{eurosym} % defines \euro
+\usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+\usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+\usepackage{fancyvrb} % verbatim replacement that allows latex
+\usepackage{grffile} % extends the file name processing of package graphics
+                     % to support a larger range
+% The hyperref package gives us a pdf with properly built
+% internal navigation ('pdf bookmarks' for the table of contents,
+% internal cross-reference links, web links for URLs, etc.)
+\usepackage{hyperref}
+\usepackage{natbib}
+\usepackage{booktabs}  % table support for pandoc > 1.12.2
+\usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+\usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                            % normalem makes italics be italics, not underlines
+\usepackage{braket}
 
-    \usepackage{adjustbox} % Used to constrain images to a maximum size 
-    \usepackage{xcolor} % Allow colors to be defined
-    \usepackage{enumerate} % Needed for markdown enumerations to work
-    \usepackage{geometry} % Used to adjust the document margins
-    \usepackage{amsmath} % Equations
-    \usepackage{amssymb} % Equations
-    \usepackage{textcomp} % defines textquotesingle
-    % Hack from http://tex.stackexchange.com/a/47451/13684:
-    \AtBeginDocument{%
-        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
-    }
-    \usepackage{upquote} % Upright quotes for verbatim code
-    \usepackage{eurosym} % defines \euro
-    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
-    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
-    \usepackage{fancyvrb} % verbatim replacement that allows latex
-    \usepackage{grffile} % extends the file name processing of package graphics 
-                         % to support a larger range 
-    % The hyperref package gives us a pdf with properly built
-    % internal navigation ('pdf bookmarks' for the table of contents,
-    % internal cross-reference links, web links for URLs, etc.)
-    \usepackage{hyperref}
-    \usepackage{longtable} % longtable support required by pandoc >1.10
-    \usepackage{booktabs}  % table support for pandoc > 1.12.2
-    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
-    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
-                                % normalem makes italics be italics, not underlines
-    \usepackage{mathrsfs}
-    
 
     
     
@@ -149,8 +144,6 @@
     \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
     % Document parameters
     % Document title
-    \title{PerceivedIncomeRisk}
-    
     
     
     
@@ -285,30 +278,22 @@
     \begin{document}
     
     
-    \maketitle
+    \title{Perceived Income Risks}\author{Tao Wang}\affiliation{Johns Hopkins University}
+
+\date{\today}
+\maketitle
+
+
     
     
 
     
-    \hypertarget{perceived-income-risks}{%
-\section{Perceived Income Risks}\label{perceived-income-risks}}
-
-\begin{itemize}
-\tightlist
-\item
-  a research proposal
-\item
-  Tao Wang
-\item
-  Oct 14, 2019
-\end{itemize}
-
     \hypertarget{the-research-question}{%
-\subsection{The research question}\label{the-research-question}}
+\section{The research question}\label{the-research-question}}
 
-`'The devil is the in higher moments.'' Even if two people share
-identical expected income and homogeneous preferences, different degrees
-of income risks still lead to starkly different decisions such as
+``The devil is in higher moments.'' Even if two people share identical
+expected income and homogeneous preferences, different degrees of income
+risks still lead to starkly different decisions such as
 saving/consumption and portfolio choices. This is well understood in
 models in which agents are inter-temporally risk-averse, or prudent, and
 the risks associated with future marginal utility motivate precautionary
@@ -324,13 +309,13 @@ Economists have long utilized cross-sectional distributions of realized
 micro data to estimate the stochastic environments relevant for the
 agents' decision, such as income process. And then in modeling the
 estimated risk profile is taken as parametric inputs and the individual
-shocks are simply drawn from the shared distributions. (See
-\cite{7250895/FHA8RDSF} as an example.) But one assumption implicitly
-made when doing this is that the agents in the model perfectly
-understand thus agree on the income risk profile imposed on them. As
-shown by the actively developing literature on expectation formation, in
-particular, the mounting evidence on heterogeneity in economic
-expectations held by micro agents, this assumption seems be too
+shocks are simply drawn from the shared distributions.(See
+\cite{blundell_consumption_2008} as an example.) But one assumption
+implicitly made when doing this is that the agents in the model
+perfectly understand thus agree on the income risk profile imposed on
+them. As shown by the actively developing literature on expectation
+formation, in particular, the mounting evidence on heterogeneity in
+economic expectations held by micro agents, this assumption seems be too
 stringent. To the extent that agents make decisions based on their
 \emph{respective} perceptions, understanding the \emph{perceived} income
 risk profile and its correlation structure with other macro variables
@@ -374,6 +359,17 @@ Empirically, I can immediately ask following questions.
     For instance, if we treat the income risks identified from
     cross-sectional inequality by econometricians as a benchmark, to
     what extent are the risks perceived by the agents?
+
+    \begin{itemize}
+    \tightlist
+    \item
+      If agents know more than econometricians about their individual
+      earnings, the perceived risks may be lower than econometrician's
+      estimates?
+    \item
+      Or actually, agents, due to inattention or other reasons, tend to
+      think the overall risk is higher?
+    \end{itemize}
   \end{itemize}
 \item
   If the subjetive income risk can be decomposed into composents of
@@ -387,18 +383,7 @@ Empirically, I can immediately ask following questions.
     For instance, if agents overestimate their permanent income risks?
   \item
     If agents overestimate the persistence of the income process?
-    \cite{7250895/5XVTCNHG}
-
-    \begin{itemize}
-    \tightlist
-    \item
-      If agents know more than econometricians about their individual
-      earnings, the perceived risks may be lower than econometrician's
-      estimates?
-    \item
-      Or actually, agents, due to inattention or other reasons, tend to
-      think the overall risk is higher?
-    \end{itemize}
+    \cite{rozsypal_overpersistence_2017}
   \item
     One step back, if the perceived income process is really log normal.
     Or it has skewness? This can be jointly tested using higher moments
@@ -409,7 +394,7 @@ Empirically, I can immediately ask following questions.
   covariance with macro-environment, risky asset returns, matter a great
   deal. For instance, if perceived income risks are counter-cyclical, it
   has important labor supply and portfolio implications.
-  \cite{7250895/QAM2226R}
+  \cite{catherine_countercyclical_2019}
 \end{itemize}
 
 Theoretically, once I can document robustly some patterns of the
@@ -433,51 +418,52 @@ a few of the following scenarios.
 \end{itemize}
 
 \hypertarget{relevant-literature-and-potential-contribution}{%
-\subsubsection{Relevant Literature and Potential
-Contribution}\label{relevant-literature-and-potential-contribution}}
+\subsection{Relevant literature and potential
+contribution}\label{relevant-literature-and-potential-contribution}}
 
 This paper is relevant to four lines of literature. First, the idea of
 this paper echoes with an old problem in the consumption insurance
-literature: `insurance or information'. \cite{7250895/CJ63N699},
-\cite{7250895/TH74LHW4} In any empirical tests of consumption insurance
-or consumption response to income shocks, there is always a worry that
-what is interpreted as shock has actually already entered in the agents'
-information set or exactly the opposite. For instance, since
-econometricians have no full access to what agents truely know in their
-information set, what is interpreted as excessive sensitivity may be
-simply because agents do not have access to the recently realized
-shocks. My paper shares a similar spirit with the few papers above in
-the sense that we try to tackle the identification problem in the same
-approach: directly using the expectation data and explicitly controling
-what are truely conditional expectations of the agents making the
-decision. This helps economists avoid making assumptions on what is
-exactly in the agents' information set. What differentiates my work from
-these few papers is that I focus on higher moments, i.e.~income risks
-and skewness by utilizing the recently available density forecasts of
-labor income. Part of my exercise can be also seen as an extension of
-the New York Fed
+literature: `insurance or information' (\cite{pistaferri_superior_2001},
+\cite{kaufmann_disentangling_2009}). In any empirical tests of
+consumption insurance or consumption response to income, there is always
+a worry that what is interpreted as the shock has actually already
+entered the agents' information set or exactly the opposite. For
+instance, the notion of excessive sensitivity, namely households
+consumption highly responsive to anticipated income shock, maybe simply
+because agents have not incorporated the recently realized shocks that
+econometricians assume so. My paper shares a similar spirit with the few
+papers above in the sense that we try to tackle the identification
+problem in the same approach: directly using the expectation data and
+explicitly controling what are truely conditional expectations of the
+agents making the decision. This helps economists avoid making
+assumptions on what is exactly in the agents' information set. What
+differentiates my work from these few papers is that I focus on higher
+moments, i.e.~income risks and skewness by utilizing the recently
+available density forecasts of labor income. Part of my exercise can be
+also seen as an extension of the New York Fed
 \href{https://libertystreeteconomics.newyorkfed.org/2017/11/understanding-permanent-and-temporary-income-shocks.html}{blog}
 from the first moment to the second moments.
 
 Second, this paper is inspired by an old but recently reviving interest
 in studying consumption/saving behaviors in models incorporating
 imperfect expectations and perceptions. For instance,
-\cite{7250895/5XVTCNHG} found that households' expectation of income
-exhibits an over-persistent bias using both expected and realized
-household income from Michigan household survey. The paper also shows
-that incorporating such bias affects the aggregate consumption function
-by distorting the cross-sectional distributions of marginal propensity
-to consume(MPCs) across the population. \cite{7250895/NENWDCHR}
-reconciles the low micro-MPC and high macro-MPCs by introducing to the
-model an information rigidity of households in learning about macro news
-while being updated about micro news. (Lian 2019) shows that an
-imperfect perception of wealth accounts such phenomenon as excess
-sensitivity to current income and higher MPCs out of wealth than current
-income and so forth. \_\textbf{My paper has a similar flavor to all of
-these works by exploring the behavioral implications of households'
-perceptive imperfection. But unlike their work, my paper dominantly
-focues on the implications of heterogeneity in perceived higher moments
-such as risks and skewness.}
+\cite{rozsypal_overpersistence_2017} found that households' expectation
+of income exhibits an over-persistent bias using both expected and
+realized household income from Michigan household survey. The paper also
+shows that incorporating such bias affects the aggregate consumption
+function by distorting the cross-sectional distributions of marginal
+propensity to consume(MPCs) across the population.
+\cite{carroll_sticky_2018} reconciles the low micro-MPC and high
+macro-MPCs by introducing to the model an information rigidity of
+households in learning about macro news while being updated about micro
+news. \cite{Lian_imperfect_2019} shows that an imperfect perception of
+wealth accounts such phenomenon as excess sensitivity to current income
+and higher MPCs out of wealth than current income and so forth.
+\_\textbf{My paper has a similar flavor to all of these works by
+exploring the behavioral implications of households' perceptive
+imperfection. But unlike their work, my paper dominantly focues on the
+implications of heterogeneity in perceived higher moments such as risks
+and skewness.}
 
 This paper also contributes to the literature studying expectation
 formation using subjective surveys. There has been a long list of
@@ -494,25 +480,25 @@ for macroeconomic modeling assumptions.
 
 Lastly, the paper is indirectly related to the research that advocated
 for eliciting probabilistic questions measuring subjective uncertainty
-in economic surveys (\cite{undefined}, \cite{7250895/72CMBZAS},
-\cite{7250895/NYPWMNU7}). Although the initial suspicion concerning to
-people's ability in understanding, using and answering probabilistic
-questions is understandable, Bertrand and \cite{7250895/5XEYZFGT} and
-other works have shown respondents have the consistent ability and
-willingness to assign a probability (or ``percent chance'') to future
-events. \cite{7250895/8PVZ2ADL} have a thorough discussion on designing,
-experimenting and implementing the consumer expectation surveys to
-ensure the quality of the responses2. Broadly speaking, the advocators
-have argued that going beyond the revealed preference approach,
-availability to survey data provides economists with direct information
-on agents' expectations and helps avoids imposing arbitrary assumptions.
-This insight holds for not only point forecast but also and even more
-importantly, for uncertainty, because for any economic decision made by
-a risk-averse agent, not only the expectation but also the perceived
-risks matter a great deal.
+in economic surveys (\cite{manski_measuring_2004},
+\cite{delavande2011measuring}, \cite{manski_survey_2018}). Although the
+initial suspicion concerning to people's ability in understanding, using
+and answering probabilistic questions is understandable,
+\cite{bertrand_people_2001} and other works have shown respondents have
+the consistent ability and willingness to assign a probability (or
+``percent chance'') to future events. \cite{armantier_overview_2017}
+have a thorough discussion on designing, experimenting and implementing
+the consumer expectation surveys to ensure the quality of the responses.
+Broadly speaking, the advocators have argued that going beyond the
+revealed preference approach, availability to survey data provides
+economists with direct information on agents' expectations and helps
+avoids imposing arbitrary assumptions. This insight holds for not only
+point forecast but also and even more importantly, for uncertainty,
+because for any economic decision made by a risk-averse agent, not only
+the expectation but also the perceived risks matter a great deal.
 
 \hypertarget{a-broader-motivation}{%
-\subsubsection{A broader motivation}\label{a-broader-motivation}}
+\subsection{A broader motivation}\label{a-broader-motivation}}
 
 The approach that I am proposing here is a natural development from the
 existing literature of expectation formation. One of the common
@@ -539,55 +525,65 @@ structural model that contains optimizing decisions and general
 equilibrium forces.
 
     \hypertarget{data-variables-and-density-estimation}{%
-\subsection{Data, Variables and Density
-Estimation}\label{data-variables-and-density-estimation}}
+\section{Data, variables and density
+estimation}\label{data-variables-and-density-estimation}}
+
+\hypertarget{data}{%
+\subsection{Data}\label{data}}
 
 The data used for this paper is from the core module of Survey of
-Consumer Expectation(SCE) conducted by New York Fed, a monthly online
-survey for a rotating panel of around 1,300 household heads. The sample
-period in my paper spans from June 2013 to June 2018, in total 60
-months. This makes about 79000 household-year observations, among which
-around 53,000 observations provide non-empty answers to the density
-question on earning growth.
+Consumer Expectation(SCE) conducted by the New York Fed, a monthly
+online survey for a rotating panel of around 1,300 household heads. The
+sample period in my paper spans from June 2013 to June 2018, in total of
+60 months. This makes about 79000 household-year observations, among
+which around 53,000 observations provide non-empty answers to the
+density question on earning growth.
 
-In particular, the questionare asks each respondent to fill perceived
-probabilities of their same-job-hour earning growth to pre-defined
-non-overlapping bins. The question is framed as below:
+Particular relevant for my purpose, the questionnaire asks each
+respondent to fill perceived probabilities of their same-job-hour
+earning growth to pre-defined non-overlapping bins. The question is
+framed as ``suppose that 12 months from now, you are working in the
+exact same {[}``main'' if Q11\textgreater{}1{]} job at the same place
+you currently work and working the exact same number of hours. In your
+view, what would you say is the percent chance that 12 months from now:
+increased by x\% or more?''.
 
-\begin{verbatim}
-"Suppose that 12 months from now, you are working in the exact same [“main” if Q11>1] job at the same place you currently work, and working the exact same number of hours. In your view, what would you say is the percent chance that 12 months from now: increased by x% or more?"
-\end{verbatim}
-
-As a special feature of online questinare, the survey moves on to next
-question only if the probabilities filled in all bins add up to one.
-This ensures the basic probabilistic consistency of the answers crutial
-for any further analysis using this data. Besides, the earning growth
+As a special feature of the online questionnaire, the survey only moves
+on to the next question if the probabilities filled in all bins add up
+to one. This ensures the basic probabilistic consistency of the answers
+crucial for any further analysis. Besides, the earning growth
 expectation regarding exactly the same position, same hours and same
 location has two important implications for my analysis. First, the
-requirements help make sure the comparability of the answers across
-time, and also excludes the potential changes in earnings driven by
-endogeous labor supply decisions, i.e.~working for more. Second, the
-earning expectations, risks and tail risks measured here is only
-conditional. It excludes either unemployment, i.e.~zero earning, or an
-upward movement in the job ladder, i.e.~a different earning growth rate.
-Therefore, it does not fully reflect the labor income risk profile
-relevant for each individual.
+requirements help make sure the comparability of the answers across time
+and also excludes the potential changes in earnings driven by endogenous
+labor supply decisions, i.e.~working for longer hours. Second, the
+earning expectations, risks and tail risks measured here are only
+conditional. It excludes either unemployment, i.e.~likely a zero
+earning, or an upward movement in the job ladder, i.e.~a different
+earning growth rate. Therefore, it does not fully reflect the labor
+income risk profile relevant to each individual.
 
-To the extent that we want to tease out the voluntary decision from the
-exogeous labor income, only the exclusion of unemployment scenario is
-relevant for my purpose in characterizing the labor income risks. This
-is assuring because if so, we could interprete the moments of
-same-job-hour earning growth as an upper bound for the level of growth
-rate and a lower bound for the income risks. To put it another way, the
-expected earning growth conditional on employment is higher than the
-unditional one, and the conditional earning risk is lower than the
-unconditional one. At the same time, since SCE seperately elcits the
-perceived probability of losing the curent job for each respondent, I
-could adjust the measured labor income moments taking into account the
-unemployment risk.
+In so far as we want to tease out the earning changes from voluntary
+decisions, moving to a different job position should actually not be
+included in earning expectations. Therefore only the exclusion of an
+unemployment scenario is relevant for my purpose in characterizing the
+labor income risks. But what is assuring me is that the bias due to
+omission of unemployment risk is unambiguous. We could interpret the
+moments of same-job-hour earning growth as an upper bound for the level
+of growth rate and a lower bound for the income risk. To put it in
+another way, the expected earning growth conditional on employment is
+higher than the unconditional one, and the conditional earning risk is
+lower than the unconditional one. At the same time, since SCE separately
+elicits the perceived probability of losing the current job for each
+respondent, I could adjust the measured labor income moments taking into
+account the unemployment risk.
+
+\hypertarget{density-estimation-and-variables}{%
+\subsection{Density estimation and
+variables}\label{density-estimation-and-variables}}
 
 With the histogram answers for each individual in hand, I follow
-\cite{7250895/2JGDME82} to fit each of them with a parametric
+\cite{engelberg_comparing_2009} to fit each of them with a parametric
 distribution accordingly for three following cases. In the first case
 when there are three or more intervales filled with positive
 probabilities, it will be fitted with a generalized beta distribution.
@@ -601,53 +597,72 @@ with an isosceles triangular distribution. In the third case, if there
 is only one positive-probability of interval only, i.e.~equal to one, it
 is fitted with a uniform distribution.
 
-The reasons why I discuss the exact procedures for density distribution
-is not symbolic. It is important for this paper's purpose because I need
-to make sure the estimation assumptions of the distribution does not
-mechanically distort my distribution of the moments.
-\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+I have a reason to discuss at length the exact procedures for density
+distribution. It is important for this paper's purpose because I need to
+make sure the estimation assumptions of the density distribution do not
+mechanically distort my cross-sectional patterns of the estimated
+moments. This is the most obviously seen in the tail risk measure,
+skewness. The assumption of log normality of income process, common in
+the literature (See again \cite{blundell_consumption_2008}), implicitly
+assume zero skewness, i.e.~that the income increase and decrease are
+equally likely. This may not be the case in our surveyed density for
+many individuals. In order to account for this possibility, the assumed
+density distribution should be flexible enough to allow for different
+shapes of subjective distribution. Beta distribution fits this purpose
+well. Of course, in the case of uniform and isosceles triangular
+distribution, the skewness is zero by default. For those of you who may
+wonder, the fractions of the density answers fitted with the beta,
+uniform, and triangular distributions are, respectively, xxx, xxx, xxx
+in our sample.
 
-Since the micro data provided in SCE website already includes the
+Since the microdata provided in the SCE website already includes the
 estimated mean, variance and IQR by the staff economists following the
-exactly same approach, I directly use their estimates for these moments.
+exact same approach, I directly use their estimates for these moments.
 At the same time, for the measure of tail-risk, i.e.~skewness, as not
 provided, I use my own estimates. I also confirm that my estimates and
 theirs for the first two moments are correlated with a coefficient of
 0.9.
 
-For all the moments estimates, there are inevitablly extreme values.
+For all the moment's estimates, there are inevitably extreme values.
 This could be due to the idiosyncratic answers provided by the original
-respodnent, or some non-convergence of the numeric estimation program.
+respondent, or some non-convergence of the numeric estimation program.
 Therefore, for each moment of the analysis, I exclude top and bottom
 \(5\%\) observations, leading to a sample size of around 45,000.
 
-\begin{itemize}
-\tightlist
-\item
-  conversion from nominal to real. expected real earning growth =
-  expected nominal earning growth - inflation var(expected earning
-  growth) = var(expected nominal earning growth) - var(inflation)
-\item
-  perceived income risks and other unemployment risk.
+I also recognize what is really relevant to many economic decisions such
+as consumption, real income instead of nominal income is truely
+relevant. Thanks to the availability of inflation expectation and
+inflation uncertainty (also estimated from density question) can be used
+to convert nominal earning growth moments to real terms. In particular,
+the real earning growth rate is expected nominal growth minus inflation
+expectation.
 
-  \begin{itemize}
-  \tightlist
-  \item
-    this posted a lower bound for the risk as the question only askes
-    about the earning growth for the same job.
-  \item
-    nead to adjust by the unemployment risks
-  \end{itemize}
-\end{itemize}
+\begin{eqnarray}
+\overline {\Delta y^{r}}_{i,t} = \overline\Delta y_{i,t} - \overline \pi_{i,t}
+\end{eqnarray}
 
-    \hypertarget{subjective-income-risks-and-macro-environment}{%
-\subsection{Subjective income risks and macro
-environment}\label{subjective-income-risks-and-macro-environment}}
+The variance associated with real earning growth, if we treat inflation
+and nominal earning growth as two independent stochastical variables, is
+equal to the summed variance of the two.
 
-\hypertarget{cross-sectional-distribution-of-income-moments}{%
-\subsubsection{\texorpdfstring{\href{MacroRiskProfile.ipynb}{Cross-sectional
-distribution of income
-moments}}{Cross-sectional distribution of income moments}}\label{cross-sectional-distribution-of-income-moments}}
+\begin{eqnarray}
+\overline{var^{r}}_{i,t} = \overline{var}_{i,t} + \overline{var}_{i,t}(\pi_{t})
+\end{eqnarray}
+
+Not enough information is available for the same kind of transformation
+of IQR and skewness from nominal to real, so I only use nominal
+variables. Besides, as there are extreme values on inflation
+expectations and uncertainty, I also exclude top and bottom \(5\%\) of
+the observations. This further shrinks the sample, when using real
+moments, to 36,000.
+
+    \hypertarget{perceived-income-risks-basic-facts}{%
+\section{Perceived income risks: basic
+facts}\label{perceived-income-risks-basic-facts}}
+
+\hypertarget{cross-sectional-heterogeneity}{%
+\subsection{\texorpdfstring{\href{MacroRiskProfile.ipynb}{Cross-sectional
+heterogeneity}}{Cross-sectional heterogeneity}}\label{cross-sectional-heterogeneity}}
 
 This section inspects some basic cross-sectional patterns of the subject
 moments of labor income. In the figure below, I plot the histograms of
@@ -704,7 +719,7 @@ enough to allow both.
 \includegraphics{attachment:hist_Q24_rvar.jpg}
 
 \hypertarget{correlation-with-asset-returns}{%
-\subsubsection{\texorpdfstring{\href{MacroRiskProfile.ipynb}{Correlation
+\subsection{\texorpdfstring{\href{MacroRiskProfile.ipynb}{Correlation
 with asset
 returns}}{Correlation with asset returns}}\label{correlation-with-asset-returns}}
 
@@ -757,24 +772,24 @@ return.
 
 The first is the time-average or time-aggregation problem documented in
 both empirical asset pricing and consumption insurance literature
-\cite{7250895/7ZA2CX5N}, \cite{undefined}, . Variables such as
-consumption and earning are interval measures, reported as an average
-over a period, while the stock return is a spot measure computed between
-two points of the time. As a result, if the unit of the time for the
-underlying income process is at a higher frequency than the measured
-interval (an extreme case being the continuous-time), the measured
-variable will exhibit upward biased autocorrelation and correlation with
-other underlying random walk series in the same frequency. In my
-context, such a problem can be partly mitigated by the availability of
-monthly frequency of earning expectations, if we assume the unit of time
-of the underlying stochastic process is a month. Then the directly
-observed monthly correlation of the two cannot be driven by the time
-aggregation problem. What also becomes immediately clear from this
-considration is that I should not examine the correlation of the two
-series in moving average terms, because it will cause the time
-aggregation problem. This point will be discussed in greater detail in
-the next section when I decompose the perceived income risks to
-different components of varying persistence.
+\cite{working_note_1960}, \cite{jagannathan_lazy_2007}, (Crawley, 2019).
+Variables such as consumption and earning are interval measures,
+reported as an average over a period, while the stock return is a spot
+measure computed between two points of the time. As a result, if the
+unit of the time for the underlying income process is at a higher
+frequency than the measured interval (an extreme case being the
+continuous-time), the measured variable will exhibit upward biased
+autocorrelation and correlation with other underlying random walk series
+in the same frequency. In my context, such a problem can be partly
+mitigated by the availability of monthly frequency of earning
+expectations, if we assume the unit of time of the underlying stochastic
+process is a month. Then the directly observed monthly correlation of
+the two cannot be driven by the time aggregation problem. What also
+becomes immediately clear from this considration is that I should not
+examine the correlation of the two series in moving average terms,
+because it will cause the time aggregation problem. This point will be
+discussed in greater detail in the next section when I decompose the
+perceived income risks to different components of varying persistence.
 
 The second issue regards which of the following, lagged, contemporaneous
 or forward is the correct correlation one should look at. Considering
@@ -820,10 +835,10 @@ conditional on more individual characteristics.
 \includegraphics{attachment:tsMed3mvvar.jpg}
 \includegraphics{attachment:tsEstMean3mvskew.jpg}
 
-\hypertarget{individual-characteristics-and-perceived-income-risks}{%
-\subsubsection{\texorpdfstring{\href{MicroRiskProfile.ipynb}{Individual
-characteristics and perceived income
-risks}}{Individual characteristics and perceived income risks}}\label{individual-characteristics-and-perceived-income-risks}}
+\hypertarget{role-of-individual-characteristics}{%
+\subsection{\texorpdfstring{\href{MicroRiskProfile.ipynb}{Role of
+individual
+characteristics}}{Role of individual characteristics}}\label{role-of-individual-characteristics}}
 
 What factors are associated with subjective riskiness of labor income?
 This section inspects the question by regressing the perceived income
@@ -832,11 +847,11 @@ job-specific characteristics, household demographics and other
 macroeconomic expectations held by the respondent.
 
 In a general form, the regression is specified as followed, where the
-dependent variable \(\textit{IncMom}_{i,t}\) represents alternative
-measures of perceived income risks for either nominal or real earning.
+dependent variable is one of the individual subjetive moments that
+represent perceived income risks for either nominal or real earning.
 
 \begin{eqnarray}
-\textrm{IncMom}_{i,t} = \alpha + \beta_0 \textrm{HH}_{i,t} + \beta_1 \textrm{JobType}_{i,t} + \beta_2 \textrm{Exp}_{i,t} + \beta_3 \textrm{Month}_t + \epsilon_{i,t}
+\{\overline{var}_{i,t}, \overline{var}^2_{i,t}, \overline{iqr}_{i,t}\} = \alpha + \beta_0 \textrm{HH}_{i,t} + \beta_1 \textrm{JobType}_{i,t} + \beta_2 \textrm{Exp}_{i,t} + \beta_3 \textrm{Month}_t + \epsilon_{i,t}
 \end{eqnarray}
 
 The first block of factors, as called \(\textit{Jobtype}_{i,t}\)
@@ -955,9 +970,9 @@ environment? This will be the focus of the coming sections.
  
 \end{verbatim}
 
-\hypertarget{perceived-income-risks-and-decision}{%
-\subsubsection{Perceived income risks and
-decision}\label{perceived-income-risks-and-decision}}
+\hypertarget{perceived-income-risks-and-decision-preliminary}{%
+\subsection{Perceived income risks and decision
+(preliminary)}\label{perceived-income-risks-and-decision-preliminary}}
 
 Need to be careful with the bias toward zero due to the noisiness of
 subjective risk measure. But if it is negative sign, the bias goes
@@ -974,14 +989,13 @@ against me. Therefore, less of a concern.
   voluntarily leave the job.
 \end{itemize}
 
-    \hypertarget{decomposing-perceived-income-risks}{%
-\subsection{Decomposing perceived income
-risks}\label{decomposing-perceived-income-risks}}
+    \hypertarget{perceived-income-risks-and-persistence}{%
+\section{Perceived income risks and
+persistence}\label{perceived-income-risks-and-persistence}}
 
-\hypertarget{an-illustration-of-the-idea-in-an-permanent-transitory-income-process}{%
-\subsubsection{An illustration of the idea in an permanent-transitory
-income
-process}\label{an-illustration-of-the-idea-in-an-permanent-transitory-income-process}}
+\hypertarget{an-illustration-of-the-idea-in-a-permanent-transitory-income-process}{%
+\subsection{An illustration of the idea in a permanent-transitory income
+process}\label{an-illustration-of-the-idea-in-a-permanent-transitory-income-process}}
 
 The income process of individual \(i\) is the following
 
@@ -1073,7 +1087,7 @@ exercise, we can compare them with estimates from only realized income
 serieses.
 
 \hypertarget{other-moments-from-rational-expectation}{%
-\subsubsection{Other moments from rational
+\subsection{Other moments from rational
 expectation}\label{other-moments-from-rational-expectation}}
 
 Besises, econometricians have utilized another moment restrictions: auto
@@ -1105,10 +1119,9 @@ Cov^*( E_{t-1}(\Delta y_t), E_t(\Delta y_{t+1}) ) = \\
   The survey is asked each month.
 \end{itemize}
 
-    \hypertarget{a-simple-example-with-half-year-surveys-of-one-year-ahead-earning-growth}{%
-\subsubsection{A Simple Example with Half-year Surveys of One-year-ahead
-Earning
-Growth}\label{a-simple-example-with-half-year-surveys-of-one-year-ahead-earning-growth}}
+    \hypertarget{a-simple-example-with-half-year-as-the-unit-of-the-time}{%
+\subsubsection{A simple example with half-year as the unit of the
+time}\label{a-simple-example-with-half-year-as-the-unit-of-the-time}}
 
 Earning in year \(t\) is a summation of half-year earning.
 
@@ -1199,29 +1212,22 @@ with income growth in future.
 
 This is again, different from the econometrician's problem.
 
-\hypertarget{alternative-income-process}{%
-\subsubsection{Alternative income
-process}\label{alternative-income-process}}
-
-    \hypertarget{sketch-of-the-model}{%
-\subsection{Sketch of the Model}\label{sketch-of-the-model}}
-
-\hypertarget{new-ingredients-of-the-life-cycle-model}{%
-\subsubsection{New ingredients of the life-cycle
-model}\label{new-ingredients-of-the-life-cycle-model}}
-
-\hypertarget{anticipated-insights}{%
-\subsubsection{Anticipated insights}\label{anticipated-insights}}
+    \hypertarget{model-in-progress}{%
+\section{Model (in progress)}\label{model-in-progress}}
 
     \hypertarget{summary}{%
-\subsection{Summary}\label{summary}}
+\section{Summary}\label{summary}}
 
     \hypertarget{reference}{%
-\subsection{Reference}\label{reference}}
+\section{Reference}\label{reference}}
+
 
 
     % Add a bibliography block to the postdoc
     
     
+\bibliographystyle{apalike}
+\bibliography{PerceivedIncomeRisk}
+
     
     \end{document}
