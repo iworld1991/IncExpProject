@@ -4,7 +4,7 @@ cd WorkingFolder/PythonCode/
 
 
 ipython PerceivedIncomeRisk.py
-jupyter nbconvert --to=latex --LatexExporter.template_file=./PerceivedIncomeRisk.tplx TagRemovePreprocessor.remove_cell_tags='{"remove_cell"}' PerceivedIncomeRisk.ipynb
+jupyter nbconvert --to=latex --LatexExporter.template_file=./PerceivedIncomeRisk0.tplx TagRemovePreprocessor.remove_cell_tags='{"remove_cell"}' PerceivedIncomeRisk.ipynb
 
 ipython TexTablesMover.py
 

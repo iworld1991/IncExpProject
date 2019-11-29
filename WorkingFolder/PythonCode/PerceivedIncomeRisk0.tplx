@@ -32,9 +32,6 @@
 % proper Figure object with a Caption API and a way to capture that
 % in the conversion process - todo).
 \usepackage{caption}
-\DeclareCaptionLabelFormat{nolabel}{}
-\captionsetup{labelformat=nolabel}
-
 \usepackage{adjustbox} % Used to constrain images to a maximum size
 \usepackage{xcolor} % Allow colors to be defined
 \usepackage{enumerate} % Needed for markdown enumerations to work

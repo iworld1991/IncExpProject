@@ -8,7 +8,7 @@
 %===============================================================================
 
 ((* block docclass *))
-\documentclass[12pt,notitlepage,onecolumn,aps,pra]{revtex4-1}
+\documentclass[12pt,notitlepage,onecolumn,aps,pra]{article}
 ((* endblock docclass *))
 
 %===============================================================================
@@ -32,6 +32,9 @@
 % proper Figure object with a Caption API and a way to capture that
 % in the conversion process - todo).
 \usepackage{caption}
+\DeclareCaptionLabelFormat{nolabel}{}
+\captionsetup{labelformat=nolabel}
+
 \usepackage{adjustbox} % Used to constrain images to a maximum size
 \usepackage{xcolor} % Allow colors to be defined
 \usepackage{enumerate} % Needed for markdown enumerations to work
@@ -61,11 +64,9 @@
                             % normalem makes italics be italics, not underlines
 \usepackage{braket}
 
-
-
-\usepackage{rotating}   % roating table 
-\usepackage{threeparttable}  % to add notes to the table 
-\usepackage{subcaption}  % caption to sub tables
+\usepackage{rotating}
+\usepackage{threeparttable}
+\usepackage{subcaption}
 
 ((* endblock packages *))
 
@@ -90,10 +91,6 @@
 \author{((( nb.metadata["latex_metadata"]["author"] )))}
 ((*- else -*))
 \author{Tao Wang}
-((*- endif *))
-
-((*- if nb.metadata.get("latex_metadata", {}).get("affiliation", ""): -*))
-\affiliation{((( nb.metadata["latex_metadata"]["affiliation"] )))}
 ((*- endif *))
 
 \date{\today}
@@ -205,6 +202,7 @@
 ((( output.text | wrap_text(86) | escape_latex | ansi2latex )))
     \end{Verbatim}
 ((* endblock stream *))
+
 
 %==============================================================================
 % Define macro custom_add_prompt() (derived from add_prompt() macro in style_ipython.tplx)
