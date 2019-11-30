@@ -401,7 +401,10 @@ beginningtex = """
 \\label{macro_corr}"""
 
 endtex = """\\begin{tablenotes}
-\item Standard errors are clustered by date. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\item *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\item This table reports correlation coefficients between different perceived income moments(inc for nominal 
+and rinc for real) at time 
+$t$ and the monthly s\&p500 return by the end of $t+k$ for $k=0,1,..,5$. 
 \\end{tablenotes}
 \\end{threeparttable}
 \\end{table}"""

@@ -140,7 +140,7 @@ else:
 #
 # ##  Cross-sectional heterogeneity
 #
-# This section inspects some basic cross-sectional patterns of the subject moments of labor income. In the Figure \ref{fig:histmoms} below, I plot the histograms of $\overline\Delta y_{i,t}$, $\overline{var}_{i,t}$,$\overline{iqr}_{i,t}$ and $\overline {skw}_{i,t}$, $\overline {\Delta y^{r}}_{i,t}$, $\overline{var^{r}}_{i,t}$. 
+# This section inspects some basic cross-sectional patterns of the subject moments of labor income. In the Figure \ref{fig:histmoms} below, I plot the histograms of $\overline\Delta y_{i,t}$, $\overline{var}_{i,t}$, $\overline {skw}_{i,t}$, $\overline {\Delta y^{r}}_{i,t}$, $\overline{var^{r}}_{i,t}$. 
 #
 # First, expected income growth across the population exhibits a dispersion ranging from a decrease of $2-3\%$ to around an increase of $10\%$ in nominal terms. Given the well-known downward wage rigidity, it is not surprising that most of the people expect a positive earning growth. At the same time, the distribution of expected income growth is right-skewed, meaning that more workers expect a smaller than larger wage growth. What is interesting is that this cross-sectional right-skewness in nominal earning disappears in expected real terms. Expected earnings growth adjusted by individual inflation expectation becomes symmetric around zero, ranging from a decrease of $10\%$ to an increase of $10\%$. Real labor income increase and decrease are approximately equally likely.  
 #
@@ -150,19 +150,19 @@ else:
 #
 #
 
-# + {"caption": "Distribution of Inidivudal Momnets", "code_folding": [], "label": "fig:histmoms"}
+# + {"caption": "Distribution of Individual Moments", "code_folding": [], "label": "fig:histmoms", "note": "this figure plots histograms of the individual income moments. inc for nominal and rinc for real."}
 ## insert figures
 
 graph_path = os.path.join(path,'../Graphs/ind/')
 
 fig_list = ['hist_incexp.jpg',
-            'hist_incvar.jpg',
             'hist_rincexp.jpg',
+            'hist_incvar.jpg',
             'hist_rincvar.jpg']
             
 nb_fig = len(fig_list)
     
-file_list = [graph_path+fig for fig in fig_list]
+file_list = [graph_path+ fig for fig in fig_list]
 
 ## show figures 
 plt.figure(figsize=(10,10))
@@ -260,7 +260,7 @@ macro_corr
 #     
 #      
 
-# + {"caption": "Perceived Income by Group", "code_folding": [], "label": "fig:boxplotbygroup", "widefigure": true}
+# + {"caption": "Perceived Income by Group", "code_folding": [], "label": "fig:boxplotbygroup", "note": "this figure is the boxplot of perceived income risk(inc for nominal and rinc for real) by different household income (HHinc), education (educ) and gender.", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/ind/')
 

@@ -20,6 +20,7 @@
 import os
 
 
+# + {"code_folding": [0]}
 def insertbefore(oldtex, key, tex_to_add):
     """ 
     Inserts 'tex_to_add' into 'oldtex' right before 'key'. 
@@ -33,7 +34,6 @@ def insertbefore(oldtex, key, tex_to_add):
 
 cwd = os.getcwd()
 ltxtb_where = os.path.join(cwd,'../Tables/latex/')
-
 ltx_name = 'PerceivedIncomeRisk.tex'
 ltx_file = os.path.join(cwd,ltx_name)
 
@@ -46,7 +46,7 @@ for file in os.listdir(ltxtb_where):
         file_path = os.path.join(ltxtb_where, file)
         f = open(file_path, 'r')
         ltxtb = f.read()
-        print(len(ltxtb))
+        #print(len(ltxtb))
         ltxtbs = ltxtbs + ltxtb
 
 # +

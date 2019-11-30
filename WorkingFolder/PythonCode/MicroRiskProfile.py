@@ -335,7 +335,8 @@ beginningtex = """
 \\caption{Perceived Income Risks and Individual Characteristics}
 \\label{micro_reg}"""
 
-endtex = """\\begin{tablenotes}\item Standard errors are clustered by date. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+endtex = """\\begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\item This table reports regression results of perceived income risks (incvar for nominal, rincvar for real) on household specific variables. HHinc: household income group ranges from lowests (=1, less than \$10k/year) to the heightst (=11, greater than \$200k/year). Education, educ ranges from the lowest (=1, less than high school) to the highest (=9).
 \\end{tablenotes}
 \\end{threeparttable}
 \\end{adjustbox}
@@ -461,7 +462,8 @@ beginningtex = """
 \\caption{Perceived Income Growth and Individual Characteristics}
 \\label{micro_reg_exp}"""
 
-endtex = """\\begin{tablenotes}\item Standard errors are clustered by date. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+endtex = """\\begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\item This table reports regression results of perceived labor income(incexp for nominal, rincexp for real) growth on household specific variables. HHinc: household income group ranges from lowests (=1, less than \$10k/year) to the heightst (=11, greater than \$200k/year). Education, educ ranges from the lowest (=1, less than high school) to the highest (=9).
 \\end{tablenotes}
 \\end{threeparttable}
 \\end{adjustbox}
