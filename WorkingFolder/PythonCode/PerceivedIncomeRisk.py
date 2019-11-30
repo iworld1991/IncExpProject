@@ -154,10 +154,10 @@ else:
 
 graph_path = os.path.join(path,'../Graphs/ind/')
 
-fig_list = ['hist_Q24_mean.jpg',
-            'hist_Q24_var.jpg',
-            'hist_Q24_rmean.jpg',
-            'hist_Q24_rvar.jpg']
+fig_list = ['hist_incexp.jpg',
+            'hist_incvar.jpg',
+            'hist_rincexp.jpg',
+            'hist_rincvar.jpg']
             
 nb_fig = len(fig_list)
     
@@ -196,9 +196,9 @@ for i in range(nb_fig):
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/pop/')
 
-fig_list = ['tsMed3mvmean.jpg',
-            'tsMed3mvvar.jpg',
-            'tsEstMean3mvskew.jpg']
+fig_list = ['tsMedmean.jpg',
+            'tsMedvar.jpg',
+            'tsEstMeanskew.jpg']
             
 nb_fig = len(fig_list)
 
@@ -282,7 +282,7 @@ reg_tb = pd.read_excel('../Tables/micro_reg.xlsx').replace(np.nan,'')
 reg_tb
 # -
 
-# ##  Perceived income risks and decision (preliminary)
+# ##  Perceived income risks and decision (in progress)
 #
 # Need to be careful with the bias toward zero due to the noisiness of subjective risk measure. But if it is negative sign, the bias goes against me. Therefore, less of a concern. 
 #
@@ -290,7 +290,7 @@ reg_tb
 #   - Particularly so for durable good.
 #   - Higher income risks is also associated with higher chance to voluntarily leave the job. 
 
-# #  Perceived income risks and persistence  
+# #  Perceived income risks and persistence (in progress) 
 #
 # ##  An illustration of the idea in a permanent-transitory income process
 #
