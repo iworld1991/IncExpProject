@@ -353,24 +353,26 @@ Empirically, I can immediately ask following questions.
   To what extent to which this heterogeneity in perceptions align with
   the true income risks facing different population group, or at least
   partly attributed to perceptive differences due to heterogeneity in
-  information and information processing, as discussed in many models?
+  information and information processing, as discussed in many models of
+  expectation formation?
 
   \begin{itemize}
   \tightlist
   \item
-    For instance, if we treat the income risks identified from
-    cross-sectional inequality by econometricians as a benchmark, to
-    what extent are the risks perceived by the agents?
+    If we treat the income risks identified from cross-sectional
+    inequality by econometricians as a benchmark, to what extent are the
+    risks perceived by the agents?
 
     \begin{itemize}
     \tightlist
     \item
       If agents know more than econometricians about their individual
-      earnings, the perceived risks may be lower than econometrician's
-      estimates?
+      earnings, should the perceived risks may be lower than
+      econometrician's estimates?
     \item
-      Or actually, agents, due to inattention or other reasons, tend to
-      think the overall risk is higher?
+      Or actually, do agents, due to inattention or other information
+      rigidity in learning about recently realized shocsk, perceive the
+      overall risk to be higher?
     \end{itemize}
   \end{itemize}
 \item
@@ -396,8 +398,28 @@ Empirically, I can immediately ask following questions.
   covariance with macro-environment, risky asset returns, matter a great
   deal. For instance, if perceived income risks are counter-cyclical, it
   has important labor supply and portfolio implications.
-  \cite{catherine_countercyclical_2019}
+  (\cite{guvenen2014nature}, \cite{catherine_countercyclical_2019})
 \end{itemize}
+
+One of the key challenges when addressing these questions is how to
+separately account for the differences in perceived risks driven by
+differences in underlying risk profiles, i.e.~the ``truth'', and the
+rest driven by perceptive and informational heterogeneity. The most
+straightforward way seems to be to compare econometrician's external
+estimates of the income process using realized data and the perceived
+from the subjective survey. But this approach implicitly assumes that
+econometricians correctly specify the model of the income process and
+ignores the likely superior information problem discussed above.
+Therefore, in this paper, instead of simply assuming the external
+estimate by econometricians is the true underlying income process, I
+characterize the differences between perception and the true process by
+jointly recovering the process using realized data and expectations
+based on a particular well-defined theory of expectation formation. The
+advantage of doing this is that one does not need to make a stringent
+assumption about either agents' full rationality or econometricians'
+correctness of model specification. It allows econometricians to utilize
+the information from expectations to understand the true law of the
+system. This is in a similar spirit to \cite{guvenen_inferring_2014}.
 
 Theoretically, once I can document robustly some patterns of the
 perceived income risks profile, it can ben incorporated into an
@@ -416,7 +438,8 @@ a few of the following scenarios.
   highly persistent than typically assumed, then it is in line with the
   rare disaster idea.
 \item
-  The peceptive differences lead to differences in MPCs.
+  The peceptive differences lead to differences in MPCs, which is a
+  different mechanism from credit-constraints and noninsurance of risks.
 \end{itemize}
 
 \hypertarget{relevant-literature-and-potential-contribution}{%
@@ -426,25 +449,31 @@ contribution}\label{relevant-literature-and-potential-contribution}}
 This paper is relevant to four lines of literature. First, the idea of
 this paper echoes with an old problem in the consumption insurance
 literature: `insurance or information' (\cite{pistaferri_superior_2001},
-\cite{kaufmann_disentangling_2009}). In any empirical tests of
-consumption insurance or consumption response to income, there is always
-a worry that what is interpreted as the shock has actually already
-entered the agents' information set or exactly the opposite. For
-instance, the notion of excessive sensitivity, namely households
-consumption highly responsive to anticipated income shock, maybe simply
-because agents have not incorporated the recently realized shocks that
-econometricians assume so. My paper shares a similar spirit with the few
-papers above in the sense that we try to tackle the identification
-problem in the same approach: directly using the expectation data and
-explicitly controling what are truely conditional expectations of the
-agents making the decision. This helps economists avoid making
-assumptions on what is exactly in the agents' information set. What
-differentiates my work from these few papers is that I focus on higher
-moments, i.e.~income risks and skewness by utilizing the recently
-available density forecasts of labor income. Part of my exercise can be
-also seen as an extension of the New York Fed
-\href{https://libertystreeteconomics.newyorkfed.org/2017/11/understanding-permanent-and-temporary-income-shocks.html}{blog}
-from the first moment to the second moments.
+\cite{kaufmann_disentangling_2009},\cite{meghir_chapter_2011}). In any
+empirical tests of consumption insurance or consumption response to
+income, there is always a worry that what is interpreted as the shock
+has actually already entered the agents' information set or exactly the
+opposite. For instance, the notion of excessive sensitivity, namely
+households consumption highly responsive to anticipated income shock,
+maybe simply because agents have not incorporated the recently realized
+shocks that econometricians assume so(\cite{flavin_excess_1988}). Also,
+recently, in the New York Fed Liberty Street {[}blog{]}, the authors
+followed a similar approach to decompose the permanent and transitory
+shocks.
+(https://libertystreeteconomics.newyorkfed.org/2017/11/understanding-permanent-and-temporary-income-shocks.html)
+My paper shares a similar spirit with these studies in the sense that I
+try to tackle the identification problem in the same approach: directly
+using the expectation data and explicitly controlling what are truly
+conditional expectations of the agents making the decision. This helps
+economists avoid making assumptions on what is exactly in the agents'
+information set. What differentiates my work from other authors is that
+I focus on higher moments, i.e.~income risks and skewness by utilizing
+the recently available density forecasts of labor income. Previous work
+only focuses on the sizes of the realized shocks and estimates the
+variance of the shocks using cross-sectional distribution, while my
+paper directly studies the individual specific variance of these shocks
+perceived by different individuals. This will become clear in Section
+\ref{perceived-income-risks-and-persistence-in-progress}.
 
 Second, this paper is inspired by an old but recently reviving interest
 in studying consumption/saving behaviors in models incorporating
@@ -459,24 +488,28 @@ propensity to consume(MPCs) across the population.
 macro-MPCs by introducing to the model an information rigidity of
 households in learning about macro news while being updated about micro
 news. \cite{lian2019imperfect} shows that an imperfect perception of
-wealth accounts such phenomenon as excess sensitivity to current income
-and higher MPCs out of wealth than current income and so forth. My paper
-has a similar flavor to all of these works by exploring the behavioral
-implications of households' perceptive imperfection. The novelty of my
-paper dominantly focues on the implications of heterogeneity in
-perceived higher moments such as risks and skewness.
+wealth accounts for such phenomenon as excess sensitivity to current
+income and higher MPCs out of wealth than current income and so forth.
+My paper has a similar flavor to all of these works by exploring the
+behavioral implications of households' perceptive imperfection. The
+novelty of my paper lies in the primary on the implications of
+heterogeneity in perceived higher moments such as risks and skewness.
+Various theories of expectation formation have different predictions
+about the cross-sectional and dynamic patterns of perceived risks. I
+examine these predictions in this paper.
 
 This paper also contributes to the literature studying expectation
 formation using subjective surveys. There has been a long list of
 ``irrational expectation'' theories developed in recent decades on how
 agents deviate from full-information rationality benchmark, such as
 sticky expectation, noisy signal extraction, least-square learning, etc.
-Also, empirical work has been devoted to testing these theories. But it
-is fair to say that thus far, relatively little work has been done on
-individual variables such as labor income, which may well be more
-relevant to individual economic decisions. Therefore, understanding
+Also, empirical work has been devoted to testing these theories in a
+comparable manner (\cite{coibion2012can}, \cite{fuhrer2018intrinsic}).
+But it is fair to say that thus far, relatively little work has been
+done on individual variables such as labor income, which may well be
+more relevant to individual economic decisions. Therefore, understanding
 expectation formation of the individual variables, in particular,
-concerning both mean and higher moments, will prove fruitful insights
+concerning both mean and higher moments, will provide fruitful insights
 for macroeconomic modeling assumptions.
 
 Lastly, the paper is indirectly related to the research that advocated
@@ -497,30 +530,6 @@ avoids imposing arbitrary assumptions. This insight holds for not only
 point forecast but also and even more importantly, for uncertainty,
 because for any economic decision made by a risk-averse agent, not only
 the expectation but also the perceived risks matter a great deal.
-
-\hypertarget{a-broader-motivation}{%
-\subsection{A broader motivation}\label{a-broader-motivation}}
-
-The approach that I am proposing here is a natural development from the
-existing literature of expectation formation. One of the common
-practices in this literature is to compare the measured expectations
-from surveys with the law of the systems independently identified by
-econometricians and interpret all deviations of the former to the latter
-as the evidence for irrationality. It is true that this has proved to be
-fruitful and refreshing compared to the earlier macroeconomic tradition
-that solely relies on the stringent assumption of rationality. But such
-practices implicitly assume the process discovered by econometricians is
-the ``true'' one. It does not recognize at all the use of large-sized
-surveys of expectations in discovering the law of the system besides
-making a case about how expectations are not rational. Therefore, a
-rather obvious reconciliation building upon the existing literature is
-to utilize jointly the realized data and expectations to understand the
-``true'' process, while allowing for the partial rationality of the
-modelers and agents in the model. The advantage of doing this is that
-one does not need to make a stringent assumption about either agents'
-full rationality or econometricians' correctness of model specification.
-It allows econometricians to utilize the information from expectations
-to understand the true law of the system.
 
 
     \hypertarget{data-variables-and-density-estimation}{%
@@ -797,18 +806,19 @@ over the impeding 12 months at each point of the time.
 With these considerations, in the Figure \ref{fig:tssp500}, I plot the
 median perceived risk and skewness of both nominal and real earning
 along with the contemporaneous stock market returns by the end of each
-month (also true for the mean, see appendix). In order to account for
-the fact that the survey is undertaken in the middle of the month while
-the return is computed at the end of the month, I take the lag the
-income moments by 1 or 2 months when calculating the correlation
-coefficient. Table \ref{macro_corr} reports correlation coefficients of
-between perceived risks and the realized stock market return over the
-next 0-6 months. Although a Pearson test of the correlation coefficients
-is only significant for a 2-month lag, overall, the income risks
-measured by variance and IQR for both nominal and real earning post a
-negative correlation with the realized stock return a few months ahead.
-The subjective skewness has also a negative associated with the realized
-stock return in the near future.
+month (also true for the mean, see Figure \ref{micro_reg_exp} in
+appendix.). In order to account for the fact that the survey is
+undertaken in the middle of the month while the return is computed at
+the end of the month, I take the lag the income moments by 1 or 2 months
+when calculating the correlation coefficient. Table \ref{macro_corr}
+reports correlation coefficients of between perceived risks and the
+realized stock market return over the next 0-6 months. Although a
+Pearson test of the correlation coefficients is only significant for a
+2-month lag, overall, the income risks measured by variance and IQR for
+both nominal and real earning post a negative correlation with the
+realized stock return a few months ahead. The subjective skewness has
+also a negative associated with the realized stock return in the near
+future.
 
 More caution is needed when interpreting the observed negative
 association between perceived earning risks/skewness with stock market
@@ -1212,11 +1222,76 @@ This is again, different from the econometrician's problem.
     \hypertarget{summary}{%
 \section{Summary}\label{summary}}
 
-    \hypertarget{reference}{%
-\section{Reference}\label{reference}}
+    \hypertarget{appendix}{%
+\section{Appendix}\label{appendix}}
 
 
        
+\begin{table}[ht]
+\centering
+\begin{adjustbox}{width={0.9\textwidth},totalheight={\textheight}}
+\begin{threeparttable}
+\caption{Perceived Income Growth and Individual Characteristics}
+\label{micro_reg_exp}\begin{tabular}{ccccccccc}
+\toprule
+{} &  incexp I & incexp II & incexp III & incexp IIII & rincexp I & rincexp II & rincexp III & rincexp IIII \\
+\midrule
+HHinc=10     &           &           &    0.43*** &             &           &            &     0.66*** &              \\
+             &           &           &     (0.12) &             &           &            &      (0.17) &              \\
+HHinc=11     &           &           &    0.74*** &             &           &            &     1.20*** &              \\
+             &           &           &     (0.12) &             &           &            &      (0.17) &              \\
+HHinc=2      &           &           &       0.02 &             &           &            &       -0.27 &              \\
+             &           &           &     (0.13) &             &           &            &      (0.18) &              \\
+HHinc=3      &           &           &    0.34*** &             &           &            &       -0.06 &              \\
+             &           &           &     (0.12) &             &           &            &      (0.17) &              \\
+HHinc=4      &           &           &      0.22* &             &           &            &        0.06 &              \\
+             &           &           &     (0.12) &             &           &            &      (0.17) &              \\
+HHinc=5      &           &           &       0.19 &             &           &            &       -0.00 &              \\
+             &           &           &     (0.12) &             &           &            &      (0.17) &              \\
+HHinc=6      &           &           &     0.28** &             &           &            &        0.25 &              \\
+             &           &           &     (0.12) &             &           &            &      (0.17) &              \\
+HHinc=7      &           &           &     0.29** &             &           &            &       0.29* &              \\
+             &           &           &     (0.12) &             &           &            &      (0.17) &              \\
+HHinc=8      &           &           &     0.27** &             &           &            &        0.24 &              \\
+             &           &           &     (0.11) &             &           &            &      (0.16) &              \\
+HHinc=9      &           &           &    0.30*** &             &           &            &     0.46*** &              \\
+             &           &           &     (0.11) &             &           &            &      (0.16) &              \\
+educ=2       &           &           &            &        0.44 &           &            &             &         0.18 \\
+             &           &           &            &      (0.39) &           &            &             &       (0.62) \\
+educ=3       &           &           &            &        0.44 &           &            &             &         0.06 \\
+             &           &           &            &      (0.38) &           &            &             &       (0.61) \\
+educ=4       &           &           &            &        0.63 &           &            &             &         0.50 \\
+             &           &           &            &      (0.38) &           &            &             &       (0.62) \\
+educ=5       &           &           &            &      0.77** &           &            &             &         0.98 \\
+             &           &           &            &      (0.38) &           &            &             &       (0.61) \\
+educ=6       &           &           &            &        0.54 &           &            &             &         0.96 \\
+             &           &           &            &      (0.38) &           &            &             &       (0.61) \\
+educ=7       &           &           &            &        0.55 &           &            &             &         1.01 \\
+             &           &           &            &      (0.42) &           &            &             &       (0.66) \\
+educ=8       &           &           &            &     1.05*** &           &            &             &       1.53** \\
+             &           &           &            &      (0.41) &           &            &             &       (0.65) \\
+educ=9       &           &           &            &       -0.73 &           &            &             &        -0.73 \\
+             &           &           &            &      (0.67) &           &            &             &       (1.01) \\
+gender=male  &           &           &            &    -0.27*** &           &            &             &     -0.89*** \\
+             &           &           &            &      (0.06) &           &            &             &       (0.09) \\
+parttime=yes &  -0.47*** &  -0.34*** &   -0.28*** &             &  -0.66*** &   -0.54*** &    -0.36*** &              \\
+             &    (0.03) &    (0.03) &     (0.03) &             &    (0.04) &     (0.04) &      (0.05) &              \\
+selfemp=yes  &   0.89*** &   0.00*** &     0.00** &             &   0.93*** &    0.00*** &     0.00*** &              \\
+             &    (0.04) &    (0.00) &     (0.00) &             &    (0.05) &     (0.00) &      (0.00) &              \\
+             &    (0.01) &    (0.03) &     (0.11) &      (0.37) &    (0.02) &     (0.04) &      (0.16) &       (0.61) \\
+Stkprob      &           &   0.01*** &    0.01*** &             &           &    0.02*** &     0.02*** &              \\
+             &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+UEprobInd    &           &  -0.01*** &   -0.01*** &             &           &   -0.02*** &    -0.01*** &              \\
+             &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+N            &     45955 &     40806 &      35282 &        6796 &     42057 &      37280 &       32558 &         5873 \\
+R2           &      0.02 &      0.02 &       0.02 &        0.01 &      0.01 &       0.03 &        0.05 &         0.03 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\item Standard errors are clustered by date. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\end{tablenotes}
+\end{threeparttable}
+\end{adjustbox}
+\end{table}
 \begin{table}[ht]
 \centering
 \begin{adjustbox}{width={0.9\textwidth},totalheight={\textheight}}

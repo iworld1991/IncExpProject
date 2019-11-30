@@ -67,9 +67,9 @@ dataset = pd.read_stata('../SurveyData/SCE/IncExpSCEProbIndM.dta')
 
 vars_id = ['userid','date']
 
-moms_nom = ['Q24_var']
+moms_nom = ['Q24_mean','Q24_var']
 
-moms_real = ['Q24_rvar']
+moms_real = ['Q24_rmean','Q24_rvar']
 
 vars_demog = ['D6']   ## level of income, 11 groups 
 
@@ -193,7 +193,7 @@ for mom in ['incvar','rincvar']:
         
 """
 
-# + {"code_folding": [6]}
+# + {"code_folding": [5, 6]}
 fontsize = 80
 figsize = (100,40)
 plt.style.use('ggplot')
@@ -230,7 +230,7 @@ for gp in ['HHinc','educ','gender']:
     ## save figure 
     plt.savefig('../Graphs/ind/boxplot'+'_'+str(gp)+'.jpg')
 
-# + {"code_folding": []}
+# + {"code_folding": [9]}
 gplist = ['HHinc','educ','gender']
 momlist = ['incvar','rincvar']
 incg_lb = list(inc_grp.values())
@@ -274,17 +274,128 @@ plt.savefig('../Graphs/ind/boxplot.jpg')
 ## preps 
 
 dep_list =  ['incvar','rincvar'] 
+dep_list2 =['incexp','rincexp']
 indep_list_ct = ['UEprobInd','UEprobInd','Stkprob']
 indep_list_dc = ['HHinc','selfemp','fulltime']
 
 
-# + {"code_folding": [5]}
-## full-table 
+# + {"code_folding": [7]}
+## full-table for risks  
 
 rs_list = {}  ## list to store results 
 nb_spc = 4  ## number of specifications 
 
 for i,mom in enumerate(dep_list):
+    ## model 1 
+    model = smf.ols(formula = str(mom)
+                    +'~ C(parttime)+C(selfemp)',
+                    data = SCEM)
+    rs_list[nb_spc*i] = model.fit()
+    
+    ## model 2
+    ct_str = '+'.join([var for var in indep_list_ct])
+    model2 = smf.ols(formula = str(mom)
+                    +'~ C(parttime)+C(selfemp) + '
+                     + ct_str,
+                    data = SCEM)
+    rs_list[nb_spc*i+1] = model2.fit()
+    
+    ## model 3 
+    model3 = smf.ols(formula = str(mom)
+                    +'~ C(parttime) + C(selfemp) + C(HHinc) +'
+                     + ct_str,
+                    data = SCEM)
+    rs_list[nb_spc*i+2] = model3.fit()
+    
+    ## model 4 
+    model4 = smf.ols(formula = str(mom)
+                    +'~ C(gender)+ C(educ)',
+                    data = SCEM)
+    rs_list[nb_spc*i+3] = model4.fit()
+    
+    
+rs_names = [rs_list[i] for i in range(len(rs_list))]
+
+dfoutput = summary_col(rs_names,
+                        float_format='%0.2f',
+                        stars = True,
+                        info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
+                                  'R2':lambda x: "{:.2f}".format(x.rsquared)})
+dfoutput.title = 'Perceived Income Risks'
+print(dfoutput)
+
+# +
+## output tables 
+
+beginningtex = """
+\\begin{table}[ht]
+\\centering
+\\begin{adjustbox}{width={0.9\\textwidth},totalheight={\\textheight}}
+\\begin{threeparttable}
+\\caption{Perceived Income Risks and Individual Characteristics}
+\\label{micro_reg}"""
+
+endtex = """\\begin{tablenotes}\item Standard errors are clustered by date. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\\end{tablenotes}
+\\end{threeparttable}
+\\end{adjustbox}
+\\end{table}"""
+
+
+# + {"code_folding": [3]}
+## relabel rows 
+
+
+def CatRename(table):
+    relabels = {}
+    rows = [idx for idx in table.index if ')[T.' in idx]
+    for i in range(len(rows)):
+        string = rows[i]
+        var = string.split('C(')[1].split(')[T')[0]
+        val = string.split('[T.')[1].split(']')[0]
+        if '.0' in val:
+            val = val.split('.0')[0]
+        else:
+            val = val 
+        relabels[rows[i]] = var + '=' + str(val)
+    table = table.rename(index = relabels)
+    return table 
+
+table = CatRename(dfoutput.tables[0])
+
+
+# +
+## excluding rows that are not to be exported 
+
+to_drop = ['Intercept']
+
+## need to also drop rows reporting the stadard deviations as well 
+rows_below = []
+for var in to_drop:
+    row_idx = list(table.index).index(var)
+    #print(row_idx)
+    rows_below.append(row_idx) 
+    
+tb = table.drop(index = to_drop)
+
+# + {"code_folding": []}
+## write to latex 
+f = open('../Tables/latex/micro_reg.tex', 'w')
+f.write(beginningtex)
+tb_ltx = tb.to_latex().replace('lllllllll','ccccccccc')   # hard coded here 
+#print(tb)
+f.write(tb_ltx)
+f.write(endtex)
+f.close()
+# + {"code_folding": []}
+## full-table for expected growth, appendix 
+
+## full-table for risks  
+
+rs_list = {}  ## list to store results 
+nb_spc = 4  ## number of specifications 
+
+for i,mom in enumerate(dep_list2):
     ## model 1 
     model = smf.ols(formula = str(mom)
                     +'~ C(parttime)+C(selfemp)',
@@ -320,51 +431,14 @@ dfoutput2 = summary_col(rs_names2,
                         stars = True,
                         info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
                                   'R2':lambda x: "{:.2f}".format(x.rsquared)})
-dfoutput2.title = 'Perceived Income Risks'
+dfoutput2.title = 'Perceived Income Growth'
 print(dfoutput2)
 
-# +
-## output tables 
-
-beginningtex = """
-\\begin{table}[ht]
-\\centering
-\\begin{adjustbox}{width={0.9\\textwidth},totalheight={\\textheight}}
-\\begin{threeparttable}
-\\caption{Perceived Income Risks and Individual Characteristics}
-\\label{micro_reg}"""
-
-endtex = """\\begin{tablenotes}\item Standard errors are clustered by date. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
-\\end{tablenotes}
-\\end{threeparttable}
-\\end{adjustbox}
-\\end{table}"""
-
-
-# +
-## relabel rows to make it easier 
-
-
-def CatRename(table):
-    relabels = {}
-    rows = [idx for idx in table.index if ')[T.' in idx]
-    for i in range(len(rows)):
-        string = rows[i]
-        var = string.split('C(')[1].split(')[T')[0]
-        val = string.split('[T.')[1].split(']')[0]
-        if '.0' in val:
-            val = val.split('.0')[0]
-        else:
-            val = val 
-        relabels[rows[i]] = var + '=' + str(val)
-    table = table.rename(index = relabels)
-    return table 
-
+## relabel 
 table = CatRename(dfoutput2.tables[0])
 
-# +
-## excluding rows that are not to be exported 
 
+## drop 
 to_drop = ['Intercept']
 
 ## need to also drop rows reporting the stadard deviations as well 
@@ -376,9 +450,26 @@ for var in to_drop:
     
 tb = table.drop(index = to_drop)
 
-# + {"code_folding": []}
+## latex setting 
+
+
+beginningtex = """
+\\begin{table}[ht]
+\\centering
+\\begin{adjustbox}{width={0.9\\textwidth},totalheight={\\textheight}}
+\\begin{threeparttable}
+\\caption{Perceived Income Growth and Individual Characteristics}
+\\label{micro_reg_exp}"""
+
+endtex = """\\begin{tablenotes}\item Standard errors are clustered by date. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\\end{tablenotes}
+\\end{threeparttable}
+\\end{adjustbox}
+\\end{table}"""
+
+
 ## write to latex 
-f = open('../Tables/latex/micro_reg.tex', 'w')
+f = open('../Tables/latex/micro_reg_exp.tex', 'w')
 f.write(beginningtex)
 tb_ltx = tb.to_latex().replace('lllllllll','ccccccccc')   # hard coded here 
 #print(tb)
@@ -386,5 +477,6 @@ f.write(tb_ltx)
 f.write(endtex)
 f.close()
 # -
+
 
 
