@@ -305,7 +305,7 @@ reg_tb
 # \begin{equation}
 # \begin{split}
 # y_{i,t} = p_{i,t} + \epsilon_{i,t} \\
-# P_{i,t} = p_{i,t-1} + \theta_{i,t} \\
+# p_{i,t} = p_{i,t-1} + \theta_{i,t} \\
 # \theta_{i,t} \sim N(0,\sigma_{\theta,t}) \\
 # \epsilon_{i,t} \sim N(0,\sigma_{\epsilon,t})
 # \end{split}
@@ -340,16 +340,16 @@ reg_tb
 # Cov (\Delta y_{i,t}, \Delta y_{i,t-1}) =  - \sigma^2_{\epsilon,t-1}
 # \end{equation}
 #
-# Using the recursive structure from an income panel of length t+2 periods (therefore, t+1 periods of $\Delta y_{i,t}$ are available), the three moments above could identify income risks $\sigma_{\theta,t}$ and $\sigma_{\epsilon,t}$ and for up to $t$ periods.  
+# Using the recursive structure from an income panel of length t+2 periods (therefore, t+1 periods of $\Delta y_{i,t}$ are available), the three moments above could identify income risks $\sigma_{\theta,t}$ and $\sigma_{\epsilon,t}$ for up to $t$ periods.  
 #
-# The additional information from density forecasts is the conditional variance that is specifically perceived by $i$, $Var^*_{i,t}(\Delta y_{i,t+1})$. This is not the same as the cross-sectional variance defined above (which has no subscript $i$). Under the rational expectation, an agent $i$ who knows perfectly about her income process and standing at time $t$ shall perceive her income risks to be exactly equal to the conditional variance of income growth over the next period given the realized shocks up to $t$. 
+# The additional information from density forecasts is the conditional variance that is specifically perceived by $i$, $Var_{i,t}(\Delta y_{i,t+1})$. This is not the same as the cross-sectional variance defined above (which has no subscript $i$). Under the rational expectation, an agent $i$ who knows perfectly about her income process and standing at time $t$ shall perceive her income risks to be exactly equal to the conditional variance of income growth over the next period given the realized shocks up to $t$. 
 #
 # \begin{equation}
 # \label{VarCRE}
 #  Var^*_{i,t}(\Delta y_{i,t+1}) = \sigma^2_{\theta,t+1} + \sigma^2_{\epsilon,t+1} \quad \forall i
 # \end{equation}
 #  
-# where I use ${}^*$ superscript to represent the rational expectation version of the moments. For the risks estimated from cross-sectional distribution from above to truly align with what is perceived by individual $i$, we need two assumptions. First, the income shocks from for total population are drawn from the same distribution as assumed by econometricians. Second, the agent $i$ has the rational expectation. 
+# where I use ${}^*$ superscript to represent the rational expectation version of the moments. For the risks estimated from cross-sectional distribution from above to truly align with what is perceived by individual $i$, we need two assumptions. First, the income shocks for the entire population (or the defined cohort that shares the same distribution of income shocks) are exactly as assumed by econometricians. Second, the agent $i$ has the rational expectation and full information.  
 #
 # In order to reflect the observed heterogeneity in perceived risks from the data, I assume the realized perceived risk has an i.i.d. component on the top of rational expectation benchmark. 
 #
