@@ -381,7 +381,7 @@ reg_tb
 # Earning in year $t$ is a summation of half-year earning. 
 #
 # \begin{equation}
-# y_t = y_{t_2}+ y_{t_2} 
+# y_t = y_{t_1}+ y_{t_2} 
 # \end{equation}
 #
 # The YoY growth of income is below
@@ -471,8 +471,44 @@ reg_tb
 # #  Model (in progress)
 
 #
-# #  Summary 
+# #  Summary and agenda
 #
+#
+# A few robust empirical findings so far. 
+#
+#  - Individuals' perceived income risks measured by variance, IQR and tail risk measure skewness all exhibit sizable dispersion across different individuals. This pattern also holds for real earning risk, when adjusted by inflation uncertainty. 
+#  - Distributions of perceived risks are consistent with a number of intuitive patterns. For instance, earners who are males, from higher-income households, and with higher education have statistically significantly lower perceived risks. 
+#  - The perceived risk is also positively associated with the perceived chance of unemployment. 
+#  
+# Preliminary findings include the following.  
+#
+#  - Perceived risk and skewness for future income are negatively correlated with stock market returns in the same future horizon. (This needs to be more disciplined by the empirical asset pricing literature.)
+#  
+# To-dos in the next stage of the work
+#
+# - Empirically, investigate the correlation between perceived risk and high-frequency macro variables that can approximate business cycle dynamics.
+# - To decompose the subjective income process by addressing the time aggregation problem and missing data on monthly earnings.
+#
+# - Theoretically, build a life cycle model of consumption/portfolio choice with the following features:
+#       - heterogeneous perceptions of income process, which is micro-founded in a manner in line with the empirical patterns. 
+#       - with endogenous consumption and portfolio choice decisions. 
+#       - with market incompleteness, i.e. the idiosyncratic risks are uninsured. 
 
 # + {"hide_cell": true, "cell_type": "markdown"}
 # # Appendix 
+
+# + {"caption": "Distribution of Individual Moments: IQR", "code_folding": [], "label": "fig:histmoms_iqr", "note": "this figure plots histograms of the individual income moments. inc for nominal and rinc for real."}
+graph_path = os.path.join(path,'../Graphs/ind/')
+
+fig_list = ['hist_inciqr.jpg']
+            
+nb_fig = len(fig_list)
+    
+file_list = [graph_path+ fig for fig in fig_list]
+
+## show figures 
+plt.figure(figsize=(5,5))
+for i in range(nb_fig):
+    plt.subplot(1,1,i+1)
+    plt.imshow(mpimg.imread(file_list[i]))
+    plt.axis("off")
