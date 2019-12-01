@@ -157,16 +157,18 @@ graph_path = os.path.join(path,'../Graphs/ind/')
 fig_list = ['hist_incexp.jpg',
             'hist_rincexp.jpg',
             'hist_incvar.jpg',
-            'hist_rincvar.jpg']
+            'hist_rincvar.jpg',
+            'hist_inciqr.jpg',
+            'histIncSkew.jpg']
             
 nb_fig = len(fig_list)
     
 file_list = [graph_path+ fig for fig in fig_list]
 
 ## show figures 
-plt.figure(figsize=(10,10))
+plt.figure(figsize=(10,15))
 for i in range(nb_fig):
-    plt.subplot(2,int(nb_fig/2),i+1)
+    plt.subplot(int(nb_fig/2),2,i+1)
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
 # -
@@ -496,19 +498,3 @@ reg_tb
 
 # + {"hide_cell": true, "cell_type": "markdown"}
 # # Appendix 
-
-# + {"caption": "Distribution of Individual Moments: IQR", "code_folding": [], "label": "fig:histmoms_iqr", "note": "this figure plots histograms of the individual income moments. inc for nominal and rinc for real."}
-graph_path = os.path.join(path,'../Graphs/ind/')
-
-fig_list = ['hist_inciqr.jpg']
-            
-nb_fig = len(fig_list)
-    
-file_list = [graph_path+ fig for fig in fig_list]
-
-## show figures 
-plt.figure(figsize=(5,5))
-for i in range(nb_fig):
-    plt.subplot(1,1,i+1)
-    plt.imshow(mpimg.imread(file_list[i]))
-    plt.axis("off")
