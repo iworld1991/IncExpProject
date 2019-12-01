@@ -297,7 +297,7 @@ reg_tb
 # The cross-sectional heterogeneity documented in the previous analysis in perceived risks mask two aspects that are crutial to understanding the real nature of the perceptual heterogeneity. First, to what extent these subjetive risk profiles simply reflect the de facto differences in the stochastic nature of the idiosyncratic labor income shocks? This is also imperative if one wants to attribute part of the differences to any deviations from full-information rational expectation. Second, do the perceived risks contain different components that differ in terms of its persistence? The risks associated with permanent and transitory shocks have substantially different impacts on individual decisions. In order to address both issues, I will need to specify a well-defined income process.
 #
 #
-# ##  An illustration in a simple two-component income process and rational expectation
+# ##  An illustration of the idea in a permanent-transitory income process
 #
 #
 # The logged income of individual $i$ (excluding the predictable component given known information by agents at time $t$) follows a following process (same as <cite data-cite="carroll1997nature">(Carroll and Samwick, 1997)</cite>).  
@@ -311,70 +311,84 @@ reg_tb
 # \end{split}
 # \end{equation}
 #
-# where $p_{i,t}$ is a random walk component with a permanent shock $\theta_{i,t}$ at each point of time, and $\epsilon_{i,t}$ is the transitory shock that is i.i.d.. Note that risks of both transitory and permanent shocks indicated by their respective variance are time-varying. For now, we do not break down individuals into different cohorts, i.e. $\sigma_{\theta,t}$ and $\sigma_{\epsilon,t}$ are not cohort-specific. But we can do this exercise for any defined cohort.  
+# where $p_{i,t}$ is a random walk component with a permanent shock $\theta_{i,t}$ in each point of time. $\epsilon_{i,t}$ is the transitory shock that is i.i.d.. The risks of both transitory and permanent shocks indicated by its variance are time-varying. For now, we do not break down individuals into different cohorts, i.e. $\sigma_{\theta,t}$ and $\sigma_{\epsilon,t}$ are not cohort specific. But we can do this exercise for any defined cohort.  
 #
 # Realized income growth is 
 #
 # \begin{equation}
 # \begin{split}
 # \Delta y_{i,t+1} = y_{i,t+1} - y_{i,t} \\
-#  = p_{i,t+1} + \epsilon_{i,t+1} - p_{i,t} - \epsilon_{i,t} \\
+#  = P_{i,t+1} + \epsilon_{i,t+1} - P_{i,t} - \epsilon_{i,t} \\
 #  = \theta_{i,t+1} + \Delta \epsilon_{i,t+1}
 # \end{split}
 # \end{equation}
 #
-# To recover the sizes of the income risks $\sigma_{\theta,t}$ and $\sigma_{\epsilon,t}$, econometricians have conventionally relied upon following three moment restrictions available from cross-sectional distributions of realized income growth rates.   
+# For an agent $i$, who knows perfectly about her income process, standing at time $t$, her conditional variance of income growth for next period is 
 #
 # \begin{equation}
-# \label{VarUC}
+#  Var^*_{i,t}(\Delta y_{i,t+1}) = \sigma^2_{\theta,t+1} + \sigma^2_{\epsilon,t+1} + \sigma^2_{\xi,t} \quad \forall i
+# \end{equation}
+#  
+# where I use ${}^*$ supscript to denote the rational expecation version of the moments, in the sense that the individual $i$ knows perfectly her income process assumed here and have observed the realization of $\sigma_{\epsilon,t}$. Therefore the later does not show up in her condtional uncertainty. The third component $\sigma_{\xi,t}$ is an idiosyncratic shock to the level of perceived risk that can be either interpreted as a measurement error from the point view of the econometricians or a perceptual change to which econometricians have no access to. 
+#
+# At the same time, the cross-cetional variance of the expected income growth at time $t$ about income growth reflects the different views of the risks.
+#
+# \begin{equation}
+# \overline {Var}^*_{t}(E_{i}(\Delta y_{i,t+1})) = \tilde \sigma^2_{\theta,t+1} +\tilde \sigma^2_{\epsilon,t}+ \tilde \sigma^2_{\epsilon,t+1}
+# \end{equation}
+#
+#
+# The autocovariance of expected income growth in consecutive two periods is as follows.
+#
+#
+# \begin{equation}
+# \overline {Cov}^*_{t+1|t}(E_{i,t}(\Delta y_{i,t+1}),E_{i,t+1}(\Delta y_{i,t+2}) ) = - \tilde \sigma^2_{\epsilon,t+1}
+# \end{equation}
+#
+# The three moments exactly identify the perceived income risks in each period. One way to think about these risks is that they are revealed by people's forecasts.   
+#
+# These moments restrictions exactly mirrors the problem faced by econometricians who have only access to the realized earnings in a panel structure. 
+#
+# What is available to econometricians is the realized cross-sectional variance of income growth (no subscript $i$) shown below. It is different from uncertainty faced with individuals. 
+#
+# \begin{equation}
 # Var (\Delta y_{i,t+1}) =  \sigma^2_{\theta,t+1} +\sigma^2_{\epsilon,t}+ \sigma^2_{\epsilon,t+1}
 # \end{equation}
 #
+# Taking the differences of the population's analogue of the first equation and the second above recover variance of transitory risks $\sigma_{\epsilon,t}$. Recursively using the panel structure, we could recover all the transitory and permanent income risks.
+#
+# Besides, econometricians also use the following moments.
+#
 # \begin{equation}
-# \label{AvarUC1}
-# Cov (\Delta y_{i,t}, \Delta y_{i,t+1}) =  - \sigma^2_{\epsilon,t}
+# Cov (\Delta y_{i,t}, \Delta y_{i,t+1}) =  -\sigma^2_{\epsilon,t}
 # \end{equation}
 #
+# This exercise is based on the assumption that individuals across the population or one defined cohort share the same income process. And also it is rational expectation in the sense that on average individuals get the income process right. 
+#
+# Once we recover permanent and transitory volatilities from above exercise, we can compare them with estimates from only realized income serieses.   
+#
+# ##  Other moments from rational expectation
+#
+# Besises, econometricians have utilized another moment restrictions: auto correlation of income growth across two periods are 
 # \begin{equation}
-# \label{AvarUC2}
-# Cov (\Delta y_{i,t}, \Delta y_{i,t-1}) =  - \sigma^2_{\epsilon,t-1}
-# \end{equation}
-#
-# Using the recursive structure from an income panel of length t+2 periods (therefore, t+1 periods of $\Delta y_{i,t}$ are available), the three moments above could identify income risks $\sigma_{\theta,t}$ and $\sigma_{\epsilon,t}$ and for up to $t$ periods.  
-#
-# The additional information from density forecasts is the conditional variance that is specifically perceived by $i$, $Var^*_{i,t}(\Delta y_{i,t+1})$. This is not the same as the cross-sectional variance defined above (which has no subscript $i$). Under the rational expectation, an agent $i$ who knows perfectly about her income process and standing at time $t$ shall perceive her income risks to be exactly equal to the conditional variance of income growth over the next period given the realized shocks up to $t$. 
-#
-# \begin{equation}
-# \label{VarCRE}
-#  Var^*_{i,t}(\Delta y_{i,t+1}) = \sigma^2_{\theta,t+1} + \sigma^2_{\epsilon,t+1} \quad \forall i
-# \end{equation}
-#  
-# where I use ${}^*$ superscript to represent the rational expectation version of the moments. For the risks estimated from cross-sectional distribution from above to truly align with what is perceived by individual $i$, we need two assumptions. First, the income shocks from for total population are drawn from the same distribution as assumed by econometricians. Second, the agent $i$ has the rational expectation. 
-#
-# In order to reflect the observed heterogeneity in perceived risks from the data, I assume the realized perceived risk has an i.i.d. component on the top of rational expectation benchmark. 
-#
-# \begin{equation}
-# \label{VarCIRE}
-#  Var_{i,t}(\Delta y_{i,t+1}) = \sigma^2_{\theta,t+1} + \sigma^2_{\epsilon,t+1} + \xi_{i,t} \quad \forall i
-# \end{equation}
-#
-# The third component $\xi_t$ is an idiosyncratic shock to the level of a perceived risk that can be either interpreted as a measurement error from the point view of the econometricians or a perceptual change to which econometricians have no access to. Rational expectation assumption also implies $\xi_{i,t}$ is mean zero, meaning the agents' perceived risks on average converge to the summation of the one-period ahead permanent and transitory risks.  
-#
-# The rational expectation also has following moment restrictions, which although do not help identification of the risks, do have important implications once I make alternative assumptions on expectation formation. 
-#
-# \begin{equation}
-# Cov^*_{i,t}( \Delta y_{i,t}, \Delta y_{i,t+1} ) \\
-#  = Cov^*_{i,t}(\theta_{i,t} + \epsilon_{i,t} - \epsilon_{i,t-1}, \theta_{i,t+1} + \epsilon_{i,t+1} - \epsilon_{i,t}) \\
+# Cov^*_{t}( \Delta y_t, \Delta y_{t+1} ) = \\
+#  = Cov^*_{t}(\theta_t + \epsilon_t - \epsilon_{t-1}, \theta_{t+1} + \epsilon_{t+1} - \epsilon_{t}) \\
 #  = 0 
 # \end{equation}
 #
-# Conditional on all the information and realized shocks up to $t$, the expected earning growth in further future should be orthogonal to the next period. This is, again, different from an econometrician's problem, for whom the covariance is $-\sigma^2_{\epsilon,t}$. The rational agent in the model learns about $\sigma_{\epsilon,t}$.  
+# This is, again, different to an econometrician, for whom the covariance is $-\sigma^2_{\epsilon,t}$. The rational agent in the model learns about $\sigma_{\epsilon,t}$.  
 #
-# In theory, with available data on cross-sectional realized income growths and perceived income risks, by combining Equation \ref{VarUC}, \ref{AvarUC1}, \ref{AvarUC2}, and \ref{VarCIRE}, I can jointly estimate the sizes of permanent and transitory risks as well as the dispersion of the perceptual shock $\sigma_{\xi,t}$. The last provides me with one way to systematically characterize the deviation of the perceived risks from what econometricians have estimated and used. 
+# The serial covariance of expeced income growth across two periods are 
+# \begin{equation}
+# Cov^*( E_{t-1}(\Delta y_t), E_t(\Delta y_{t+1}) ) = \\
+# = Cov^*(E_{t-1}(\theta_t +\epsilon_t - \epsilon_{t-1}), E_{t}(\theta_{t+1} + \epsilon_{t+1} - \epsilon_t)) \\
+# = 0
+# \end{equation}
 
-# ## Time aggregation problem (in progress and very preliminary)
+# ## Time aggregation problem 
 #
-# The stylized example in the previous section is only valid in the absence of a time-aggregation problem. It hinges on the assumption that the unit of the time at which the income process is defined is the same as the frequency of the income observation is measured. This is, however, not the case for SCE data. What is available as perceived income risk is concerning the one-year-ahead income growth, while the underlying income process is preferably defined at a higher frequency (i.e. in monthly and quarterly.) Assuming a higher frequency than annual income is motivated by two considerations. First, it is more realistic. Second, it is also meant to be compatible with the frequency at which the survey is conducted, i.e. monthly. 
+# - The earning growth asked is from $m$ to $m+12$. 
+# - The survey is asked each month. 
 
 # ###  A simple example with half-year as the unit of the time 
 #
