@@ -93,6 +93,12 @@
 \date{\today}
 \maketitle
 
+((*- if nb.metadata.get("latex_metadata", {}).get("abstract", ""): -*))
+\begin{abstract}((( nb.metadata["latex_metadata"]["abstract"] )))\end{abstract}
+((*- else -*))
+%
+((*- endif *))
+
 ((* endblock maketitle *))
 
 

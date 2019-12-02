@@ -93,6 +93,12 @@
 \date{\today}
 \maketitle
 
+((*- if nb.metadata.get("latex_metadata", {}).get("abstract", ""): -*))
+\begin{abstract}((( nb.metadata["latex_metadata"]["abstract"] )))\end{abstract} \newpage
+((*- else -*))
+%
+((*- endif *))
+
 ((* endblock maketitle *))
 
 
@@ -150,7 +156,7 @@
 ((* macro draw_figure_with_caption(filename, caption, label) -*))
 ((* set filename = filename | posix_path *))
 ((*- block figure scoped -*))
-    \begin{figure}
+    \begin{figure}[!ht]
         \begin{center}\adjustimage{max size={0.9\linewidth}{0.4\paperheight}}{((( filename )))}\end{center}
         \caption{((( caption )))}
         \label{((( label )))}
@@ -162,7 +168,7 @@
 ((* macro draw_widefigure_with_caption(filename, caption, label) -*))
 ((* set filename = filename | posix_path *))
 ((*- block figure_wide scoped -*))
-    \begin{figure*}
+    \begin{figure*}[!ht]
         \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{((( filename )))}\end{center}
         \caption{((( caption )))}
         \label{((( label )))}
