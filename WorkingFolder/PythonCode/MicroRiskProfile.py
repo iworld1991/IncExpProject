@@ -230,7 +230,7 @@ for gp in ['HHinc','educ','gender']:
     ## save figure 
     plt.savefig('../Graphs/ind/boxplot'+'_'+str(gp)+'.jpg')
 
-# + {"code_folding": [9]}
+# + {"code_folding": []}
 gplist = ['HHinc','educ','gender']
 momlist = ['incvar','rincvar']
 incg_lb = list(inc_grp.values())
@@ -238,7 +238,7 @@ incg_lb = list(inc_grp.values())
 
 ## plot 
 
-fig,axes = plt.subplots(3,2,figsize =(20,20))
+fig,axes = plt.subplots(3,2,figsize =(25,25))
 
 for i in range(3):
     for j in range(2):
@@ -261,9 +261,9 @@ for i in range(3):
                              showfliers = False)
             
         # settings 
-        bp.set_xlabel(gp,fontsize = 20)
-        #bp.xtick_label(fontsize=20)
-        bp.set_ylabel(mom,fontsize = 20)
+        bp.set_xlabel(gp,fontsize = 25)
+        bp.tick_params(labelsize=25)
+        bp.set_ylabel(mom,fontsize = 25)
         
 plt.savefig('../Graphs/ind/boxplot.jpg')
 # -

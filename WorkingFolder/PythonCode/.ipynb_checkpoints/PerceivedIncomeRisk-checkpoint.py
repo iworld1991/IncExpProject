@@ -19,45 +19,44 @@
 #
 # "The devil is in higher moments." Even if two people share identical expected income and homogeneous preferences, different degrees of income risks still lead to starkly different decisions such as saving/consumption and portfolio choices. This is well understood in models in which agents are inter-temporally risk-averse, or prudent, and the risks associated with future marginal utility motivate precautionary motives. The same logic carries through to models in which capital income and portfolio returns are stochastic, and the risks of returns naturally become the center of asset pricing. Such behavioral regularities equipped with market incompleteness due to reasons such as imperfect insurance and credit constraints have also been the cornerstone assumptions used in the literature on heterogeneous-agent macroeconomics. 
 #
-# Economists have long utilized cross-sectional distributions of realized micro data to estimate the stochastic environments relevant for the agents' decision, such as income process. And then in modeling the estimated risk profile is taken as parametric inputs and the individual shocks are simply drawn from the shared distributions.(See <cite data-cite="blundell_consumption_2008">(Blundell, et al. 2013)</cite> as an example.) But one assumption implicitly made when doing this is that the agents in the model perfectly understand thus agree on the income risk profile imposed on them. As shown by the actively developing literature on expectation formation, in particular, the mounting evidence on heterogeneity in economic expectations held by micro agents, this assumption seems be too stringent. To the extent that agents make decisions based on their *respective* perceptions, understanding the *perceived* income risk profile and its correlation structure with other macro variables are the keys to explaining their behavior patterns.
+# Economists have long utilized cross-sectional distributions of realized microdata to estimate the stochastic environments relevant to the agents' decision, such as the income process. And then in modeling the estimated risk profile is taken as parametric inputs and the individual shocks are simply drawn from the shared distributions. (See <cite data-cite="blundell_consumption_2008">(Blundell, et al. 2013)</cite> as an example.) But one assumption implicitly made when doing this is that the agents in the model perfectly understand thus agree on the income risk profile imposed on them. As shown by the actively developing literature on expectation formation, in particular, the mounting evidence on heterogeneity in economic expectations held by micro agents, this assumption seems to be too stringent. To the extent that agents make decisions based on their *respective* perceptions, understanding the *perceived* income risk profile and its correlation structure with other macro variables are the keys to explaining their behavior patterns.
 #
-# This paper's goal is to understand the question discussed above by directly shedding light on the subjective income profile using the recently available density forecasts of labor income surveyed by New York Fed's Survey of Consumer Expectation (SCE). What is special about this survey is that agents are asked to provide histogram-type forecasts of their earning growth over the next 12 months together with a set of expectational questions about macroeconomy. It is at monthly frequency and has a panel structure allowing for concesecutive observations of the same household over a horizon of 12 months. When the indiviudal density foreacst is available, a parametric density estimation can be made to obtain the individual-specific subjetive distribution. And higher moments reflecting the perceived income risks such as variance, as well as the assymmetry of the distributon such as skewness allow me to directly chracterize the perceived risk profile without relying on external estimates from cross-sectinal micro data. This provides the first-hand measured perceptions on income risks that are truely relevant to individual decisions.
+# This paper's goal is to understand the question discussed above by directly shedding light on the subjective income profile using the recently available density forecasts of labor income surveyed by New York Fed's Survey of Consumer Expectation (SCE). What is special about this survey is that agents are asked to provide histogram-type forecasts of their earning growth over the next 12 months together with a set of expectational questions about the macroeconomy. It is at a monthly frequency and has a panel structure allowing for consecutive observations of the same household over a horizon of 12 months. When the individual density forecast is available, a parametric density estimation can be made to obtain the individual-specific subjective distribution. And higher moments reflecting the perceived income risks such as variance, as well as the asymmetry of the distribution such as skewness allow me to directly characterize the perceived risk profile without relying on external estimates from cross-sectional microdata. This provides the first-hand measured perceptions on income risks that are truly relevant to individual decisions.
 #
-#
-# Empirically, I can immediately ask following questions. 
+# Empirically, I can immediately ask the following questions. 
 #
 # - How much heterogeneity is there across workers' perceived income risks? What factors, i.e. household income, demographics, and other expectations, are correlated with the subjective risks in both individual and macro level? 
 #
-# - To what extent to which this heterogeneity in perceptions align with the true income risks facing different population group, or at least partly attributed to perceptive differences due to heterogeneity in information and information processing, as discussed in many models of expectation formation?  
+# - To what extent this heterogeneity in perceptions align with the true income risks facing different population group, or at least partly attributed to perceptive differences due to heterogeneity in information and information processing, as discussed in many models of expectation formation?  
 #    - If we treat the income risks identified from cross-sectional inequality by econometricians as a benchmark, to what extent are the risks perceived by the agents?
-#       - If agents know more than econometricians about their individual earnings, should the perceived risks may be lower than econometrician's estimates?
-#       - Or actually, do agents, due to inattention or other information rigidity in learning about recently realized shocsk, perceive the overall risk to be higher?
+#       - If agents know more than econometricians about their individual earnings, should the perceived risks be lower than econometrician's estimates?
+#       - Or actually, do agents, due to inattention or other information rigidity in learning about recently realized shocks, perceive the overall risk to be higher?
 #
-# - If the subjetive income risk can be decomposed into composents of varying persistence (i.e. permanent vs transitory) based on assumed income process, it is possible to charaterize potential deviations of perceptive income process from some well defined rational benchmark.
+# - If the subjective income risk can be decomposed into components of varying persistence (i.e. permanent vs transitory) based on assumed income process, it is possible to characterize potential deviations of perceptive income process from some well defined rational benchmark.
 #      - For instance, if agents overestimate their permanent income risks? 
 #      - If agents overestimate the persistence of the income process? <cite data-cite="rozsypal_overpersistence_2017">(Rozsypal and Schlafmann, 2017)</cite>
-#      - One step back, if the perceived income process is really log normal. Or it has skewness? This can be jointly tested using higher moments of the density forecasts.  
+#      - One step back, if the log-normality assumption of income progress consistent with the surveyed data. Or it has non-zero skewness? This can be jointly tested using higher moments of the density forecasts.  
 #  
-# - Finally, not just the process of earning itself, but also its covariance with macro-environment, risky asset returns, matter a great deal. For instance, if perceived income risks are counter-cyclical, it has important labor supply and portfolio implications. <cite data-cite="catherine_countercyclical_2019">(Catherine, 2019)</cite>
+# - Finally, not just the process of earning itself, but also its covariance with macro-environment, risky asset returns, matter a great deal. For instance, if perceived income risks are counter-cyclical, it has important labor supply and portfolio implications. (<cite data-cite="guvenen2014nature">(Guvenen, et al. 2014)</cite>, <cite data-cite="catherine_countercyclical_2019">(Catherine, 2019)</cite>)
 #
 #  
-# One of the key challenges when addressing these questions is how to separately account for the differences in perceived risks driven by differences in underlying risk profiles, i.e. the "truth", and the rest driven by perceptive and informational heterogeneity. The most straightforward way seems to be to compare econometrician's external estimates of the income process using realized data and the perceived from the subjective survey. But this approach implicitly assumes that econometricians correctly specify the model of the income process and ignores the likely superior information problem discussed above. Therefore, in this paper, instead of simply assuming the external estimate by econometricians is the true underlying income process, I characterize the differences between perception and the true process by jointly recovering the process using realized data and expectations based on a particular well-defined theory of expectation formation. The advantage of doing this is that one does not need to make a stringent assumption about either agents' full rationality or econometricians' correctness of model specification. It allows econometricians to utilize the information from expectations to understand the true law of the system. This is in a similar spirit to <cite data-cite="guvenen_inferring_2014">(Guvenen, 2014)</cite>.
+# One of the key challenges when addressing these questions is to separately account for the differences in perceived risks driven by differences in underlying risk profiles, i.e. the "truth", and the rest driven by perceptive and informational heterogeneity. The most straightforward way seems to be to compare econometrician's external estimates of the income process using realized data and the perceived from the subjective survey. But this approach implicitly assumes that econometricians correctly specify the model of the income process and ignores the likely superior information problem discussed above. Therefore, in this paper, instead of simply assuming the external estimate by econometricians is the true underlying income process, I characterize the differences between perception and the true process by jointly recovering the process using realized data and expectations based on a particular well-defined theory of expectation formation. The advantage of doing this is that one does not need to make a stringent assumption about either agents' full rationality or econometricians' correctness of model specification. It allows econometricians to utilize the information from expectations to understand the true law of the system. This is in a similar spirit to <cite data-cite="guvenen_inferring_2014">(Guvenen, 2014)</cite>, although the author does not use expectation survey but the consumption choice as the additional input for the joint estimation. 
+#  
 #
-# Theoretically, once I can document robustly some patterns of the perceived income risks profile, it can ben incorporated into an otherwise standard life-cycle models involving consumption/portfolio decisions to explore its macro implications. Ex ante, one may conjecture a few of the following scenarios. 
+# Theoretically, once I can document robustly some patterns of the perceived income risks profile, it can ben incorporated into an otherwise standard life-cycle model involving consumption/portfolio decisions to explore its macro implications. Ex-ante, one may conjecture a few of the following scenarios. 
 #
-#   - If the subjetive risks or skewness is found to be negatively correlated with the risky market return or business cycles, this exposes agents to more risks than a non-state-dependent income profile. 
+#   - If the subjective risks or skewness is found to be negatively correlated with the risky market return or business cycles, this exposes agents to more risks than a non-state-dependent income profile. 
 #
-#   - If according to the subjetive risk profile, the downside risks are highly persistent than typically assumed, then it is in line with the rare disaster idea.  
+#   - If according to the subjective risk profile, the downside risks are highly persistent than typically assumed, then it is in line with the rare disaster idea.  
 #
-#   - The peceptive differences lead to differences in MPCs, which is a different mechanism from credit-constraints and noninsurance of risks. 
-#
+#   - The perceptual differences lead to differences in MPCs, which is a different mechanism from credit-constraints and noninsurance of risks. 
 #
 #      
 # ##  Relevant literature and potential contribution 
 #
-# This paper is relevant to four lines of literature. First, the idea of this paper echoes with an old problem in the consumption insurance literature: 'insurance or information' (<cite data-cite="pistaferri_superior_2001">Pistaferri, 2001</cite>, <cite data-cite="kaufmann_disentangling_2009">Kaufmann and Pistaferri, 2009</cite>). In any empirical tests of consumption insurance or consumption response to income, there is always a worry that what is interpreted as the shock has actually already entered the agents' information set or exactly the opposite. For instance, the notion of excessive sensitivity, namely households consumption highly responsive to anticipated income shock, maybe simply because agents have not incorporated the recently realized shocks that econometricians assume so(<cite data-cite="flavin_excess_1988">Flavin,1988</cite>). Also, recently, in the New York Fed Liberty Street [blog], the authors followed a similar approach to decompose the permanent and transitory shocks. (https://libertystreeteconomics.newyorkfed.org/2017/11/understanding-permanent-and-temporary-income-shocks.html) My paper shares a similar spirit with these studies in the sense that I try to tackle the identification problem in the same approach: directly using the expectation data and explicitly controlling what are truly conditional expectations of the agents making the decision. This helps economists avoid making assumptions on what is exactly in the agents' information set. What differentiates my work from other authors is that I focus on higher moments, i.e. income risks and skewness by utilizing the recently available density forecasts of labor income. Previous work only focuses on the sizes of the realized shocks and estimates the variance of the shocks using cross-sectional distribution, while my paper directly studies the individual specific variance of these shocks perceived by different individuals. This will become clear in Section \ref{perceived-income-risks-and-persistence-in-progress}. 
+# This paper is relevant to four lines of literature. First, the idea of this paper echoes with an old problem in the consumption insurance literature: 'insurance or information' (<cite data-cite="pistaferri_superior_2001">Pistaferri, 2001</cite>, <cite data-cite="kaufmann_disentangling_2009">Kaufmann and Pistaferri, 2009</cite>,<cite data-cite="meghir2011earnings">Meghir et al. 2011</cite>). In any empirical tests of consumption insurance or consumption response to income, there is always a worry that what is interpreted as the shock has actually already entered the agents' information set or exactly the opposite. For instance, the notion of excessive sensitivity, namely households consumption highly responsive to anticipated income shock, maybe simply because agents have not incorporated the recently realized shocks that econometricians assume so (<cite data-cite="flavin_excess_1988">Flavin,1988</cite>). Also, recently, in the New York Fed [blog](https://libertystreeteconomics.newyorkfed.org/2017/11/understanding-permanent-and-temporary-income-shocks.html), the authors followed a similar approach to decompose the permanent and transitory shocks. My paper shares a similar spirit with these studies in the sense that I try to tackle the identification problem in the same approach: directly using the expectation data and explicitly controlling what are truly conditional expectations of the agents making the decision. This helps economists avoid making assumptions on what is exactly in the agents' information set. What differentiates my work from other authors is that I focus on higher moments, i.e. income risks and skewness by utilizing the recently available density forecasts of labor income. Previous work only focuses on the sizes of the realized shocks and estimates the variance of the shocks using cross-sectional distribution, while my paper directly studies the individual specific variance of these shocks perceived by different individuals. This will become clear in Section \ref{perceived-income-process-in-progress}. 
 #
-# Second, this paper is inspired by an old but recently reviving interest in studying consumption/saving behaviors in models incorporating imperfect expectations and perceptions. For instance, <cite data-cite="rozsypal_overpersistence_2017">(Rozsypal and Schlafmann, 2017)</cite> found that households' expectation of income exhibits an over-persistent bias using both expected and realized household income from Michigan household survey. The paper also shows that incorporating such bias affects the aggregate consumption function by distorting the cross-sectional distributions of marginal propensity to consume(MPCs) across the population. <cite data-cite="carroll_sticky_2018">(Carroll et al. 2018)</cite> reconciles the low micro-MPC and high macro-MPCs by introducing to the model an information rigidity of households in learning about macro news while being updated about micro news. <cite data-cite="lian2019imperfect">(Lian, 2019)</cite> shows that an imperfect perception of wealth accounts for such phenomenon as excess sensitivity to current income and higher MPCs out of wealth than current income and so forth. My paper has a similar flavor to all of these works by exploring the behavioral implications of households' perceptive imperfection. The novelty of my paper lies in the primary on the implications of heterogeneity in perceived higher moments such as risks and skewness. Various theories of expectation formation have different predictions about the cross-sectional and dynamic patterns of perceived risks. I examine these predictions in this paper.   
+# Second, this paper is inspired by an old but recently reviving interest in studying consumption/saving behaviors in models incorporating imperfect expectations and perceptions. For instance, <cite data-cite="rozsypal_overpersistence_2017">(Rozsypal and Schlafmann, 2017)</cite> found that households' expectation of income exhibits an over-persistent bias using both expected and realized household income from Michigan household survey. The paper also shows that incorporating such bias affects the aggregate consumption function by distorting the cross-sectional distributions of marginal propensity to consume(MPCs) across the population. <cite data-cite="carroll_sticky_2018">(Carroll et al. 2018)</cite> reconciles the low micro-MPC and high macro-MPCs by introducing to the model an information rigidity of households in learning about macro news while being updated about micro news. <cite data-cite="lian2019imperfect">(Lian, 2019)</cite> shows that an imperfect perception of wealth accounts for such phenomenon as excess sensitivity to current income and higher MPCs out of wealth than current income and so forth. My paper has a similar flavor to all of these works by exploring the behavioral implications of households' perceptive imperfection. The novelty of my paper lies in the primary focus on the implications of heterogeneity in perceived higher moments such as risks and skewness. Various theories of expectation formation have different predictions about the cross-sectional and dynamic patterns of perceived risks. I examine these predictions in this paper.   
 #
 # This paper also contributes to the literature studying expectation formation using subjective surveys. There has been a long list of "irrational expectation" theories developed in recent decades on how agents deviate from full-information rationality benchmark, such as sticky expectation, noisy signal extraction, least-square learning, etc. Also, empirical work has been devoted to testing these theories in a comparable manner (<cite data-cite="coibion2012can">(Coibion and Gorodnichenko, 2012)</cite>, <cite data-cite="fuhrer2018intrinsic">(Fuhrer, 2018)</cite>). But it is fair to say that thus far, relatively little work has been done on individual variables such as labor income, which may well be more relevant to individual economic decisions. Therefore, understanding expectation formation of the individual variables, in particular, concerning both mean and higher moments, will provide fruitful insights for macroeconomic modeling assumptions. 
 #
@@ -140,7 +139,7 @@ else:
 #
 # ##  Cross-sectional heterogeneity
 #
-# This section inspects some basic cross-sectional patterns of the subject moments of labor income. In the Figure \ref{fig:histmoms} below, I plot the histograms of $\overline\Delta y_{i,t}$, $\overline{var}_{i,t}$,$\overline{iqr}_{i,t}$ and $\overline {skw}_{i,t}$, $\overline {\Delta y^{r}}_{i,t}$, $\overline{var^{r}}_{i,t}$. 
+# This section inspects some basic cross-sectional patterns of the subject moments of labor income. In the Figure \ref{fig:histmoms} below, I plot the histograms of $\overline\Delta y_{i,t}$, $\overline{var}_{i,t}$, $\overline {skw}_{i,t}$, $\overline {\Delta y^{r}}_{i,t}$, $\overline{var^{r}}_{i,t}$. 
 #
 # First, expected income growth across the population exhibits a dispersion ranging from a decrease of $2-3\%$ to around an increase of $10\%$ in nominal terms. Given the well-known downward wage rigidity, it is not surprising that most of the people expect a positive earning growth. At the same time, the distribution of expected income growth is right-skewed, meaning that more workers expect a smaller than larger wage growth. What is interesting is that this cross-sectional right-skewness in nominal earning disappears in expected real terms. Expected earnings growth adjusted by individual inflation expectation becomes symmetric around zero, ranging from a decrease of $10\%$ to an increase of $10\%$. Real labor income increase and decrease are approximately equally likely.  
 #
@@ -150,24 +149,26 @@ else:
 #
 #
 
-# + {"caption": "Distribution of Inidivudal Momnets", "code_folding": [], "label": "fig:histmoms"}
+# + {"caption": "Distribution of Individual Moments", "code_folding": [], "label": "fig:histmoms", "note": "this figure plots histograms of the individual income moments. inc for nominal and rinc for real."}
 ## insert figures
 
 graph_path = os.path.join(path,'../Graphs/ind/')
 
 fig_list = ['hist_incexp.jpg',
-            'hist_incvar.jpg',
             'hist_rincexp.jpg',
-            'hist_rincvar.jpg']
+            'hist_incvar.jpg',
+            'hist_rincvar.jpg',
+            'hist_inciqr.jpg',
+            'histIncSkew.jpg']
             
 nb_fig = len(fig_list)
     
-file_list = [graph_path+fig for fig in fig_list]
+file_list = [graph_path+ fig for fig in fig_list]
 
 ## show figures 
-plt.figure(figsize=(10,10))
+plt.figure(figsize=(10,15))
 for i in range(nb_fig):
-    plt.subplot(2,int(nb_fig/2),i+1)
+    plt.subplot(int(nb_fig/2),2,i+1)
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
 # -
@@ -260,7 +261,7 @@ macro_corr
 #     
 #      
 
-# + {"caption": "Perceived Income by Group", "code_folding": [], "label": "fig:boxplotbygroup", "widefigure": true}
+# + {"caption": "Perceived Income by Group", "code_folding": [], "label": "fig:boxplotbygroup", "note": "this figure is the boxplot of perceived income risk(inc for nominal and rinc for real) by different household income (HHinc), education (educ) and gender.", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/ind/')
 
@@ -283,115 +284,106 @@ reg_tb = pd.read_excel('../Tables/micro_reg.xlsx').replace(np.nan,'')
 reg_tb
 # -
 
-# ##  Perceived income risks and decision (in progress)
+# ##  Perceived income risks and decisions (in progress)
 #
-# Need to be careful with the bias toward zero due to the noisiness of subjective risk measure. But if it is negative sign, the bias goes against me. Therefore, less of a concern. 
+# This section investigates how individual-specific perceived risks are correlated with household economic decisions such as consumption and labor supply. I should note that the purpose of this exerice is not primarily for causal inference at current stage. Instead, it is meant to check if the surveyed households demostrate certain degree of in-survey consistency in terms of their perceptions and decision inclinations. 
 #
-#   - Higher income risks may lead to lower household spending. 
-#   - Particularly so for durable good.
-#   - Higher income risks is also associated with higher chance to voluntarily leave the job. 
+# In particular, I ask two questions based on the available survey answers provided by the core module of the survey. First, are higher perceived income risks associated with a lower anticipated household spending growth? Second, are higher perceived income risks are associated with actions of self-insurance such as seeking an alternative job. This can be indirectly tested using the surveyed probability of voluntary seperation from the current job. In addition, supplementary modules of SCE have also surveyd more detailed questions on spending decisions and labor market. (These I will examine in the next stage of the analysis.)
+#
+# There is one important econometric concern when I run regressions of the decision variable on perceived risks due to the measurement error in the regressor used here. In a typical OLS regression in which the regressor has i.i.d. measurement errors, the coefficient estimate for the imperfectly measured regressor will have a bias toward zero. For this reason, if I find that willingness to consume is indeed negatively correlated with perceived risks, taking into acount the bias, it implies that the correlation of the two are greater in the magnitude. 
+#
+# The empirical results will be reported in the next version of the draft.
 
-# #  Perceived income risks and persistence (in progress) 
+# #  Perceived income process (in progress) 
 #
-# ##  An illustration of the idea in a permanent-transitory income process
+# The cross-sectional heterogeneity documented in the previous analysis in perceived risks mask two aspects that are crutial to understanding the real nature of the perceptual heterogeneity. First, to what extent these subjetive risk profiles simply reflect the de facto differences in the stochastic nature of the idiosyncratic labor income shocks? This is also imperative if one wants to attribute part of the differences to any deviations from full-information rational expectation. Second, do the perceived risks contain different components that differ in terms of its persistence? The risks associated with permanent and transitory shocks have substantially different impacts on individual decisions. In order to address both issues, I will need to specify a well-defined income process.
 #
 #
-# The income process of individual $i$ is the following 
+# ##  An illustration in a simple two-component income process and rational expectation
+#
+#
+# The logged income of individual $i$ (excluding the predictable component given known information by agents at time $t$) follows a following process (same as <cite data-cite="carroll1997nature">(Carroll and Samwick, 1997)</cite>).  
 #
 # \begin{equation}
 # \begin{split}
-# y_{i,t} = P_{i,t} + \epsilon_{i,t} \\
-# P_{i,t} = P_{i,t-1} + \theta_{i,t} \\
+# y_{i,t} = p_{i,t} + \epsilon_{i,t} \\
+# p_{i,t} = p_{i,t-1} + \theta_{i,t} \\
 # \theta_{i,t} \sim N(0,\sigma_{\theta,t}) \\
 # \epsilon_{i,t} \sim N(0,\sigma_{\epsilon,t})
 # \end{split}
 # \end{equation}
 #
-# Notice transitory and permanent risks are time-varying. For now, we do not break down the individual into different cohorts, i.e. $\sigma_{\theta,t}$ and $\sigma_{\epsilon,t}$ are not cohort specific. But we can do this exercise for any defined cohort.  
+# where $p_{i,t}$ is a random walk component with a permanent shock $\theta_{i,t}$ at each point of time, and $\epsilon_{i,t}$ is the transitory shock that is i.i.d.. Note that risks of both transitory and permanent shocks indicated by their respective variance are time-varying. For now, we do not break down individuals into different cohorts, i.e. $\sigma_{\theta,t}$ and $\sigma_{\epsilon,t}$ are not cohort-specific. But we can do this exercise for any defined cohort.  
 #
-# Income growth is 
+# Realized income growth is 
 #
 # \begin{equation}
 # \begin{split}
 # \Delta y_{i,t+1} = y_{i,t+1} - y_{i,t} \\
-#  = P_{i,t+1} + \epsilon_{i,t+1} - P_{i,t} - \epsilon_{i,t} \\
+#  = p_{i,t+1} + \epsilon_{i,t+1} - p_{i,t} - \epsilon_{i,t} \\
 #  = \theta_{i,t+1} + \Delta \epsilon_{i,t+1}
 # \end{split}
 # \end{equation}
 #
-# Assuming the agent knows perfectly the income process, then standing at time $t$, the conditional variance of income growth for next period is 
+# To recover the sizes of the income risks $\sigma_{\theta,t}$ and $\sigma_{\epsilon,t}$, econometricians have conventionally relied upon following three moment restrictions available from cross-sectional distributions of realized income growth rates.   
 #
 # \begin{equation}
-# Var^*_{i,t}(\Delta y_{i,t+1}) = \tilde \sigma^2_{\theta,t+1} + \tilde \sigma^2_{\epsilon,t+1} \quad \forall i
-# \end{equation}
-#  
-# where we use $\tilde{}$ supscript to denote the perceived risks. Because of rational expectation, the agent learns about the realization of $\sigma_{\epsilon,t}$, therefore it does not show up in her uncertainty. 
-#
-# In the same time, the cross-cetional variance of the expected income growth at time $t$ about income growth reflects the different views of the risks.
-#
-# \begin{equation}
-# \overline {Var}^*_{t}(E_{i}(\Delta y_{i,t+1})) = \tilde \sigma^2_{\theta,t+1} +\tilde \sigma^2_{\epsilon,t}+ \tilde \sigma^2_{\epsilon,t+1}
-# \end{equation}
-#
-#
-# The autocovariance of expected income growth in consecutive two periods is as follows.
-#
-#
-# \begin{equation}
-# \overline {Cov}^*_{t+1|t}(E_{i,t}(\Delta y_{i,t+1}),E_{i,t+1}(\Delta y_{i,t+2}) ) = - \tilde \sigma^2_{\epsilon,t+1}
-# \end{equation}
-#
-# The three moments exactly identify the perceived income risks in each period. One way to think about these risks is that they are revealed by people's forecasts.   
-#
-# These moments restrictions exactly mirrors the problem faced by econometricians who have only access to the realized earnings in a panel structure. 
-#
-# What is available to econometricians is the realized cross-sectional variance of income growth (no subscript $i$) shown below. It is different from uncertainty faced with individuals. 
-#
-# \begin{equation}
+# \label{VarUC}
 # Var (\Delta y_{i,t+1}) =  \sigma^2_{\theta,t+1} +\sigma^2_{\epsilon,t}+ \sigma^2_{\epsilon,t+1}
 # \end{equation}
 #
-# Taking the differences of the population's analogue of the first equation and the second above recover variance of transitory risks $\sigma_{\epsilon,t}$. Recursively using the panel structure, we could recover all the transitory and permanent income risks.
-#
-# Besides, econometricians also use the following moments.
-#
 # \begin{equation}
-# Cov (\Delta y_{i,t}, \Delta y_{i,t+1}) =  -\sigma^2_{\epsilon,t}
+# \label{AvarUC1}
+# Cov (\Delta y_{i,t}, \Delta y_{i,t+1}) =  - \sigma^2_{\epsilon,t}
 # \end{equation}
 #
-# This exercise is based on the assumption that individuals across the population or one defined cohort share the same income process. And also it is rational expectation in the sense that on average individuals get the income process right. 
-#
-# Once we recover permanent and transitory volatilities from above exercise, we can compare them with estimates from only realized income serieses.   
-#
-# ##  Other moments from rational expectation
-#
-# Besises, econometricians have utilized another moment restrictions: auto correlation of income growth across two periods are 
 # \begin{equation}
-# Cov^*_{t}( \Delta y_t, \Delta y_{t+1} ) = \\
-#  = Cov^*_{t}(\theta_t + \epsilon_t - \epsilon_{t-1}, \theta_{t+1} + \epsilon_{t+1} - \epsilon_{t}) \\
+# \label{AvarUC2}
+# Cov (\Delta y_{i,t}, \Delta y_{i,t-1}) =  - \sigma^2_{\epsilon,t-1}
+# \end{equation}
+#
+# Using the recursive structure from an income panel of length t+2 periods (therefore, t+1 periods of $\Delta y_{i,t}$ are available), the three moments above could identify income risks $\sigma_{\theta,t}$ and $\sigma_{\epsilon,t}$ for up to $t$ periods.  
+#
+# The additional information from density forecasts is the conditional variance that is specifically perceived by $i$, $Var_{i,t}(\Delta y_{i,t+1})$. This is not the same as the cross-sectional variance defined above (which has no subscript $i$). Under the rational expectation, an agent $i$ who knows perfectly about her income process and standing at time $t$ shall perceive her income risks to be exactly equal to the conditional variance of income growth over the next period given the realized shocks up to $t$. 
+#
+# \begin{equation}
+# \label{VarCRE}
+#  Var^*_{i,t}(\Delta y_{i,t+1}) = \sigma^2_{\theta,t+1} + \sigma^2_{\epsilon,t+1} \quad \forall i
+# \end{equation}
+#  
+# where I use ${}^*$ superscript to represent the rational expectation version of the moments. For the risks estimated from cross-sectional distribution from above to truly align with what is perceived by individual $i$, we need two assumptions. First, the income shocks for the entire population (or the defined cohort that shares the same distribution of income shocks) are exactly as assumed by econometricians. Second, the agent $i$ has the rational expectation and full information.  
+#
+# In order to reflect the observed heterogeneity in perceived risks from the data, I assume the realized perceived risk has an i.i.d. component on the top of rational expectation benchmark. 
+#
+# \begin{equation}
+# \label{VarCIRE}
+#  Var_{i,t}(\Delta y_{i,t+1}) = \sigma^2_{\theta,t+1} + \sigma^2_{\epsilon,t+1} + \xi_{i,t} \quad \forall i
+# \end{equation}
+#
+# The third component $\xi_t$ is an idiosyncratic shock to the level of a perceived risk that can be either interpreted as a measurement error from the point view of the econometricians or a perceptual change to which econometricians have no access to. Rational expectation assumption also implies $\xi_{i,t}$ is mean zero, meaning the agents' perceived risks on average converge to the summation of the one-period ahead permanent and transitory risks.  
+#
+# The rational expectation also has following moment restrictions, which although do not help identification of the risks, do have important implications once I make alternative assumptions on expectation formation. 
+#
+# \begin{equation}
+# Cov^*_{i,t}( \Delta y_{i,t}, \Delta y_{i,t+1} ) \\
+#  = Cov^*_{i,t}(\theta_{i,t} + \epsilon_{i,t} - \epsilon_{i,t-1}, \theta_{i,t+1} + \epsilon_{i,t+1} - \epsilon_{i,t}) \\
 #  = 0 
 # \end{equation}
 #
-# This is, again, different to an econometrician, for whom the covariance is $-\sigma^2_{\epsilon,t}$. The rational agent in the model learns about $\sigma_{\epsilon,t}$.  
+# Conditional on all the information and realized shocks up to $t$, the expected earning growth in further future should be orthogonal to the next period. This is, again, different from an econometrician's problem, for whom the covariance is $-\sigma^2_{\epsilon,t}$. The rational agent in the model learns about $\sigma_{\epsilon,t}$.  
 #
-# The serial covariance of expeced income growth across two periods are 
-# \begin{equation}
-# Cov^*( E_{t-1}(\Delta y_t), E_t(\Delta y_{t+1}) ) = \\
-# = Cov^*(E_{t-1}(\theta_t +\epsilon_t - \epsilon_{t-1}), E_{t}(\theta_{t+1} + \epsilon_{t+1} - \epsilon_t)) \\
-# = 0
-# \end{equation}
+# In theory, with available data on cross-sectional realized income growths and perceived income risks, by combining Equation \ref{VarUC}, \ref{AvarUC1}, \ref{AvarUC2}, and \ref{VarCIRE}, I can jointly estimate the sizes of permanent and transitory risks as well as the dispersion of the perceptual shock $\sigma_{\xi,t}$. The last provides me with one way to systematically characterize the deviation of the perceived risks from what econometricians have estimated and used. 
 
-# ## Time aggregation problem 
+# ## Time aggregation problem (in progress and very preliminary)
 #
-# - The earning growth asked is from $m$ to $m+12$. 
-# - The survey is asked each month. 
+# The stylized example in the previous section is only valid in the absence of a time-aggregation problem. It hinges on the assumption that the unit of the time at which the income process is defined is the same as the frequency of the income observation is measured. This is, however, not the case for SCE data. What is available as perceived income risk is concerning the one-year-ahead income growth, while the underlying income process is preferably defined at a higher frequency (i.e. in monthly and quarterly.) Assuming a higher frequency than annual income is motivated by two considerations. First, it is more realistic. Second, it is also meant to be compatible with the frequency at which the survey is conducted, i.e. monthly. 
 
 # ###  A simple example with half-year as the unit of the time 
 #
 # Earning in year $t$ is a summation of half-year earning. 
 #
 # \begin{equation}
-# y_t = y_{t_2}+ y_{t_2} 
+# y_t = y_{t_1}+ y_{t_2} 
 # \end{equation}
 #
 # The YoY growth of income is below
@@ -481,8 +473,33 @@ reg_tb
 # #  Model (in progress)
 
 #
-# #  Summary 
+# #  Summary and agenda
 #
+#
+# A few robust empirical findings so far. 
+#
+#  - Individuals' perceived income risks measured by variance, IQR and tail risk measure skewness all exhibit sizable dispersion across different individuals. This pattern also holds for real earning risk, when adjusted by inflation uncertainty. 
+#  - Distributions of perceived risks are consistent with a number of intuitive patterns. For instance, earners who are males, from higher-income households, and with higher education have statistically significantly lower perceived risks. 
+#  - The perceived risk is also positively associated with the perceived chance of unemployment. 
+#  
+# Preliminary findings include the following.  
+#
+#  - Perceived risk and skewness for future income are negatively correlated with stock market returns in the same future horizon. (This needs to be more disciplined by the empirical asset pricing literature.)
+#  
+# To-dos in the next stage of the work
+#
+# - Empirically, investigate the correlation between perceived risk and high-frequency macro variables that can approximate business cycle dynamics.
+# - To decompose the subjective income process by addressing the time aggregation problem and missing data on monthly earnings.
+#
+# - Theoretically, build a life cycle model of consumption/portfolio choice with the following features:
+#       - heterogeneous perceptions of income process, which is micro-founded in a manner in line with the empirical patterns. 
+#       - with endogenous consumption and portfolio choice decisions. 
+#       - with market incompleteness, i.e. the idiosyncratic risks are uninsured. 
 
 # + {"hide_cell": true, "cell_type": "markdown"}
 # # Appendix 
+# -
+
+
+
+
