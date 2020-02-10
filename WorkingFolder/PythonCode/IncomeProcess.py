@@ -16,6 +16,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
+from scipy.optimize import root 
 import copy as cp
 
 
@@ -35,7 +36,7 @@ def toPara(vec,
     return vec[:ma_q-1], vec[ma_q:].reshape(2,t)
 
 
-# + {"code_folding": [6, 24, 28, 34, 53, 67, 76, 90, 118, 122, 126, 142, 162, 179]}
+# + {"code_folding": [0, 6, 10, 24, 28, 34, 55, 69, 78, 82, 95, 119, 128, 156, 160, 164, 180, 200, 214, 231, 251, 279, 297, 307]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''
@@ -76,11 +77,13 @@ class IMAProcess:
         ma_coeffs = self.ma_coeffs
         sigmas = self.sigmas
         ma_q = self.ma_q 
-                 
+        np.random.seed(12345)                 
         p_draws = np.multiply(np.random.randn(n_sim*t).reshape([n_sim,t]), 
                               np.tile(sigmas[0,:],[n_sim,1]))  # draw permanent shocks
+        np.random.seed(12342)
         t_draws = np.multiply(np.random.randn(n_sim*t).reshape([n_sim,t]), 
-                              np.tile(sigmas[1,:],[n_sim,1]))  ## draw one-period transitory shocks 
+                              np.tile(sigmas[1,:],[n_sim,1]))  ## draw one-period transitory shocks
+    
         t_draws_cum = np.array( [self.cumshocks(shocks = t_draws[i,:],
                                                 ma_coeffs = ma_coeffs) 
                                  for i in range(n_sim)]
@@ -125,6 +128,42 @@ class IMAProcess:
         self.SimAggMoms = {'Mean':mean_diff,
                            'Var':varcov_diff}
         return self.SimAggMoms
+    
+##########
+## new ####
+###########
+    def ComputeMomentsAgg(self,
+                          n_agg = 1):
+        self.sigmas = sigmas
+        sigmas_theta = sigmas[0,:]
+        sigmas_eps = sigmas[1,:]
+        
+        n = n_agg 
+        t = self.t 
+        
+        t_truc = t - n 
+        
+        ## prepare the locations for var-cov matrix 
+        var_cov = np.zeros([t_truc,t_truc])
+        
+        ## prepare a 2n-1 x 1  vector [1,2...n,n-1..1]
+        M_vec0 = np.arrange(n-1)+1
+        M_vec1 = np.flip(np.arrange(n)+1)  
+        M_vec =  np.concatenate((M_vec0,M_vec1))
+        
+        ## prepare a 2n-2 x 1 vector [-1,-1...,1,1]
+        I_vec0 = - np.ones(n-1)
+        I_vec1 = np.ones(n-1)
+        I_vec =  np.concatenate((I_vec0,I_vec1))
+        
+        for i in range(t_truc):
+            for k in range(n):
+                var_cov[i,i+k] = (M_vec[k:]*M_vec[:-k]*sigmas_theta[k:-k]
+                                  +I_vec[k:]*I_vec[:-k]*sigmas_eps[k:-k]) # need to check 
+                var_cov[i+k,i] = var_cov[i,i+k]
+        
+        self.Moments_Agg = var_cov
+        return self.Moments_Agg
     
     def ComputeGenMoments(self):
         ## parameters 
@@ -198,6 +237,20 @@ class IMAProcess:
         
         return self.para_est    
     
+    def EstimateParaRoot(self,
+                         para_guess = None):
+        t = self.t
+        ma_q = self.ma_q
+        
+        para_est = root(self.ObjFunc,
+                       x0 = para_guess)['x']
+        
+        self.para_est = toPara(para_est,
+                               t,
+                               ma_q)
+        
+        return self.para_est 
+    
     def ObjFuncSim(self,
                    para_sim):
         data_moms_dct = self.data_moms_dct
@@ -208,7 +261,7 @@ class IMAProcess:
                                   ma_q)
         self.ma_coeffs = ma_coeffs
         self.sigmas = sigmas
-        model_series_sim = self.SimulateSeries() 
+        model_series_sim = self.SimulateSeries(n_sim = 2000) 
         model_moms_dct = self.SimulatedMoments()  
         model_moms = np.array([model_moms_dct[key] for key in ['Var']]).flatten()
         data_moms = np.array([data_moms_dct[key] for key in ['Var']]).flatten()
@@ -310,6 +363,5 @@ class IMAProcess:
             autovar = np.array([cov_var[i,i+step] for i in range(abs(step),len(cov_var)-1)]) 
         self.autovar = autovar
         self.autovaragg = autovar
-        return self.autovaragg 
-# -
 
+        return self.autovaragg 

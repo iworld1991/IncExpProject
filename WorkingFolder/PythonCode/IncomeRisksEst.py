@@ -22,7 +22,8 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.optimize import minimize
+#from scipy.optimize import minimize
+#from scipy.optimize import root
 import copy as cp
 
 from IncomeProcess import IMAProcess as ima
@@ -44,10 +45,10 @@ sigmas = np.array([p_sigmas_draw,
 dt = ima(t = t,
          ma_coeffs = ma_nosa,
          sigmas = sigmas)
-sim_data = dt.SimulateSeries(n_sim = 5000)
+sim_data = dt.SimulateSeries(n_sim = 8000)
 sim_moms = dt.SimulatedMoments()
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## get the computed moments 
 
 comp_moms = dt.ComputeGenMoments()
@@ -57,14 +58,14 @@ cov_var_comp = comp_moms['Var']
 var_comp = dt.AutocovarComp(step=0) #np.diagonal(cov_var_comp)
 autovarb1_comp = dt.AutocovarComp(step=-1)  #np.array([cov_var_comp[i,i+1] for i in range(len(cov_var_comp)-1)]) 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## get the simulated moments 
 av = sim_moms['Mean']
 cov_var = sim_moms['Var']
 var = dt.Autocovar(step = 0)   #= np.diagonal(cov_var)
 autovarb1 = dt.Autocovar(step = -1) #np.array([cov_var[i,i+1] for i in range(len(cov_var)-1)]) 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## plot simulated moments of first diff 
 
 plt.figure(figsize=((20,4)))
@@ -104,14 +105,14 @@ plt.legend(loc=1)
 
 # ### Time Aggregation
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## time aggregation 
 
 sim_data = dt.SimulateSeries(n_sim = 1000)
 agg_series = dt.TimeAggregate(n_periods = 3)
 agg_series_moms = dt.SimulateMomentsAgg()
 
-# + {"code_folding": [0, 1]}
+# + {"code_folding": [1]}
 ## difference times degree of time aggregation leads to different autocorrelation
 for ns in np.array([2,8]):
     an_instance = cp.deepcopy(dt)
@@ -127,7 +128,7 @@ plt.title('1-degree autocovariance of different \n level of time aggregation')
 
 # ### Estimation
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## some fake data moments with alternative parameters
 
 ## fix ratio of p and t risks
@@ -148,7 +149,7 @@ data_fake = dt_fake.SimulateSeries(n_sim = 5000)
 moms_fake = dt_fake.SimulatedMoments()
 # -
 
-# #### Estimation using computed moments 
+# ### Estimation using computed moments 
 
 # + {"code_folding": []}
 ## estimation of income risks 
@@ -158,12 +159,12 @@ dt_est.GetDataMoments(moms_fake)
 
 para_guess_this = np.ones(2*t  + dt_est.ma_q)  # make sure the length of the parameters are right 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 para_est = dt_est.EstimatePara(method='CG',
-                              para_guess = para_guess_this)
+                               para_guess = para_guess_this)
 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## check the estimation and true parameters 
 
 fig = plt.figure(figsize=([10,4]))
@@ -180,19 +181,38 @@ plt.plot(dt_est.para_est[1][1][1:].T**2,'r-',label='Estimation')
 plt.plot(dt_fake.sigmas[1][1:]**2,'-*',label='Truth')
 plt.legend(loc=0)
 
+# +
+### Estimation using computed moments using root finding 
+
+para_root = dt_est.EstimateParaRoot(para_guess_this)
+
+# +
+
+fig = plt.figure(figsize=([10,4]))
+
+plt.subplot(1,2,1)
+plt.title('Permanent Risk')
+plt.plot(dt_est.para_est[1][0][1:].T**2,'r-',label='Estimation')
+plt.plot(dt_fake.sigmas[0][1:]**2,'-*',label='Truth')
+
+
+plt.subplot(1,2,2)
+plt.title('Transitory Risk')
+plt.plot(dt_est.para_est[1][1][1:].T**2,'r-',label='Estimation')
+plt.plot(dt_fake.sigmas[1][1:]**2,'-*',label='Truth')
+plt.legend(loc=0)
+
 # + {"code_folding": [], "cell_type": "markdown"}
-# #### Estimation using simulated moments 
+# ### Estimation using simulated moments 
 
 # + {"code_folding": []}
 para_guess_this2 = para_guess_this*0.3
 
 bounds_this = ((0,1),) + ((0,0.5),)*(2*t)
 
-para_est_sim = dt_est.EstimateParabySim(method='Powell',
+para_est_sim = dt_est.EstimateParabySim(method='CG',
                                         para_guess = para_guess_this2,
-                                        options={'disp':True,
-                                                'xtol':0.0000000000000001,
-                                                'ftol':0.00000000000000001}
+                                        options={'disp':True}
                                        )
 
 # + {"code_folding": [0]}
@@ -219,11 +239,9 @@ n_loop = 5
 
 para_est_sum_sim = (np.array([0]),np.zeros([2,50]))
 for i in range(n_loop):
-    para_est_this_time = dt_est.EstimateParabySim(method='Powell',
-                                                     para_guess = para_guess_this2,
-                                                     options = {'disp': True,
-                                                               'ftol': 0.00000000000000001,
-                                                               'xtol':0.000000001})
+    para_est_this_time = dt_est.EstimateParabySim(method='CG',
+                                                  para_guess = para_guess_this2,
+                                                  options = {'disp': True})
     para_est_sum_sim  = para_est_sum_sim + para_est_this_time
 # -
 
