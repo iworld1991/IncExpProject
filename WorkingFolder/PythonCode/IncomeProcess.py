@@ -36,7 +36,7 @@ def toPara(vec,
     return vec[:ma_q-1], vec[ma_q:].reshape(2,t)
 
 
-# + {"code_folding": [0, 6, 10, 24, 28, 34, 55, 69, 78, 82, 95, 119, 128, 156, 160, 164, 180, 200, 214, 231, 251, 279, 297, 307]}
+# + {"code_folding": [1, 10, 24, 28, 34, 55, 69, 78, 82, 95, 129, 157, 161, 165, 181, 201, 215, 232, 252, 280, 298, 308, 318]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''
@@ -45,12 +45,12 @@ class IMAProcess:
     t: int, number of periods of the series
     process_para, dict, includes 
        - ma_coeffs: size f q for MA(q),  moving average coeffcients of transitory shocks. q = 0 by default.
-       - sigmas:  size of t x 2, draws of permanent and transitory risks from time varying volatility 
+       - sigmas:  size of 2 x t, draws of permanent and transitory risks from time varying volatility 
     '''
     def __init__(self,
-                 t = 100,
-                 n_periods = np.array([1]),
-                 ma_coeffs = np.ones(1),
+                 t = 100,                   ## length of sample period  
+                 n_periods = np.array([1]), ## # of periods for time aggregation 
+                 ma_coeffs = np.ones(1),    
                  sigmas = np.ones([2,100]),
                 ):
         #self.process_para = process_para
@@ -134,33 +134,34 @@ class IMAProcess:
 ###########
     def ComputeMomentsAgg(self,
                           n_agg = 1):
-        self.sigmas = sigmas
+        sigmas = self.sigmas
         sigmas_theta = sigmas[0,:]
         sigmas_eps = sigmas[1,:]
         
         n = n_agg 
         t = self.t 
         
-        t_truc = t - n 
+        t_truc = t - 2*n 
         
         ## prepare the locations for var-cov matrix 
-        var_cov = np.zeros([t_truc,t_truc])
+        var_cov = np.zeros([t,t])
         
-        ## prepare a 2n-1 x 1  vector [1,2...n,n-1..1]
-        M_vec0 = np.arrange(n-1)+1
-        M_vec1 = np.flip(np.arrange(n)+1)  
+        ## prepare a (2n-1) x 1  vector [1,2...n,n-1..1]
+        M_vec0 = np.arange(n-1)+1
+        M_vec1 = np.flip(np.arange(n)+1)  
         M_vec =  np.concatenate((M_vec0,M_vec1))
         
-        ## prepare a 2n-2 x 1 vector [-1,-1...,1,1]
-        I_vec0 = - np.ones(n-1)
-        I_vec1 = np.ones(n-1)
+        ## prepare a 2n x 1 vector [-1,-1...,1,1]
+        I_vec0 = - np.ones(n)
+        I_vec1 = np.ones(n)
         I_vec =  np.concatenate((I_vec0,I_vec1))
         
-        for i in range(t_truc):
-            for k in range(n):
-                var_cov[i,i+k] = (M_vec[k:]*M_vec[:-k]*sigmas_theta[k:-k]
-                                  +I_vec[k:]*I_vec[:-k]*sigmas_eps[k:-k]) # need to check 
+        for i in np.arange(t_truc)+n:
+            for k in np.arange(n)+1:   ## !!!need to check here. 
+                var_cov[i,i+k] = ( sum(M_vec[k:]*M_vec[:-k]*sigmas_theta[i+1-n:i+n-k])
+                                  + sum(I_vec[k:]*I_vec[:-k]*sigmas_eps[i-n:i+n-k]) ) # need to check 
                 var_cov[i+k,i] = var_cov[i,i+k]
+            var_cov[i,i] = sum(M_vec**2*sigmas_theta[i+1-n:i+n])
         
         self.Moments_Agg = var_cov
         return self.Moments_Agg
@@ -365,3 +366,37 @@ class IMAProcess:
         self.autovaragg = autovar
 
         return self.autovaragg 
+# + {"code_folding": [0]}
+## debugging test of the data 
+
+t = 100
+ma_nosa = np.array([1])
+p_sigmas = np.arange(t)  # sizes of the time-varying permanent volatility 
+p_sigmas_rw = np.ones(t) # a special case of time-invariant permanent volatility, random walk 
+p_sigmas_draw = np.random.uniform(0,1,t) ## allowing for time-variant shocks 
+
+pt_ratio = 0.33
+t_sigmas = pt_ratio * p_sigmas_draw # sizes of the time-varyingpermanent volatility
+sigmas = np.array([p_sigmas_draw,
+                   t_sigmas])
+
+#dt = IMAProcess(t = t,
+#         ma_coeffs = ma_nosa,
+#         sigmas = sigmas)
+#sim_data = dt.SimulateSeries(n_sim = 8000)
+#sim_moms = dt.SimulatedMoments()
+
+# + {"code_folding": [0]}
+## generate an instance 
+
+dt_fake = IMAProcess(t = t,
+              ma_coeffs = ma_nosa,
+              sigmas = sigmas)
+data_fake = dt_fake.SimulateSeries(n_sim = 5000)
+moms_fake = dt_fake.SimulatedMoments()
+# -
+
+
+agg_moms_sim = dt_fake.ComputeMomentsAgg(n_agg = 4)
+
+agg_moms_sim.shape

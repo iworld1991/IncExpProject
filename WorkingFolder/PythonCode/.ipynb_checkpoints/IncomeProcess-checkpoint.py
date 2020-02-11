@@ -16,10 +16,27 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
+from scipy.optimize import root 
 import copy as cp
 
 
-# + {"code_folding": [6, 10, 24, 34, 53, 67, 76, 90, 118, 122, 126, 140, 156, 171, 187, 213, 229, 239, 249]}
+# + {"code_folding": [0, 8]}
+def toVec(ma_coeffs,
+          sigmas,
+          t,
+          ma_q):
+    assert ma_coeffs.shape == (ma_q,)
+    assert sigmas.shape == (2, t)
+    return np.hstack([ma_coeffs.flatten(), sigmas.flatten()])
+
+def toPara(vec,
+           t,
+           ma_q):
+    assert len(vec) == 2*t + ma_q
+    return vec[:ma_q-1], vec[ma_q:].reshape(2,t)
+
+
+# + {"code_folding": [1, 10, 24, 28, 34, 55, 69, 78, 82, 95, 129, 157, 161, 165, 181, 201, 215, 232, 252, 280, 298, 308, 318]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''
@@ -28,21 +45,21 @@ class IMAProcess:
     t: int, number of periods of the series
     process_para, dict, includes 
        - ma_coeffs: size f q for MA(q),  moving average coeffcients of transitory shocks. q = 0 by default.
-       - sigmas:  size of t x 2, draws of permanent and transitory risks from time varying volatility 
+       - sigmas:  size of 2 x t, draws of permanent and transitory risks from time varying volatility 
     '''
     def __init__(self,
-                 t = 100,
-                 n_periods = np.array([1]),
-                 ma_coeffs = np.ones(1),
+                 t = 100,                   ## length of sample period  
+                 n_periods = np.array([1]), ## # of periods for time aggregation 
+                 ma_coeffs = np.ones(1),    
                  sigmas = np.ones([2,100]),
                 ):
         #self.process_para = process_para
         self.ma_coeffs = ma_coeffs
         self.ma_q = self.ma_coeffs.shape[0]
         self.t = t
-        self.sigmas =sigmas
+        self.sigmas = sigmas
         self.n_periods = n_periods
-    
+        
     ## auxiliary function for ma cum sum
     def cumshocks(self,
                   shocks,
@@ -60,11 +77,13 @@ class IMAProcess:
         ma_coeffs = self.ma_coeffs
         sigmas = self.sigmas
         ma_q = self.ma_q 
-                 
+        np.random.seed(12345)                 
         p_draws = np.multiply(np.random.randn(n_sim*t).reshape([n_sim,t]), 
                               np.tile(sigmas[0,:],[n_sim,1]))  # draw permanent shocks
+        np.random.seed(12342)
         t_draws = np.multiply(np.random.randn(n_sim*t).reshape([n_sim,t]), 
-                              np.tile(sigmas[1,:],[n_sim,1]))  ## draw one-period transitory shocks 
+                              np.tile(sigmas[1,:],[n_sim,1]))  ## draw one-period transitory shocks
+    
         t_draws_cum = np.array( [self.cumshocks(shocks = t_draws[i,:],
                                                 ma_coeffs = ma_coeffs) 
                                  for i in range(n_sim)]
@@ -110,6 +129,43 @@ class IMAProcess:
                            'Var':varcov_diff}
         return self.SimAggMoms
     
+##########
+## new ####
+###########
+    def ComputeMomentsAgg(self,
+                          n_agg = 1):
+        sigmas = self.sigmas
+        sigmas_theta = sigmas[0,:]
+        sigmas_eps = sigmas[1,:]
+        
+        n = n_agg 
+        t = self.t 
+        
+        t_truc = t - 2*n 
+        
+        ## prepare the locations for var-cov matrix 
+        var_cov = np.zeros([t,t])
+        
+        ## prepare a (2n-1) x 1  vector [1,2...n,n-1..1]
+        M_vec0 = np.arange(n-1)+1
+        M_vec1 = np.flip(np.arange(n)+1)  
+        M_vec =  np.concatenate((M_vec0,M_vec1))
+        
+        ## prepare a 2n x 1 vector [-1,-1...,1,1]
+        I_vec0 = - np.ones(n)
+        I_vec1 = np.ones(n)
+        I_vec =  np.concatenate((I_vec0,I_vec1))
+        
+        for i in np.arange(t_truc)+n:
+            for k in np.arange(n)+1:   ## !!!need to check here. 
+                var_cov[i,i+k] = ( sum(M_vec[k:]*M_vec[:-k]*sigmas_theta[i+1-n:i+n-k])
+                                  + sum(I_vec[k:]*I_vec[:-k]*sigmas_eps[i-n:i+n-k]) ) # need to check 
+                var_cov[i+k,i] = var_cov[i,i+k]
+            var_cov[i,i] = sum(M_vec**2*sigmas_theta[i+1-n:i+n])
+        
+        self.Moments_Agg = var_cov
+        return self.Moments_Agg
+    
     def ComputeGenMoments(self):
         ## parameters 
         t = self.t 
@@ -150,8 +206,10 @@ class IMAProcess:
                 para):
         data_moms_dct = self.data_moms_dct
         t = self.t
-        ma_coeffs,sigmas = para
-        self.t = t
+        ma_q = self.ma_q
+        ma_coeffs,sigmas = toPara(para,
+                                  t,
+                                  ma_q)
         self.ma_coeffs = ma_coeffs
         self.sigmas = sigmas
         model_moms_dct = self.ComputeGenMoments() 
@@ -159,13 +217,14 @@ class IMAProcess:
         data_moms = np.array([data_moms_dct[key] for key in ['Var']]).flatten()
         diff = np.linalg.norm(model_moms - data_moms)
         return diff
-        
+    
     def EstimatePara(self,
                      method = 'CG',
                      bounds = None,
-                     para_guess =(1,
-                                  np.random.uniform(0,1,100).reshape(2,50)),
+                     para_guess = None,
                      options = {'disp':True}):
+        t = self.t
+        ma_q = self.ma_q
         
         para_est = minimize(self.ObjFunc,
                             x0 = para_guess,
@@ -173,47 +232,72 @@ class IMAProcess:
                             bounds = bounds,
                             options = options)['x']
         
-        self.para_est = para_est
+        self.para_est = toPara(para_est,
+                               t,
+                               ma_q)
+        
         return self.para_est    
     
+    def EstimateParaRoot(self,
+                         para_guess = None):
+        t = self.t
+        ma_q = self.ma_q
+        
+        para_est = root(self.ObjFunc,
+                       x0 = para_guess)['x']
+        
+        self.para_est = toPara(para_est,
+                               t,
+                               ma_q)
+        
+        return self.para_est 
+    
     def ObjFuncSim(self,
-                para_sim):
+                   para_sim):
         data_moms_dct = self.data_moms_dct
         t = self.t
-        ma_coeffs,sigmas = para_sim
-        self.t = t
+        ma_q = self.ma_q
+        ma_coeffs,sigmas = toPara(para_sim,
+                                  t,
+                                  ma_q)
         self.ma_coeffs = ma_coeffs
         self.sigmas = sigmas
-        model_series_sim = self.SimulateSeries() 
-        model_moms_dct = self.SimulatedMoments() 
+        model_series_sim = self.SimulateSeries(n_sim = 2000) 
+        model_moms_dct = self.SimulatedMoments()  
         model_moms = np.array([model_moms_dct[key] for key in ['Var']]).flatten()
         data_moms = np.array([data_moms_dct[key] for key in ['Var']]).flatten()
         diff = np.linalg.norm(model_moms - data_moms)
         return diff
         
     def EstimateParabySim(self,
-                     method = 'CG',
-                     bounds = None,
-                     para_guess =(np.array([1]),
-                                  np.random.uniform(0,1,100).reshape(2,50)),
-                     options = {'disp':True}):
+                          method = 'CG',
+                          bounds = None,
+                          para_guess = None,
+                          options = {'disp':True}):
+        t = self.t
+        ma_q = self.ma_q
         
         para_est_sim = minimize(self.ObjFuncSim,
-                            x0 = para_guess,
-                            method = method,
-                            bounds = bounds,
-                            options = options)['x']
+                                x0 = para_guess,
+                                method = method,
+                                bounds = bounds,
+                                options = options)['x']
         
-        self.para_est_sim = para_est_sim
-        return self.para_est_sim  
+        self.para_est_sim = toPara(para_est_sim,
+                                   t,
+                                   ma_q)
+        
+        return self.para_est_sim    
     
     def ObjFuncAgg(self,
-                   para_agg,
-                   n_periods = 12):
+                   para_agg):
         data_moms_agg_dct = self.data_moms_agg_dct
         t = self.t
-        ma_coeffs,sigmas = para_agg
-        
+        ma_q = self.ma_q
+        n_periods = self.n_periods
+        ma_coeffs,sigmas = toPara(para_agg,
+                                  t,
+                                  ma_q)
         new_instance = cp.deepcopy(self)
         new_instance.t = t   
         new_instance.ma_coeffs = ma_coeffs
@@ -236,17 +320,19 @@ class IMAProcess:
     def EstimateParaAgg(self,
                         method = 'CG',
                         bounds = None,
-                        para_guess =(np.array([1]),
-                                     np.random.uniform(0,1,100).reshape(2,50)),
+                        para_guess = None,
                         options = {'disp':True}):
-        
+        t = self.t
+        ma_q = self.ma_q
         para_est_agg = minimize(self.ObjFuncAgg,
                                 x0 = para_guess,
                                 method = method,
                                 bounds = bounds,
                                 options = options)['x']
         
-        self.para_est_agg = para_est_agg
+        self.para_est_agg = toPara(para_est_agg,
+                                   t,
+                                   ma_q)
         return self.para_est_agg  
     
     def Autocovar(self,
@@ -278,7 +364,39 @@ class IMAProcess:
             autovar = np.array([cov_var[i,i+step] for i in range(abs(step),len(cov_var)-1)]) 
         self.autovar = autovar
         self.autovaragg = autovar
+
         return self.autovaragg 
+# + {"code_folding": [0]}
+## debugging test of the data 
+
+t = 100
+ma_nosa = np.array([1])
+p_sigmas = np.arange(t)  # sizes of the time-varying permanent volatility 
+p_sigmas_rw = np.ones(t) # a special case of time-invariant permanent volatility, random walk 
+p_sigmas_draw = np.random.uniform(0,1,t) ## allowing for time-variant shocks 
+
+pt_ratio = 0.33
+t_sigmas = pt_ratio * p_sigmas_draw # sizes of the time-varyingpermanent volatility
+sigmas = np.array([p_sigmas_draw,
+                   t_sigmas])
+
+#dt = IMAProcess(t = t,
+#         ma_coeffs = ma_nosa,
+#         sigmas = sigmas)
+#sim_data = dt.SimulateSeries(n_sim = 8000)
+#sim_moms = dt.SimulatedMoments()
+
+# + {"code_folding": [0]}
+## generate an instance 
+
+dt_fake = IMAProcess(t = t,
+              ma_coeffs = ma_nosa,
+              sigmas = sigmas)
+data_fake = dt_fake.SimulateSeries(n_sim = 5000)
+moms_fake = dt_fake.SimulatedMoments()
 # -
 
 
+agg_moms_sim = dt_fake.ComputeMomentsAgg(n_agg = 4)
+
+agg_moms_sim.shape

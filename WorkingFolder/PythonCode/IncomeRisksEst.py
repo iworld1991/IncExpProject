@@ -28,7 +28,7 @@ import copy as cp
 
 from IncomeProcess import IMAProcess as ima
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## debugging test of the data 
 
 t = 66
@@ -128,7 +128,7 @@ plt.title('1-degree autocovariance of different \n level of time aggregation')
 
 # ### Estimation
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## some fake data moments with alternative parameters
 
 ## fix ratio of p and t risks
@@ -181,10 +181,10 @@ plt.plot(dt_est.para_est[1][1][1:].T**2,'r-',label='Estimation')
 plt.plot(dt_fake.sigmas[1][1:]**2,'-*',label='Truth')
 plt.legend(loc=0)
 
-# +
+# + {"code_folding": [0]}
 ### Estimation using computed moments using root finding 
 
-para_root = dt_est.EstimateParaRoot(para_guess_this)
+#para_root = dt_est.EstimateParaRoot(para_guess_this)
 
 # +
 
@@ -201,6 +201,11 @@ plt.title('Transitory Risk')
 plt.plot(dt_est.para_est[1][1][1:].T**2,'r-',label='Estimation')
 plt.plot(dt_fake.sigmas[1][1:]**2,'-*',label='Truth')
 plt.legend(loc=0)
+# -
+
+# ### Estimation using time aggregated data and computed moments
+
+dt_est.ComputeMomentsAgg(n_agg=2)
 
 # + {"code_folding": [], "cell_type": "markdown"}
 # ### Estimation using simulated moments 
