@@ -36,7 +36,7 @@ def toPara(vec,
     return vec[:ma_q-1], vec[ma_q:].reshape(2,t)
 
 
-# + {"code_folding": [1, 10, 24, 28, 34, 55, 69, 78, 82, 95, 129, 157, 161, 165, 181, 201, 215, 232, 252, 280, 298, 308, 318]}
+# + {"code_folding": [10, 26, 30, 46, 67, 81, 90, 107, 141, 169, 173, 177, 193, 213, 227, 244, 264, 292, 314, 342, 360, 370, 380]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''
@@ -58,7 +58,9 @@ class IMAProcess:
         self.ma_q = self.ma_coeffs.shape[0]
         self.t = t
         self.sigmas = sigmas
-        self.n_periods = n_periods
+        self.n_agg = 1
+        self.init_sigmas = np.array([0.1,0.1])
+        self.init_sv = np.array([0.1,0.1])
         
     ## auxiliary function for ma cum sum
     def cumshocks(self,
@@ -71,6 +73,10 @@ class IMAProcess:
             cum.append(sum([ma_coeffs[back]*shocks[i-back] for back in range(len(ma_coeffs))]))
         return np.array(cum)         
     
+##########
+## new ###
+##########
+        
     def SimulateSeries(self,
                        n_sim = 200):
         t = self.t 
@@ -130,8 +136,8 @@ class IMAProcess:
         return self.SimAggMoms
     
 ##########
-## new ####
-###########
+## new ###
+##########
     def ComputeMomentsAgg(self,
                           n_agg = 1):
         sigmas = self.sigmas
@@ -158,10 +164,10 @@ class IMAProcess:
         
         for i in np.arange(t_truc)+n:
             for k in np.arange(n)+1:   ## !!!need to check here. 
-                var_cov[i,i+k] = ( sum(M_vec[k:]*M_vec[:-k]*sigmas_theta[i+1-n:i+n-k])
-                                  + sum(I_vec[k:]*I_vec[:-k]*sigmas_eps[i-n:i+n-k]) ) # need to check 
+                var_cov[i,i+k] = ( sum(M_vec[k:]*M_vec[:-k]*sigmas_theta[i+1-n:i+n-k]**2)
+                                  + sum(I_vec[k:]*I_vec[:-k]*sigmas_eps[i-n:i+n-k]**2) ) # need to check 
                 var_cov[i+k,i] = var_cov[i,i+k]
-            var_cov[i,i] = sum(M_vec**2*sigmas_theta[i+1-n:i+n])
+            var_cov[i,i] = sum(M_vec**2*sigmas_theta[i+1-n:i+n]**2)
         
         self.Moments_Agg = var_cov
         return self.Moments_Agg
@@ -335,6 +341,56 @@ class IMAProcess:
                                    ma_q)
         return self.para_est_agg  
     
+##########
+## new ###
+########## 
+
+    def ObjFuncAggCompute(self,
+                          para_agg):
+        data_moms_agg_dct = self.data_moms_agg_dct
+        t = self.t
+        ma_q = self.ma_q
+        n_agg = self.n_agg
+        ma_coeffs,sigmas = toPara(para_agg,
+                                  t,
+                                  ma_q)
+        new_instance = cp.deepcopy(self)
+        new_instance.t = t   
+        new_instance.ma_coeffs = ma_coeffs
+        new_instance.sigmas = sigmas
+        #model_series_sim = new_instance.SimulateSeries() 
+        #model_series_agg = new_instance.TimeAggregate(n_periods = n_periods)
+        model_moms_agg_dct = new_instance.ComputeMomentsAgg(n_agg = self.n_agg)
+        
+        model_moms = np.array([model_moms_agg_dct[key] for key in ['Var']]).flatten()
+        data_moms = np.array([data_moms_agg_dct[key] for key in ['Var']]).flatten()
+        if len(model_moms) > len(data_moms):
+            n_burn = len(model_moms) - len(data_moms)
+            model_moms = model_moms[n_burn:]
+        if len(model_moms) < len(data_moms):
+            n_burn = -(len(model_moms) - len(data_moms))
+            data_moms = data_moms[n_burn:]
+        diff = np.linalg.norm(model_moms - data_moms)
+        return diff
+    
+    def EstimateParaAggCompute(self,
+                               method = 'CG',
+                               bounds = None,
+                               para_guess = None,
+                               options = {'disp':True}):
+        t = self.t
+        ma_q = self.ma_q
+        para_est_agg = minimize(self.ObjFuncAggCompute,
+                                x0 = para_guess,
+                                method = method,
+                                bounds = bounds,
+                                options = options)['x']
+        
+        self.para_est_agg_compute = toPara(para_est_agg,
+                                           t,
+                                           ma_q)
+        return self.para_est_agg_compute  
+    
     def Autocovar(self,
                   step = 1):
         cov_var = self.SimMoms['Var']
@@ -369,7 +425,7 @@ class IMAProcess:
 # + {"code_folding": [0]}
 ## debugging test of the data 
 
-t = 100
+t = 10
 ma_nosa = np.array([1])
 p_sigmas = np.arange(t)  # sizes of the time-varying permanent volatility 
 p_sigmas_rw = np.ones(t) # a special case of time-invariant permanent volatility, random walk 
@@ -386,17 +442,47 @@ sigmas = np.array([p_sigmas_draw,
 #sim_data = dt.SimulateSeries(n_sim = 8000)
 #sim_moms = dt.SimulatedMoments()
 
-# + {"code_folding": [0]}
-## generate an instance 
+# + {"code_folding": []}
+## invoke an instance 
 
 dt_fake = IMAProcess(t = t,
-              ma_coeffs = ma_nosa,
-              sigmas = sigmas)
-data_fake = dt_fake.SimulateSeries(n_sim = 5000)
+                     ma_coeffs = ma_nosa,
+                     sigmas = sigmas)
+data_fake= dt_fake.SimulateSeries(n_sim = 5000)
 moms_fake = dt_fake.SimulatedMoments()
+
+
+# + {"code_folding": []}
+## time aggregation 
+n_agg = 3
+dt_fake.TimeAggregate(n_periods = n_agg)
+moms_fake_agg = dt_fake.SimulateMomentsAgg()
+
+## and prepare fake data 
+
+sigmas2 = sigmas*2 
+dt_fake2 = IMAProcess(t = t,
+                      ma_coeffs = ma_nosa,
+                      sigmas = sigmas2)
+data_fake2= dt_fake2.SimulateSeries(n_sim = 5000)
+moms_fake2 = dt_fake2.SimulatedMoments()
+dt_fake2.TimeAggregate(n_periods = n_agg)
+moms_fake_agg2 = dt_fake2.SimulateMomentsAgg()
+
+# + {"code_folding": []}
+# simulated time aggregated moments 
+agg_moms_sim = moms_fake_agg['Var']
+
+# computed time aggregated moments 
+agg_moms_com = dt_fake.ComputeMomentsAgg(n_agg = n_agg)
+
+distance = np.linalg.norm((agg_moms_com[n_agg:,n_agg:] - agg_moms_sim))
+
+# + {"code_folding": []}
+## estimation 
+#dt_fake.n_agg = 3
+#dt_fake.GetDataMomentsAgg(moms_fake_agg2)
+#dt_fake.EstimateParaAggCompute()
 # -
 
 
-agg_moms_sim = dt_fake.ComputeMomentsAgg(n_agg = 4)
-
-agg_moms_sim.shape

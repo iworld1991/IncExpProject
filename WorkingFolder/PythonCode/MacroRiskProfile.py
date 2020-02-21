@@ -111,6 +111,8 @@ sub_var = ['date',
            'Q24_rmean',
            'Q24_rvar']
 IncSCEIndMoms = SCEProbIndM[sub_var]
+
+
 sub_var2 = ['date','userid','IncVar','IncMean','IncSkew','IncKurt']
 IncSCEIndMomsEst = SCEDstIndM[sub_var2]
 
@@ -133,7 +135,7 @@ IncSCEIndMoms = IncSCEIndMoms.rename(columns={'Q24_mean': 'incexp',
 
 #IncSCEIndMomsEst['IncSkew'] = IncSCEIndMomsEst['IncSkew'].copy().replace(0,np.nan)
 
-# + {"code_folding": [22, 30]}
+# + {"code_folding": [30]}
 moms = ['incexp','incvar','inciqr','rincexp','rincvar']
 moms_est = ['IncVar','IncMean','IncSkew','IncKurt']
 
@@ -306,7 +308,7 @@ corr_table = dt_combM.corr()
 corr_table.to_excel('../Tables/corrM.xlsx')
 corr_table
 
-# + {"code_folding": [18, 20, 42, 54, 64, 67]}
+# + {"code_folding": [4, 18, 20, 32, 42, 54, 64, 67]}
 ## try different lags or leads
 
 lead_loop = 6

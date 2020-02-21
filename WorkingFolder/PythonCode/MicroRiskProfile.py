@@ -53,11 +53,13 @@ plt.rcParams['font.family'] = "serif"
 plt.rcParams['font.serif'] = "cm"
 """
 
+## precision of showing float  
 pd.options.display.float_format = '{:,.2f}'.format
 
 dataset = pd.read_stata('../SurveyData/SCE/IncExpSCEProbIndM.dta')   
+dataset_est = pd.read_stata('../SurveyData/SCE/IncExpSCEDstIndM.dta')
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## panel data 
 
 #dataset.index = dataset[['date','userid']]
@@ -95,9 +97,20 @@ vars_all_reg_long = (vars_id+moms_nom + moms_real + vars_job +
                      vars_demog + vars_demog_sub + 
                      vars_empexp + vars_macroexp)
 
+vars_est_all= vars_id + ['IncMean','IncVar','IncSkew','IncKurt']
+
+
 ## select dataset 
 
-SCEM = dataset[vars_all_reg_long]
+SCEM_base = dataset[vars_all_reg_long]
+SCEM_est = dataset_est[vars_est_all]
+
+
+SCEM = pd.merge(SCEM_base, SCEM_est,  how='left', left_on = vars_id, right_on = vars_id)
+
+# +
+## describe data 
+
 SCEM.describe(include='all')
 
 # +
@@ -107,7 +120,11 @@ SCEM = SCEM.rename(columns={'Q24_mean': 'incexp',
                            'Q24_var': 'incvar',
                            'Q24_iqr': 'inciqr',
                            'Q24_rmean':'rincexp',
-                           'Q24_rvar': 'rincvar'})
+                           'Q24_rvar': 'rincvar',
+                           'IncMean':'incmeanest',
+                            'IncVar':'incvarest',
+                           'IncSkew':'incskew',
+                           'IncKurt':'inckurt'})
 
 SCEM = SCEM.rename(columns = {'D6':'HHinc',
                               'Q13new':'UEprobInd',
@@ -127,6 +144,7 @@ SCEM.columns
 
 SCEM.dtypes
 
+# + {"code_folding": []}
 for col in ['HHinc','age','educ']:
     SCEM[col] = SCEM[col].astype('int64',errors = 'ignore')
 
@@ -150,7 +168,7 @@ cleanup_nums = {'parttime': {0: 'no', 1: 'yes'},
 SCEM.replace(cleanup_nums,
              inplace = True)
 
-# +
+# + {"code_folding": []}
 ## categorical variables 
 
 vars_cat = ['HHinc','fulltime','parttime','selfemp','gender','educ','userid','date']
@@ -162,6 +180,7 @@ for var in vars_cat:
 #pp = sns.pairplot(SCEM)
 
 # + {"code_folding": []}
+fig, ax = plt.subplots(figsize=(10,10))
 sns.heatmap(SCEM.corr(), annot=True)
 # -
 
@@ -193,7 +212,7 @@ for mom in ['incvar','rincvar']:
         
 """
 
-# + {"code_folding": [5, 6]}
+# + {"code_folding": [5]}
 fontsize = 80
 figsize = (100,40)
 plt.style.use('ggplot')
@@ -230,7 +249,9 @@ for gp in ['HHinc','educ','gender']:
     ## save figure 
     plt.savefig('../Graphs/ind/boxplot'+'_'+str(gp)+'.jpg')
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
+## variances by groups 
+
 gplist = ['HHinc','educ','gender']
 momlist = ['incvar','rincvar']
 incg_lb = list(inc_grp.values())
@@ -266,6 +287,44 @@ for i in range(3):
         bp.set_ylabel(mom,fontsize = 25)
         
 plt.savefig('../Graphs/ind/boxplot.jpg')
+
+# + {"code_folding": [0]}
+## skewness by groups 
+
+momlist = ['incskew','inckurt']
+incg_lb = list(inc_grp.values())
+
+
+## plot 
+
+fig,axes = plt.subplots(3,2,figsize =(25,25))
+
+for i in range(3):
+    for j in range(2):
+        gp = gplist[i]
+        mom = momlist[j]
+        if gplist[i] =='HHinc':
+            bp = sns.boxplot(x = gp,
+                            y = mom,
+                            data = SCEM, 
+                            color = 'skyblue',
+                            ax = axes[i,j],
+                            whis = True,
+                            showfliers = False)
+        else:
+            bp = sns.boxplot(x = gp,
+                             y = mom,
+                             data = SCEM,
+                             color = 'skyblue',
+                             ax = axes[i,j],
+                             showfliers = False)
+            
+        # settings 
+        bp.set_xlabel(gp,fontsize = 25)
+        bp.tick_params(labelsize=25)
+        bp.set_ylabel(mom,fontsize = 25)
+        
+plt.savefig('../Graphs/ind/boxplot2.jpg')
 # -
 
 # ###  4. Regressions
@@ -279,7 +338,7 @@ indep_list_ct = ['UEprobInd','UEprobInd','Stkprob']
 indep_list_dc = ['HHinc','selfemp','fulltime']
 
 
-# + {"code_folding": [7]}
+# + {"code_folding": [5, 7]}
 ## full-table for risks  
 
 rs_list = {}  ## list to store results 
@@ -324,7 +383,7 @@ dfoutput = summary_col(rs_names,
 dfoutput.title = 'Perceived Income Risks'
 print(dfoutput)
 
-# +
+# + {"code_folding": [0]}
 ## output tables 
 
 beginningtex = """
@@ -343,7 +402,7 @@ endtex = """\\begin{tablenotes}\item Standard errors are clustered by household.
 \\end{table}"""
 
 
-# + {"code_folding": [3]}
+# + {"code_folding": [0, 3]}
 ## relabel rows 
 
 
@@ -365,7 +424,7 @@ def CatRename(table):
 table = CatRename(dfoutput.tables[0])
 
 
-# +
+# + {"code_folding": [0]}
 ## excluding rows that are not to be exported 
 
 to_drop = ['Intercept']
@@ -388,7 +447,7 @@ tb_ltx = tb.to_latex().replace('lllllllll','ccccccccc')   # hard coded here
 f.write(tb_ltx)
 f.write(endtex)
 f.close()
-# + {"code_folding": []}
+# + {"code_folding": [7]}
 ## full-table for expected growth, appendix 
 
 ## full-table for risks  
@@ -478,7 +537,3 @@ tb_ltx = tb.to_latex().replace('lllllllll','ccccccccc')   # hard coded here
 f.write(tb_ltx)
 f.write(endtex)
 f.close()
-# -
-
-
-
