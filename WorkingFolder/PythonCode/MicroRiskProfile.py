@@ -66,7 +66,7 @@ dataset_est = pd.read_stata('../SurveyData/SCE/IncExpSCEDstIndM.dta')
 
 #dataset.index = dataset[['date','userid']]
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## variable list by catogrories 
 
 vars_id = ['userid','date']
@@ -83,7 +83,8 @@ vars_job = ['Q10_1',  # full-time
 
 vars_demog_sub = ['Q32',  ## age 
                   'Q33',  ## gender 
-                  'Q36']  ## education (1-8 low to high, 9 other)
+                  'Q36',  ## education (1-8 low to high, 9 other)
+                  'byear'] ## year of birth
 
 vars_decision = ['Q26v2',  ## spending growth or decrease next year 
                  'Q26v2part2']  # household spending growth 
@@ -118,7 +119,7 @@ SCEM = pd.merge(SCEM_base, SCEM_est,  how='left', left_on = vars_id, right_on = 
 
 #SCEM.describe(include = all)
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## renaming 
 
 SCEM = SCEM.rename(columns={'Q24_mean': 'incexp',
@@ -175,17 +176,27 @@ cleanup_nums = {'parttime': {0: 'no', 1: 'yes'},
 SCEM.replace(cleanup_nums,
              inplace = True)
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## create age group 
 
 SCEM['age_gr'] = pd.cut(SCEM['age'],
                         5,
                         labels=[1,2,3,4,5])
 
-# + {"code_folding": [0, 4]}
+
+## create cohort group
+
+
+SCEM['byear_gr'] = pd.cut(SCEM['byear'],
+                          6,
+                         labels = ['40s','50s','60s','70s','80s','90s'])
+
+
+
+# + {"code_folding": [4]}
 ## categorical variables 
 
-vars_cat = ['HHinc','fulltime','parttime','selfemp','gender','educ','userid','date']
+vars_cat = ['HHinc','fulltime','parttime','selfemp','gender','educ','userid','date','byear']
 
 for var in vars_cat:
     SCEM[var] = pd.Categorical(SCEM[var],ordered = False)
@@ -201,10 +212,17 @@ sns.heatmap(SCEM.corr(), annot=True)
 # ###  3. Histograms
 
 # + {"code_folding": []}
-## by ages 
+## by age 
 
-for mom in ['incexp']:
-    SCEM.groupby('age')[mom].mean().plot.bar(title = mom)
+for mom in ['rincexp']:
+    SCEM.groupby('age_gr')[mom].mean().plot.bar(title = mom)
+
+# + {"code_folding": []}
+## by cohort 
+
+for mom in ['rincexp']:
+    SCEM.groupby('byear_gr')[mom].mean().plot.bar(title = mom)
+    plt.xlabel('group by the year of birth')
 
 # + {"code_folding": [0]}
 ## by income group 
@@ -274,7 +292,7 @@ for gp in ['HHinc','educ','gender']:
     
 """
 
-# + {"code_folding": [0, 11]}
+# + {"code_folding": []}
 ## variances by groups 
 
 gplist = ['HHinc','educ','gender','age_gr']
