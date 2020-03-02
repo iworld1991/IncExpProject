@@ -116,7 +116,7 @@ SCEM = pd.merge(SCEM_base, SCEM_est,  how='left', left_on = vars_id, right_on = 
 # +
 ## describe data 
 
-SCEM.describe(include='all')
+#SCEM.describe(include = all)
 
 # +
 ## renaming 
@@ -350,7 +350,7 @@ indep_list_ct = ['UEprobInd','UEprobInd','Stkprob']
 indep_list_dc = ['HHinc','selfemp','fulltime']
 
 
-# + {"code_folding": [7]}
+# + {"code_folding": [0, 7]}
 ## full-table for risks  
 
 rs_list = {}  ## list to store results 

@@ -321,6 +321,7 @@ sort userid date
 
 replace Q32 = Q32[_n-1] if Q32==. & userid == userid[_n-1] 
 replace Q36 = Q36[_n-1] if Q36==. & userid == userid[_n-1] 
+replace Q33 = Q33[_n-1] if Q33==. & userid == userid[_n-1] & D1==1
 
 save "${folder}/SCE/IncExpSCEProbIndM",replace 
 

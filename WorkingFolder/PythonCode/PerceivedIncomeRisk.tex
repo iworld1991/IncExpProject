@@ -1,18 +1,6 @@
-
-% Default to the notebook output style
-
-    
-
-
-% Inherit from the specified cell style.
-
-
-
-
-    
 \documentclass[12pt,notitlepage,onecolumn,aps,pra]{article}
 
-    
+
     
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
@@ -65,7 +53,6 @@
 
 
 
-    
     
     % Colors for the hyperref package
     \definecolor{urlcolor}{rgb}{0,.145,.698}
@@ -150,9 +137,7 @@
     
     
     
-
-    % Pygments definitions
-    
+% Pygments definitions
 \makeatletter
 \def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
     \let\PY@ul=\relax \let\PY@tc=\relax%
@@ -254,11 +239,97 @@
 \makeatother
 
 
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
     % Exact colors from NB
-    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
-    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
-
-
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        \ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}
+    }
+    
 
     
     % Prevent overflowing lines due to hard-to-break entities
@@ -277,8 +348,7 @@
     
     
 
-    \begin{document}
-    
+\begin{document}
     
     \title{Perceived Income Risks}\author{Tao Wang}
 
@@ -1353,34 +1423,36 @@ HHinc=8      &           &           &     0.27** &             &           &   
              &           &           &     (0.11) &             &           &            &      (0.16) &              \\
 HHinc=9      &           &           &    0.30*** &             &           &            &     0.46*** &              \\
              &           &           &     (0.11) &             &           &            &      (0.16) &              \\
-educ=2       &           &           &            &        0.44 &           &            &             &         0.18 \\
-             &           &           &            &      (0.39) &           &            &             &       (0.62) \\
-educ=3       &           &           &            &        0.44 &           &            &             &         0.06 \\
-             &           &           &            &      (0.38) &           &            &             &       (0.61) \\
-educ=4       &           &           &            &        0.63 &           &            &             &         0.50 \\
-             &           &           &            &      (0.38) &           &            &             &       (0.62) \\
-educ=5       &           &           &            &      0.77** &           &            &             &         0.98 \\
-             &           &           &            &      (0.38) &           &            &             &       (0.61) \\
-educ=6       &           &           &            &        0.54 &           &            &             &         0.96 \\
-             &           &           &            &      (0.38) &           &            &             &       (0.61) \\
-educ=7       &           &           &            &        0.55 &           &            &             &         1.01 \\
-             &           &           &            &      (0.42) &           &            &             &       (0.66) \\
-educ=8       &           &           &            &     1.05*** &           &            &             &       1.53** \\
-             &           &           &            &      (0.41) &           &            &             &       (0.65) \\
-educ=9       &           &           &            &       -0.73 &           &            &             &        -0.73 \\
-             &           &           &            &      (0.67) &           &            &             &       (1.01) \\
-gender=male  &           &           &            &    -0.27*** &           &            &             &     -0.89*** \\
-             &           &           &            &      (0.06) &           &            &             &       (0.09) \\
+educ=2       &           &           &            &        0.10 &           &            &             &        0.46* \\
+             &           &           &            &      (0.17) &           &            &             &       (0.24) \\
+educ=3       &           &           &            &        0.14 &           &            &             &       0.61** \\
+             &           &           &            &      (0.17) &           &            &             &       (0.24) \\
+educ=4       &           &           &            &        0.23 &           &            &             &      0.68*** \\
+             &           &           &            &      (0.17) &           &            &             &       (0.24) \\
+educ=5       &           &           &            &     0.43*** &           &            &             &      1.32*** \\
+             &           &           &            &      (0.17) &           &            &             &       (0.24) \\
+educ=6       &           &           &            &        0.25 &           &            &             &      1.18*** \\
+             &           &           &            &      (0.17) &           &            &             &       (0.24) \\
+educ=7       &           &           &            &      0.38** &           &            &             &      1.48*** \\
+             &           &           &            &      (0.18) &           &            &             &       (0.26) \\
+educ=8       &           &           &            &     0.66*** &           &            &             &      1.67*** \\
+             &           &           &            &      (0.18) &           &            &             &       (0.25) \\
+educ=9       &           &           &            &     -0.77** &           &            &             &        -0.16 \\
+             &           &           &            &      (0.33) &           &            &             &       (0.45) \\
+gender=male  &           &           &            &    -0.31*** &           &            &             &     -0.73*** \\
+             &           &           &            &      (0.02) &           &            &             &       (0.03) \\
 parttime=yes &  -0.47*** &  -0.34*** &   -0.28*** &             &  -0.66*** &   -0.54*** &    -0.36*** &              \\
              &    (0.03) &    (0.03) &     (0.03) &             &    (0.04) &     (0.04) &      (0.05) &              \\
 selfemp=yes  &   0.89*** &   0.00*** &     0.00** &             &   0.93*** &    0.00*** &     0.00*** &              \\
              &    (0.04) &    (0.00) &     (0.00) &             &    (0.05) &     (0.00) &      (0.00) &              \\
-             &    (0.01) &    (0.03) &     (0.11) &      (0.37) &    (0.02) &     (0.04) &      (0.16) &       (0.61) \\
+             &    (0.01) &    (0.03) &     (0.11) &      (0.16) &    (0.02) &     (0.04) &      (0.16) &       (0.24) \\
+R-squared    &      0.02 &      0.02 &       0.02 &        0.01 &      0.01 &       0.03 &        0.05 &         0.03 \\
+             &      0.02 &      0.02 &       0.02 &        0.01 &      0.01 &       0.03 &        0.05 &         0.03 \\
 Stkprob      &           &   0.01*** &    0.01*** &             &           &    0.02*** &     0.02*** &              \\
              &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
 UEprobInd    &           &  -0.01*** &   -0.01*** &             &           &   -0.02*** &    -0.01*** &              \\
              &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-N            &     45955 &     40806 &      35282 &        6796 &     42057 &      37280 &       32558 &         5873 \\
+N            &     45955 &     40806 &      35282 &       40233 &     42057 &      37280 &       32558 &        36815 \\
 R2           &      0.02 &      0.02 &       0.02 &        0.01 &      0.01 &       0.03 &        0.05 &         0.03 \\
 \bottomrule
 \end{tabular}
@@ -1419,35 +1491,37 @@ HHinc=8      &          &           &   -4.24*** &             &           &    
              &          &           &     (0.53) &             &           &            &      (1.05) &              \\
 HHinc=9      &          &           &   -4.47*** &             &           &            &   -12.91*** &              \\
              &          &           &     (0.53) &             &           &            &      (1.05) &              \\
-educ=2       &          &           &            &     -4.81** &           &            &             &        -6.15 \\
-             &          &           &            &      (1.98) &           &            &             &       (4.37) \\
-educ=3       &          &           &            &    -5.74*** &           &            &             &    -11.82*** \\
-             &          &           &            &      (1.95) &           &            &             &       (4.31) \\
-educ=4       &          &           &            &    -6.15*** &           &            &             &     -11.11** \\
-             &          &           &            &      (1.96) &           &            &             &       (4.34) \\
-educ=5       &          &           &            &    -6.09*** &           &            &             &    -15.64*** \\
-             &          &           &            &      (1.93) &           &            &             &       (4.29) \\
-educ=6       &          &           &            &    -6.71*** &           &            &             &    -17.44*** \\
-             &          &           &            &      (1.95) &           &            &             &       (4.31) \\
-educ=7       &          &           &            &    -6.54*** &           &            &             &    -19.89*** \\
-             &          &           &            &      (2.12) &           &            &             &       (4.59) \\
-educ=8       &          &           &            &     -4.55** &           &            &             &    -15.77*** \\
-             &          &           &            &      (2.07) &           &            &             &       (4.51) \\
-educ=9       &          &           &            &     -7.79** &           &            &             &    -20.74*** \\
-             &          &           &            &      (3.32) &           &            &             &       (6.74) \\
-gender=male  &          &           &            &    -0.82*** &           &            &             &      4.48*** \\
-             &          &           &            &      (0.29) &           &            &             &       (0.57) \\
+educ=2       &          &           &            &     -1.67** &           &            &             &       -2.75* \\
+             &          &           &            &      (0.80) &           &            &             &       (1.56) \\
+educ=3       &          &           &            &     -1.88** &           &            &             &     -4.70*** \\
+             &          &           &            &      (0.79) &           &            &             &       (1.54) \\
+educ=4       &          &           &            &    -2.34*** &           &            &             &     -5.07*** \\
+             &          &           &            &      (0.80) &           &            &             &       (1.55) \\
+educ=5       &          &           &            &     -1.91** &           &            &             &     -7.68*** \\
+             &          &           &            &      (0.78) &           &            &             &       (1.53) \\
+educ=6       &          &           &            &    -2.37*** &           &            &             &     -9.25*** \\
+             &          &           &            &      (0.79) &           &            &             &       (1.54) \\
+educ=7       &          &           &            &     -2.15** &           &            &             &     -9.06*** \\
+             &          &           &            &      (0.85) &           &            &             &       (1.64) \\
+educ=8       &          &           &            &       -0.53 &           &            &             &     -7.17*** \\
+             &          &           &            &      (0.83) &           &            &             &       (1.62) \\
+educ=9       &          &           &            &    -5.20*** &           &            &             &    -12.13*** \\
+             &          &           &            &      (1.60) &           &            &             &       (2.99) \\
+gender=male  &          &           &            &    -0.83*** &           &            &             &      2.63*** \\
+             &          &           &            &      (0.11) &           &            &             &       (0.20) \\
 parttime=yes &    -0.19 &     -0.01 &   -0.81*** &             &   0.91*** &    1.28*** &    -1.53*** &              \\
              &   (0.13) &    (0.13) &     (0.15) &             &    (0.25) &     (0.27) &      (0.29) &              \\
 selfemp=yes  &  7.36*** &  -0.00*** &    0.00*** &             &   6.16*** &    0.00*** &    -0.00*** &              \\
              &   (0.15) &    (0.00) &     (0.00) &             &    (0.29) &     (0.00) &      (0.00) &              \\
-             &   (0.06) &    (0.11) &     (0.52) &      (1.92) &    (0.11) &     (0.23) &      (1.04) &       (4.26) \\
+             &   (0.06) &    (0.11) &     (0.52) &      (0.78) &    (0.11) &     (0.23) &      (1.04) &       (1.53) \\
+R-squared    &     0.05 &      0.00 &       0.01 &        0.00 &      0.01 &       0.01 &        0.04 &         0.02 \\
+             &     0.05 &      0.00 &       0.01 &        0.00 &      0.01 &       0.01 &        0.04 &         0.02 \\
 Stkprob      &          &    0.01** &    0.01*** &             &           &   -0.05*** &    -0.04*** &              \\
              &          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
 UEprobInd    &          &   0.03*** &    0.03*** &             &           &    0.06*** &     0.05*** &              \\
              &          &    (0.00) &     (0.00) &             &           &     (0.01) &      (0.01) &              \\
-N            &    46027 &     39868 &      34475 &        6872 &     43237 &      37397 &       32614 &         6165 \\
-R2           &     0.05 &      0.00 &       0.01 &        0.00 &      0.01 &       0.01 &        0.04 &         0.03 \\
+N            &    46027 &     39868 &      34475 &       40264 &     43237 &      37397 &       32614 &        37770 \\
+R2           &     0.05 &      0.00 &       0.01 &        0.00 &      0.01 &       0.01 &        0.04 &         0.02 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
@@ -1488,4 +1562,4 @@ $t$ and the monthly s\&p500 return by the end of $t+k$ for $k=0,1,..,5$.
 \bibliography{PerceivedIncomeRisk}
 
     
-    \end{document}
+\end{document}
