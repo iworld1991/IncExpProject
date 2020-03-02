@@ -323,7 +323,28 @@ replace Q32 = Q32[_n-1] if Q32==. & userid == userid[_n-1]
 replace Q36 = Q36[_n-1] if Q36==. & userid == userid[_n-1] 
 replace Q33 = Q33[_n-1] if Q33==. & userid == userid[_n-1] & D1==1
 
+***************************************************
+**** Winsorization
+*************************************************
+
+drop if Q32 > 70 | Q32 < 20 /*age greater than 100 */ 
+
+***************************************************
+**** create cohort 
+*************************************************
+
+gen byear = year - Q32
+label var byear "year of birth"
+
+egen byear_gr = cut(byear), group(5)
+label var byear_gr "cohort by year of birth"
+
+label define byear_grlb 0 "1952" 1 "1961" 2 "1970" 3 "1980" 4 "1998"
+label value byear_gr byear_grlb
+
 save "${folder}/SCE/IncExpSCEProbIndM",replace 
+
+
 
 ***************************************
 **   Histograms of Moments  ***********

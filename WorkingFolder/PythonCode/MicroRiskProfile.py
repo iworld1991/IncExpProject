@@ -66,7 +66,7 @@ dataset_est = pd.read_stata('../SurveyData/SCE/IncExpSCEDstIndM.dta')
 
 #dataset.index = dataset[['date','userid']]
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## variable list by catogrories 
 
 vars_id = ['userid','date']
@@ -95,7 +95,7 @@ vars_empexp = ['Q13new']  ## probability of unemployment
 vars_macroexp = ['Q6new',  ## stock market going up 
                  'Q4new']  ## UE goes up 
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## subselect variables 
 
 vars_all_reg_long = (vars_id+moms_nom + moms_real + vars_job + 
@@ -118,7 +118,7 @@ SCEM = pd.merge(SCEM_base, SCEM_est,  how='left', left_on = vars_id, right_on = 
 
 #SCEM.describe(include = all)
 
-# +
+# + {"code_folding": [0]}
 ## renaming 
 
 SCEM = SCEM.rename(columns={'Q24_mean': 'incexp',
@@ -175,7 +175,14 @@ cleanup_nums = {'parttime': {0: 'no', 1: 'yes'},
 SCEM.replace(cleanup_nums,
              inplace = True)
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
+## create age group 
+
+SCEM['age_gr'] = pd.cut(SCEM['age'],
+                        5,
+                        labels=[1,2,3,4,5])
+
+# + {"code_folding": [0, 4]}
 ## categorical variables 
 
 vars_cat = ['HHinc','fulltime','parttime','selfemp','gender','educ','userid','date']
@@ -183,7 +190,7 @@ vars_cat = ['HHinc','fulltime','parttime','selfemp','gender','educ','userid','da
 for var in vars_cat:
     SCEM[var] = pd.Categorical(SCEM[var],ordered = False)
 
-# +
+# + {"code_folding": []}
 #pp = sns.pairplot(SCEM)
 
 # + {"code_folding": []}
@@ -192,6 +199,12 @@ sns.heatmap(SCEM.corr(), annot=True)
 # -
 
 # ###  3. Histograms
+
+# + {"code_folding": []}
+## by ages 
+
+for mom in ['incexp']:
+    SCEM.groupby('age')[mom].mean().plot.bar(title = mom)
 
 # + {"code_folding": [0]}
 ## by income group 
@@ -219,7 +232,7 @@ for mom in ['incvar','rincvar']:
         
 """
 
-# + {"code_folding": [5]}
+# + {"code_folding": [0, 7]}
 ## old box charts
 """
 fontsize = 80
@@ -261,19 +274,19 @@ for gp in ['HHinc','educ','gender']:
     
 """
 
-# + {"code_folding": [11]}
+# + {"code_folding": [0, 11]}
 ## variances by groups 
 
-gplist = ['HHinc','educ','gender']
+gplist = ['HHinc','educ','gender','age_gr']
 momlist = ['incvar','rincvar']
 incg_lb = list(inc_grp.values())
 
 
 ## plot 
 
-fig,axes = plt.subplots(3,2,figsize =(25,25))
+fig,axes = plt.subplots(len(gplist),2,figsize =(25,25))
 
-for i in range(3):
+for i in range(len(gplist)):
     for j in range(2):
         gp = gplist[i]
         mom = momlist[j]
@@ -295,13 +308,13 @@ for i in range(3):
             
         # settings 
         bp.set_xlabel(gp,fontsize = 25)
-        bp.tick_params(labelsize=25)
+        bp.tick_params(labelsize = 25)
         bp.set_ylabel(mom,fontsize = 25)
         
 plt.savefig('../Graphs/ind/boxplot.jpg')
 
-# + {"code_folding": []}
-## skewness by groups 
+# + {"code_folding": [0, 10]}
+## skewness and kurtosis by groups 
 
 momlist = ['incskew','inckurt']
 incg_lb = list(inc_grp.values())
@@ -309,9 +322,9 @@ incg_lb = list(inc_grp.values())
 
 ## plot 
 
-fig,axes = plt.subplots(3,2,figsize =(25,25))
+fig,axes = plt.subplots(len(gplist),2,figsize =(25,25))
 
-for i in range(3):
+for i in range(len(gplist)):
     for j in range(2):
         gp = gplist[i]
         mom = momlist[j]
@@ -450,7 +463,7 @@ for var in to_drop:
     
 tb = table.drop(index = to_drop)
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## write to latex 
 f = open('../Tables/latex/micro_reg.tex', 'w')
 f.write(beginningtex)
@@ -555,7 +568,7 @@ f.close()
 #
 #
 
-# +
+# + {"code_folding": [0]}
 ## full-table for risks  
 
 rs_list = {}  ## list to store results 
