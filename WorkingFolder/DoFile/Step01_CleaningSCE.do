@@ -312,6 +312,16 @@ gen Q24_rdisg = Q24_rsd^2
 label var Q24_rdisg "Disagreements of 1-yr-ahead real expted income growth"
 
 
+***************************************************
+**** Fill the age/education for the same household
+*************************************************
+
+
+sort userid date 
+
+replace Q32 = Q32[_n-1] if Q32==. & userid == userid[_n-1] 
+replace Q36 = Q36[_n-1] if Q36==. & userid == userid[_n-1] 
+
 save "${folder}/SCE/IncExpSCEProbIndM",replace 
 
 ***************************************
@@ -379,7 +389,6 @@ label var Q24_disg "Disagreements of 1-yr-ahead expected earning growth"
 label var Q24_rmean "Average 1-yr-ahead expected real earning growth(%)"
 label var Q24_rvar "Average Uncertainty of 1-yr-ahead real expected earning growth"
 label var Q24_rdisg "Disagreements of 1-yr-ahead expected real earning growth"
-
 
 save "${folder}/SCE/IncExpSCEProbPopM",replace 
 

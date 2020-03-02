@@ -34,7 +34,9 @@ import statsmodels.formula.api as smf
 from linearmodels.panel import PanelOLS
 from statsmodels.iolib.summary2 import summary_col
 
-"""
+""" 
+## matplotlib configurations
+
 from IPython.display import set_matplotlib_formats
 set_matplotlib_formats('pdf','png','jpg')
 #plt.rcParams['savefig.dpi'] = 75
@@ -83,6 +85,9 @@ vars_demog_sub = ['Q32',  ## age
                   'Q33',  ## gender 
                   'Q36']  ## education (1-8 low to high, 9 other)
 
+vars_decision = ['Q26v2',  ## spending growth or decrease next year 
+                 'Q26v2part2']  # household spending growth 
+
 ## these variables are only available for a sub sample 
 
 vars_empexp = ['Q13new']  ## probability of unemployment 
@@ -95,7 +100,7 @@ vars_macroexp = ['Q6new',  ## stock market going up
 
 vars_all_reg_long = (vars_id+moms_nom + moms_real + vars_job + 
                      vars_demog + vars_demog_sub + 
-                     vars_empexp + vars_macroexp)
+                     vars_empexp + vars_macroexp + vars_decision)
 
 vars_est_all= vars_id + ['IncMean','IncVar','IncSkew','IncKurt']
 
@@ -135,7 +140,9 @@ SCEM = SCEM.rename(columns = {'D6':'HHinc',
                               'Q12new':'selfemp',
                               'Q32':'age',
                               'Q33':'gender',
-                              'Q36':'educ'})
+                              'Q36':'educ',
+                              'Q26v2': 'spending_dum',
+                              'Q26v2part2':'spending'})
 
 SCEM.columns
 # -
@@ -186,7 +193,7 @@ sns.heatmap(SCEM.corr(), annot=True)
 
 # ###  3. Histograms
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## by income group 
 
 fontsize = 80
@@ -213,6 +220,8 @@ for mom in ['incvar','rincvar']:
 """
 
 # + {"code_folding": [5]}
+## old box charts
+"""
 fontsize = 80
 figsize = (100,40)
 plt.style.use('ggplot')
@@ -248,8 +257,11 @@ for gp in ['HHinc','educ','gender']:
     plt.suptitle('')
     ## save figure 
     plt.savefig('../Graphs/ind/boxplot'+'_'+str(gp)+'.jpg')
+    
+    
+"""
 
-# + {"code_folding": [0]}
+# + {"code_folding": [11]}
 ## variances by groups 
 
 gplist = ['HHinc','educ','gender']
@@ -288,7 +300,7 @@ for i in range(3):
         
 plt.savefig('../Graphs/ind/boxplot.jpg')
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## skewness by groups 
 
 momlist = ['incskew','inckurt']
@@ -305,8 +317,8 @@ for i in range(3):
         mom = momlist[j]
         if gplist[i] =='HHinc':
             bp = sns.boxplot(x = gp,
-                            y = mom,
-                            data = SCEM, 
+                             y = mom,
+                             data = SCEM, 
                             color = 'skyblue',
                             ax = axes[i,j],
                             whis = True,
@@ -338,7 +350,7 @@ indep_list_ct = ['UEprobInd','UEprobInd','Stkprob']
 indep_list_dc = ['HHinc','selfemp','fulltime']
 
 
-# + {"code_folding": [5, 7]}
+# + {"code_folding": [7]}
 ## full-table for risks  
 
 rs_list = {}  ## list to store results 
@@ -424,7 +436,7 @@ def CatRename(table):
 table = CatRename(dfoutput.tables[0])
 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## excluding rows that are not to be exported 
 
 to_drop = ['Intercept']
@@ -447,7 +459,7 @@ tb_ltx = tb.to_latex().replace('lllllllll','ccccccccc')   # hard coded here
 f.write(tb_ltx)
 f.write(endtex)
 f.close()
-# + {"code_folding": [7]}
+# + {"code_folding": [0, 41, 55]}
 ## full-table for expected growth, appendix 
 
 ## full-table for risks  
@@ -537,3 +549,37 @@ tb_ltx = tb.to_latex().replace('lllllllll','ccccccccc')   # hard coded here
 f.write(tb_ltx)
 f.write(endtex)
 f.close()
+# -
+
+# ## 5. Perceived risks and decisions
+#
+#
+
+# +
+## full-table for risks  
+
+rs_list = {}  ## list to store results 
+nb_spc = 1  ## number of specifications 
+
+dep_list3 = ['incexp','rincexp','incvar','rincvar','incskew']
+
+
+for i,mom in enumerate(dep_list3):
+    ## model 1 
+    model = smf.ols(formula = 'spending'+ '~'+ mom,
+                    data = SCEM)
+    rs_list[nb_spc*i] = model.fit()
+    
+    
+rs_names = [rs_list[i] for i in range(len(rs_list))]
+
+dfoutput = summary_col(rs_names,
+                        float_format='%0.2f',
+                        stars = True,
+                        info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
+                                  'R2':lambda x: "{:.2f}".format(x.rsquared)})
+dfoutput.title = 'Perceived Income Risks and Decisions'
+print(dfoutput)
+# -
+
+
