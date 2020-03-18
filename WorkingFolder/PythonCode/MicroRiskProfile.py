@@ -119,7 +119,7 @@ SCEM = pd.merge(SCEM_base, SCEM_est,  how='left', left_on = vars_id, right_on = 
 
 #SCEM.describe(include = all)
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## renaming 
 
 SCEM = SCEM.rename(columns={'Q24_mean': 'incexp',
@@ -205,6 +205,7 @@ for var in vars_cat:
 #pp = sns.pairplot(SCEM)
 
 # + {"code_folding": []}
+# correlation heatmap 
 fig, ax = plt.subplots(figsize=(10,10))
 sns.heatmap(SCEM.corr(), annot=True)
 # -
@@ -214,17 +215,41 @@ sns.heatmap(SCEM.corr(), annot=True)
 # + {"code_folding": []}
 ## by age 
 
-for mom in ['rincexp']:
+for mom in ['incvar']:
     SCEM.groupby('age_gr')[mom].mean().plot.bar(title = mom)
+    plt.xlabel('group by the year of birth \n (from young to old)')
 
 # + {"code_folding": []}
 ## by cohort 
 
-for mom in ['rincexp']:
+for mom in ['incvar']:
     SCEM.groupby('byear_gr')[mom].mean().plot.bar(title = mom)
-    plt.xlabel('group by the year of birth')
+    plt.xlabel('group by the year of birth \n (from older generation to the young)')
+
+# +
+## by hh income 
+
+
+for mom in ['incskew']:
+    SCEM.groupby('HHinc')[mom].mean().plot.bar(title = mom)
+    plt.xlabel('group by household income (from low to high)')
 
 # + {"code_folding": [0]}
+## by education
+
+
+for mom in ['incskew']:
+    SCEM.groupby('educ')[mom].mean().plot.bar(title = mom)
+    plt.xlabel('group by education (from low to high)')
+
+# + {"code_folding": []}
+## by gender 
+
+for mom in ['rincvar']:
+    SCEM.groupby('gender')[mom].mean().plot.bar(title = mom)
+    plt.xlabel('group by gender')
+
+# + {"code_folding": []}
 ## by income group 
 
 fontsize = 80
@@ -292,7 +317,7 @@ for gp in ['HHinc','educ','gender']:
     
 """
 
-# + {"code_folding": []}
+# + {"code_folding": [0, 11]}
 ## variances by groups 
 
 gplist = ['HHinc','educ','gender','age_gr']

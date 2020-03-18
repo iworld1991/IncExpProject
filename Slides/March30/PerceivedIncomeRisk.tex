@@ -1,0 +1,424 @@
+\documentclass{beamer}
+\usepackage{default}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{adjustbox}  % Allows for fitting tables into slide
+\usepackage{hyperref}
+\usepackage{threeparttable}
+\usepackage{caption}
+%\usepackage{subcaption}
+\usepackage{natbib}
+\usepackage{adjustbox}
+\usepackage{subcaption}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{boxes}
+\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{default}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+%\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+% colortheme to choose one 
+
+%\usecolortheme{beaver}
+%\usecolortheme{crane}
+%\usecolortheme{default}
+\usecolortheme{dolphin}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+
+
+% fond theme to choose one 
+%\usefonttheme{structuresmallcapsserif}
+%\usefonttheme{structureitalicserif}
+%\usefonttheme{structurebold}
+\usefonttheme{serif}
+%\usefonttheme{professionalfonts}
+%\usefonttheme{default}
+
+\title{Perceived Income Risks}
+
+
+% A subtitle is optional and this may be deleted
+
+\author{Tao Wang \\ Johns Hopkins University}
+% - Give the names in the same order as the appear in the paper.
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\date{\today}
+% - Either use conference name or its abbreviation.
+% - Not really informative to the audience, more for people (including
+%   yourself) who are reading the slides online
+
+% This is only inserted into the PDF information catalog. Can be left
+% out. 
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
+% \logo{\pgfuseimage{university-logo}}
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+\AtBeginSubsection[]
+{
+	\begin{frame}<beamer>{Outline}
+	\tableofcontents[currentsection]
+\end{frame}
+}
+
+\begin{document}
+	
+
+\begin{frame}
+	\titlepage
+\end{frame}
+\begin{frame}{Outline}
+	\tableofcontents
+	% You might wish to add the option [pausesections]
+\end{frame}
+
+
+\section{Motivation}
+
+\begin{frame}{Motivation}
+	\begin{itemize}
+		\item ddddddddd
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{What this paper does}
+	\begin{enumerate}
+		\item dddd
+	\end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Literature}
+\begin{itemize}
+	\item ddddd
+	\begin{itemize}
+		\item dddd
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Definition and notation}
+	\begin{table}[ht]
+		\centering
+		\label{MomSum}
+		\begin{tabular}{ll}
+			
+			\hline 
+			Individual moments                                  & Population moments                             \\
+			\hline 
+			Mean forecast: $y_{i,t+h|t}$                   & Average forecast: $\bar y_{t+h|t}$                   \\
+			Forecast error: $FE_{i,t+h|t}$ & Average forecast error: $\overline{FE}_{t+h|t}$ \\
+			Uncertainty: $Var_{i,t+h|t}$         & \textbf{Average uncertainty}:  $\overline{Var}_{t+h|t}$ \\
+			& Disagreement:  $\overline{Disg}_{t+h|t}$       \\
+			\hline 
+		\end{tabular}
+	\end{table}
+	
+\end{frame}
+
+
+\begin{frame}{Data}
+	\begin{table}[]
+		\resizebox{\textwidth}{!}{	\begin{tabular}{lll}
+				
+				\hline 
+				& SCE & SPF        \\
+				\hline 
+				Time period                                    & 2013M6-2018M6                            & 2007Q1-2018Q4             \\
+				Frequency                                      & Monthly                                 & Quarterly                \\
+				Sample Size                                    & 1,300                                   & 30-50                    \\
+				Aggregate Var in Density                       & \textcolor{blue}{1-yr-ahead inflation}          & \textcolor{blue}{1-yr and 3-yr core CPI and core PCE}         \\
+				Pannel Structure                               & stay up to 12 months                    & average stay for 5 years \\
+				Demographic Info                        & Education, Income, Age        & Industry    \\
+				\hline 
+		\end{tabular}}
+	\end{table}
+\begin{itemize}
+	\item density estimation following (\citet{engelberg2009comparing})
+	\item exclude top and bottom 5\% values for forecast errors and uncertainty
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Basic patterns: uncertainty and realized inflation}
+	\begin{figure}
+		\centering
+		\label{InfVar}
+		\includegraphics[width=0.3\textwidth]{figuresDraft/Inf1yf_CPIAU_varSPFCPIQ.png}
+		\includegraphics[width=0.3\textwidth]{figuresDraft/Inf1yf_PCE_varSPFPCEQ.png}
+		\includegraphics[width=0.3\textwidth]{figuresDraft/Inf1yf_CPIAU_varSCEM.png}
+	\end{figure}
+
+\end{frame}
+
+
+\begin{frame}{Basic patterns: uncertainty and the size of forecast errors}
+	\begin{figure}
+		\centering
+		\label{FEVar}
+		\includegraphics[width=0.3\textwidth]{figuresDraft/SPFCPI_abFE_varSPFCPIQ.png}
+		\includegraphics[width=0.3\textwidth]{figuresDraft/SPFPCE_abFE_varSPFPCEQ.png}
+		\includegraphics[width=0.3\textwidth]{figuresDraft/SCE_abFE_varSCEM.png}
+	\end{figure}
+\begin{itemize}
+\item no evidence for positive correlation betwen high ex ante uncertainty and ex post forecast errors.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Basic patterns: uncertainty and disagreement}
+	\begin{figure}
+		\centering
+		\label{DisgVar}
+		\includegraphics[width=0.3\textwidth]{figuresDraft/CPI_disg_varSPFCPIQ.png}
+		\includegraphics[width=0.3\textwidth]{figuresDraft/PCE_disg_varSPFPCEQ.png}
+		\includegraphics[width=0.3\textwidth]{figuresDraft/Q9_disg_varSCEM.png}
+	\end{figure}
+\begin{itemize}
+	\item uncertainty are not the same as disagreement for professionals 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Basic patterns: summary}
+	\begin{itemize}
+		\item uncertainty varies across time 
+		\item uncertainty contains different information from widely  proxies such as disagreement and forecast error
+	\end{itemize}
+\end{frame}
+
+\section{Theory}
+
+\begin{frame}{AR(1) model of inflation}
+	
+
+\begin{itemize}
+	
+\item 	\textbf{Inflation process}	
+	$$y_{t} = \rho y_{t-1} + \omega_t  $$ 
+	$$\omega_t \sim N(0,\sigma^2_{\omega})$$
+
+\item \textbf{Uncertainty}
+		\begin{itemize}
+			\item FIRE: time-invariant 
+			\begin{eqnarray*}\label{VarREPop}
+				\overline{Var}^*_{t+h|t} = \sum^{h}_{s=1}\rho^{2s} \sigma^2_{\omega}
+			\end{eqnarray*}
+			
+			\item SE: time-invariant 
+			\begin{eqnarray*}\label{VarSEPopRE}
+				\overline{Var}^{se}_{t+h|t} = \sum^{+\infty}_{\tau =0} \lambda (1-\lambda)^\tau \overline{Var}^*_{t+h|t-\tau}
+			\end{eqnarray*}
+			
+			\item NI: time-variant but quantitatively tiny due to highly efficient Kalman gain
+			
+			\begin{eqnarray*}\label{VarNIPopRE}
+				\overline{Var}^{ni}_{t+h|t} = \rho^{2h} \overline{Var}^{ni}_{t|t} + \overline{Var}^*_{t+h|t}
+			\end{eqnarray*}
+		\end{itemize}
+		
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}{Stocastic volatility (UCSV) inflation process (\citet{stock2007has})}
+
+\begin{itemize}
+\item \textbf{Inflation process}
+\begin{eqnarray*}
+\begin{split}
+& y_t = \theta_t + \eta_t,\quad \textrm{where } \eta_t =\sigma_{\eta,t} \xi_{\eta,t} \\
+& \theta_t = \theta_{t-1} + \epsilon_t, \quad \textrm{where }  \epsilon_t =\sigma_{\epsilon,t} \xi_{\epsilon,t} \\
+& \log\sigma^2_{\eta,t} = \log\sigma^2_{\eta,t-1} + \mu_{\eta,t} \\
+& \log\sigma^2_{\epsilon,t} = \log\sigma^2_{\epsilon,t-1} + \mu_{\epsilon,t} 
+\end{split}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\begin{split}
+& \xi_t =[\xi_{\eta,t},\xi_{\epsilon,t}] \sim N(0,I_2) \\
+& \mu_{t} = [\mu_{\eta,t},\mu_{\epsilon,t}]' \sim N(0,\gamma I_2) 
+\end{split}
+\end{eqnarray*}
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{UCSV inflation process}
+	
+	\begin{itemize}
+		\item \textbf{Uncertainty}
+		\begin{itemize}
+			\item FIRE: time-varying  \begin{eqnarray*}\label{VARRESVPop}
+			\begin{split}
+			\overline{Var}^*_{t+h|t} = \sum_{k=1}^h exp^{- 0.5k\gamma_{\eta}} \sigma^2_{\eta,t}  +  exp^{- 0.5 h \gamma_{\epsilon}} \sigma^2_{\epsilon,t} 
+			\end{split} 
+			\end{eqnarray*}
+			
+			\item SE: time-varying 
+			\begin{eqnarray*}
+		\overline {Var}^{se}_{t+h|t} = \sum^{\infty}_{\tau=0} (1-\lambda)^\tau\lambda\overline{Var}^*_{t+h|t-\tau} 
+			\end{eqnarray*}
+			
+			\item NI (1-step-ahead): time-varying 
+		\begin{eqnarray*}
+		\overline{Var}^\theta_{t|t-1} = \overline{Var}^\theta_{t-1|t-1} + Var^*_{t|t-1}(y_t) 
+		\end{eqnarray*}
+			
+		\end{itemize}
+	\end{itemize}
+	
+\end{frame}
+
+
+\section{Estimation}
+\begin{frame}{Simulated method of moment estimation}
+	
+	\begin{eqnarray*}
+	\widehat \Omega = \underset{\{\Omega \in \Gamma\} }{argmin} (M_{\textrm{data} } - F^{o}(\Omega, Y)) W  (M_{\textrm{data} } - F^{o}(\Omega, Y))'
+	\end{eqnarray*}
+	
+	\begin{itemize}
+		\item  $\Omega$: parameters of the particular $o \in \{{fire}, {se}, {ni} \} \times \{ar, sv\}$
+		\item  $\Gamma$: constraints for the parameter. 
+		\item $M_{data}$: data moments
+		\item $F$: simulated model moments according to a particular theory $o$, a function of parameters $\Omega$ as well as the $Y$, the real-time data (including history) up till each point of the time $t$. 
+		\begin{itemize}
+			\item unconditional moments, not specific to time
+			\item moments selected from average forecast, variance and autocovariance of forecasts, average diagreement, variance and autovariance of disagreement, average uncertainty, etc. 
+		\end{itemize}
+		\item  $W$: weight matrix, identity matrix for now 
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Estimation procedure and algorithm}
+	\begin{enumerate}
+		\item for each theory of expectation formation and the inflation process, start with an initial value for the parameter(s) of interest
+		\item simulate individual forecasts for a large enough ($N=200$) number of forecasters
+		\item compute the average forecast errors, disagreement and average uncertainty across all agents
+		\item compute the time-series moments of the average forecast, disagreement, and uncertainty
+		\item compute the difference between the simulated moments and the data moments 
+		\item keep searching the parameter value until reaching below a threshold of the loss
+	\end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Two-step and joint estimation}
+	\begin{enumerate}
+		\item two-step estimation:  separately estimate inflation process parameters and then parameters of the inflation process
+		\begin{itemize}
+			\item pros: computationally lighter 
+			\item cons: potential misspecification. does not utilize the expectation data to understand inflation process per se.  
+		\end{itemize}
+		\item joint estimation: targeting both moments of realized inflation series and moments of forecasts to simultaneously estimate both the inflation process and the parameter of expectation formation
+		\begin{itemize}
+			\item pros: additional information gain from expectations data about inflation process itself
+			\item cons: more computation burden  
+		\end{itemize}
+	\end{enumerate}
+\end{frame}
+
+
+\subsection{AR(1)}
+
+%%%%%%%%%%%%%%%%%%%
+\subsubsection{SE}
+
+\begin{frame}{SE parameter estimate: professionals}
+	\begin{table}
+		\centering
+		\caption{SMM Estimates of SE: professionals}
+		\label{SMM_Est_SE_SPF_Table}
+		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
+		\begin{tabular}{lllllllllllll}
+			\hline 
+			0     & 1       & 2       & 3       & 4  & SE: $\hat\lambda_{SPF}$(Q) & SE: $\hat\lambda_{SPF}$(Q) & SE: $\rho$ & SE: $\sigma$ & SE: $\hat\lambda_{SCE}$(M) & SE: $\hat\lambda_{SCE}$(M) & SE: $\rho$ & SE: $\sigma$ \\
+			\hline 
+			FEVar & FEATV   &         &         &    & 0.47                       & 0.36                       & 1.00       & 0.08         & 0.2                        & 0.59                       & 0.99       & 0.08         \\
+			FEVar & DisgATV & DisgVar &         &    & 0.27                       & 0.38                       & 1.00       & 0.11         & 0.2                        & 0.56                       & 0.98       & 0.08         \\
+			FEVar & FEATV   & DisgVar & DisgATV &    & 0.47                       & 0.36                       & 1.00       & 0.10         & 0.2                        & 0.59                       & 0.99       & 0.08         \\
+			FEVar & FEATV   & DisgVar & DisgATV & FE & 0.47                       & 0.36                       & 1.00       & 0.08         & 0.2                        & 0.59                       & 0.99       & 0.08       \\
+			\hline  
+		\end{tabular}
+	}
+	\end{table}
+	\begin{itemize}
+		\item $\lambda$: update rate in SE
+	\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Professionals and SEAR}
+	\begin{figure}[ht]
+		\label{SE_diag_SPF}
+		\begin{subfigure}[b]{0.2\textwidth}
+			\centering
+			\caption{FE}
+			\includegraphics[width=\textwidth, height = 0.8\textheight]{figuresDraft/spf_se_est_diag0.png}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}[b]{0.2\textwidth}
+			\caption{Disg}
+			\includegraphics[width=\textwidth, height = 0.8\textheight]{figuresDraft/spf_se_est_diag1.png}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}[b]{0.2\textwidth}
+			\caption{FE/Disg}
+			\includegraphics[width=\textwidth, height = 0.8\textheight]{figuresDraft/spf_se_est_diag2.png}
+		\end{subfigure}
+	\end{figure}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\section{Conclusion}
+
+\begin{frame}{Conclusion}
+	\begin{itemize}
+		\item ddddd
+	\end{itemize}	
+\end{frame}
+
+
+\bibliographystyle{apalike}
+\bibliography{PerceivedIncomeRisk}
+
+
+\end{document}

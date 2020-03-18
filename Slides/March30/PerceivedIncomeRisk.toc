@@ -1,0 +1,6 @@
+\beamer@sectionintoc {1}{Motivation}{3}{0}{1}
+\beamer@sectionintoc {2}{Theory}{12}{0}{2}
+\beamer@sectionintoc {3}{Estimation}{15}{0}{3}
+\beamer@subsectionintoc {3}{1}{AR(1)}{18}{0}{3}
+\beamer@subsubsectionintoc {3}{1}{1}{SE}{19}{0}{3}
+\beamer@sectionintoc {4}{Conclusion}{21}{0}{4}

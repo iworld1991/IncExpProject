@@ -150,18 +150,18 @@ IncSCEPopMomsMed = pd.pivot_table(data = IncSCEIndMoms,
                                                                                    'rincvar':'rvarMed'})
 
 IncSCEPopMomsMean = pd.pivot_table(data = IncSCEIndMoms, 
-                                   index=['date'], 
-                                  values = moms,
-                                  aggfunc= 'mean').reset_index().rename(columns={'incexp': 'meanMean',
+                                   index = ['date'],
+                                   values = moms,
+                                   aggfunc = 'mean').reset_index().rename(columns={'incexp': 'meanMean',
                                                                                  'incvar': 'varMean',
                                                                                  'inciqr': 'iqrMean',
                                                                                  'rincexp':'rmeanMean',
                                                                                  'rincvar':'rvarMean'})
 
 IncSCEPopMomsEstMed = pd.pivot_table(data = IncSCEIndMomsEst, 
-                                     index=['date'],
+                                     index = ['date'],
                                      values = moms_est,
-                                     aggfunc= 'median').reset_index().rename(columns={'IncMean': 'meanEstMed',
+                                     aggfunc = 'median').reset_index().rename(columns={'IncMean': 'meanEstMed',
                                                                                       'IncVar': 'varEstMed',
                                                                                       'IncSkew': 'skewEstMed',
                                                                                       'IncKurt':'kurtEstMed'})
@@ -213,7 +213,7 @@ for mom in moms_est:
 
 # ### 4. Combinine the two series 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## streamline the dates for merging 
 
 # adjusting the end-of-month dates to the begining-of-month for combining 
@@ -392,7 +392,7 @@ corr_df = pd.DataFrame(corr_array,
 
 corr_df
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## output tables to latex 
 
 beginningtex = """
@@ -668,5 +668,3 @@ for i,moms in enumerate( ['Skew']):
     model = sm.OLS(Y,X)
     rs = model.fit()
     print(rs.summary())
-# -
-
