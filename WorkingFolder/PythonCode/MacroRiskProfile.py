@@ -61,7 +61,7 @@ pd.options.display.float_format = '{:,.2f}'.format
 ## s&p 500 series 
 
 start = datetime.datetime(2000, 1, 1)
-end = datetime.datetime(2019, 10, 30)
+end = datetime.datetime(2020, 3, 30)
 
 # + {"code_folding": []}
 ## downloading the data from Fred
@@ -308,7 +308,7 @@ corr_table = dt_combM.corr()
 corr_table.to_excel('../Tables/corrM.xlsx')
 corr_table
 
-# + {"code_folding": [4, 18, 20, 32, 42, 54, 64, 67]}
+# + {"code_folding": [0, 4, 18, 20, 32, 42, 54, 64, 67]}
 ## try different lags or leads
 
 lead_loop = 6
@@ -428,7 +428,7 @@ f.close()
 ## output table to excel 
 corr_df.to_excel('../Tables/macro_corr.xlsx')
 
-# + {"code_folding": [0, 28]}
+# + {"code_folding": [28]}
 ## plots of correlation for MEDIAN population stats 
 
 figsize = (80,40)

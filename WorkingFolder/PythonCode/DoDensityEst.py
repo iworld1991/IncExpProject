@@ -31,7 +31,7 @@ from DensityEst import SynDensityStat
 
 # + {"code_folding": []}
 ### loading probabilistic data on monthly income growth  
-IndSCE=pd.read_stata('../SurveyData/SCE/IncExpSCEProbIndM.dta')   
+IndSCE = pd.read_stata('../SurveyData/SCE/IncExpSCEProbIndM.dta')   
 
 
 # +
@@ -76,7 +76,7 @@ for i in range(nobs):
     try:
     #if not np.isnan(Inc).any():
         stats_est = SynDensityStat(SCE_bins,Inc)     
-        if not np.isnan(stats_est).any():
+        if not np.isnan(stats_est['mean']).any():
             ct = ct+1
             IndSCE_moment_est['IncMean'][i] = stats_est['mean']
             print(stats_est['mean'])
@@ -146,7 +146,7 @@ IndSCE_pk = pd.read_pickle('./IndSCEDstIndM.pkl')
 columns_keep = ['date','year','month','userid','tenure','IncMean','IncVar','IncSkew','IncKurt']
 IndSCE_pk_new = IndSCE_pk[columns_keep]
 
-IndSCE_pk_new.head()
+IndSCE_pk_new.tail()
 
 IndSCE_pk_new =IndSCE_pk_new.astype({'IncMean': 'float',
                                      'IncVar': 'float',

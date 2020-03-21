@@ -154,7 +154,8 @@ SCEM.dtypes
 
 # + {"code_folding": []}
 for col in ['HHinc','age','educ']:
-    SCEM[col] = SCEM[col].astype('int64',errors = 'ignore')
+    SCEM[col] = SCEM[col].astype('int',
+                                 errors='ignore')
 
 # + {"code_folding": [0]}
 inc_grp = {1:"10k",
@@ -181,7 +182,7 @@ SCEM.replace(cleanup_nums,
 
 SCEM['age_gr'] = pd.cut(SCEM['age'],
                         5,
-                        labels=[1,2,3,4,5])
+                        labels= [1,2,3,4,5])
 
 
 ## create cohort group
@@ -193,7 +194,7 @@ SCEM['byear_gr'] = pd.cut(SCEM['byear'],
 
 
 
-# + {"code_folding": [4]}
+# + {"code_folding": []}
 ## categorical variables 
 
 vars_cat = ['HHinc','fulltime','parttime','selfemp','gender','educ','userid','date','byear']
@@ -207,7 +208,7 @@ for var in vars_cat:
 # + {"code_folding": []}
 # correlation heatmap 
 fig, ax = plt.subplots(figsize=(10,10))
-sns.heatmap(SCEM.corr(), annot=True)
+sns.heatmap(SCEM.corr(), annot = True)
 # -
 
 # ###  3. Histograms
@@ -215,14 +216,19 @@ sns.heatmap(SCEM.corr(), annot=True)
 # + {"code_folding": []}
 ## by age 
 
-for mom in ['incvar']:
+for mom in ['rincvar']:
+    plt.style.use('ggplot')
     SCEM.groupby('age_gr')[mom].mean().plot.bar(title = mom)
-    plt.xlabel('group by the year of birth \n (from young to old)')
+    plt.title('')
+    plt.xlabel('group by the year of birth \n (from young to old)',
+              size = 15)
+    plt.ylabel('dd',size = 15)
 
 # + {"code_folding": []}
 ## by cohort 
 
-for mom in ['incvar']:
+for mom in ['rincvar']:
+    plt.style.use('ggplot')
     SCEM.groupby('byear_gr')[mom].mean().plot.bar(title = mom)
     plt.xlabel('group by the year of birth \n (from older generation to the young)')
 
@@ -317,7 +323,7 @@ for gp in ['HHinc','educ','gender']:
     
 """
 
-# + {"code_folding": [0, 11]}
+# + {"code_folding": [0]}
 ## variances by groups 
 
 gplist = ['HHinc','educ','gender','age_gr']
@@ -492,7 +498,7 @@ def CatRename(table):
 table = CatRename(dfoutput.tables[0])
 
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## excluding rows that are not to be exported 
 
 to_drop = ['Intercept']
@@ -611,7 +617,7 @@ f.close()
 #
 #
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## full-table for risks  
 
 rs_list = {}  ## list to store results 

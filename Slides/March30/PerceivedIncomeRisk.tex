@@ -112,7 +112,7 @@
 \end{frame}
 
 
-\begin{frame}{What this paper does}
+\begin{frame}{This paper's agenda}
 	\begin{enumerate}
 		\item dddd
 	\end{enumerate}
@@ -128,252 +128,166 @@
 \end{itemize}
 \end{frame}
 
-
-
-\begin{frame}{Definition and notation}
-	\begin{table}[ht]
-		\centering
-		\label{MomSum}
-		\begin{tabular}{ll}
-			
-			\hline 
-			Individual moments                                  & Population moments                             \\
-			\hline 
-			Mean forecast: $y_{i,t+h|t}$                   & Average forecast: $\bar y_{t+h|t}$                   \\
-			Forecast error: $FE_{i,t+h|t}$ & Average forecast error: $\overline{FE}_{t+h|t}$ \\
-			Uncertainty: $Var_{i,t+h|t}$         & \textbf{Average uncertainty}:  $\overline{Var}_{t+h|t}$ \\
-			& Disagreement:  $\overline{Disg}_{t+h|t}$       \\
-			\hline 
-		\end{tabular}
-	\end{table}
-	
-\end{frame}
+\section{Stylized facts}
 
 
 \begin{frame}{Data}
-	\begin{table}[]
-		\resizebox{\textwidth}{!}{	\begin{tabular}{lll}
-				
+	\begin{table}
+		\centering
+		\caption{Survey of Consumer Expectations}
+		\label{SCE_data_sum}
+		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
+			\begin{tabular}{lll}
 				\hline 
-				& SCE & SPF        \\
+				Time period                                    & 2013M6-2018M6            \\
+				Frequency                                      & monthly                                 \\
+				Sample size                                    & 1,300                                  \\
+				Density variable                    &  \textcolor{blue}{1-yr-ahead earning growth   (same position/hours) }           \\
+				Pannel structure                               & stay up to 12 months      \\
+				Demographics                     & educ, income, age        \\
 				\hline 
-				Time period                                    & 2013M6-2018M6                            & 2007Q1-2018Q4             \\
-				Frequency                                      & Monthly                                 & Quarterly                \\
-				Sample Size                                    & 1,300                                   & 30-50                    \\
-				Aggregate Var in Density                       & \textcolor{blue}{1-yr-ahead inflation}          & \textcolor{blue}{1-yr and 3-yr core CPI and core PCE}         \\
-				Pannel Structure                               & stay up to 12 months                    & average stay for 5 years \\
-				Demographic Info                        & Education, Income, Age        & Industry    \\
-				\hline 
-		\end{tabular}}
+			\end{tabular}
+		}
 	\end{table}
-\begin{itemize}
-	\item density estimation following (\citet{engelberg2009comparing})
-	\item exclude top and bottom 5\% values for forecast errors and uncertainty
-\end{itemize}
+	\begin{itemize}
+		\item density estimation following (\cite{engelberg_comparing_2009})
+		\item exclude top and bottom 5\% values for forecast errors and uncertainty
+	\end{itemize}
 \end{frame}
 
 
-\begin{frame}{Basic patterns: uncertainty and realized inflation}
+\begin{frame}{Definitions}
+	\begin{itemize}
+		\item Moments:
+		\begin{itemize}
+			\item expected growth, $\overline \Delta_i (y_i)$
+			\item variance: $\bar \sigma^2_i(\Delta y_i)$
+			\item skewness: $\overline {skew}_i(\Delta y_i)$
+		\end{itemize}
+		\item Nominal can be converted into real using forecast uncertainty of inflation 
+		\begin{itemize}
+			\item $\bar \sigma_i^2(\Delta y^r) =\bar \sigma_i^2(\Delta y^n) +  \sigma_i^2(\pi)$  
+		\end{itemize}
+		\item Also, can be adjusted with perceived unemployment risk. So the perceived risk of same job/hour is just a lower bound for income risk. 
+	\end{itemize}
+\end{frame}
+
+\subsection{Cross-sectional pattern of subjective income risks}
+
+\begin{frame}{Cross-sectional distribution of expected income growth}
 	\begin{figure}
 		\centering
-		\label{InfVar}
-		\includegraphics[width=0.3\textwidth]{figuresDraft/Inf1yf_CPIAU_varSPFCPIQ.png}
-		\includegraphics[width=0.3\textwidth]{figuresDraft/Inf1yf_PCE_varSPFPCEQ.png}
-		\includegraphics[width=0.3\textwidth]{figuresDraft/Inf1yf_CPIAU_varSCEM.png}
+		\label{incexp_hist}
+		\includegraphics[width=0.4\textwidth]{figures/hist_incexp}
+		\includegraphics[width=0.4\textwidth]{figures/hist_rincexp} 
 	\end{figure}
-
+	\begin{itemize}
+		\item Nominal rigity can be seen from the expected norminal earning growth, while real expected growth become symmetric 
+	\end{itemize}
 \end{frame}
 
-
-\begin{frame}{Basic patterns: uncertainty and the size of forecast errors}
+\begin{frame}{Cross-sectional distribution of income risks}
 	\begin{figure}
 		\centering
-		\label{FEVar}
-		\includegraphics[width=0.3\textwidth]{figuresDraft/SPFCPI_abFE_varSPFCPIQ.png}
-		\includegraphics[width=0.3\textwidth]{figuresDraft/SPFPCE_abFE_varSPFPCEQ.png}
-		\includegraphics[width=0.3\textwidth]{figuresDraft/SCE_abFE_varSCEM.png}
+		\label{incvar_hist}
+		\includegraphics[width=0.4\textwidth]{figures/hist_incvar}
+		\includegraphics[width=0.4\textwidth]{figures/hist_rincvar}
 	\end{figure}
-\begin{itemize}
-\item no evidence for positive correlation betwen high ex ante uncertainty and ex post forecast errors.
-\end{itemize}
+	\begin{itemize}
+		\item average perceived income risks:  $3\%$ standard deviation for nominal and $4\%$ standard deviation for real income
+		\item just a lower bound: before adjustment of unemployment risk 
+	\end{itemize}
 \end{frame}
 
-\begin{frame}{Basic patterns: uncertainty and disagreement}
+\begin{frame}{Cross-sectional distribution of income risks}
 	\begin{figure}
 		\centering
-		\label{DisgVar}
-		\includegraphics[width=0.3\textwidth]{figuresDraft/CPI_disg_varSPFCPIQ.png}
-		\includegraphics[width=0.3\textwidth]{figuresDraft/PCE_disg_varSPFPCEQ.png}
-		\includegraphics[width=0.3\textwidth]{figuresDraft/Q9_disg_varSCEM.png}
+		\label{incvar_skew}
+		\includegraphics[width=0.4\textwidth]{figures/histIncSkew}
 	\end{figure}
-\begin{itemize}
-	\item uncertainty are not the same as disagreement for professionals 
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Basic patterns: summary}
 	\begin{itemize}
-		\item uncertainty varies across time 
-		\item uncertainty contains different information from widely  proxies such as disagreement and forecast error
+		\item sizable dispersion in skewness, i.e. about half of the people have non-zero skewness in perceived inome distribution. 
 	\end{itemize}
 \end{frame}
 
-\section{Theory}
 
-\begin{frame}{AR(1) model of inflation}
-	
-
-\begin{itemize}
-	
-\item 	\textbf{Inflation process}	
-	$$y_{t} = \rho y_{t-1} + \omega_t  $$ 
-	$$\omega_t \sim N(0,\sigma^2_{\omega})$$
-
-\item \textbf{Uncertainty}
-		\begin{itemize}
-			\item FIRE: time-invariant 
-			\begin{eqnarray*}\label{VarREPop}
-				\overline{Var}^*_{t+h|t} = \sum^{h}_{s=1}\rho^{2s} \sigma^2_{\omega}
-			\end{eqnarray*}
-			
-			\item SE: time-invariant 
-			\begin{eqnarray*}\label{VarSEPopRE}
-				\overline{Var}^{se}_{t+h|t} = \sum^{+\infty}_{\tau =0} \lambda (1-\lambda)^\tau \overline{Var}^*_{t+h|t-\tau}
-			\end{eqnarray*}
-			
-			\item NI: time-variant but quantitatively tiny due to highly efficient Kalman gain
-			
-			\begin{eqnarray*}\label{VarNIPopRE}
-				\overline{Var}^{ni}_{t+h|t} = \rho^{2h} \overline{Var}^{ni}_{t|t} + \overline{Var}^*_{t+h|t}
-			\end{eqnarray*}
-		\end{itemize}
-		
-	\end{itemize}
-	
-\end{frame}
-
-\begin{frame}{Stocastic volatility (UCSV) inflation process (\citet{stock2007has})}
-
-\begin{itemize}
-\item \textbf{Inflation process}
-\begin{eqnarray*}
-\begin{split}
-& y_t = \theta_t + \eta_t,\quad \textrm{where } \eta_t =\sigma_{\eta,t} \xi_{\eta,t} \\
-& \theta_t = \theta_{t-1} + \epsilon_t, \quad \textrm{where }  \epsilon_t =\sigma_{\epsilon,t} \xi_{\epsilon,t} \\
-& \log\sigma^2_{\eta,t} = \log\sigma^2_{\eta,t-1} + \mu_{\eta,t} \\
-& \log\sigma^2_{\epsilon,t} = \log\sigma^2_{\epsilon,t-1} + \mu_{\epsilon,t} 
-\end{split}
-\end{eqnarray*}
-
-\begin{eqnarray*}
-\begin{split}
-& \xi_t =[\xi_{\eta,t},\xi_{\epsilon,t}] \sim N(0,I_2) \\
-& \mu_{t} = [\mu_{\eta,t},\mu_{\epsilon,t}]' \sim N(0,\gamma I_2) 
-\end{split}
-\end{eqnarray*}
-\end{itemize}
-
-\end{frame}
-
-
-\begin{frame}{UCSV inflation process}
-	
+\begin{frame}{Perceived income risks by household income}
+	\begin{figure}
+		\centering
+		\label{boxplot_hhinc}
+		\includegraphics[width=0.8\textwidth]{figures/boxplot_exp_HHinc} \\
+		\includegraphics[width=0.8\textwidth]{figures/boxplot_var_HHinc}
+	\end{figure}
 	\begin{itemize}
-		\item \textbf{Uncertainty}
-		\begin{itemize}
-			\item FIRE: time-varying  \begin{eqnarray*}\label{VARRESVPop}
-			\begin{split}
-			\overline{Var}^*_{t+h|t} = \sum_{k=1}^h exp^{- 0.5k\gamma_{\eta}} \sigma^2_{\eta,t}  +  exp^{- 0.5 h \gamma_{\epsilon}} \sigma^2_{\epsilon,t} 
-			\end{split} 
-			\end{eqnarray*}
-			
-			\item SE: time-varying 
-			\begin{eqnarray*}
-		\overline {Var}^{se}_{t+h|t} = \sum^{\infty}_{\tau=0} (1-\lambda)^\tau\lambda\overline{Var}^*_{t+h|t-\tau} 
-			\end{eqnarray*}
-			
-			\item NI (1-step-ahead): time-varying 
-		\begin{eqnarray*}
-		\overline{Var}^\theta_{t|t-1} = \overline{Var}^\theta_{t-1|t-1} + Var^*_{t|t-1}(y_t) 
-		\end{eqnarray*}
-			
-		\end{itemize}
+		\item 
 	\end{itemize}
-	
 \end{frame}
 
 
-\section{Estimation}
-\begin{frame}{Simulated method of moment estimation}
-	
-	\begin{eqnarray*}
-	\widehat \Omega = \underset{\{\Omega \in \Gamma\} }{argmin} (M_{\textrm{data} } - F^{o}(\Omega, Y)) W  (M_{\textrm{data} } - F^{o}(\Omega, Y))'
-	\end{eqnarray*}
-	
+\begin{frame}{Perceived income risks by age}
+	\begin{figure}
+		\centering
+		\label{boxplot_age_gr}
+		\includegraphics[width=0.8\textwidth]{figures/boxplot_exp_age_gr} \\
+		\includegraphics[width=0.8\textwidth]{figures/boxplot_var_age_gr}
+	\end{figure}
 	\begin{itemize}
-		\item  $\Omega$: parameters of the particular $o \in \{{fire}, {se}, {ni} \} \times \{ar, sv\}$
-		\item  $\Gamma$: constraints for the parameter. 
-		\item $M_{data}$: data moments
-		\item $F$: simulated model moments according to a particular theory $o$, a function of parameters $\Omega$ as well as the $Y$, the real-time data (including history) up till each point of the time $t$. 
-		\begin{itemize}
-			\item unconditional moments, not specific to time
-			\item moments selected from average forecast, variance and autocovariance of forecasts, average diagreement, variance and autovariance of disagreement, average uncertainty, etc. 
-		\end{itemize}
-		\item  $W$: weight matrix, identity matrix for now 
+		\item 
 	\end{itemize}
 \end{frame}
 
 
-\begin{frame}{Estimation procedure and algorithm}
+
+\begin{frame}{Perceived income risks by generation}
+	\begin{figure}
+		\centering
+		\label{boxplot_byear_gr}
+		\includegraphics[width=0.8\textwidth]{figures/boxplot_exp_byear_gr} \\
+		\includegraphics[width=0.8\textwidth]{figures/boxplot_var_byear_gr}
+	\end{figure}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+\end{frame}
+
+
+
+
+\subsection{Correlation with stock market returns}
+
+\subsection{Perceived risks and economic decisions}
+
+\section{Model (work in progress)}
+
+\begin{frame}{Model ingredients}
+	
 	\begin{enumerate}
-		\item for each theory of expectation formation and the inflation process, start with an initial value for the parameter(s) of interest
-		\item simulate individual forecasts for a large enough ($N=200$) number of forecasters
-		\item compute the average forecast errors, disagreement and average uncertainty across all agents
-		\item compute the time-series moments of the average forecast, disagreement, and uncertainty
-		\item compute the difference between the simulated moments and the data moments 
-		\item keep searching the parameter value until reaching below a threshold of the loss
+		\item imperfect understanding of the income process, a deviation from rational expectation benchmark. 
+		\begin{itemize}
+			\item experience-based learning capturing the cross-generatio and age-dependence income perceptions
+		\end{itemize}
+		\item finite-period life cycle with a constant probability of death 
+		\item uninsured idiosyncratic risks and aggregate risks, workhorse assumption of the HANK literature
+		\item single asset, i.e. no distinction between liquid and iliquid assets 
 	\end{enumerate}
 \end{frame}
 
-
-\begin{frame}{Two-step and joint estimation}
-	\begin{enumerate}
-		\item two-step estimation:  separately estimate inflation process parameters and then parameters of the inflation process
-		\begin{itemize}
-			\item pros: computationally lighter 
-			\item cons: potential misspecification. does not utilize the expectation data to understand inflation process per se.  
-		\end{itemize}
-		\item joint estimation: targeting both moments of realized inflation series and moments of forecasts to simultaneously estimate both the inflation process and the parameter of expectation formation
-		\begin{itemize}
-			\item pros: additional information gain from expectations data about inflation process itself
-			\item cons: more computation burden  
-		\end{itemize}
-	\end{enumerate}
+\begin{frame}{Intuitions behind the model mechanisms}
+	\begin{itemize}
+		\item imperfect understanding $ \quad \rightarrow$ heterogeneous perception of risks $ \quad \plus$ uninsurance of risks $ \quad \rightarrow$ difference in precautionary motives and MPCs across populations $ \quad \rightarrow$ potential amplification of aggregate MPC. 
+	\end{itemize}
 \end{frame}
 
-
-\subsection{AR(1)}
 
 %%%%%%%%%%%%%%%%%%%
-\subsubsection{SE}
 
-\begin{frame}{SE parameter estimate: professionals}
+\begin{frame}{Some Table Results}
 	\begin{table}
 		\centering
 		\caption{SMM Estimates of SE: professionals}
 		\label{SMM_Est_SE_SPF_Table}
 		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
-		\begin{tabular}{lllllllllllll}
-			\hline 
-			0     & 1       & 2       & 3       & 4  & SE: $\hat\lambda_{SPF}$(Q) & SE: $\hat\lambda_{SPF}$(Q) & SE: $\rho$ & SE: $\sigma$ & SE: $\hat\lambda_{SCE}$(M) & SE: $\hat\lambda_{SCE}$(M) & SE: $\rho$ & SE: $\sigma$ \\
-			\hline 
-			FEVar & FEATV   &         &         &    & 0.47                       & 0.36                       & 1.00       & 0.08         & 0.2                        & 0.59                       & 0.99       & 0.08         \\
-			FEVar & DisgATV & DisgVar &         &    & 0.27                       & 0.38                       & 1.00       & 0.11         & 0.2                        & 0.56                       & 0.98       & 0.08         \\
-			FEVar & FEATV   & DisgVar & DisgATV &    & 0.47                       & 0.36                       & 1.00       & 0.10         & 0.2                        & 0.59                       & 0.99       & 0.08         \\
-			FEVar & FEATV   & DisgVar & DisgATV & FE & 0.47                       & 0.36                       & 1.00       & 0.08         & 0.2                        & 0.59                       & 0.99       & 0.08       \\
-			\hline  
-		\end{tabular}
-	}
+		}
 	\end{table}
 	\begin{itemize}
 		\item $\lambda$: update rate in SE
@@ -381,10 +295,9 @@
 \end{frame}
 
 
-
-\begin{frame}{Professionals and SEAR}
+\begin{frame}{Some Figures}
 	\begin{figure}[ht]
-		\label{SE_diag_SPF}
+		\label{figurelabel}
 		\begin{subfigure}[b]{0.2\textwidth}
 			\centering
 			\caption{FE}
@@ -407,13 +320,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-
 \section{Conclusion}
 
 \begin{frame}{Conclusion}
 	\begin{itemize}
 		\item ddddd
 	\end{itemize}	
+\end{frame}
+
+\section*{Appendix}
+
+\begin{frame}{Density estimation and robustness of my results}
+	\begin{itemize}
+		\item ddd
+	\end{itemize}
 \end{frame}
 
 

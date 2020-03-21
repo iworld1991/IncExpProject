@@ -31,7 +31,7 @@ import pandas as pd
 
 # ### Case 1. Generalized Beta Distribution
 
-# + {"code_folding": [23, 26]}
+# + {"code_folding": []}
 def GeneralizedBetaEst(bin,
                        probs,
                        rep = 3):
@@ -55,10 +55,10 @@ def GeneralizedBetaEst(bin,
               4:  alpha, beta, lb, ub, e.g. lb=0 and ub=1 for a standard beta distribution
     """
     # n+1 bins and n probs, both are arrays
-    if sum([probs[i]>0 for i in range(len(bin)-1)])<3:
+    if sum([probs[i] > 0 for i in range(len(bin)-1)])<3:
         print("Warning: at least three bins with positive probs are needed")
         para_est = None
-    if sum(probs)!=1:
+    if sum(probs) != 1:
         print("probs need to sum up to 1")
         para_est = None
     else:
@@ -84,12 +84,13 @@ def GeneralizedBetaEst(bin,
             para_est_holder = np.zeros(4)
             suc_ct = 0
             for time in range(rep):
-                para_est = minimize(distance4para,
+                para_est_rs = minimize(distance4para,
                                     x0_4para,
                                     method='CG',
                                     options={'disp':True,
-                                             'gtol': 1e-06})['x']
-                print(para_est)
+                                             'gtol': 1e-06})
+                para_est = para_est_rs['x']
+                print(para_est_rs)
                 if not np.isnan(para_est).any():
                     suc_ct = suc_ct+1  ## only counts the times of success to divide for avearge 
                 para_est_holder = para_est_holder + para_est         
@@ -100,12 +101,13 @@ def GeneralizedBetaEst(bin,
             para_est_holder = np.zeros(2)
             suc_ct = 0
             for time in range(rep):
-                para_est = minimize(distance2para,
+                para_est_rs = minimize(distance2para,
                                     x0_2para,
                                     method='CG',
                                     options={'disp':True,
-                                             'gtol': 1e-06})['x']
-                print(para_est)
+                                             'gtol': 1e-06})
+                para_est = para_est_rs['x']
+                print(para_est_rs)
                 if not np.isnan(para_est).any(): ## if para_est is not null 
                     suc_ct = suc_ct+1  ## only counts the times of success to divide for avearge 
                 para_est_holder = para_est_holder + para_est
@@ -113,7 +115,7 @@ def GeneralizedBetaEst(bin,
         return para_est   # could be 2 or 4 parameters 
 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 def GeneralizedBetaStats(a,b,lb,ub):
     """
     This function computes the moments of a generalized beta distribution, mean and variance for now. 
@@ -165,7 +167,7 @@ def GeneralizedBetaStats(a,b,lb,ub):
 # $$\implies h = \frac{2}{t+c-b}$$
 #
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 def TriangleEst(bin,probs):
     """
     The function fits histograms with exactly two adjacent 
@@ -244,7 +246,7 @@ def TriangleEst(bin,probs):
 #
 #
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 def TriangleStats(lb,ub):
     """
     parameters
@@ -272,7 +274,7 @@ def TriangleStats(lb,ub):
 
 # ### Case 3. Uniform Distribution
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 def UniformEst(bin,probs):
     """
     This function fits a histogram with only one bin of positive probability to a uniform distribution.
@@ -304,7 +306,7 @@ def UniformEst(bin,probs):
     return {"lb":lb,"ub":ub}
 
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 def UniformStats(lb,ub):
     """
     The function computes the moment of a uniform distribution.
@@ -385,7 +387,7 @@ def UniformStats(lb,ub):
 #plt.hist(sim_data,density=True,label='Dist of Simulated Data')
 #plt.legend(loc=0)
 
-# + {"code_folding": [24]}
+# + {"code_folding": []}
 ## This is the synthesized density estimation function
 def SynDensityStat(bin,
                    probs):
