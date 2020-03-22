@@ -96,7 +96,7 @@ vars_empexp = ['Q13new']  ## probability of unemployment
 vars_macroexp = ['Q6new',  ## stock market going up 
                  'Q4new']  ## UE goes up 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## subselect variables 
 
 vars_all_reg_long = (vars_id+moms_nom + moms_real + vars_job + 
@@ -119,7 +119,7 @@ SCEM = pd.merge(SCEM_base, SCEM_est,  how='left', left_on = vars_id, right_on = 
 
 #SCEM.describe(include = all)
 
-# + {"code_folding": [0]}
+# + {"code_folding": [2, 12]}
 ## renaming 
 
 SCEM = SCEM.rename(columns={'Q24_mean': 'incexp',
@@ -146,6 +146,12 @@ SCEM = SCEM.rename(columns = {'D6':'HHinc',
                               'Q26v2part2':'spending'})
 
 SCEM.columns
+
+# +
+## creat some less fine groups 
+
+SCEM['HHinc_gr'] = SCEM['HHinc']>= 6
+SCEM['educ_gr'] = SCEM['educ'] >= 4 
 # -
 
 # ### 2. Correlation pattern 
@@ -153,7 +159,7 @@ SCEM.columns
 SCEM.dtypes
 
 # + {"code_folding": []}
-for col in ['HHinc','age','educ']:
+for col in ['HHinc','age','educ','HHinc_gr','educ_gr']:
     SCEM[col] = SCEM[col].astype('int',
                                  errors='ignore')
 
@@ -173,7 +179,9 @@ inc_grp = {1:"10k",
 cleanup_nums = {'parttime': {0: 'no', 1: 'yes'},
                 'fulltime': {0: 'no', 1: 'yes'},
                 'selfemp':{1: 'no', 2: 'yes'},
-                'gender':{1:'male',2:'female'}}
+                'gender':{1:'male',2:'female'},
+               'HHinc_gr':{0:'low inc',1:'high inc'},
+               'educ_gr':{0:'low educ',1:'high educ'},}
 SCEM.replace(cleanup_nums,
              inplace = True)
 
@@ -197,7 +205,7 @@ SCEM['byear_gr'] = pd.cut(SCEM['byear'],
 # + {"code_folding": []}
 ## categorical variables 
 
-vars_cat = ['HHinc','fulltime','parttime','selfemp','gender','educ','userid','date','byear']
+vars_cat = ['HHinc','fulltime','parttime','selfemp','gender','educ','userid','date','byear','HHinc_gr','educ_gr']
 
 for var in vars_cat:
     SCEM[var] = pd.Categorical(SCEM[var],ordered = False)
@@ -412,7 +420,7 @@ indep_list_ct = ['UEprobInd','UEprobInd','Stkprob']
 indep_list_dc = ['HHinc','selfemp','fulltime']
 
 
-# + {"code_folding": [0, 7]}
+# + {"code_folding": [7, 36]}
 ## full-table for risks  
 
 rs_list = {}  ## list to store results 
@@ -435,14 +443,14 @@ for i,mom in enumerate(dep_list):
     
     ## model 3 
     model3 = smf.ols(formula = str(mom)
-                    +'~ C(parttime) + C(selfemp) + C(HHinc) +'
+                    +'~ C(parttime) + C(selfemp) + C(HHinc_gr) +'
                      + ct_str,
                     data = SCEM)
     rs_list[nb_spc*i+2] = model3.fit()
     
     ## model 4 
     model4 = smf.ols(formula = str(mom)
-                    +'~ C(gender)+ C(educ)',
+                    +'~ C(gender)+ C(educ_gr)',
                     data = SCEM)
     rs_list[nb_spc*i+3] = model4.fit()
     
@@ -457,13 +465,13 @@ dfoutput = summary_col(rs_names,
 dfoutput.title = 'Perceived Income Risks'
 print(dfoutput)
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## output tables 
 
 beginningtex = """
-\\begin{table}[ht]
+\\begin{table}[p]
 \\centering
-\\begin{adjustbox}{width={0.9\\textwidth},totalheight={\\textheight}}
+\\begin{adjustbox}{width={0.9\\textwidth}}
 \\begin{threeparttable}
 \\caption{Perceived Income Risks and Individual Characteristics}
 \\label{micro_reg}"""
@@ -476,9 +484,8 @@ endtex = """\\begin{tablenotes}\item Standard errors are clustered by household.
 \\end{table}"""
 
 
-# + {"code_folding": [0, 3]}
+# + {"code_folding": [2]}
 ## relabel rows 
-
 
 def CatRename(table):
     relabels = {}
@@ -494,14 +501,11 @@ def CatRename(table):
         relabels[rows[i]] = var + '=' + str(val)
     table = table.rename(index = relabels)
     return table 
-
 table = CatRename(dfoutput.tables[0])
 
-
-# + {"code_folding": [0]}
 ## excluding rows that are not to be exported 
 
-to_drop = ['Intercept']
+to_drop = ['R-squared']
 
 ## need to also drop rows reporting the stadard deviations as well 
 rows_below = []
@@ -509,10 +513,10 @@ for var in to_drop:
     row_idx = list(table.index).index(var)
     #print(row_idx)
     rows_below.append(row_idx) 
+    #rows_below.append(row_idx+1)
     
 tb = table.drop(index = to_drop)
 
-# + {"code_folding": [0]}
 ## write to latex 
 f = open('../Tables/latex/micro_reg.tex', 'w')
 f.write(beginningtex)
@@ -521,7 +525,12 @@ tb_ltx = tb.to_latex().replace('lllllllll','ccccccccc')   # hard coded here
 f.write(tb_ltx)
 f.write(endtex)
 f.close()
-# + {"code_folding": [0, 41, 55]}
+# -
+
+
+tb.to_excel('../Tables/micro_reg.xlsx')
+
+# + {"code_folding": [41, 55]}
 ## full-table for expected growth, appendix 
 
 ## full-table for risks  
@@ -546,14 +555,14 @@ for i,mom in enumerate(dep_list2):
     
     ## model 3 
     model3 = smf.ols(formula = str(mom)
-                    +'~ C(parttime) + C(selfemp) + C(HHinc) +'
+                    +'~ C(parttime) + C(selfemp) + C(HHinc_gr) +'
                      + ct_str,
                     data = SCEM)
     rs_list[nb_spc*i+2] = model3.fit()
     
     ## model 4 
     model4 = smf.ols(formula = str(mom)
-                    +'~ C(gender)+ C(educ)',
+                    +'~ C(gender)+ C(educ_gr)',
                     data = SCEM)
     rs_list[nb_spc*i+3] = model4.fit()
     
@@ -573,7 +582,7 @@ table = CatRename(dfoutput2.tables[0])
 
 
 ## drop 
-to_drop = ['Intercept']
+to_drop = ['R-squared']
 
 ## need to also drop rows reporting the stadard deviations as well 
 rows_below = []
@@ -588,9 +597,9 @@ tb = table.drop(index = to_drop)
 
 
 beginningtex = """
-\\begin{table}[ht]
+\\begin{table}[p]
 \\centering
-\\begin{adjustbox}{width={0.9\\textwidth},totalheight={\\textheight}}
+\\begin{adjustbox}{width={0.9\\textwidth}}
 \\begin{threeparttable}
 \\caption{Perceived Income Growth and Individual Characteristics}
 \\label{micro_reg_exp}"""
@@ -640,8 +649,73 @@ dfoutput = summary_col(rs_names,
                         stars = True,
                         info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
                                   'R2':lambda x: "{:.2f}".format(x.rsquared)})
-dfoutput.title = 'Perceived Income Risks and Decisions'
+dfoutput.title = 'Perceived Income Risks and Household Spending'
 print(dfoutput)
+# + {"code_folding": [20]}
+## output tables 
+
+beginningtex = """
+\\begin{table}[p]
+\\centering
+\\begin{adjustbox}{width={0.9\\textwidth}}
+\\begin{threeparttable}
+\\caption{Perceived Income Risks and Household Spending}
+\\label{spending_reg}"""
+
+endtex = """\\begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\item This table reports regression results of expected spending growth on perceived income risks (incvar for nominal, rincvar for real).
+\\end{tablenotes}
+\\end{threeparttable}
+\\end{adjustbox}
+\\end{table}"""
+
+
+## relabel rows 
+
+def CatRename(table):
+    relabels = {}
+    rows = [idx for idx in table.index if ')[T.' in idx]
+    for i in range(len(rows)):
+        string = rows[i]
+        var = string.split('C(')[1].split(')[T')[0]
+        val = string.split('[T.')[1].split(']')[0]
+        if '.0' in val:
+            val = val.split('.0')[0]
+        else:
+            val = val 
+        relabels[rows[i]] = var + '=' + str(val)
+    table = table.rename(index = relabels)
+    return table 
+table = CatRename(dfoutput.tables[0])
+
+## excluding rows that are not to be exported 
+
+to_drop = ['R-squared']
+
+## need to also drop rows reporting the stadard deviations as well 
+rows_below = []
+for var in to_drop:
+    row_idx = list(table.index).index(var)
+    #print(row_idx)
+    rows_below.append(row_idx) 
+    
+tb = table.drop(index = to_drop)
+
+## excel version 
+tb.to_excel('../Tables/spending_reg.xlsx')
+
+## write to latex 
+f = open('../Tables/latex/spending_reg.tex', 'w')
+f.write(beginningtex)
+tb_ltx = tb.to_latex().replace('lllll','ccccc')   # hard coded here 
+#print(tb)
+f.write(tb_ltx)
+f.write(endtex)
+f.close()
+
+
 # -
+
+
 
 

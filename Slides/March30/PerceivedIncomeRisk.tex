@@ -158,15 +158,15 @@
 
 \begin{frame}{Definitions}
 	\begin{itemize}
-		\item Moments:
+		\item Moments to look at 
 		\begin{itemize}
 			\item expected growth, $\overline \Delta_i (y_i)$
-			\item variance: $\bar \sigma^2_i(\Delta y_i)$
+			\item variance: $\overline {var}_i(\Delta y_i)$
 			\item skewness: $\overline {skew}_i(\Delta y_i)$
 		\end{itemize}
 		\item Nominal can be converted into real using forecast uncertainty of inflation 
 		\begin{itemize}
-			\item $\bar \sigma_i^2(\Delta y^r) =\bar \sigma_i^2(\Delta y^n) +  \sigma_i^2(\pi)$  
+			\item $\overline{var}_i(\Delta y^r) =\overline {var}_i(\Delta y^n) +  \overline {var}_i(\pi)$
 		\end{itemize}
 		\item Also, can be adjusted with perceived unemployment risk. So the perceived risk of same job/hour is just a lower bound for income risk. 
 	\end{itemize}
@@ -186,7 +186,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Cross-sectional distribution of income risks}
+\begin{frame}{Cross-sectional distribution of income dispersion}
 	\begin{figure}
 		\centering
 		\label{incvar_hist}
@@ -199,7 +199,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Cross-sectional distribution of income risks}
+\begin{frame}{Cross-sectional distribution of tail risks}
 	\begin{figure}
 		\centering
 		\label{incvar_skew}
@@ -251,9 +251,73 @@
 \end{frame}
 
 
+\begin{frame}{Other covariants of perceived income risks}
+	\begin{table}
+	\centering
+	\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
+			\begin{tabular}{ccccccccc}
+			\hline 
+			& incvar I & incvar II & incvar III & incvar IIII & rincvar I & rincvar II & rincvar III & rincvar IIII \\
+			\hline 
+			gender=male  &          &           &            &    -0.77*** &           &            &             &      2.65*** \\
+			&          &           &            &      (0.10) &           &            &             &       (0.19) \\
+			parttime=yes &     0.05 &     0.24* &   -0.65*** &             &   1.41*** &    1.80*** &    -1.26*** &              \\
+			&   (0.12) &    (0.13) &     (0.14) &             &    (0.23) &     (0.26) &      (0.28) &              \\
+			selfemp=yes  &  7.21*** &  -0.00*** &    0.00*** &             &   6.27*** &    0.00*** &     0.00*** &              \\
+			&   (0.15) &    (0.00) &     (0.00) &             &    (0.27) &     (0.00) &      (0.00) &              \\
+			Stkprob      &          &   0.01*** &    0.01*** &             &           &   -0.05*** &    -0.04*** &              \\
+			&          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+			UEprobInd    &          &   0.03*** &    0.03*** &             &           &    0.06*** &     0.05*** &              \\
+			&          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+			\hline 
+			Income/educ          & Yes   & Yes   & Yes   & Yes  & Yes  & Yes  & Yes & Yes   \\
+			N            &    54029 &     47356 &      40979 &       47457 &     50730 &      44404 &       38745 &        44517  \\
+			R2           &     0.05 &      0.00 &       0.02 &        0.00 &      0.01 &       0.01 &        0.04 &         0.02 \\
+			\hline 
+		\end{tabular}
+	}
+\end{table}
+\end{frame}
+
 
 
 \subsection{Correlation with stock market returns}
+
+\begin{frame}{Expected income growth and stock market performance}
+		\begin{figure}
+		\centering
+		\label{ts_mean}
+		\includegraphics[width=\textwidth]{figures/tsMedmean.jpg}
+	\end{figure}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Dispersion risks and stock market performance}
+	\begin{figure}
+		\centering
+		\label{ts_var}
+		\includegraphics[width=\textwidth]{figures/tsMedvar.jpg}
+	\end{figure}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Tail risks and stock market performance}
+	\begin{figure}
+		\centering
+		\label{ts_skew}
+		\includegraphics[width=\textwidth]{figures/tsEstMeanskew.jpg}
+	\end{figure}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+\end{frame}
 
 \subsection{Perceived risks and economic decisions}
 
@@ -278,20 +342,36 @@
 	\end{itemize}
 \end{frame}
 
-
 %%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Some Table Results}
+\begin{frame}{Other individual characteristics and perceived income risks}
 	\begin{table}
 		\centering
-		\caption{SMM Estimates of SE: professionals}
-		\label{SMM_Est_SE_SPF_Table}
+		\caption{Perceived Income Risks and Individual Characteristics}
+		\label{micro_reg}
 		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
+				\begin{tabular}{ccccccccc}
+				\hline 
+				& incvar I & incvar II & incvar III & incvar IIII & rincvar I & rincvar II & rincvar III & rincvar IIII \\
+				\hline 
+				gender=male  &          &           &            &    -0.77*** &           &            &             &      2.65*** \\
+				&          &           &            &      (0.10) &           &            &             &       (0.19) \\
+				parttime=yes &     0.05 &     0.24* &   -0.65*** &             &   1.41*** &    1.80*** &    -1.26*** &              \\
+				&   (0.12) &    (0.13) &     (0.14) &             &    (0.23) &     (0.26) &      (0.28) &              \\
+				selfemp=yes  &  7.21*** &  -0.00*** &    0.00*** &             &   6.27*** &    0.00*** &     0.00*** &              \\
+				&   (0.15) &    (0.00) &     (0.00) &             &    (0.27) &     (0.00) &      (0.00) &              \\
+				Stkprob      &          &   0.01*** &    0.01*** &             &           &   -0.05*** &    -0.04*** &              \\
+				&          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+				UEprobInd    &          &   0.03*** &    0.03*** &             &           &    0.06*** &     0.05*** &              \\
+				&          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+				\hline 
+				Income/educ          & Yes   & Yes   & Yes   & Yes  & Yes  & Yes  & Yes & Yes   \\
+				N            &    54029 &     47356 &      40979 &       47457 &     50730 &      44404 &       38745 &        44517  \\
+				R2           &     0.05 &      0.00 &       0.02 &        0.00 &      0.01 &       0.01 &        0.04 &         0.02 \\
+				\hline 
+			\end{tabular}
 		}
 	\end{table}
-	\begin{itemize}
-		\item $\lambda$: update rate in SE
-	\end{itemize}
 \end{frame}
 
 

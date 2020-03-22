@@ -137,7 +137,7 @@ IncSCEIndMoms = IncSCEIndMoms.rename(columns={'Q24_mean': 'incexp',
 
 # + {"code_folding": [30]}
 moms = ['incexp','incvar','inciqr','rincexp','rincvar']
-moms_est = ['IncVar','IncMean','IncSkew','IncKurt']
+moms_est = ['IncSkew','IncKurt']
 
 ## compute population summary stats for these ind moms
 IncSCEPopMomsMed = pd.pivot_table(data = IncSCEIndMoms, 
@@ -180,35 +180,42 @@ T = len(IncSCEPopMomsEstMean)
 # ### 3. Cross-sectional patterns of subjective distributions
 #
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ### histograms 
 
 for mom in moms:
-    fig,ax = plt.subplots(figsize=(4,4))
+    fig,ax = plt.subplots(figsize=(6,4))
     sns.distplot(IncSCEIndMoms[mom],
                  kde = True,
-                 bins = 21) 
+                 color ='red',
+                 bins = 0) 
     plt.xlabel(mom, fontsize = 12)
     plt.xlabel(mom,fontsize = 12)
-    plt.ylabel("Frequency",fontsize = 12)
+    plt.ylabel("Frequency",
+               fontsize = 12)
     plt.savefig('../Graphs/ind/hist_'+str(mom)+'.jpg')
-    
+
+# +
+## for estimated moments 
+
 for mom in moms_est:
-    fig,ax = plt.subplots(figsize=(4,4))
+    fig,ax = plt.subplots(figsize=(6,4))
     mom_nonan = IncSCEIndMomsEst[mom].dropna()
-    mom_lb, mom_ub = np.percentile(mom_nonan,6),np.percentile(mom_nonan,94) ## exclude top and bottom 3% observations
+    mom_lb, mom_ub = np.percentile(mom_nonan,2),np.percentile(mom_nonan,98) ## exclude top and bottom 3% observations
     #print(mom_lb)
     #print(mom_ub)
-    to_keep = (mom_nonan < mom_ub) & (mom_nonan > mom_lb)
+    to_keep = (mom_nonan < mom_ub) & (mom_nonan > mom_lb) & (mom_nonan!=0)
     #print(to_keep.shape)
     mom_nonan_truc = mom_nonan[to_keep]
     #print(mom_nonan_truc.shape)
     sns.distplot(mom_nonan_truc,
                  kde = True, 
-                 bins = 80) 
+                 color = 'red',
+                 bins = 20) 
     plt.xlabel(mom, fontsize = 13)
     plt.ylabel("Frequency",fontsize = 13)
     plt.savefig('../Graphs/ind/hist'+str(mom)+'.jpg')
+    
 # -
 
 # ### 4. Combinine the two series 
@@ -650,21 +657,13 @@ for i,moms in enumerate( ['mean','var','skew','kurt']):
 # ### 7. Individual regressions 
 
 # + {"code_folding": []}
-lead = 1
+lead = 2
 
-for i,moms in enumerate( ['var','iqr','rvar']):
-    Y = np.array(dt_combIndM['Q24_'+str(moms)])[lead+1:]
+for i,moms in enumerate( ['incexp','incvar','inciqr','rincvar','IncSkew']):
+    Y = np.array(dt_combIndM[moms])[lead+1:]
     X = np.array(dt_combIndM['sp500'])[:-(lead+1)]
     X = sm.add_constant(X)
     model = sm.OLS(Y,X)
     rs = model.fit()
     print(rs.summary())
     
-    
-for i,moms in enumerate( ['Skew']):
-    Y = np.array(dt_combIndM['Inc'+str(moms)])[lead+1:]
-    X = np.array(dt_combIndM['sp500'])[:-(lead+1)]
-    X = sm.add_constant(X)
-    model = sm.OLS(Y,X)
-    rs = model.fit()
-    print(rs.summary())

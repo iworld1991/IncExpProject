@@ -5,5 +5,8 @@
 \beamer@slide {boxplot_hhinc}{12}
 \beamer@slide {boxplot_age_gr}{13}
 \beamer@slide {boxplot_byear_gr}{14}
-\beamer@slide {SMM_Est_SE_SPF_Table}{19}
-\beamer@slide {figurelabel}{20}
+\beamer@slide {ts_mean}{17}
+\beamer@slide {ts_var}{18}
+\beamer@slide {ts_skew}{19}
+\beamer@slide {micro_reg}{23}
+\beamer@slide {figurelabel}{24}

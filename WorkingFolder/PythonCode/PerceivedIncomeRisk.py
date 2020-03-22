@@ -194,7 +194,7 @@ for i in range(nb_fig):
 # More caution is needed when interpreting the observed negative association between perceived earning risks/skewness with stock market returns. First, my sample period is short and has mostly posted positive returns. Second, the pattern is based on a population median and mean of the perceived income risks, and it does not account for any household-specific characteristics. As we have seen in the cross-sectional pattern, there are substantial variations across individuals in their perceived income risks and skewness. Third, the risk profile we consider here is only relevant for marginal consumers/investors who at least have access to the stock market in the first place. Therefore, it is worth exploring the correlation above conditional on more individual characteristics. 
 #  
 
-# + {"caption": "Perceived Income Risks and Stock Market Return", "code_folding": [], "label": "fig:tssp500", "widefigure": true}
+# + {"caption": "Perceived Income Risks and Stock Market Return", "code_folding": [0], "label": "fig:tssp500", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/pop/')
 
@@ -293,6 +293,12 @@ reg_tb
 # There is one important econometric concern when I run regressions of the decision variable on perceived risks due to the measurement error in the regressor used here. In a typical OLS regression in which the regressor has i.i.d. measurement errors, the coefficient estimate for the imperfectly measured regressor will have a bias toward zero. For this reason, if I find that willingness to consume is indeed negatively correlated with perceived risks, taking into account the bias, it implies that the correlation of the two is greater in the magnitude. 
 #
 # The empirical results will be reported in the next version of the draft.
+
+spending_reg_tb = pd.read_excel('../Tables/spending_reg.xlsx').replace(np.nan,'')
+
+# + {"hide_input": true, "hide_output": true}
+spending_reg_tb
+# -
 
 # #  Perceived income process (in progress) 
 #
