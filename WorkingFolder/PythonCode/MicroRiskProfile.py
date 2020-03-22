@@ -119,7 +119,7 @@ SCEM = pd.merge(SCEM_base, SCEM_est,  how='left', left_on = vars_id, right_on = 
 
 #SCEM.describe(include = all)
 
-# + {"code_folding": [2, 12]}
+# + {"code_folding": [12]}
 ## renaming 
 
 SCEM = SCEM.rename(columns={'Q24_mean': 'incexp',
@@ -153,6 +153,16 @@ SCEM.columns
 SCEM['HHinc_gr'] = SCEM['HHinc']>= 6
 SCEM['educ_gr'] = SCEM['educ'] >= 4 
 # -
+
+len(SCEM)
+
+# +
+## filtering non-working group 
+
+SCEM = SCEM[(SCEM.age < 66) & (SCEM.age > 20)]
+# -
+
+len(SCEM)
 
 # ### 2. Correlation pattern 
 
@@ -416,11 +426,11 @@ plt.savefig('../Graphs/ind/boxplot2.jpg')
 
 dep_list =  ['incvar','rincvar'] 
 dep_list2 =['incexp','rincexp']
-indep_list_ct = ['UEprobInd','UEprobInd','Stkprob']
+indep_list_ct = ['UEprobInd','UEprobAgg','Stkprob']
 indep_list_dc = ['HHinc','selfemp','fulltime']
 
 
-# + {"code_folding": [7, 36]}
+# + {"code_folding": [0, 7, 36]}
 ## full-table for risks  
 
 rs_list = {}  ## list to store results 
@@ -632,7 +642,7 @@ f.close()
 rs_list = {}  ## list to store results 
 nb_spc = 1  ## number of specifications 
 
-dep_list3 = ['incexp','rincexp','incvar','rincvar','incskew']
+dep_list3 = ['incexp','rincexp','incvar','rincvar','UEprobInd','UEprobAgg','incskew']
 
 
 for i,mom in enumerate(dep_list3):
@@ -707,7 +717,7 @@ tb.to_excel('../Tables/spending_reg.xlsx')
 ## write to latex 
 f = open('../Tables/latex/spending_reg.tex', 'w')
 f.write(beginningtex)
-tb_ltx = tb.to_latex().replace('lllll','ccccc')   # hard coded here 
+tb_ltx = tb.to_latex().replace('llllll','cccccc')   # hard coded here 
 #print(tb)
 f.write(tb_ltx)
 f.write(endtex)
@@ -715,7 +725,6 @@ f.close()
 
 
 # -
-
 
 
 

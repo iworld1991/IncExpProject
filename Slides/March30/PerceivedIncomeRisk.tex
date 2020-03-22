@@ -10,6 +10,10 @@
 \usepackage{natbib}
 \usepackage{adjustbox}
 \usepackage{subcaption}
+
+
+
+
 %\usetheme{AnnArbor}
 %\usetheme{Antibes}
 %\usetheme{Bergen}
@@ -251,34 +255,121 @@
 \end{frame}
 
 
-\begin{frame}{Other covariants of perceived income risks}
+\begin{frame}{Covariants of expected income growth}
 	\begin{table}
-	\centering
-	\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
+		\centering
+		\caption{Expected income growth and individual characteristics}
+		\label{micro_reg_exp}
+		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
 			\begin{tabular}{ccccccccc}
-			\hline 
-			& incvar I & incvar II & incvar III & incvar IIII & rincvar I & rincvar II & rincvar III & rincvar IIII \\
-			\hline 
-			gender=male  &          &           &            &    -0.77*** &           &            &             &      2.65*** \\
-			&          &           &            &      (0.10) &           &            &             &       (0.19) \\
-			parttime=yes &     0.05 &     0.24* &   -0.65*** &             &   1.41*** &    1.80*** &    -1.26*** &              \\
-			&   (0.12) &    (0.13) &     (0.14) &             &    (0.23) &     (0.26) &      (0.28) &              \\
-			selfemp=yes  &  7.21*** &  -0.00*** &    0.00*** &             &   6.27*** &    0.00*** &     0.00*** &              \\
-			&   (0.15) &    (0.00) &     (0.00) &             &    (0.27) &     (0.00) &      (0.00) &              \\
-			Stkprob      &          &   0.01*** &    0.01*** &             &           &   -0.05*** &    -0.04*** &              \\
-			&          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-			UEprobInd    &          &   0.03*** &    0.03*** &             &           &    0.06*** &     0.05*** &              \\
-			&          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-			\hline 
-			Income/educ          & Yes   & Yes   & Yes   & Yes  & Yes  & Yes  & Yes & Yes   \\
-			N            &    54029 &     47356 &      40979 &       47457 &     50730 &      44404 &       38745 &        44517  \\
-			R2           &     0.05 &      0.00 &       0.02 &        0.00 &      0.01 &       0.01 &        0.04 &         0.02 \\
-			\hline 
-		\end{tabular}
-	}
-\end{table}
+				\hline 
+				{} &  incexp I & incexp II & incexp III & incexp IIII & rincexp I & rincexp II & rincexp III & rincexp IIII \\
+				\hline 
+				HHinc\_gr=low inc &           &           &      -0.03 &             &           &            &    -0.39*** &              \\
+				&           &           &     (0.02) &             &           &            &      (0.03) &              \\
+				educ\_gr=low educ &           &           &            &    -0.25*** &           &            &             &     -0.63*** \\
+				&           &           &            &      (0.02) &           &            &             &       (0.03) \\
+				gender=male      &           &           &            &    -0.32*** &           &            &             &     -0.78*** \\
+				&           &           &            &      (0.02) &           &            &             &       (0.03) \\
+				parttime=yes     &  -0.47*** &  -0.36*** &   -0.35*** &             &  -0.63*** &   -0.53*** &    -0.44*** &              \\
+				&    (0.03) &    (0.03) &     (0.03) &             &    (0.04) &     (0.04) &      (0.04) &              \\
+				selfemp=yes      &   0.86*** &  -0.00*** &    0.00*** &             &   0.84*** &   -0.00*** &    -0.00*** &              \\
+				&    (0.03) &    (0.00) &     (0.00) &             &    (0.05) &     (0.00) &      (0.00) &              \\
+				Stkprob          &           &   0.01*** &    0.01*** &             &           &    0.02*** &     0.02*** &              \\
+				&           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+				UEprobInd        &           &  -0.01*** &   -0.01*** &             &           &   -0.02*** &    -0.02*** &              \\
+				&           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+				Intercept        &   2.82*** &   2.57*** &    2.58*** &     3.05*** &  -0.29*** &   -0.92*** &    -0.80*** &      0.20*** \\
+				&    (0.01) &    (0.02) &     (0.02) &      (0.02) &    (0.02) &     (0.03) &      (0.03) &       (0.02) \\
+				\hline 
+				N                &     54275 &     48606 &      48606 &       47712 &     49702 &      44446 &       44446 &        43694 \\
+				R2               &      0.01 &      0.02 &       0.02 &        0.01 &      0.01 &       0.04 &        0.04 &         0.02 \\
+				
+				\hline 
+			\end{tabular}
+		}
+	\end{table}
 \end{frame}
 
+\begin{frame}{Covariants of perceived income risks}
+	\begin{table}
+		\centering
+		\caption{Perceived income risks and individual characteristics}
+		\label{micro_reg}
+		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
+
+\begin{tabular}{ccccccccc}
+	\hline 
+	{} &  incexp I & incexp II & incexp III & incexp IIII & rincexp I & rincexp II & rincexp III & rincexp IIII \\
+	\hline 
+	HHinc\_gr=low inc &           &           &      -0.03 &             &           &            &    -0.36*** &              \\
+	&           &           &     (0.02) &             &           &            &      (0.03) &              \\
+	educ\_gr=low educ &           &           &            &    -0.25*** &           &            &             &     -0.63*** \\
+	&           &           &            &      (0.02) &           &            &             &       (0.03) \\
+	gender=male      &           &           &            &    -0.32*** &           &            &             &     -0.78*** \\
+	&           &           &            &      (0.02) &           &            &             &       (0.03) \\
+	parttime=yes     &  -0.47*** &  -0.36*** &   -0.36*** &             &  -0.63*** &   -0.53*** &    -0.45*** &              \\
+	&    (0.03) &    (0.03) &     (0.03) &             &    (0.04) &     (0.04) &      (0.04) &              \\
+	selfemp=yes      &   0.86*** &   0.00*** &    0.00*** &             &   0.84*** &   -0.00*** &    -0.00*** &              \\
+	&    (0.03) &    (0.00) &     (0.00) &             &    (0.05) &     (0.00) &      (0.00) &              \\
+	Stkprob          &           &   0.01*** &    0.01*** &             &           &    0.02*** &     0.02*** &              \\
+	&           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+	UEprobAgg        &           &  -0.00*** &   -0.00*** &             &           &   -0.01*** &    -0.01*** &              \\
+	&           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+	UEprobInd        &           &  -0.01*** &   -0.01*** &             &           &   -0.01*** &    -0.01*** &              \\
+	&           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+	Intercept        &   2.82*** &   2.63*** &    2.64*** &     3.05*** &  -0.29*** &   -0.52*** &    -0.41*** &      0.20*** \\
+	&    (0.01) &    (0.03) &     (0.03) &      (0.02) &    (0.02) &     (0.04) &      (0.04) &       (0.02) \\           
+	\hline 
+	N                &     54275 &     48579 &      48579 &       47712 &     49702 &      44424 &       44424 &        43694 \\
+	R2               &      0.01 &      0.02 &       0.02 &        0.01 &      0.01 &       0.05 &        0.05 &         0.02 \\
+	\hline 
+\end{tabular}	
+}
+	\end{table}
+\end{frame}
+
+
+\subsection{Perceived risks and economic decisions}
+
+
+\begin{frame}{Perveived Income Risks and Household Spending}
+	\begin{table}
+		\centering
+		\caption{Perceived income risks and household spending}
+		\label{spending_reg}
+		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
+	
+	\begin{tabular}{ccccccll}
+		\hline 
+		{} & spending I & spending II & spending III & spending IIII & spending IIIII & spending IIIIII & spending IIIIIII \\
+		\hline 
+		incexp    &    0.39*** &             &              &               &                &                 &                  \\
+		&     (0.08) &             &              &               &                &                 &                  \\
+		
+		rincexp   &            &      -0.04* &              &               &                &                 &                  \\
+		&            &      (0.02) &              &               &                &                 &                  \\
+		incvar    &            &             &      0.07*** &               &                &                 &                  \\
+		&            &             &       (0.02) &               &                &                 &                  \\
+		
+		rincvar   &            &             &              &       0.07*** &                &                 &                  \\
+		&            &             &              &        (0.01) &                &                 &                  \\
+		
+		UEprobAgg &            &             &              &               &                &         0.04*** &                  \\
+		&            &             &              &               &                &          (0.01) &                  \\
+		UEprobInd &            &             &              &               &          -0.01 &                 &                  \\
+		&            &             &              &               &         (0.01) &                 &                  \\
+		
+		incskew   &            &             &              &               &                &                 &             0.21 \\
+		&            &             &              &               &                &                 &           (0.43) \\
+		\hline 
+		N         &      55673 &       50997 &        55465 &         52099 &          54315 &           85468 &            55029 \\
+		R2        &       0.00 &        0.00 &         0.00 &          0.00 &           0.00 &            0.00 &             0.00 \\
+		\hline 
+	\end{tabular}
+		}
+	\end{table}
+\end{frame}
 
 
 \subsection{Correlation with stock market returns}
@@ -319,7 +410,6 @@
 	\end{itemize}
 \end{frame}
 
-\subsection{Perceived risks and economic decisions}
 
 \section{Model (work in progress)}
 
@@ -343,36 +433,6 @@
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{Other individual characteristics and perceived income risks}
-	\begin{table}
-		\centering
-		\caption{Perceived Income Risks and Individual Characteristics}
-		\label{micro_reg}
-		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
-				\begin{tabular}{ccccccccc}
-				\hline 
-				& incvar I & incvar II & incvar III & incvar IIII & rincvar I & rincvar II & rincvar III & rincvar IIII \\
-				\hline 
-				gender=male  &          &           &            &    -0.77*** &           &            &             &      2.65*** \\
-				&          &           &            &      (0.10) &           &            &             &       (0.19) \\
-				parttime=yes &     0.05 &     0.24* &   -0.65*** &             &   1.41*** &    1.80*** &    -1.26*** &              \\
-				&   (0.12) &    (0.13) &     (0.14) &             &    (0.23) &     (0.26) &      (0.28) &              \\
-				selfemp=yes  &  7.21*** &  -0.00*** &    0.00*** &             &   6.27*** &    0.00*** &     0.00*** &              \\
-				&   (0.15) &    (0.00) &     (0.00) &             &    (0.27) &     (0.00) &      (0.00) &              \\
-				Stkprob      &          &   0.01*** &    0.01*** &             &           &   -0.05*** &    -0.04*** &              \\
-				&          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-				UEprobInd    &          &   0.03*** &    0.03*** &             &           &    0.06*** &     0.05*** &              \\
-				&          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-				\hline 
-				Income/educ          & Yes   & Yes   & Yes   & Yes  & Yes  & Yes  & Yes & Yes   \\
-				N            &    54029 &     47356 &      40979 &       47457 &     50730 &      44404 &       38745 &        44517  \\
-				R2           &     0.05 &      0.00 &       0.02 &        0.00 &      0.01 &       0.01 &        0.04 &         0.02 \\
-				\hline 
-			\end{tabular}
-		}
-	\end{table}
-\end{frame}
 
 
 \begin{frame}{Some Figures}

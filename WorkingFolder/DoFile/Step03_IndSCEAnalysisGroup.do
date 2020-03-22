@@ -37,21 +37,51 @@ sort ID year month
 ** Exclude extreme outliers 
 ******************************
 
-*keep if Q32 < 100 & Q32 >= 10
+keep if Q32 <= 65 & Q32 >= 20
 
-drop if IncVar < 0
+*****************************************
+****  Renaming so that more consistent **
+*****************************************
+
+rename Q24_mean incmean
+rename Q24_var incvar
+rename Q24_iqr inciqr
+rename IncSkew incskew 
+rename Q24_rmean rincmean
+rename Q24_rvar rincvar
+
+rename Q36 educ
+rename D6 HHinc 
+rename Q32 age 
+rename Q33 gender 
+rename Q10_1 fulltime
+rename Q10_2 parttime
+rename Q12new selfemp
+rename Q6new Stkprob
+rename Q4new UEprobAgg
+rename Q13new UEprobInd
+rename Q26v2 spending_dum
+rename Q26v2part2 spending 
+
+************************
+** focus on non-zero skewness
+****************************
+
+replace incskew = . if incskew==0
+
 
 *************************
 *** Exclude outliers *****
 *************************
 
-local Moments IncMean IncVar IncSkew IncKurt
+local Moments incmean rincmean incvar rincvar inciqr incskew 
 
 foreach var in `Moments'{
-      egen `var'pl=pctile(`var'),p(10)
-	  egen `var'pu=pctile(`var'),p(90)
+      egen `var'pl=pctile(`var'),p(1)
+	  egen `var'pu=pctile(`var'),p(99)
 	  replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
 }
+
 
 * other thresholds 
 
@@ -67,7 +97,7 @@ foreach var in `Moments'{
 *** generate other vars *****
 *****************************
 
-gen age_sq = (Q32-30)^2
+gen age_sq = age^2
 label var age_sq "Age-squared"
 
 encode _STATE, gen(state_id)
@@ -77,66 +107,84 @@ label var state_id "state id"
 *** generate group vars *****
 *****************************
 
-gen cohort = year-Q32
-label var cohort "cohort by year of birth"
-egen cohort_g = cut(cohort), group(3)
-label define cohortlb 0 "1915-1956" 1 "1957-1972" 2 "1973-2000"
-label value cohort_g cohortlb
+egen byear_g = cut(byear), group(4)
 
-egen age_g = cut(Q32), group(3)  
+label define byearglb 0 "1950s" 1 "1960s" 2 "1970s" 3 "1980s"
+label value byear_g byearlb
+
+egen age_g = cut(age), group(3)  
 label var age_g "age group"
-label define agelb 0 "Young" 1 "Middle-age" 2 "Old"
+label define agelb 0 "young" 1 "middle-age" 2 "old"
 label value age_g agelb
 
-egen edu_g = cut(Q36), group(3) 
+egen edu_g = cut(educ), group(2) 
 label var edu_g "education group"
-label define edulb 0 "Low Education" 1 "Medium Education" 2 "High Education"
+label define edulb 0 "low educ" 1 "high educ" 
 label value edu_g edulb
 
-gen gender_g = Q33 
-label var gender_g "gender_grou"
 label define gdlb 0 "Male" 1 "Female" 
-label value gender_g gdlb
+label value gender gdlb
 
-egen inc_g = cut(Q47), group(3)
-label var inc_g "income_g"
-label define inclb 0 "Low income" 1 "Middle Income" 2 "High Income"
-label value inc_g inclb
+egen HHinc_g = cut(HHinc), group(3)
+label var HHinc_g "Household income group"
+label define HHinc_glb 0 "low inc" 1 "middle inc" 2 "high inc"
+label value HHinc_g HHinc_glb
 
-local group_vars age_g edu_g inc_g cohort_g
+local group_vars byear_g age_g edu_g HHinc_g 
 
 **********************************
 *** tables and hists of Vars *****
 **********************************
-
-
-foreach gp in `group_vars' {
-tabstat Q24_mean Q24_var Q24_iqr IncMean IncVar, st(p10 p50 p90) by(`gp')
-}
-
-
-foreach gp in `group_vars' {
-table `gp', c(median Q24_var) by(year)
-}
-
-
 /*
 
-foreach mom in iqr var mean {
+local Moments incmean incvar inciqr rincmean rincvar incskew
 
-twoway (hist Q24_`mom',fcolor(ltblue) lcolor(none)), ///
+foreach gp in `group_vars' {
+tabstat `Moments', st(p10 p50 p90) by(`gp')
+}
+
+
+foreach gp in `group_vars' {
+table `gp', c(median incvar mean incvar median rincvar mean rincvar) by(year)
+}
+
+
+
+** histograms 
+
+foreach mom in `Moments'{
+
+twoway (hist `mom',fcolor(ltblue) lcolor(none)), ///
 	   ytitle("") ///
 	   title("`mom'")
 graph export "${sum_graph_folder}/hist/hist_`mom'.png",as(png) replace  
 
 }
 
-foreach gp in `group_vars' {
-foreach mom in iqr var mean {
 
-twoway (hist Q24_`mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
-       (hist Q24_`mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
-	   (hist Q24_`mom' if `gp'==2,fcolor(red) lcolor("")), ///
+* 4 groups 
+foreach gp in byear_g{
+foreach mom in `Moments'{
+twoway (hist `mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
+       (hist `mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
+	   (hist `mom' if `gp'==2,fcolor(red) lcolor("")) ///
+	   (hist `mom' if `gp'==3,fcolor(green) lcolor("")), ///
+	   xtitle("") ///
+	   ytitle("") ///
+	   title("`mom'") ///
+	   legend(label(1 `gp'=0) label(2 `gp'=1) label(3 `gp'=2) label(4 `gp'=3) col(1))
+
+graph export "${sum_graph_folder}/hist/hist_`mom'_`gp'.png",as(png) replace  
+}
+}
+
+* 3 groups 
+foreach gp in HHinc_g age_g{
+foreach mom in `Moments'{
+
+twoway (hist `mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
+       (hist `mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
+	   (hist `mom' if `gp'==2,fcolor(red) lcolor("")), ///
 	   xtitle("") ///
 	   ytitle("") ///
 	   title("`mom'") ///
@@ -147,32 +195,137 @@ graph export "${sum_graph_folder}/hist/hist_`mom'_`gp'.png",as(png) replace
 }
 }
 
-foreach mom in Mean Var Skew Kurt{
+* 2 groups 
 
-twoway (hist Inc`mom' if Inc`mom'<Inc`mom'u_truc & Inc`mom'>Inc`mom'l_truc, ///
-		fcolor(ltblue) lcolor(none)), ///
-	   ytitle("") ///
-	   title("`mom'")
-graph export "${sum_graph_folder}/hist/hist_Inc`mom'.png",as(png) replace  
 
-}
+foreach gp in edu_g{
+foreach mom in `Moments'{
 
-foreach gp in `group_vars' {
-foreach mom in Mean Var Skew Kurt{
-
-twoway (hist Inc`mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
-       (hist Inc`mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
-	   (hist Inc`mom' if `gp'==2,fcolor(red) lcolor("")), ///
+twoway (hist `mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
+       (hist `mom' if `gp'==1,fcolor(ltblue) lcolor("")), ///
 	   xtitle("") ///
 	   ytitle("") ///
 	   title("`mom'") ///
-	   legend(label(1 `gp'=0) label(2 `gp'=1) label(3 `gp'=2) col(1))
+	   legend(label(1 `gp'=0) label(2 `gp'=1) col(1))
 
-graph export "${sum_graph_folder}/hist/hist_Inc_`mom'_`gp'.png",as(png) replace  
+graph export "${sum_graph_folder}/hist/hist_`mom'_`gp'.png",as(png) replace  
 
 }
 }
+
 */
+
+
+**********************************
+*** time series pltos by group *****
+**********************************
+
+** 4 groups 
+foreach agg in mean median{
+  foreach gp in byear_g{
+   preserve 
+   
+   collapse (`agg') `Moments', by(year month `gp')
+   gen date_str=string(year)+"m"+string(month) 
+   gen date= monthly(date_str,"YM")
+   format date %tm
+   
+foreach mom in `Moments'{
+keep if `mom'!=.
+twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
+       (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)) ///
+	   (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)) ///
+	   (tsline `mom' if `gp'== 3,lp(dash_dot) lwidth(thick)), ///
+       xtitle("date") ///
+	   ytitle("") ///
+	   title("`mom' by generation") ///
+	   legend(label(1 "1950s") label(2 "1960s") label(3 "1970s") label(4 "1980s")  col(4))
+ graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
+      }
+  restore
+}
+}
+
+
+** 3 groups fo HH income 
+foreach agg in mean median{
+  foreach gp in HHinc_g{
+   preserve 
+   
+   collapse (`agg') `Moments', by(year month `gp')
+   gen date_str=string(year)+"m"+string(month) 
+   gen date= monthly(date_str,"YM")
+   format date %tm
+   
+foreach mom in `Moments'{
+keep if `mom'!=.
+twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
+       (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)) ///
+	   (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)), ///
+       xtitle("date") ///
+	   ytitle("") ///
+	   title("`mom' by household income") ///
+	   legend(label(1 "low") label(2 "median") label(3 "high")  col(3))
+ graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
+      }
+  restore
+}
+}
+
+
+** 3 groups fo HH income 
+foreach agg in mean median{
+  foreach gp in age_g{
+   preserve 
+   
+   collapse (`agg') `Moments', by(year month `gp')
+   gen date_str=string(year)+"m"+string(month) 
+   gen date= monthly(date_str,"YM")
+   format date %tm
+   
+foreach mom in `Moments'{
+keep if `mom'!=.
+twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
+       (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)) ///
+	   (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)), ///
+       xtitle("date") ///
+	   ytitle("") ///
+	   title("`mom' by age") ///
+	   legend(label(1 "young") label(2 "middle-age") label(3 "old")  col(3))
+	   
+ graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
+      }
+  restore
+}
+}
+
+
+** 2 groups 
+foreach agg in mean median{
+  foreach gp in edu_g{
+   preserve 
+   
+   collapse (`agg') `Moments', by(year month `gp')
+   gen date_str=string(year)+"m"+string(month) 
+   gen date= monthly(date_str,"YM")
+   format date %tm
+   
+foreach mom in `Moments'{
+keep if `mom'!=.
+twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
+       (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)), ///
+       xtitle("date") ///
+	   ytitle("") ///
+	   title("`mom' by education") ///
+	   legend(label(1 "low") label(2 "high") col(2))
+ graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
+      }
+  restore
+}
+}
+
+ddd
+/*
 *******************
 *** Seasonal ******
 *******************

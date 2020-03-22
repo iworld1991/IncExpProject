@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  21 MAR 2020 20:02
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  22 MAR 2020 14:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -761,25 +761,25 @@ y)
 (/usr/local/texlive/2019/texmf-dist/tex/latex/beamer/beamerfontthemeserif.sty)
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\\' on input line 65.
+(hyperref)                removing `\\' on input line 69.
 
 (./PerceivedIncomeRisk.aux)
 \openout1 = `PerceivedIncomeRisk.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 94.
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 94.
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 94.
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 94.
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 94.
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 94.
-LaTeX Font Info:    ... okay on input line 94.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 94.
-LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -847,7 +847,7 @@ e
 ))
 ABD: EveryShipout initializing macros
 \AtBeginShipoutBox=\box61
-Package hyperref Info: Link coloring OFF on input line 94.
+Package hyperref Info: Link coloring OFF on input line 98.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -857,9 +857,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count176
 )
-LaTeX Info: Redefining \ref on input line 94.
-LaTeX Info: Redefining \pageref on input line 94.
-LaTeX Info: Redefining \nameref on input line 94.
+LaTeX Info: Redefining \ref on input line 98.
+LaTeX Info: Redefining \pageref on input line 98.
+LaTeX Info: Redefining \nameref on input line 98.
 
 (./PerceivedIncomeRisk.out) (./PerceivedIncomeRisk.out)
 \@outlinefile=\write5
@@ -905,17 +905,17 @@ eivedIncomeRisk.toc)
 ] [5
 
 ]
-LaTeX Font Info:    Try loading font information for U+msa on input line 156.
+LaTeX Font Info:    Try loading font information for U+msa on input line 160.
  (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 156.
+LaTeX Font Info:    Try loading font information for U+msb on input line 160.
 (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 
 Package natbib Warning: Citation `engelberg_comparing_2009' on page 6 undefined
- on input line 156.
+ on input line 160.
 
 [6
 
@@ -924,92 +924,92 @@ Package natbib Warning: Citation `engelberg_comparing_2009' on page 6 undefined
 ] (./PerceivedIncomeRisk.toc) [8
 
 ]
-<figures/hist_incexp.jpg, id=348, 433.62pt x 289.08pt>
+<figures/hist_incexp.jpg, id=349, 433.62pt x 289.08pt>
 File: figures/hist_incexp.jpg Graphic file (type jpg)
 <use figures/hist_incexp.jpg>
-Package pdftex.def Info: figures/hist_incexp.jpg  used on input line 187.
+Package pdftex.def Info: figures/hist_incexp.jpg  used on input line 191.
 (pdftex.def)             Requested size: 136.91603pt x 91.27681pt.
-<figures/hist_rincexp.jpg, id=349, 433.62pt x 289.08pt>
+<figures/hist_rincexp.jpg, id=350, 433.62pt x 289.08pt>
 File: figures/hist_rincexp.jpg Graphic file (type jpg)
 <use figures/hist_rincexp.jpg>
-Package pdftex.def Info: figures/hist_rincexp.jpg  used on input line 187.
+Package pdftex.def Info: figures/hist_rincexp.jpg  used on input line 191.
 (pdftex.def)             Requested size: 136.91603pt x 91.27681pt.
  [9
 
  <./figures/hist_incexp.jpg> <./figures/hist_rincexp.jpg>]
-<figures/hist_incvar.jpg, id=381, 433.62pt x 289.08pt>
+<figures/hist_incvar.jpg, id=382, 433.62pt x 289.08pt>
 File: figures/hist_incvar.jpg Graphic file (type jpg)
 <use figures/hist_incvar.jpg>
-Package pdftex.def Info: figures/hist_incvar.jpg  used on input line 200.
+Package pdftex.def Info: figures/hist_incvar.jpg  used on input line 204.
 (pdftex.def)             Requested size: 136.91603pt x 91.27681pt.
-<figures/hist_rincvar.jpg, id=382, 433.62pt x 289.08pt>
+<figures/hist_rincvar.jpg, id=383, 433.62pt x 289.08pt>
 File: figures/hist_rincvar.jpg Graphic file (type jpg)
 <use figures/hist_rincvar.jpg>
-Package pdftex.def Info: figures/hist_rincvar.jpg  used on input line 200.
+Package pdftex.def Info: figures/hist_rincvar.jpg  used on input line 204.
 (pdftex.def)             Requested size: 136.91603pt x 91.27681pt.
  [10
 
  <./figures/hist_incvar.jpg> <./figures/hist_rincvar.jpg>]
-<figures/histIncSkew.jpg, id=417, 433.62pt x 289.08pt>
+<figures/histIncSkew.jpg, id=418, 433.62pt x 289.08pt>
 File: figures/histIncSkew.jpg Graphic file (type jpg)
 <use figures/histIncSkew.jpg>
-Package pdftex.def Info: figures/histIncSkew.jpg  used on input line 211.
+Package pdftex.def Info: figures/histIncSkew.jpg  used on input line 215.
 (pdftex.def)             Requested size: 136.91603pt x 91.27681pt.
  [11
 
  <./figures/histIncSkew.jpg>]
-<figures/boxplot_exp_HHinc.jpg, id=449, 939.51pt x 361.35pt>
+<figures/boxplot_exp_HHinc.jpg, id=450, 939.51pt x 361.35pt>
 File: figures/boxplot_exp_HHinc.jpg Graphic file (type jpg)
 <use figures/boxplot_exp_HHinc.jpg>
-Package pdftex.def Info: figures/boxplot_exp_HHinc.jpg  used on input line 224.
+Package pdftex.def Info: figures/boxplot_exp_HHinc.jpg  used on input line 228.
 
 (pdftex.def)             Requested size: 273.83728pt x 105.31813pt.
-<figures/boxplot_var_HHinc.jpg, id=450, 939.51pt x 361.35pt>
+<figures/boxplot_var_HHinc.jpg, id=451, 939.51pt x 361.35pt>
 File: figures/boxplot_var_HHinc.jpg Graphic file (type jpg)
 <use figures/boxplot_var_HHinc.jpg>
-Package pdftex.def Info: figures/boxplot_var_HHinc.jpg  used on input line 224.
+Package pdftex.def Info: figures/boxplot_var_HHinc.jpg  used on input line 228.
 
 (pdftex.def)             Requested size: 273.83728pt x 105.31813pt.
 
-Overfull \vbox (16.0155pt too high) detected at line 224
+Overfull \vbox (16.0155pt too high) detected at line 228
  []
 
 [12
 
  <./figures/boxplot_exp_HHinc.jpg> <./figures/boxplot_var_HHinc.jpg>]
-<figures/boxplot_exp_age_gr.jpg, id=482, 939.51pt x 361.35pt>
+<figures/boxplot_exp_age_gr.jpg, id=483, 939.51pt x 361.35pt>
 File: figures/boxplot_exp_age_gr.jpg Graphic file (type jpg)
 <use figures/boxplot_exp_age_gr.jpg>
-Package pdftex.def Info: figures/boxplot_exp_age_gr.jpg  used on input line 237
+Package pdftex.def Info: figures/boxplot_exp_age_gr.jpg  used on input line 241
 .
 (pdftex.def)             Requested size: 273.83728pt x 105.31813pt.
-<figures/boxplot_var_age_gr.jpg, id=483, 939.51pt x 361.35pt>
+<figures/boxplot_var_age_gr.jpg, id=484, 939.51pt x 361.35pt>
 File: figures/boxplot_var_age_gr.jpg Graphic file (type jpg)
 <use figures/boxplot_var_age_gr.jpg>
-Package pdftex.def Info: figures/boxplot_var_age_gr.jpg  used on input line 237
+Package pdftex.def Info: figures/boxplot_var_age_gr.jpg  used on input line 241
 .
 (pdftex.def)             Requested size: 273.83728pt x 105.31813pt.
 
-Overfull \vbox (16.0155pt too high) detected at line 237
+Overfull \vbox (16.0155pt too high) detected at line 241
  []
 
 [13
 
  <./figures/boxplot_exp_age_gr.jpg> <./figures/boxplot_var_age_gr.jpg>]
-<figures/boxplot_exp_byear_gr.jpg, id=517, 939.51pt x 361.35pt>
+<figures/boxplot_exp_byear_gr.jpg, id=518, 939.51pt x 361.35pt>
 File: figures/boxplot_exp_byear_gr.jpg Graphic file (type jpg)
 <use figures/boxplot_exp_byear_gr.jpg>
 Package pdftex.def Info: figures/boxplot_exp_byear_gr.jpg  used on input line 2
-51.
+55.
 (pdftex.def)             Requested size: 273.83728pt x 105.31813pt.
-<figures/boxplot_var_byear_gr.jpg, id=518, 939.51pt x 361.35pt>
+<figures/boxplot_var_byear_gr.jpg, id=519, 939.51pt x 361.35pt>
 File: figures/boxplot_var_byear_gr.jpg Graphic file (type jpg)
 <use figures/boxplot_var_byear_gr.jpg>
 Package pdftex.def Info: figures/boxplot_var_byear_gr.jpg  used on input line 2
-51.
+55.
 (pdftex.def)             Requested size: 273.83728pt x 105.31813pt.
 
-Overfull \vbox (16.0155pt too high) detected at line 251
+Overfull \vbox (16.0155pt too high) detected at line 255
  []
 
 [14
@@ -1017,42 +1017,46 @@ Overfull \vbox (16.0155pt too high) detected at line 251
  <./figures/boxplot_exp_byear_gr.jpg> <./figures/boxplot_var_byear_gr.jpg>]
 [15
 
-] (./PerceivedIncomeRisk.toc) [16
+] [16
+
+] (./PerceivedIncomeRisk.toc) [17
+
+] [18
+
+] (./PerceivedIncomeRisk.toc)
+[19
 
 ]
-<figures/tsMedmean.jpg, id=627, 5781.6pt x 2890.8pt>
+<figures/tsMedmean.jpg, id=736, 5781.6pt x 2890.8pt>
 File: figures/tsMedmean.jpg Graphic file (type jpg)
 <use figures/tsMedmean.jpg>
-Package pdftex.def Info: figures/tsMedmean.jpg  used on input line 295.
+Package pdftex.def Info: figures/tsMedmean.jpg  used on input line 386.
 (pdftex.def)             Requested size: 342.2953pt x 171.14679pt.
- [17
+ [20
 
  <./figures/tsMedmean.jpg>]
-<figures/tsMedvar.jpg, id=659, 5781.6pt x 2890.8pt>
+<figures/tsMedvar.jpg, id=768, 5781.6pt x 2890.8pt>
 File: figures/tsMedvar.jpg Graphic file (type jpg)
 <use figures/tsMedvar.jpg>
-Package pdftex.def Info: figures/tsMedvar.jpg  used on input line 307.
+Package pdftex.def Info: figures/tsMedvar.jpg  used on input line 398.
 (pdftex.def)             Requested size: 342.2953pt x 171.14679pt.
- [18
+ [21
 
  <./figures/tsMedvar.jpg>]
-<figures/tsEstMeanskew.jpg, id=690, 5781.6pt x 2890.8pt>
+<figures/tsEstMeanskew.jpg, id=799, 5781.6pt x 2890.8pt>
 File: figures/tsEstMeanskew.jpg Graphic file (type jpg)
 <use figures/tsEstMeanskew.jpg>
-Package pdftex.def Info: figures/tsEstMeanskew.jpg  used on input line 320.
+Package pdftex.def Info: figures/tsEstMeanskew.jpg  used on input line 411.
 (pdftex.def)             Requested size: 342.2953pt x 171.14679pt.
- [19
+ [22
 
- <./figures/tsEstMeanskew.jpg>]
-(./PerceivedIncomeRisk.toc) [20
-
-] [21
+ <./figures/tsEstMeanskew.jpg>] [23
 
 ]
 ! Undefined control sequence.
 \beamer@doifinframe ...ion of risks $ \quad \plus 
                                                   $ uninsurance of risks $ \...
-l.343 \end{frame}
+l.434 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1060,14 +1064,12 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-[22
-
-] [23
+[24
 
 ]
 
 LaTeX Warning: File `figuresDraft/spf_se_est_diag0.png' not found on input line
- 397.
+ 458.
 
 
 ! Package pdftex.def Error: File `figuresDraft/spf_se_est_diag0.png' not found:
@@ -1077,14 +1079,14 @@ See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.397 \end{frame}
+l.458 \end{frame}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
 LaTeX Warning: File `figuresDraft/spf_se_est_diag1.png' not found on input line
- 397.
+ 458.
 
 
 ! Package pdftex.def Error: File `figuresDraft/spf_se_est_diag1.png' not found:
@@ -1094,14 +1096,14 @@ See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.397 \end{frame}
+l.458 \end{frame}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
 LaTeX Warning: File `figuresDraft/spf_se_est_diag2.png' not found on input line
- 397.
+ 458.
 
 
 ! Package pdftex.def Error: File `figuresDraft/spf_se_est_diag2.png' not found:
@@ -1111,20 +1113,20 @@ See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.397 \end{frame}
+l.458 \end{frame}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
-Overfull \vbox (13.81523pt too high) detected at line 397
+Overfull \vbox (13.81523pt too high) detected at line 458
  []
 
-[24
-
-] [25
+[25
 
 ] [26
+
+] [27
 
 ] (./PerceivedIncomeRisk.bbl
 
@@ -1148,19 +1150,23 @@ Package natbib Warning: Empty `thebibliography' environment on input line 3.
 
 Package natbib Warning: There were undefined citations.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 424.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 424.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 485.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 485.
 (./PerceivedIncomeRisk.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 424.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 424.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 485.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 485.
 Package rerunfilecheck Info: File `PerceivedIncomeRisk.out' has not changed.
-(rerunfilecheck)             Checksum: 9D73BF70C2ACEB944319C2D0549AA699;517.
+(rerunfilecheck)             Checksum: 442458BF09006D2AD4E4D75F30DE01CA;517.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
- 20142 strings out of 492616
- 380951 string characters out of 6129482
- 467535 words of memory out of 5000000
- 23509 multiletter control sequences out of 15000+600000
+ 20151 strings out of 492616
+ 381058 string characters out of 6129482
+ 483683 words of memory out of 5000000
+ 23514 multiletter control sequences out of 15000+600000
  11646 words of font info for 46 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,15n,96p,806b,733s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1174,10 +1180,10 @@ al/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/
 texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/tex
 live/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texl
 ive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on PerceivedIncomeRisk.pdf (26 pages, 3203100 bytes).
+Output written on PerceivedIncomeRisk.pdf (27 pages, 3206236 bytes).
 PDF statistics:
- 1006 PDF objects out of 1200 (max. 8388607)
- 879 compressed objects within 9 object streams
- 73 named destinations out of 1000 (max. 500000)
+ 1038 PDF objects out of 1200 (max. 8388607)
+ 909 compressed objects within 10 object streams
+ 77 named destinations out of 1000 (max. 500000)
  531 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -5,8 +5,10 @@
 \beamer@slide {boxplot_hhinc}{12}
 \beamer@slide {boxplot_age_gr}{13}
 \beamer@slide {boxplot_byear_gr}{14}
-\beamer@slide {ts_mean}{17}
-\beamer@slide {ts_var}{18}
-\beamer@slide {ts_skew}{19}
-\beamer@slide {micro_reg}{23}
-\beamer@slide {figurelabel}{24}
+\beamer@slide {micro_reg_exp}{15}
+\beamer@slide {micro_reg}{16}
+\beamer@slide {spending_reg}{18}
+\beamer@slide {ts_mean}{20}
+\beamer@slide {ts_var}{21}
+\beamer@slide {ts_skew}{22}
+\beamer@slide {figurelabel}{25}
