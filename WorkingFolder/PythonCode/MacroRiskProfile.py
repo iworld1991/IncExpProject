@@ -135,7 +135,7 @@ IncSCEIndMoms = IncSCEIndMoms.rename(columns={'Q24_mean': 'incexp',
 
 #IncSCEIndMomsEst['IncSkew'] = IncSCEIndMomsEst['IncSkew'].copy().replace(0,np.nan)
 
-# + {"code_folding": [30]}
+# + {"code_folding": []}
 moms = ['incexp','incvar','inciqr','rincexp','rincvar']
 moms_est = ['IncSkew','IncKurt']
 
@@ -180,7 +180,7 @@ T = len(IncSCEPopMomsEstMean)
 # ### 3. Cross-sectional patterns of subjective distributions
 #
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ### histograms 
 
 for mom in moms:
@@ -188,7 +188,7 @@ for mom in moms:
     sns.distplot(IncSCEIndMoms[mom],
                  kde = True,
                  color ='red',
-                 bins = 0) 
+                 bins = 20) 
     plt.xlabel(mom, fontsize = 12)
     plt.xlabel(mom,fontsize = 12)
     plt.ylabel("Frequency",
@@ -245,6 +245,11 @@ dt_combM = pd.concat([sp500MR,
 # -
 
 dt_combM.tail()
+
+# +
+## save sp500 as stata for other analysis 
+
+sp500MR.to_stata('../OtherData/sp500.dta')
 
 # + {"code_folding": []}
 ## date index for panel 

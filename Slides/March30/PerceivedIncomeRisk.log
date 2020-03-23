@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  22 MAR 2020 14:48
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  22 MAR 2020 21:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1056,7 +1056,7 @@ Package pdftex.def Info: figures/tsEstMeanskew.jpg  used on input line 411.
 ! Undefined control sequence.
 \beamer@doifinframe ...ion of risks $ \quad \plus 
                                                   $ uninsurance of risks $ \...
-l.434 \end{frame}
+l.433 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1069,7 +1069,7 @@ and I'll forget about whatever was undefined.
 ]
 
 LaTeX Warning: File `figuresDraft/spf_se_est_diag0.png' not found on input line
- 458.
+ 457.
 
 
 ! Package pdftex.def Error: File `figuresDraft/spf_se_est_diag0.png' not found:
@@ -1079,14 +1079,14 @@ See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.458 \end{frame}
+l.457 \end{frame}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
 LaTeX Warning: File `figuresDraft/spf_se_est_diag1.png' not found on input line
- 458.
+ 457.
 
 
 ! Package pdftex.def Error: File `figuresDraft/spf_se_est_diag1.png' not found:
@@ -1096,14 +1096,14 @@ See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.458 \end{frame}
+l.457 \end{frame}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
 LaTeX Warning: File `figuresDraft/spf_se_est_diag2.png' not found on input line
- 458.
+ 457.
 
 
 ! Package pdftex.def Error: File `figuresDraft/spf_se_est_diag2.png' not found:
@@ -1113,13 +1113,13 @@ See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.458 \end{frame}
+l.457 \end{frame}
                  
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
-Overfull \vbox (13.81523pt too high) detected at line 458
+Overfull \vbox (13.81523pt too high) detected at line 457
  []
 
 [25
@@ -1150,17 +1150,13 @@ Package natbib Warning: Empty `thebibliography' environment on input line 3.
 
 Package natbib Warning: There were undefined citations.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 485.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 485.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 484.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 484.
 (./PerceivedIncomeRisk.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 485.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 485.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 484.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 484.
 Package rerunfilecheck Info: File `PerceivedIncomeRisk.out' has not changed.
 (rerunfilecheck)             Checksum: 442458BF09006D2AD4E4D75F30DE01CA;517.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
  20151 strings out of 492616
@@ -1180,7 +1176,7 @@ al/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/
 texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/tex
 live/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texl
 ive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on PerceivedIncomeRisk.pdf (27 pages, 3206236 bytes).
+Output written on PerceivedIncomeRisk.pdf (27 pages, 3205967 bytes).
 PDF statistics:
  1038 PDF objects out of 1200 (max. 8388607)
  909 compressed objects within 10 object streams

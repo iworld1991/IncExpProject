@@ -3,7 +3,38 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Est_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}22 Mar 2020, 17:32:26
+ {txt}opened on:  {res}23 Mar 2020, 10:27:10
+{txt}
+{com}. 
+. *********************************************************
+. *** before working with SCE, clean the stock market data 
+. ********************************************************
+. 
+. use "${c -(}mainfolder{c )-}/OtherData/sp500.dta",clear 
+{txt}
+{com}. 
+. generate new_date = dofc(DATE)
+{txt}
+{com}. format new_date %tm
+{txt}
+{com}. gen year = year(new_date)
+{txt}
+{com}. gen month = month(new_date)
+{txt}
+{com}. gen date_str = string(year)+ "m"+string(month)
+{txt}
+{com}. gen date = monthly(date_str,"YM")
+{txt}
+{com}. format date %tm
+{txt}
+{com}. drop DATE date_str year month new_date 
+{txt}
+{com}. label var sp500 "growth rate (%) of sp500 index from last month"
+{txt}
+{com}. save "${c -(}mainfolder{c )-}/OtherData/sp500M.dta",replace 
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/OtherData/sp500M.dta saved
+
+{com}. clear 
 {txt}
 {com}. 
 . 
@@ -25,9 +56,9 @@
 {txt}{hline 10}{c BT}{hline 27}
 
 {com}. 
-. ******************************
-. *** Merge with demographics **
-. *****************************
+. ************************************************
+. *** Merge with demographics and other moments **
+. ************************************************
 . 
 . merge 1:1 year month userid using "${c -(}folder{c )-}/SCE/IncExpSCEProbIndM",keep(master match) 
 {res}
@@ -40,6 +71,33 @@
 {com}. rename _merge hh_info_merge
 {res}{txt}
 {com}. 
+. ** format the date 
+. drop date 
+{txt}
+{com}. gen date_str=string(year)+"m"+string(month) 
+{txt}
+{com}. gen date= monthly(date_str,"YM")
+{txt}
+{com}. format date %tm
+{txt}
+{com}. order userid date year month   
+{txt}
+{com}. 
+. *************************************
+. *** Merge with stock market data   **
+. *************************************
+. 
+. merge m:1 date using "${c -(}mainfolder{c )-}/OtherData/sp500M.dta", keep(master match) 
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}          85,852{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. rename _merge sp_merge
+{res}{txt}
+{com}. 
 . *******************************
 . **  Set Panel Data Structure **
 . *******************************
@@ -47,9 +105,8 @@
 {res}{txt}
 {com}. xtset ID date   /* this is not correct. ID is unique here.*/
 {res}{txt}{col 8}panel variable:  {res}ID (unbalanced)
-{txt}{col 9}time variable:  {res}{col 25}date, 01jun2013 00:00:00 to 01may2019 00:00:00
-{col 25}but with gaps
-{txt}{col 17}delta:  {res}.001 seconds
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2019m5, but with gaps
+{txt}{col 17}delta:  {res}1 month
 {txt}
 {com}. sort ID year month 
 {txt}
@@ -297,23 +354,27 @@
 > */
 . 
 . 
+. 
 . **********************************
 . *** time series pltos by group *****
 . **********************************
 . 
-. ** 4 groups 
-. foreach agg in mean median{c -(}
-{txt}  2{com}.   foreach gp in byear_g{c -(}
-{txt}  3{com}.    preserve 
-{txt}  4{com}.    
-.    collapse (`agg') `Moments', by(year month `gp')
-{txt}  5{com}.    gen date_str=string(year)+"m"+string(month) 
-{txt}  6{com}.    gen date= monthly(date_str,"YM")
-{txt}  7{com}.    format date %tm
-{txt}  8{com}.    
-. foreach mom in `Moments'{c -(}
-{txt}  9{com}. keep if `mom'!=.
-{txt} 10{com}. twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
+. /*
+> ** 4 groups 
+> foreach agg in mean median{c -(}
+>   foreach gp in byear_g{c -(}
+>    preserve 
+>    
+>    collapse (`agg') `Moments' sp500, by(year month `gp')
+>    gen date_str=string(year)+"m"+string(month) 
+>    gen date= monthly(date_str,"YM")
+>    format date %tm
+> 
+> foreach mom in `Moments'{c -(}
+> keep if `mom'!=.
+> * moments only 
+> 
+> twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
 >        (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)) ///
 >            (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)) ///
 >            (tsline `mom' if `gp'== 3,lp(dash_dot) lwidth(thick)), ///
@@ -321,99 +382,94 @@
 >            ytitle("") ///
 >            title("`mom' by generation") ///
 >            legend(label(1 "1950s") label(2 "1960s") label(3 "1970s") label(4 "1980s")  col(4))
-{txt} 11{com}.  graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
-{txt} 12{com}.       {c )-}
-{txt} 13{com}.   restore
-{txt} 14{com}. {c )-}
-{txt} 15{com}. {c )-}
-{txt}(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_byear_g_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_byear_g_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incvar_byear_g_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincvar_byear_g_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_inciqr_byear_g_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_byear_g_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_byear_g_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_byear_g_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incvar_byear_g_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincvar_byear_g_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_inciqr_byear_g_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_byear_g_median.png written in PNG format)
-
-{com}. 
-. 
-. ** 3 groups fo HH income 
-. foreach agg in mean median{c -(}
-{txt}  2{com}.   foreach gp in HHinc_g{c -(}
-{txt}  3{com}.    preserve 
-{txt}  4{com}.    
-.    collapse (`agg') `Moments', by(year month `gp')
-{txt}  5{com}.    gen date_str=string(year)+"m"+string(month) 
-{txt}  6{com}.    gen date= monthly(date_str,"YM")
-{txt}  7{com}.    format date %tm
-{txt}  8{com}.    
-. foreach mom in `Moments'{c -(}
-{txt}  9{com}. keep if `mom'!=.
-{txt} 10{com}. twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
+>  graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
+>  
+> * moments and sp500
+> 
+> twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
+>        (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)) ///
+>            (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)) ///
+>            (tsline `mom' if `gp'== 3,lp(dash_dot) lwidth(thick)) ///
+>            (bar sp500 date if `gp'== 3,yaxis(2) fcolor(gray)), ///
+>        xtitle("date") ///
+>            ytitle("") ///
+>            ytitle("sp500 return (%)",axis(2)) ///
+>            title("`mom' by generation") ///
+>            legend(label(1 "1950s") label(2 "1960s") label(3 "1970s") label(4 "1980s") label(5 "sp500 (RHS)") col(3))
+>  graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
+> 
+> {c )-}
+>   restore
+> {c )-}
+> {c )-}
+> 
+> 
+> ** 3 groups fo HH income 
+> foreach agg in mean median{c -(}
+>   foreach gp in HHinc_g{c -(}
+>    preserve 
+>    
+>    collapse (`agg') `Moments' sp500, by(year month `gp')
+>    gen date_str=string(year)+"m"+string(month) 
+>    gen date= monthly(date_str,"YM")
+>    format date %tm
+>    
+> ** plots for moments by group 
+>    
+> * moments only 
+> foreach mom in `Moments'{c -(}
+> keep if `mom'!=.
+> 
+> * moments only 
+> twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
 >        (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)) ///
 >            (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)), ///
 >        xtitle("date") ///
 >            ytitle("") ///
 >            title("`mom' by household income") ///
 >            legend(label(1 "low") label(2 "median") label(3 "high")  col(3))
-{txt} 11{com}.  graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
-{txt} 12{com}.       {c )-}
-{txt} 13{com}.   restore
-{txt} 14{com}. {c )-}
-{txt} 15{com}. {c )-}
-{txt}(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_HHinc_g_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_HHinc_g_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incvar_HHinc_g_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincvar_HHinc_g_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_inciqr_HHinc_g_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_HHinc_g_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_HHinc_g_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_HHinc_g_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incvar_HHinc_g_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincvar_HHinc_g_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_inciqr_HHinc_g_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_HHinc_g_median.png written in PNG format)
-
-{com}. 
+>  graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
+>  
+> ** compute correlation coefficients 
+> pwcorr `mom' sp500 if `gp'==0, star(0.05)
+> local rho_lw: display %4.2f r(rho) 
+> pwcorr `mom' sp500 if `gp'==1, star(0.05)
+> local rho_md: display %4.2f r(rho) 
+> pwcorr `mom' sp500 if `gp'==2, star(0.05)
+> local rho_hg: display %4.2f r(rho) 
+> 
+> ** moments and sp500 
+> *** correlation with stock market by group *****
+> 
+> twoway (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)) ///
+>            (bar sp500 date if `gp'== 2,yaxis(2) fcolor(gray)), ///
+>        xtitle("date") ///
+>            ytitle("") ///
+>            ytitle("sp500 return (%)",axis(2)) ///
+>            title("`mom' by household income") ///
+>            legend(label(1 "high income")  label(2 "sp500 (RHS)") col(3)) ///
+>            caption("{c -(}superscript:low corr =`rho_lw',med corr =`rho_md',high corr =`rho_hg',{c )-}", ///
+>            justification(left) position(11) size(large))
+>  graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
+> {c )-}
+>           
+>   restore
+> {c )-}
+> {c )-}
+> */
+. 
 . 
 . ** 3 groups fo HH income 
 . foreach agg in mean median{c -(}
 {txt}  2{com}.   foreach gp in age_g{c -(}
 {txt}  3{com}.    preserve 
 {txt}  4{com}.    
-.    collapse (`agg') `Moments', by(year month `gp')
+.    collapse (`agg') `Moments' sp500, by(year month `gp')
 {txt}  5{com}.    gen date_str=string(year)+"m"+string(month) 
 {txt}  6{com}.    gen date= monthly(date_str,"YM")
 {txt}  7{com}.    format date %tm
-{txt}  8{com}.    
+{txt}  8{com}. 
+.  ** moments only 
 . foreach mom in `Moments'{c -(}
 {txt}  9{com}. keep if `mom'!=.
 {txt} 10{com}. twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
@@ -425,43 +481,261 @@
 >            legend(label(1 "young") label(2 "middle-age") label(3 "old")  col(3))
 {txt} 11{com}.            
 .  graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
-{txt} 12{com}.       {c )-}
-{txt} 13{com}.   restore
-{txt} 14{com}. {c )-}
-{txt} 15{com}. {c )-}
+{txt} 12{com}.  
+.  
+. ** compute correlation coefficients 
+. pwcorr `mom' sp500 if `gp'==0, star(0.05)
+{txt} 13{com}. local rho_y: display %4.2f r(rho) 
+{txt} 14{com}. pwcorr `mom' sp500 if `gp'==1, star(0.05)
+{txt} 15{com}. local rho_m: display %4.2f r(rho) 
+{txt} 16{com}. pwcorr `mom' sp500 if `gp'==2, star(0.05)
+{txt} 17{com}. local rho_o: display %4.2f r(rho) 
+{txt} 18{com}. 
+. ** moments and sp500 
+. *** correlation with stock market by group *****
+. 
+. twoway (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)) ///
+>            (bar sp500 date if `gp'== 2,yaxis(2) fcolor(gray)), ///
+>        xtitle("date") ///
+>            ytitle("") ///
+>            ytitle("sp500 return (%)",axis(2)) ///
+>            title("`mom' by household income") ///
+>            legend(label(1 "old")  label(2 "sp500 (RHS)") col(3)) ///
+>            caption("{c -(}superscript:young corr =`rho_y',middle-age corr =`rho_m',old corr =`rho_o',{c )-}", ///
+>            justification(left) position(11) size(large))
+{txt} 19{com}.  graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
+{txt} 20{com}.   {c )-}
+{txt} 21{com}.  
+.   restore
+{txt} 22{com}. {c )-}
+{txt} 23{com}. {c )-}
 {txt}(0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_age_g_mean.png written in PNG format)
+
+             {c |}  incmean    sp500
+{hline 13}{c +}{hline 18}
+     incmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0330   1.0000 
+
+             {txt}{c |}  incmean    sp500
+{hline 13}{c +}{hline 18}
+     incmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0335   1.0000 
+
+             {txt}{c |}  incmean    sp500
+{hline 13}{c +}{hline 18}
+     incmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0234   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_age_g_mean_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_age_g_mean.png written in PNG format)
+
+             {c |} rincmean    sp500
+{hline 13}{c +}{hline 18}
+    rincmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0780   1.0000 
+
+             {txt}{c |} rincmean    sp500
+{hline 13}{c +}{hline 18}
+    rincmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0449   1.0000 
+
+             {txt}{c |} rincmean    sp500
+{hline 13}{c +}{hline 18}
+    rincmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0070   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_age_g_mean_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incvar_age_g_mean.png written in PNG format)
+
+             {c |}   incvar    sp500
+{hline 13}{c +}{hline 18}
+      incvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0823   1.0000 
+
+             {txt}{c |}   incvar    sp500
+{hline 13}{c +}{hline 18}
+      incvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0947   1.0000 
+
+             {txt}{c |}   incvar    sp500
+{hline 13}{c +}{hline 18}
+      incvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0997   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incvar_age_g_mean_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincvar_age_g_mean.png written in PNG format)
+
+             {c |}  rincvar    sp500
+{hline 13}{c +}{hline 18}
+     rincvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.1682   1.0000 
+
+             {txt}{c |}  rincvar    sp500
+{hline 13}{c +}{hline 18}
+     rincvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0373   1.0000 
+
+             {txt}{c |}  rincvar    sp500
+{hline 13}{c +}{hline 18}
+     rincvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0671   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincvar_age_g_mean_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_inciqr_age_g_mean.png written in PNG format)
+
+             {c |}   inciqr    sp500
+{hline 13}{c +}{hline 18}
+      inciqr {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.1783   1.0000 
+
+             {txt}{c |}   inciqr    sp500
+{hline 13}{c +}{hline 18}
+      inciqr {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.1600   1.0000 
+
+             {txt}{c |}   inciqr    sp500
+{hline 13}{c +}{hline 18}
+      inciqr {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.1776   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_inciqr_age_g_mean_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_age_g_mean.png written in PNG format)
+
+             {c |}  incskew    sp500
+{hline 13}{c +}{hline 18}
+     incskew {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0316   1.0000 
+
+             {txt}{c |}  incskew    sp500
+{hline 13}{c +}{hline 18}
+     incskew {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.1187   1.0000 
+
+             {txt}{c |}  incskew    sp500
+{hline 13}{c +}{hline 18}
+     incskew {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0359   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_age_g_mean_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_age_g_median.png written in PNG format)
+
+             {c |}  incmean    sp500
+{hline 13}{c +}{hline 18}
+     incmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0608   1.0000 
+
+             {txt}{c |}  incmean    sp500
+{hline 13}{c +}{hline 18}
+     incmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0439   1.0000 
+
+             {txt}{c |}  incmean    sp500
+{hline 13}{c +}{hline 18}
+     incmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0626   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_age_g_median_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_age_g_median.png written in PNG format)
+
+             {c |} rincmean    sp500
+{hline 13}{c +}{hline 18}
+    rincmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0733   1.0000 
+
+             {txt}{c |} rincmean    sp500
+{hline 13}{c +}{hline 18}
+    rincmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0127   1.0000 
+
+             {txt}{c |} rincmean    sp500
+{hline 13}{c +}{hline 18}
+    rincmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0047   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_age_g_median_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incvar_age_g_median.png written in PNG format)
+
+             {c |}   incvar    sp500
+{hline 13}{c +}{hline 18}
+      incvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0654   1.0000 
+
+             {txt}{c |}   incvar    sp500
+{hline 13}{c +}{hline 18}
+      incvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0364   1.0000 
+
+             {txt}{c |}   incvar    sp500
+{hline 13}{c +}{hline 18}
+      incvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.1671   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incvar_age_g_median_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincvar_age_g_median.png written in PNG format)
+
+             {c |}  rincvar    sp500
+{hline 13}{c +}{hline 18}
+     rincvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0149   1.0000 
+
+             {txt}{c |}  rincvar    sp500
+{hline 13}{c +}{hline 18}
+     rincvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0512   1.0000 
+
+             {txt}{c |}  rincvar    sp500
+{hline 13}{c +}{hline 18}
+     rincvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0126   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincvar_age_g_median_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_inciqr_age_g_median.png written in PNG format)
+
+             {c |}   inciqr    sp500
+{hline 13}{c +}{hline 18}
+      inciqr {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0305   1.0000 
+
+             {txt}{c |}   inciqr    sp500
+{hline 13}{c +}{hline 18}
+      inciqr {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0106   1.0000 
+
+             {txt}{c |}   inciqr    sp500
+{hline 13}{c +}{hline 18}
+      inciqr {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.2386*  1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_inciqr_age_g_median_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_age_g_median.png written in PNG format)
 
+             {c |}  incskew    sp500
+{hline 13}{c +}{hline 18}
+     incskew {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0216   1.0000 
+
+             {txt}{c |}  incskew    sp500
+{hline 13}{c +}{hline 18}
+     incskew {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.1812   1.0000 
+
+             {txt}{c |}  incskew    sp500
+{hline 13}{c +}{hline 18}
+     incskew {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.1278   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_age_g_median_stk.png written in PNG format)
+
 {com}. 
+. 
+. 
 . 
 . ** 2 groups 
 . foreach agg in mean median{c -(}
 {txt}  2{com}.   foreach gp in edu_g{c -(}
 {txt}  3{com}.    preserve 
 {txt}  4{com}.    
-.    collapse (`agg') `Moments', by(year month `gp')
+.    collapse (`agg') `Moments' sp500, by(year month `gp')
 {txt}  5{com}.    gen date_str=string(year)+"m"+string(month) 
 {txt}  6{com}.    gen date= monthly(date_str,"YM")
 {txt}  7{com}.    format date %tm
@@ -475,34 +749,189 @@
 >            title("`mom' by education") ///
 >            legend(label(1 "low") label(2 "high") col(2))
 {txt} 11{com}.  graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
-{txt} 12{com}.       {c )-}
-{txt} 13{com}.   restore
-{txt} 14{com}. {c )-}
-{txt} 15{com}. {c )-}
+{txt} 12{com}.       
+. 
+.  
+. ** compute correlation coefficients 
+. pwcorr `mom' sp500 if `gp'==0, star(0.05)
+{txt} 13{com}. local rho_l: display %4.2f r(rho) 
+{txt} 14{com}. pwcorr `mom' sp500 if `gp'==1, star(0.05)
+{txt} 15{com}. local rho_h: display %4.2f r(rho) 
+{txt} 16{com}. 
+. ** moments and sp500 
+. *** correlation with stock market by group *****
+. 
+. twoway (tsline `mom' if `gp'== 1,lp(shortdash) lwidth(thick)) ///
+>            (bar sp500 date if `gp'== 1,yaxis(2) fcolor(gray)), ///
+>        xtitle("date") ///
+>            ytitle("") ///
+>            ytitle("sp500 return (%)",axis(2)) ///
+>            title("`mom' by household income") ///
+>            legend(label(1 "high")  label(2 "sp500 (RHS)") col(3)) ///
+>            caption("{c -(}superscript:low corr =`rho_l',high corr =`rho_h',{c )-}", ///
+>            justification(left) position(11) size(large))
+{txt} 17{com}. graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
+{txt} 18{com}.    {c )-}
+{txt} 19{com}.   
+.  restore
+{txt} 20{com}. {c )-}
+{txt} 21{com}. {c )-}
 {txt}(0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_edu_g_mean.png written in PNG format)
+
+             {c |}  incmean    sp500
+{hline 13}{c +}{hline 18}
+     incmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.1325   1.0000 
+
+             {txt}{c |}  incmean    sp500
+{hline 13}{c +}{hline 18}
+     incmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0776   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_edu_g_mean_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_edu_g_mean.png written in PNG format)
+
+             {c |} rincmean    sp500
+{hline 13}{c +}{hline 18}
+    rincmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.1023   1.0000 
+
+             {txt}{c |} rincmean    sp500
+{hline 13}{c +}{hline 18}
+    rincmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0499   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_edu_g_mean_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incvar_edu_g_mean.png written in PNG format)
+
+             {c |}   incvar    sp500
+{hline 13}{c +}{hline 18}
+      incvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0869   1.0000 
+
+             {txt}{c |}   incvar    sp500
+{hline 13}{c +}{hline 18}
+      incvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.1266   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incvar_edu_g_mean_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincvar_edu_g_mean.png written in PNG format)
+
+             {c |}  rincvar    sp500
+{hline 13}{c +}{hline 18}
+     rincvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0215   1.0000 
+
+             {txt}{c |}  rincvar    sp500
+{hline 13}{c +}{hline 18}
+     rincvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0769   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincvar_edu_g_mean_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_inciqr_edu_g_mean.png written in PNG format)
+
+             {c |}   inciqr    sp500
+{hline 13}{c +}{hline 18}
+      inciqr {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.1743   1.0000 
+
+             {txt}{c |}   inciqr    sp500
+{hline 13}{c +}{hline 18}
+      inciqr {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.2186   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_inciqr_edu_g_mean_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_edu_g_mean.png written in PNG format)
+
+             {c |}  incskew    sp500
+{hline 13}{c +}{hline 18}
+     incskew {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.1295   1.0000 
+
+             {txt}{c |}  incskew    sp500
+{hline 13}{c +}{hline 18}
+     incskew {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0510   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_edu_g_mean_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_edu_g_median.png written in PNG format)
+
+             {c |}  incmean    sp500
+{hline 13}{c +}{hline 18}
+     incmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.2141   1.0000 
+
+             {txt}{c |}  incmean    sp500
+{hline 13}{c +}{hline 18}
+     incmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0028   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_edu_g_median_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_edu_g_median.png written in PNG format)
+
+             {c |} rincmean    sp500
+{hline 13}{c +}{hline 18}
+    rincmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0696   1.0000 
+
+             {txt}{c |} rincmean    sp500
+{hline 13}{c +}{hline 18}
+    rincmean {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0097   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_edu_g_median_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incvar_edu_g_median.png written in PNG format)
+
+             {c |}   incvar    sp500
+{hline 13}{c +}{hline 18}
+      incvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0943   1.0000 
+
+             {txt}{c |}   incvar    sp500
+{hline 13}{c +}{hline 18}
+      incvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0432   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incvar_edu_g_median_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincvar_edu_g_median.png written in PNG format)
+
+             {c |}  rincvar    sp500
+{hline 13}{c +}{hline 18}
+     rincvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0462   1.0000 
+
+             {txt}{c |}  rincvar    sp500
+{hline 13}{c +}{hline 18}
+     rincvar {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0073   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincvar_edu_g_median_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_inciqr_edu_g_median.png written in PNG format)
+
+             {c |}   inciqr    sp500
+{hline 13}{c +}{hline 18}
+      inciqr {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res} -0.0265   1.0000 
+
+             {txt}{c |}   inciqr    sp500
+{hline 13}{c +}{hline 18}
+      inciqr {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.1177   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_inciqr_edu_g_median_stk.png written in PNG format)
 (0 observations deleted)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_edu_g_median.png written in PNG format)
+
+             {c |}  incskew    sp500
+{hline 13}{c +}{hline 18}
+     incskew {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0515   1.0000 
+
+             {txt}{c |}  incskew    sp500
+{hline 13}{c +}{hline 18}
+     incskew {c |} {res}  1.0000 
+       {txt}sp500 {c |} {res}  0.0766   1.0000 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_edu_g_median_stk.png written in PNG format)
 
 {com}. 
 . ddd
