@@ -86,12 +86,12 @@ vixD.index = pd.to_datetime(vixD.index)
 vixM = vixD.resample('M').mean()
 # -
 
-sp500M.plot(lw=2)
+sp500M.plot(lw = 3)
 #sp500Mplt = plt.title('S&P 500 (end of month)')
 
-sp500MR = np.log(sp500M).diff()
+sp500MR = np.log(sp500M).diff(periods = 12)
 
-sp500MR.plot()
+sp500MR.plot(lw = 3 )
 sp500MRplt = plt.title('Monthly return of S&P 500')
 
 # ###  2. Loading and cleaning perceived income series 
@@ -211,7 +211,7 @@ for mom in moms_est:
     sns.distplot(mom_nonan_truc,
                  kde = True, 
                  color = 'red',
-                 bins = 20) 
+                 bins = 18) 
     plt.xlabel(mom, fontsize = 13)
     plt.ylabel("Frequency",fontsize = 13)
     plt.savefig('../Graphs/ind/hist'+str(mom)+'.jpg')
@@ -320,10 +320,10 @@ corr_table = dt_combM.corr()
 corr_table.to_excel('../Tables/corrM.xlsx')
 corr_table
 
-# + {"code_folding": [0, 4, 18, 20, 32, 42, 54, 64, 67]}
+# + {"code_folding": [4, 15, 18, 20]}
 ## try different lags or leads
 
-lead_loop = 6
+lead_loop = 12
 
 def pval_str(pval):
     if pval < 0.01:
@@ -364,7 +364,7 @@ for moms in ['var','iqr','rvar']:
         #corrprint(corr, moms)
 
 for moms in ['skew']:
-    col_list.append('mean:'+str(moms))
+    col_list.append('median:'+str(moms))
     for lead in range(lead_loop):
         corr = st.pearsonr(np.array(dt_combM['sp500'][lead+1:]),
                            np.array(dt_combM[str(moms)+'EstMed'])[:-(lead+1)]
@@ -440,7 +440,7 @@ f.close()
 ## output table to excel 
 corr_df.to_excel('../Tables/macro_corr.xlsx')
 
-# + {"code_folding": [28]}
+# + {"code_folding": [0]}
 ## plots of correlation for MEDIAN population stats 
 
 figsize = (80,40)
@@ -469,7 +469,7 @@ for i,moms in enumerate( ['mean','var','iqr','rmean','rvar']):
     #print('Correlation coefficient is '+str(round(cor,3)) + ', p-value is '+ str(round(pval,3)))
     
 
-for i,moms in enumerate( ['mean','var','skew']):
+for i,moms in enumerate( ['skew']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
     ax.bar(dt_combM.index, 
@@ -521,7 +521,7 @@ for i,moms in enumerate( ['mean','var','iqr','rmean','rvar']):
     #                      np.array(dt_combM[str(moms)+'Mean']))
     #print('Correlation coefficient is '+str(round(cor,3)) + ', p-value is '+ str(round(pval,3)))
     
-for i,moms in enumerate( ['mean','var','skew']):
+for i,moms in enumerate( ['skew']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
     ax.bar(dt_combM.index, 
@@ -582,7 +582,7 @@ for i,moms in enumerate( ['mean','var','iqr','rmean','rvar']):
     #                      np.array(dt_combM3mv[str(moms)+'Med']))
     #print('Correlation coefficient is '+str(cor) + ', p-value is '+ str(pval))
 
-for i,moms in enumerate( ['mean','var','skew']):
+for i,moms in enumerate( ['skew']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
     ax.bar(dt_combM3mv.index, 
@@ -606,7 +606,7 @@ for i,moms in enumerate( ['mean','var','skew']):
     #                      np.array(dt_combM3mv[str(moms)+'EstMed']))
     #print('Correlation coefficient is '+str(round(cor,3) ) + ', p-value is '+ str(round(pval,3) ))
 
-# + {"code_folding": [0, 2, 27]}
+# + {"code_folding": [2]}
 ## plots of correlation for 3-month moving mean average 
 
 for i,moms in enumerate( ['mean','var','iqr','rmean','rvar']):
@@ -634,7 +634,7 @@ for i,moms in enumerate( ['mean','var','iqr','rmean','rvar']):
     #print('Correlation coefficient is '+str(cor) + ', p-value is '+ str(pval))
     
     
-for i,moms in enumerate( ['mean','var','skew','kurt']):
+for i,moms in enumerate( ['skew','kurt']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
     ax.bar(dt_combM3mv.index, 
@@ -665,6 +665,7 @@ for i,moms in enumerate( ['mean','var','skew','kurt']):
 lead = 2
 
 for i,moms in enumerate( ['incexp','incvar','inciqr','rincvar','IncSkew']):
+    print(moms)
     Y = np.array(dt_combIndM[moms])[lead+1:]
     X = np.array(dt_combIndM['sp500'])[:-(lead+1)]
     X = sm.add_constant(X)

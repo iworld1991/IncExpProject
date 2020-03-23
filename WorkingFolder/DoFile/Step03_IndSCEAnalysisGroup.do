@@ -255,16 +255,14 @@ graph export "${sum_graph_folder}/hist/hist_`mom'_`gp'.png",as(png) replace
 *** time series pltos by group *****
 **********************************
 
-/*
+
 ** 4 groups 
 foreach agg in mean median{
   foreach gp in byear_g{
    preserve 
    
-   collapse (`agg') `Moments' sp500, by(year month `gp')
-   gen date_str=string(year)+"m"+string(month) 
-   gen date= monthly(date_str,"YM")
-   format date %tm
+   collapse (`agg') `Moments' sp500, by(date `gp')
+   xtset `gp' date 
 
 foreach mom in `Moments'{
 keep if `mom'!=.
@@ -280,20 +278,31 @@ twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
 	   legend(label(1 "1950s") label(2 "1960s") label(3 "1970s") label(4 "1980s")  col(4))
  graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
  
-* moments and sp500
+ 
+** compute correlation coefficients 
+pwcorr `mom' f11.sp500 if `gp'==0, star(0.05)
+local rho_1: display %4.2f r(rho) 
+pwcorr `mom' f11.sp500 if `gp'==1, star(0.05)
+local rho_2: display %4.2f r(rho) 
+pwcorr `mom' f11.sp500 if `gp'==2, star(0.05)
+local rho_3: display %4.2f r(rho) 
+pwcorr `mom' f11.sp500 if `gp'==3, star(0.05)
+local rho_4: display %4.2f r(rho) 
 
-twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
-       (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)) ///
-	   (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)) ///
-	   (tsline `mom' if `gp'== 3,lp(dash_dot) lwidth(thick)) ///
-	   (bar sp500 date if `gp'== 3,yaxis(2) fcolor(gray)), ///
+** moments and sp500 
+*** correlation with stock market by group *****
+
+twoway (tsline `mom' if `gp'== 3,lp(shortdash) lwidth(thick)) ///
+	   (bar sp500 date if `gp'== 3,yaxis(2) fcolor(gs10)), ///
        xtitle("date") ///
 	   ytitle("") ///
 	   ytitle("sp500 return (%)",axis(2)) ///
 	   title("`mom' by generation") ///
-	   legend(label(1 "1950s") label(2 "1960s") label(3 "1970s") label(4 "1980s") label(5 "sp500 (RHS)") col(3))
+	   legend(label(1 "1980s")  label(2 "sp500 (RHS)") col(3)) ///
+	   caption("{superscript:1950s corr =`rho_1',1960s corr =`rho_2',1970s corr =`rho_3',1980s corr =`rho_4',}", ///
+	   justification(left) position(11) size(large))
  graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
-
+ 
 }
   restore
 }
@@ -305,10 +314,8 @@ foreach agg in mean median{
   foreach gp in HHinc_g{
    preserve 
    
-   collapse (`agg') `Moments' sp500, by(year month `gp')
-   gen date_str=string(year)+"m"+string(month) 
-   gen date= monthly(date_str,"YM")
-   format date %tm
+   collapse (`agg') `Moments' sp500, by(date `gp')
+   xtset `gp' date 
    
 ** plots for moments by group 
    
@@ -327,18 +334,18 @@ twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
  graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
  
 ** compute correlation coefficients 
-pwcorr `mom' sp500 if `gp'==0, star(0.05)
+pwcorr `mom' f2.sp500 if `gp'==0, star(0.05)
 local rho_lw: display %4.2f r(rho) 
-pwcorr `mom' sp500 if `gp'==1, star(0.05)
+pwcorr `mom' f2.sp500 if `gp'==1, star(0.05)
 local rho_md: display %4.2f r(rho) 
-pwcorr `mom' sp500 if `gp'==2, star(0.05)
+pwcorr `mom' f2.sp500 if `gp'==2, star(0.05)
 local rho_hg: display %4.2f r(rho) 
 
 ** moments and sp500 
 *** correlation with stock market by group *****
 
 twoway (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)) ///
-	   (bar sp500 date if `gp'== 2,yaxis(2) fcolor(gray)), ///
+	   (bar sp500 date if `gp'== 2,yaxis(2) fcolor(gs10)), ///
        xtitle("date") ///
 	   ytitle("") ///
 	   ytitle("sp500 return (%)",axis(2)) ///
@@ -352,18 +359,16 @@ twoway (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)) ///
   restore
 }
 }
-*/
 
 
-** 3 groups fo HH income 
+
+** 3 groups fo age
 foreach agg in mean median{
   foreach gp in age_g{
    preserve 
    
-   collapse (`agg') `Moments' sp500, by(year month `gp')
-   gen date_str=string(year)+"m"+string(month) 
-   gen date= monthly(date_str,"YM")
-   format date %tm
+   collapse (`agg') `Moments' sp500, by(date `gp')
+   xtset `gp' date 
 
  ** moments only 
 foreach mom in `Moments'{
@@ -380,22 +385,22 @@ twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
  
  
 ** compute correlation coefficients 
-pwcorr `mom' sp500 if `gp'==0, star(0.05)
+pwcorr `mom' f11.sp500 if `gp'==0, star(0.05)
 local rho_y: display %4.2f r(rho) 
-pwcorr `mom' sp500 if `gp'==1, star(0.05)
+pwcorr `mom' f11.sp500 if `gp'==1, star(0.05)
 local rho_m: display %4.2f r(rho) 
-pwcorr `mom' sp500 if `gp'==2, star(0.05)
+pwcorr `mom' f11.sp500 if `gp'==2, star(0.05)
 local rho_o: display %4.2f r(rho) 
 
 ** moments and sp500 
 *** correlation with stock market by group *****
 
 twoway (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)) ///
-	   (bar sp500 date if `gp'== 2,yaxis(2) fcolor(gray)), ///
+	   (bar sp500 date if `gp'== 2,yaxis(2) fcolor(gs10)), ///
        xtitle("date") ///
 	   ytitle("") ///
 	   ytitle("sp500 return (%)",axis(2)) ///
-	   title("`mom' by household income") ///
+	   title("`mom' by age") ///
 	   legend(label(1 "old")  label(2 "sp500 (RHS)") col(3)) ///
 	   caption("{superscript:young corr =`rho_y',middle-age corr =`rho_m',old corr =`rho_o',}", ///
 	   justification(left) position(11) size(large))
@@ -406,7 +411,7 @@ twoway (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)) ///
 }
 }
 
-
+*/
 
 
 ** 2 groups 
@@ -414,10 +419,8 @@ foreach agg in mean median{
   foreach gp in edu_g{
    preserve 
    
-   collapse (`agg') `Moments' sp500, by(year month `gp')
-   gen date_str=string(year)+"m"+string(month) 
-   gen date= monthly(date_str,"YM")
-   format date %tm
+   collapse (`agg') `Moments' sp500, by(date `gp')
+   xtset `gp' date 
    
 foreach mom in `Moments'{
 keep if `mom'!=.
@@ -432,20 +435,20 @@ twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
 
  
 ** compute correlation coefficients 
-pwcorr `mom' sp500 if `gp'==0, star(0.05)
+pwcorr `mom' f11.sp500 if `gp'==0, star(0.05)
 local rho_l: display %4.2f r(rho) 
-pwcorr `mom' sp500 if `gp'==1, star(0.05)
+pwcorr `mom' f11.sp500 if `gp'==1, star(0.05)
 local rho_h: display %4.2f r(rho) 
 
 ** moments and sp500 
 *** correlation with stock market by group *****
 
 twoway (tsline `mom' if `gp'== 1,lp(shortdash) lwidth(thick)) ///
-	   (bar sp500 date if `gp'== 1,yaxis(2) fcolor(gray)), ///
+	   (bar sp500 date if `gp'== 1,yaxis(2) fcolor(gs10)), ///
        xtitle("date") ///
 	   ytitle("") ///
 	   ytitle("sp500 return (%)",axis(2)) ///
-	   title("`mom' by household income") ///
+	   title("`mom' by education") ///
 	   legend(label(1 "high")  label(2 "sp500 (RHS)") col(3)) ///
 	   caption("{superscript:low corr =`rho_l',high corr =`rho_h',}", ///
 	   justification(left) position(11) size(large))
@@ -455,7 +458,7 @@ graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replac
  restore
 }
 }
-
+ddd
 
 /*
 *******************
@@ -532,5 +535,5 @@ eststo: xtreg Inc`mom' i.Q10_1 i.Q10_2 i.Q12new i.Q47 Q4new Q13new Q6new, fe rob
 esttab using "${sum_table_folder}/mom_ind_reg.csv", ///
              se r2 drop(0.age_g 1.Q36 0.Q10_2 1.Q12new 1.D6 *.month _cons) ///
 			 label replace
-			
+*/	
 log close 
