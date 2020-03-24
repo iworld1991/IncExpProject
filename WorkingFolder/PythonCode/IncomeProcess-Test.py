@@ -36,7 +36,7 @@ def toPara(vec,
     return vec[:ma_q-1], vec[ma_q:].reshape(2,t)
 
 
-# + {"code_folding": [10, 26, 30, 37, 55, 85, 106, 120, 129, 147, 181, 217, 233, 253, 267, 284, 304, 310, 332, 354, 382, 400, 410, 420]}
+# + {"code_folding": [1, 10, 26, 30, 39, 57, 62, 67, 81, 101, 114, 188, 326, 441]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''
@@ -72,8 +72,67 @@ class IMAProcess:
             #print(sum([ma_coeffs[back]*shocks[i-back] for back in range(len(ma_coeffs))]))
             cum.append(sum([ma_coeffs[back]*shocks[i-back] for back in range(len(ma_coeffs))]))
         return np.array(cum)         
-
-
+    
+    
+        
+    ## simulate stochastic volatility
+    def SimulateVars(self,
+                     n_sim = 1000,
+                     sv_para):
+        rho,gamma,sigma_eps = sv_para   ## three parameters 
+        t = self.t 
+        sigmas = np.empty([2,t])
+        sigmas[1,:] = sigma_eps  # transitory risk
+        sigmas[0,0] = 0.01
+        
+        ## draw innovations to svols
+        np.random.seed(1234)
+        svols_innovations = gamma*np.random.randn([n_sim,t])
+        for i in range(t-1):
+            sigmas[0,i+1] = np.sqrt(np.exp(rho*np.log(sigmas[0,i]**2) + svols_innovations[i+1])) ## permanent risks
+        self.sigmas = sigmas 
+        return self.sigmas 
+    
+    
+    def TimeAggregateVars(self,
+                         n_periods = 1):
+        Vars_agg = xxxx
+        return Vars_agg
+    
+    def SimulateMomentsAggVars(self):
+        Vars_agg = self.Vars_agg
+        Vars_varcov = np.cov(Vars_agg.T)
+        
+        
+    def ComputeMomentsVars(self,
+                           sv_para):
+        rho,gamma,sigma_eps = sv_para   ## three parameters 
+        t = self.t 
+        
+        Vars_varcov = np.zeros([t,t])
+        for i in range(t):
+            for j in range(t):
+                Vars_varcov[i,j] = gamma**2/(1-rho**2)
+                
+        ## compuatation happens here 
+        self.ComAggMomsVars = Vars_varcov
+        return self.ComAggMomsVars
+        
+    def ComputeMomentsAggVars(self,
+                              sv_para,
+                              n_agg = 2):
+        rho,gamma,sigma_eps = sv_para   ## three parameters 
+        t = self.t 
+        
+        Vars_varcov = np.zeros([t,t])
+        for i in range(t):
+            for tau in range(n_agg):
+                Vars_varcov[i,i+tau] = xxxxx
+                
+        ## compuatation happens here 
+        self.ComAggMomsVars = Vars_varcov
+        return self.ComAggMomsVars
+    
         
 ##########
 ## new ###

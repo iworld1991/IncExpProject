@@ -1,7 +1,8 @@
 \beamer@sectionintoc {1}{Motivation}{3}{0}{1}
 \beamer@sectionintoc {2}{Stylized facts}{6}{0}{2}
-\beamer@subsectionintoc {2}{1}{Cross-sectional pattern of subjective income risks}{8}{0}{2}
-\beamer@subsectionintoc {2}{2}{Perceived risks and economic decisions}{17}{0}{2}
-\beamer@subsectionintoc {2}{3}{Correlation with stock market returns}{19}{0}{2}
-\beamer@sectionintoc {3}{Model (work in progress)}{23}{0}{3}
-\beamer@sectionintoc {4}{Conclusion}{26}{0}{4}
+\beamer@subsectionintoc {2}{1}{Cross-sectional patterns}{8}{0}{2}
+\beamer@subsectionintoc {2}{2}{Perceived risks and decisions}{20}{0}{2}
+\beamer@subsectionintoc {2}{3}{Correlation with the stock market}{22}{0}{2}
+\beamer@subsectionintoc {2}{4}{Permanent/transitory decomposition (work in progress)}{26}{0}{2}
+\beamer@sectionintoc {3}{Model (work in progress)}{30}{0}{3}
+\beamer@sectionintoc {4}{Conclusion}{32}{0}{4}

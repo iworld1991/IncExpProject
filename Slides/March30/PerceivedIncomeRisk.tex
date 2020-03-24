@@ -111,25 +111,40 @@
 
 \begin{frame}{Motivation}
 	\begin{itemize}
-		\item ddddddddd
+		\item Not just expectation of income but also \textcolor{blue}{high moments} such as income risks matter for consumption/portfolio decisions, i.e. precautionary motives, stock market investment, etc. 
+		\item \textcolor{blue}{Uninsurance} of idiosyncratic risks make it matter in macroeconomics working assumption by the HANK literature  
+		\item It is pepple's perceptions that directly drive that decisions
+		\item Are the perceptions in line with econometricians' estimates of income risks based on cross-sectional inequality and the size of income income risks used in heterogeneous macro?
 	\end{itemize}
 \end{frame}
 
 
 \begin{frame}{This paper's agenda}
 	\begin{enumerate}
-		\item dddd
-	\end{enumerate}
+		\item Using density survey of labor income to directly shed light on perceived risk profile
+		\begin{itemize}
+			\item Perceived income risks differ systematically across age, generations, genders and education. 
+			\item Evidence of non-normality, i.e half of the sample have non-zero skewness
+			\item Perceived risks and skewness negatively correlate with stock market returns.  
+		\end{itemize}
+		\item Characterize the potential differences between perceptions, econometrician's estimates used in structural model so far. 
+		\begin{itemize}
+		    \item Do people understand the permanent and transitory risks perfectly?
+		\end{itemize}
+		\item Incorporating \textcolor{blue}{imperfect understanding} of income process into an otherwise standard heterogenous-agent model featuring uninsured idiosyncratic risks 
+\end{enumerate}
 \end{frame}
 
 
 \begin{frame}{Literature}
 \begin{itemize}
-	\item ddddd
-	\begin{itemize}
-		\item dddd
-	\end{itemize}
-\end{itemize}
+	\item ``insurance or information'': \cite{pistaferri_superior_2001}, \cite{kaufmann_disentangling_2009}, \cite{meghir2011earnings}, \cite{flavin_excess_1988}, New York Fed Blog (2019) 
+   \item consumption/saving and portfolio choice incorporating imperfect perception/understanding. \cite{rozsypal_overpersistence_2017}, \cite{carroll_sticky_2018}, \cite{lian2019imperfect}.  
+   \item expectation formation, mostly on macroeconomic variables, \cite{coibion2012can}, \cite{fuhrer2018intrinsic}, etc. 
+   \item subjective survey, especially on probabiblist surveys.  \cite{manski_measuring_2004}, \cite{delavande2011measuring}, \cite{manski_survey_2018}, \item \cite{bertrand_people_2001}, \cite{armantier_overview_2017}
+   \item Heterogeneous agent macro (HANK): uninsured idiosyncratic risks leads to ex post heterogeneity. \cite{xxx}
+   \item Long-run risk \cite{xxx} 
+  \end{itemize}
 \end{frame}
 
 \section{Stylized facts}
@@ -143,7 +158,7 @@
 		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
 			\begin{tabular}{lll}
 				\hline 
-				Time period                                    & 2013M6-2018M6            \\
+				Time period                                    & 2013M6-2019M6           \\
 				Frequency                                      & monthly                                 \\
 				Sample size                                    & 1,300                                  \\
 				Density variable                    &  \textcolor{blue}{1-yr-ahead earning growth   (same position/hours) }           \\
@@ -164,27 +179,39 @@
 	\begin{itemize}
 		\item Moments to look at 
 		\begin{itemize}
-			\item expected growth, $\overline \Delta_i (y_i)$
+			\item expected growth, $E_i (\Delta y_i)$
 			\item variance: $\overline {var}_i(\Delta y_i)$
 			\item skewness: $\overline {skew}_i(\Delta y_i)$
 		\end{itemize}
-		\item Nominal can be converted into real using forecast uncertainty of inflation 
+		\item Both pereived nominal and real income growth 
 		\begin{itemize}
-			\item $\overline{var}_i(\Delta y^r) =\overline {var}_i(\Delta y^n) +  \overline {var}_i(\pi)$
+			\item $E_i(\Delta y^r_i) =E_i(\Delta y_i^n) - E_i(\pi)$
+			\item $\overline{var}_i(\Delta y_i^r) =\overline {var}_i(\Delta y_i^n) +  \overline {var}_i(\pi)$
 		\end{itemize}
-		\item Also, can be adjusted with perceived unemployment risk. So the perceived risk of same job/hour is just a lower bound for income risk. 
+		\item Conditional on employment.
+		\begin{itemize}
+			\item Can be adjusted to unconditional risk using perceived unemployment risk. So the perceived risk of same job/hour is just a lower bound for income risk. 
+		\end{itemize}
 	\end{itemize}
 \end{frame}
 
-\subsection{Cross-sectional pattern of subjective income risks}
+\subsection{Cross-sectional patterns}
 
 \begin{frame}{Cross-sectional distribution of expected income growth}
 	\begin{figure}
+	\centering
+	\label{incexp_hist}
+	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\label{incexp_hist}
-		\includegraphics[width=0.4\textwidth]{figures/hist_incexp}
-		\includegraphics[width=0.4\textwidth]{figures/hist_rincexp} 
-	\end{figure}
+		\caption{nominal income expectation}
+		\includegraphics[width=\textwidth]{figures/hist_incexp}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\caption{real income expectation}
+		\includegraphics[width=\textwidth]{figures/hist_rincexp}
+	\end{subfigure}
+\end{figure}
 	\begin{itemize}
 		\item Nominal rigity can be seen from the expected norminal earning growth, while real expected growth become symmetric 
 	\end{itemize}
@@ -194,8 +221,16 @@
 	\begin{figure}
 		\centering
 		\label{incvar_hist}
-		\includegraphics[width=0.4\textwidth]{figures/hist_incvar}
-		\includegraphics[width=0.4\textwidth]{figures/hist_rincvar}
+			\begin{subfigure}[b]{0.45\textwidth}
+			\centering
+			\caption{nominal income risk}
+		\includegraphics[width=\textwidth]{figures/hist_incvar}
+		\end{subfigure}
+		\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\caption{real income risk}
+		\includegraphics[width=\textwidth]{figures/hist_rincvar}
+	\end{subfigure}
 	\end{figure}
 	\begin{itemize}
 		\item average perceived income risks:  $3\%$ standard deviation for nominal and $4\%$ standard deviation for real income
@@ -205,13 +240,34 @@
 
 \begin{frame}{Cross-sectional distribution of tail risks}
 	\begin{figure}
+	\centering
+	\label{incskew_hist}
+	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\label{incvar_skew}
-		\includegraphics[width=0.4\textwidth]{figures/histIncSkew}
-	\end{figure}
+		\caption{nominal income skewness}
+		\includegraphics[width=\textwidth]{figures/histincSkew}
+	\end{subfigure}
+\end{figure}
 	\begin{itemize}
 		\item sizable dispersion in skewness, i.e. about half of the people have non-zero skewness in perceived inome distribution. 
 	\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Perceived income risks by household income}
+	\begin{figure}[ht]
+		\label{ts_incvar_HHinc_g_mean}
+		\begin{subfigure}[b]{0.7\textwidth}
+			\centering
+			\caption{nominal income risks}
+			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incvar_HHinc_g_mean.png}
+		\end{subfigure}
+		\begin{subfigure}[b]{0.7\textwidth}
+			\caption{real income risks}
+			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_rincvar_HHinc_g_mean.png}
+		\end{subfigure}
+	\end{figure}
 \end{frame}
 
 
@@ -228,6 +284,22 @@
 \end{frame}
 
 
+
+\begin{frame}{Perceived income risks by age}
+	\begin{figure}[ht]
+		\label{ts_incvar_age_g_mean}
+		\begin{subfigure}[b]{0.7\textwidth}
+			\centering
+			\caption{nominal income risks}
+			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incvar_age_g_mean.png}
+		\end{subfigure}
+		\begin{subfigure}[b]{0.7\textwidth}
+			\caption{real income risks}
+			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_rincvar_age_g_mean.png}
+		\end{subfigure}
+	\end{figure}
+\end{frame}
+
 \begin{frame}{Perceived income risks by age}
 	\begin{figure}
 		\centering
@@ -240,6 +312,21 @@
 	\end{itemize}
 \end{frame}
 
+
+\begin{frame}{Perceived income risks by generation}
+	\begin{figure}[ht]
+		\label{ts_incvar_byear_g_mean}
+		\begin{subfigure}[b]{0.7\textwidth}
+			\centering
+			\caption{nominal income risks}
+			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incvar_byear_g_mean.png}
+		\end{subfigure}
+		\begin{subfigure}[b]{0.7\textwidth}
+			\caption{real income risks}
+			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_rincvar_byear_g_mean.png}
+		\end{subfigure}
+	\end{figure}
+\end{frame}
 
 
 \begin{frame}{Perceived income risks by generation}
@@ -330,7 +417,7 @@
 \end{frame}
 
 
-\subsection{Perceived risks and economic decisions}
+\subsection{Perceived risks and decisions}
 
 
 \begin{frame}{Perveived income risks and household spending}
@@ -372,7 +459,7 @@
 \end{frame}
 
 
-\subsection{Correlation with stock market returns}
+\subsection{Correlation with the stock market}
 
 \begin{frame}{Expected income growth and stock market performance}
 		\begin{figure}
@@ -411,6 +498,67 @@
 \end{frame}
 
 
+\subsection{Permanent/transitory decomposition (work in progress)}
+
+\begin{frame}{Underlying income process}
+	
+	\begin{itemize}
+		\item Income of individual $i$, cohort $c$ at time $t$ 
+		\begin{eqnarray*}
+			\begin{split}
+				& y_{i,c,t} = p_{i,c,t}+ \epsilon_{i,c,t},\quad \textrm{where } \epsilon_{i,c,t} \sim N(0,\sigma^2_{c,\epsilon}) \\
+				& p_{i,c,t} = p_{i,c,t-1} + \theta_{i,c,t}, \quad \textrm{where }  \theta_{i,c,t} \sim N(0,\sigma^2_{\theta,c,t} ) \\
+				& \log\sigma^2_{\theta,c,t} = \rho_c \log\sigma^2_{\theta,c,t-1} + \mu_{\theta,c,t}  \\
+				& \mu_{\theta,c,t} \sim N(0,\gamma_c^2)
+			\end{split}
+		\end{eqnarray*}
+
+	
+		\item Parameters for cohort $c$
+		\begin{itemize}
+			\item $\rho_{c}$: how persistent is the innovation to the size of  the permanent risk  
+			\item $\gamma_c$: how large is the innovation to the size of permanent risk
+			\item $\sigma_{c,\epsilon}$: the time-invariant size of the transitory risk
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Perveived risk for 1-year-ahead growth}
+	\begin{itemize}
+		\item Under a perfect understanding of the income process
+	\end{itemize}
+	\begin{itemize}
+		\item Perceived risks about next-month growth $\Delta y_{i,t}$
+		\begin{eqnarray*}
+			\begin{split}
+				& \overline {var_{i,t}}(\Delta y_{i,t+1}) & = E_{i,t}( {\sigma^2_{\theta,t+1}}) + \sigma^2_{\epsilon} \\
+				& & = \rho e^{-0.5\gamma} \sigma^2_{\theta,t}  + \sigma^2_{\epsilon} + \underbrace{\omega_{i,t}}_{\text{perception shock}}
+			\end{split}
+		\end{eqnarray*}
+		
+		\item Perceived risks about next-year growth $\Delta Y_{i,t}$
+		\begin{eqnarray*}
+		\begin{split}
+			& \overline {var_{i,t}}(\Delta Y_{i,t+12}) \\
+			& = \sum^{12}_{k=1} (12-k+1)^2 E_{i,t}( {\sigma^2_{\theta,t+k}}) + 12 \sigma^2_{\epsilon}  \\ 
+			& = \sum^{12}_{k=1} (12-k+1)^2 \rho^k e^{-0.5k\gamma} \sigma^2_{\theta,t}+ 12 \sigma^2_{\epsilon} \\ 	 
+		\end{split}
+	\end{eqnarray*}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Perceived permanent and transitory decomposition}
+	\begin{enumerate}
+	\item Do GMM estimation using observed perceived risks from the data 
+	\begin{itemize}
+     \item Using average perceived risks, variance, autocovariance across the whole population or within specified cohort
+	\end{itemize}
+\item	With the estimated paramete, we will have a breakdown of the permanent and transitory risks. We can redo the exercises in previous sections seperately. 
+\end{enumerate}
+\end{frame}
+
+
 \section{Model (work in progress)}
 
 \begin{frame}{Model ingredients}
@@ -418,43 +566,21 @@
 	\begin{enumerate}
 		\item imperfect understanding of the income process, a deviation from rational expectation benchmark. 
 		\begin{itemize}
-			\item experience-based learning capturing the cross-generatio and age-dependence income perceptions
+			\item experience-based learning capturing the cross-generation and age-dependence income perceptions
 		\end{itemize}
-		\item finite-period life cycle with a constant probability of death 
-		\item uninsured idiosyncratic risks and aggregate risks, workhorse assumption of the HANK literature
+		\item a finite life cycle with a constant probability of death 
+		\item uninsured idiosyncratic risks and aggregate risks (the workhorse assumption of the HANK literature) 
 		\item single asset, i.e. no distinction between liquid and iliquid assets 
 	\end{enumerate}
 \end{frame}
 
 \begin{frame}{Intuitions behind the model mechanisms}
 	\begin{itemize}
-		\item imperfect understanding $ \quad \rightarrow$ heterogeneous perception of risks $ \quad \plus$ uninsurance of risks $ \quad \rightarrow$ difference in precautionary motives and MPCs across populations $ \quad \rightarrow$ potential amplification of aggregate MPC. 
+		\item an imperfect understanding $ \quad \rightarrow$ heterogeneous perception of risks $ \quad \text{AND } $ uninsurance of risks $ \quad \rightarrow$ difference in precautionary motives and MPCs across populations $ \quad \rightarrow$ potential amplification of aggregate MPC
 	\end{itemize}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%
-
-
-\begin{frame}{Some Figures}
-	\begin{figure}[ht]
-		\label{figurelabel}
-		\begin{subfigure}[b]{0.2\textwidth}
-			\centering
-			\caption{FE}
-			\includegraphics[width=\textwidth, height = 0.8\textheight]{figuresDraft/spf_se_est_diag0.png}
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}[b]{0.2\textwidth}
-			\caption{Disg}
-			\includegraphics[width=\textwidth, height = 0.8\textheight]{figuresDraft/spf_se_est_diag1.png}
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}[b]{0.2\textwidth}
-			\caption{FE/Disg}
-			\includegraphics[width=\textwidth, height = 0.8\textheight]{figuresDraft/spf_se_est_diag2.png}
-		\end{subfigure}
-	\end{figure}
-\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

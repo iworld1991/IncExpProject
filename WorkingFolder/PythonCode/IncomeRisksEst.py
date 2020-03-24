@@ -65,7 +65,7 @@ cov_var = sim_moms['Var']
 var = dt.Autocovar(step = 0)   #= np.diagonal(cov_var)
 autovarb1 = dt.Autocovar(step = -1) #np.array([cov_var[i,i+1] for i in range(len(cov_var)-1)]) 
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## plot simulated moments of first diff 
 
 plt.figure(figsize=((20,4)))
