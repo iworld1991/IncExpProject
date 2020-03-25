@@ -52,6 +52,7 @@
 \usepackage{subcaption}
 
 
+
     
     % Colors for the hyperref package
     \definecolor{urlcolor}{rgb}{0,.145,.698}
@@ -1397,37 +1398,35 @@ To-dos in the next stage of the work
        
 \begin{table}[p]
 \centering
-\begin{adjustbox}{width={0.9\textwidth}}
+\begin{adjustbox}{width={\textwidth}}
 \begin{threeparttable}
 \caption{Perceived Income Growth and Individual Characteristics}
-\label{micro_reg_exp}
-
-\begin{tabular}{ccccccccc}
-\hline 
+\label{micro_reg_exp}\begin{tabular}{ccccccccc}
+\toprule
 {} &  incexp I & incexp II & incexp III & incexp IIII & rincexp I & rincexp II & rincexp III & rincexp IIII \\
-\hline 
-HHinc\_gr=low inc &           &           &      -0.03 &             &           &            &    -0.36*** &              \\
+\midrule
+HHinc\_gr=low inc &           &           &      -0.03 &             &           &            &    -0.37*** &              \\
                  &           &           &     (0.02) &             &           &            &      (0.03) &              \\
-educ\_gr=low educ &           &           &            &    -0.25*** &           &            &             &     -0.63*** \\
+educ\_gr=low educ &           &           &            &    -0.25*** &           &            &             &     -0.62*** \\
                  &           &           &            &      (0.02) &           &            &             &       (0.03) \\
-gender=male      &           &           &            &    -0.32*** &           &            &             &     -0.78*** \\
+gender=male      &           &           &            &    -0.33*** &           &            &             &     -0.78*** \\
                  &           &           &            &      (0.02) &           &            &             &       (0.03) \\
-parttime=yes     &  -0.47*** &  -0.36*** &   -0.36*** &             &  -0.63*** &   -0.53*** &    -0.45*** &              \\
+parttime=yes     &  -0.42*** &  -0.34*** &   -0.33*** &             &  -0.56*** &   -0.47*** &    -0.38*** &              \\
                  &    (0.03) &    (0.03) &     (0.03) &             &    (0.04) &     (0.04) &      (0.04) &              \\
-selfemp=yes      &   0.86*** &   0.00*** &    0.00*** &             &   0.84*** &   -0.00*** &    -0.00*** &              \\
-                 &    (0.03) &    (0.00) &     (0.00) &             &    (0.05) &     (0.00) &      (0.00) &              \\
+selfemp=yes      &   0.86*** &  -0.00*** &   -0.00*** &             &   0.83*** &   -0.00*** &     0.00*** &              \\
+                 &    (0.04) &    (0.00) &     (0.00) &             &    (0.05) &     (0.00) &      (0.00) &              \\
+Intercept        &   2.82*** &   2.64*** &    2.65*** &     3.06*** &  -0.28*** &   -0.51*** &    -0.40*** &      0.23*** \\
+                 &    (0.01) &    (0.03) &     (0.03) &      (0.02) &    (0.02) &     (0.04) &      (0.04) &       (0.02) \\
+                 &      0.01 &      0.02 &       0.02 &        0.01 &      0.01 &       0.04 &        0.05 &         0.02 \\
 Stkprob          &           &   0.01*** &    0.01*** &             &           &    0.02*** &     0.02*** &              \\
                  &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
 UEprobAgg        &           &  -0.00*** &   -0.00*** &             &           &   -0.01*** &    -0.01*** &              \\
                  &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
 UEprobInd        &           &  -0.01*** &   -0.01*** &             &           &   -0.01*** &    -0.01*** &              \\
                  &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-  Intercept        &   2.82*** &   2.63*** &    2.64*** &     3.05*** &  -0.29*** &   -0.52*** &    -0.41*** &      0.20*** \\
-  &    (0.01) &    (0.03) &     (0.03) &      (0.02) &    (0.02) &     (0.04) &      (0.04) &       (0.02) \\           
-           \hline 
-N                &     54275 &     48579 &      48579 &       47712 &     49702 &      44424 &       44424 &        43694 \\
-R2               &      0.01 &      0.02 &       0.02 &        0.01 &      0.01 &       0.05 &        0.05 &         0.02 \\
-\hline 
+N                &     52102 &     47112 &      47112 &       45745 &     47728 &      43099 &       43099 &        41908 \\
+R2               &      0.01 &      0.02 &       0.02 &        0.01 &      0.01 &       0.04 &        0.05 &         0.02 \\
+\bottomrule
 \end{tabular}
 \begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
 \item This table reports regression results of perceived labor income(incexp for nominal, rincexp for real) growth on household specific variables. HHinc: household income group ranges from lowests (=1, less than \$10k/year) to the heightst (=11, greater than \$200k/year). Education, educ ranges from the lowest (=1, less than high school) to the highest (=9).
@@ -1437,36 +1436,35 @@ R2               &      0.01 &      0.02 &       0.02 &        0.01 &      0.01 
 \end{table}
 \begin{table}[p]
 \centering
-\begin{adjustbox}{width={0.9\textwidth}}
+\begin{adjustbox}{width=\textwidth}
 \begin{threeparttable}
 \caption{Perceived Income Risks and Individual Characteristics}
-\label{micro_reg}
-\begin{tabular}{ccccccccc}
-\hline 
+\label{micro_reg}\begin{tabular}{ccccccccc}
+\toprule
 {} & incvar I & incvar II & incvar III & incvar IIII & rincvar I & rincvar II & rincvar III & rincvar IIII \\
-\hline 
-HHinc\_gr=low inc &          &           &    1.56*** &             &           &            &     7.01*** &              \\
-                 &          &           &     (0.10) &             &           &            &      (0.19) &              \\
-educ\_gr=low educ &          &           &            &     0.40*** &           &            &             &      3.82*** \\
-                 &          &           &            &      (0.11) &           &            &             &       (0.21) \\
-gender=male      &          &           &            &    -0.80*** &           &            &             &      2.76*** \\
+\midrule
+HHinc\_gr=low inc &          &           &    1.52*** &             &           &            &     6.97*** &              \\
+                 &          &           &     (0.10) &             &           &            &      (0.20) &              \\
+educ\_gr=low educ &          &           &            &     0.44*** &           &            &             &      4.01*** \\
+                 &          &           &            &      (0.12) &           &            &             &       (0.22) \\
+gender=male      &          &           &            &    -0.82*** &           &            &             &      2.67*** \\
                  &          &           &            &      (0.10) &           &            &             &       (0.19) \\
-parttime=yes     &     0.05 &     0.24* &      -0.12 &             &   1.41*** &    1.81*** &        0.19 &              \\
-                 &   (0.12) &    (0.13) &     (0.13) &             &    (0.23) &     (0.26) &      (0.26) &              \\
-selfemp=yes      &  7.21*** &  -0.00*** &   -0.00*** &             &   6.27*** &   -0.00*** &     0.00*** &              \\
-                 &   (0.15) &    (0.00) &     (0.00) &             &    (0.27) &     (0.00) &      (0.00) &              \\
-Stkprob          &          &   0.01*** &    0.01*** &             &           &   -0.05*** &    -0.05*** &              \\
+parttime=yes     &    0.25* &   0.35*** &      -0.02 &             &   1.90*** &    2.23*** &      0.56** &              \\
+                 &   (0.13) &    (0.13) &     (0.14) &             &    (0.25) &     (0.27) &      (0.27) &              \\
+selfemp=yes      &  7.58*** &     -0.00 &    -0.00** &             &   6.72*** &   -0.00*** &    -0.00*** &              \\
+                 &   (0.15) &    (0.00) &     (0.00) &             &    (0.29) &     (0.00) &      (0.00) &              \\
+Intercept        &  4.62*** &   3.76*** &    3.30*** &     5.71*** &  12.42*** &   12.26*** &    10.22*** &     11.21*** \\
+                 &   (0.05) &    (0.12) &     (0.13) &      (0.08) &    (0.10) &     (0.25) &      (0.25) &       (0.14) \\
+                 &     0.05 &      0.00 &       0.01 &        0.00 &      0.01 &       0.01 &        0.04 &         0.01 \\
+Stkprob          &          &   0.01*** &    0.01*** &             &           &   -0.06*** &    -0.05*** &              \\
                  &          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-UEprobAgg        &          &    0.01** &      0.00* &             &           &    0.05*** &     0.04*** &              \\
+UEprobAgg        &          &    0.00** &       0.00 &             &           &    0.05*** &     0.04*** &              \\
                  &          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-UEprobInd        &          &   0.03*** &    0.02*** &             &           &    0.05*** &     0.04*** &              \\
+UEprobInd        &          &   0.03*** &    0.03*** &             &           &    0.05*** &     0.04*** &              \\
                  &          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-                 Intercept        &  4.64*** &   3.75*** &    3.28*** &     5.72*** &  12.42*** &   12.21*** &    10.16*** &     11.16*** \\
-                 &   (0.05) &    (0.12) &     (0.12) &      (0.07) &    (0.10) &     (0.24) &      (0.25) &       (0.14) \\
-                 \hline 
-N                &    54029 &     47331 &      47331 &       47457 &     50730 &      44382 &       44382 &        44517 \\
+N                &    51788 &     45903 &      45903 &       45430 &     48665 &      43077 &       43077 &        42654 \\
 R2               &     0.05 &      0.00 &       0.01 &        0.00 &      0.01 &       0.01 &        0.04 &         0.01 \\
-\hline 
+\bottomrule
 \end{tabular}
 \begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
 \item This table reports regression results of perceived income risks (incvar for nominal, rincvar for real) on household specific variables. HHinc: household income group ranges from lowests (=1, less than \$10k/year) to the heightst (=11, greater than \$200k/year). Education, educ ranges from the lowest (=1, less than high school) to the highest (=9).
@@ -1476,62 +1474,66 @@ R2               &     0.05 &      0.00 &       0.01 &        0.00 &      0.01 &
 \end{table}
 \begin{table}[ht]
 \centering
+\begin{adjustbox}{width={\textwidth}}
 \begin{threeparttable}
 \caption{Correlation between Perceived Income Risks and Stock Market Return}
-\label{macro_corr}\begin{tabular}{ccccccl}
+\label{macro_corr}
+\begin{tabular}{cccccclll}
 \toprule
-{} &      0 &       1 &        2 &      3 &      4 &        5 \\
+{} & median:var & median:iqr & median:rvar & median:skew &  mean:var &  mean:iqr & mean:rvar & mean:skew \\
 \midrule
-median:var  &  -0.02 &   -0.15 &  -0.24** &  -0.18 &  -0.05 &     -0.1 \\
-median:iqr  &  -0.05 &   -0.12 &  -0.25** &  -0.17 &  -0.04 &    -0.12 \\
-median:rvar &  -0.01 &   -0.01 &    -0.06 &  -0.03 &  -0.14 &  -0.26** \\
-mean:skew   &    nan &     nan &      nan &    nan &    nan &      nan \\
-mean:var    &   0.02 &   -0.07 &    -0.09 &  -0.11 &  -0.16 &    -0.12 \\
-mean:iqr    &   0.01 &   -0.04 &    -0.14 &  -0.14 &  -0.16 &    -0.12 \\
-mean:rvar   &   0.02 &    -0.0 &     0.07 &  -0.07 &  -0.16 &    -0.18 \\
-mean:skew   &  -0.08 &  -0.22* &      0.0 &  -0.14 &   0.12 &     0.03 \\
+0  &       0.04 &       0.01 &        0.08 &         nan &      0.16 &      0.19 &      0.05 &     -0.16 \\
+1  &      -0.02 &      -0.05 &        0.06 &         nan &      0.16 &      0.18 &      0.07 &   -0.26** \\
+2  &      -0.12 &      -0.14 &        0.03 &         nan &      0.14 &      0.14 &      0.16 &  -0.31*** \\
+3  &     -0.21* &     -0.22* &        0.02 &         nan &      0.08 &      0.05 &      0.13 &  -0.35*** \\
+4  &     -0.3** &    -0.31** &       -0.06 &         nan &     -0.03 &     -0.07 &      -0.0 &    -0.22* \\
+5  &    -0.29** &    -0.31** &      -0.22* &         nan &     -0.07 &     -0.13 &     -0.14 &     -0.14 \\
+6  &    -0.31** &    -0.31** &     -0.26** &         nan &     -0.09 &     -0.17 &     -0.11 &   -0.26** \\
+7  &    -0.4*** &   -0.41*** &    -0.39*** &         nan &     -0.21 &   -0.27** &   -0.25** &  -0.32*** \\
+8  &   -0.44*** &   -0.44*** &    -0.41*** &         nan &     -0.21 &   -0.31** &   -0.25** &    -0.3** \\
+9  &   -0.47*** &   -0.48*** &    -0.36*** &         nan &   -0.31** &  -0.39*** &   -0.28** &   -0.26** \\
+10 &   -0.49*** &    -0.5*** &    -0.41*** &         nan &  -0.42*** &   -0.5*** &    -0.3** &    -0.3** \\
+11 &   -0.51*** &   -0.51*** &     -0.4*** &         nan &  -0.41*** &  -0.51*** &   -0.29** &    -0.25* \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
 \item *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
 \item This table reports correlation coefficients between different perceived income moments(inc for nominal 
 and rinc for real) at time 
-$t$ and the monthly s\&p500 return by the end of $t+k$ for $k=0,1,..,5$. 
+$t$ and the monthly s\&p500 return by the end of $t+k$ for $k=0,1,..,11$. 
 \end{tablenotes}
 \end{threeparttable}
+\end{adjustbox}
 \end{table}
 \begin{table}[p]
 \centering
 \begin{adjustbox}{width={0.9\textwidth}}
 \begin{threeparttable}
 \caption{Perceived Income Risks and Household Spending}
-\label{spending_reg}
-\begin{tabular}{ccccccll}
-\hline 
+\label{spending_reg}\begin{tabular}{ccccccll}
+\toprule
 {} & spending I & spending II & spending III & spending IIII & spending IIIII & spending IIIIII & spending IIIIIII \\
-\hline 
+\midrule
+Intercept &    3.46*** &     4.23*** &      4.29*** &       3.73*** &        4.67*** &         3.21*** &          4.63*** \\
+          &     (0.31) &      (0.07) &       (0.22) &        (0.26) &         (0.31) &          (0.72) &           (0.20) \\
+          &       0.00 &        0.00 &         0.00 &          0.00 &           0.00 &            0.00 &             0.00 \\
+UEprobAgg &            &             &              &               &                &         0.04*** &                  \\
+          &            &             &              &               &                &          (0.02) &                  \\
+UEprobInd &            &             &              &               &          -0.01 &                 &                  \\
+          &            &             &              &               &         (0.01) &                 &                  \\
 incexp    &    0.39*** &             &              &               &                &                 &                  \\
-&     (0.08) &             &              &               &                &                 &                  \\
-
-rincexp   &            &      -0.04* &              &               &                &                 &                  \\
-&            &      (0.02) &              &               &                &                 &                  \\
+          &     (0.08) &             &              &               &                &                 &                  \\
+incskew   &            &             &              &               &                &                 &             0.19 \\
+          &            &             &              &               &                &                 &           (0.45) \\
 incvar    &            &             &      0.07*** &               &                &                 &                  \\
           &            &             &       (0.02) &               &                &                 &                  \\
-
+rincexp   &            &      -0.04* &              &               &                &                 &                  \\
+          &            &      (0.02) &              &               &                &                 &                  \\
 rincvar   &            &             &              &       0.07*** &                &                 &                  \\
           &            &             &              &        (0.01) &                &                 &                  \\
-          
-          UEprobAgg &            &             &              &               &                &         0.04*** &                  \\
-          &            &             &              &               &                &          (0.01) &                  \\
-          UEprobInd &            &             &              &               &          -0.01 &                 &                  \\
-          &            &             &              &               &         (0.01) &                 &                  \\
-          
-          incskew   &            &             &              &               &                &                 &             0.21 \\
-          &            &             &              &               &                &                 &           (0.43) \\
-          \hline 
-N         &      55673 &       50997 &        55465 &         52099 &          54315 &           85468 &            55029 \\
+N         &      53455 &       48983 &        53171 &         49986 &          52632 &           76531 &            52751 \\
 R2        &       0.00 &        0.00 &         0.00 &          0.00 &           0.00 &            0.00 &             0.00 \\
-\hline 
+\bottomrule
 \end{tabular}
 \begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
 \item This table reports regression results of expected spending growth on perceived income risks (incvar for nominal, rincvar for real).

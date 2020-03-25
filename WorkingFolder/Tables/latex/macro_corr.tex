@@ -1,27 +1,34 @@
 
 \begin{table}[ht]
 \centering
+\begin{adjustbox}{width={\textwidth}}
 \begin{threeparttable}
 \caption{Correlation between Perceived Income Risks and Stock Market Return}
-\label{macro_corr}\begin{tabular}{ccccccccccccl}
+\label{macro_corr}
+\begin{tabular}{cccccclll}
 \toprule
-{} &      0 &        1 &         2 &         3 &        4 &        5 &        6 &         7 &         8 &         9 &        10 &        11 \\
+{} & median:var & median:iqr & median:rvar & median:skew &  mean:var &  mean:iqr & mean:rvar & mean:skew \\
 \midrule
-median:var  &   0.04 &    -0.02 &     -0.12 &    -0.21* &   -0.3** &  -0.29** &  -0.31** &   -0.4*** &  -0.44*** &  -0.47*** &  -0.49*** &  -0.51*** \\
-median:iqr  &   0.01 &    -0.05 &     -0.14 &    -0.22* &  -0.31** &  -0.31** &  -0.31** &  -0.41*** &  -0.44*** &  -0.48*** &   -0.5*** &  -0.51*** \\
-median:rvar &   0.08 &     0.06 &      0.03 &      0.02 &    -0.06 &   -0.22* &  -0.26** &  -0.39*** &  -0.41*** &  -0.36*** &  -0.41*** &   -0.4*** \\
-median:skew &    nan &      nan &       nan &       nan &      nan &      nan &      nan &       nan &       nan &       nan &       nan &       nan \\
-mean:var    &   0.16 &     0.16 &      0.14 &      0.08 &    -0.03 &    -0.07 &    -0.09 &     -0.21 &     -0.21 &   -0.31** &  -0.42*** &  -0.41*** \\
-mean:iqr    &   0.19 &     0.18 &      0.14 &      0.05 &    -0.07 &    -0.13 &    -0.17 &   -0.27** &   -0.31** &  -0.39*** &   -0.5*** &  -0.51*** \\
-mean:rvar   &   0.05 &     0.07 &      0.16 &      0.13 &     -0.0 &    -0.14 &    -0.11 &   -0.25** &   -0.25** &   -0.28** &    -0.3** &   -0.29** \\
-mean:skew   &  -0.16 &  -0.26** &  -0.31*** &  -0.35*** &   -0.22* &    -0.14 &  -0.26** &  -0.32*** &    -0.3** &   -0.26** &    -0.3** &    -0.25* \\
+0  &       0.04 &       0.01 &        0.08 &         nan &      0.16 &      0.19 &      0.05 &     -0.16 \\
+1  &      -0.02 &      -0.05 &        0.06 &         nan &      0.16 &      0.18 &      0.07 &   -0.26** \\
+2  &      -0.12 &      -0.14 &        0.03 &         nan &      0.14 &      0.14 &      0.16 &  -0.31*** \\
+3  &     -0.21* &     -0.22* &        0.02 &         nan &      0.08 &      0.05 &      0.13 &  -0.35*** \\
+4  &     -0.3** &    -0.31** &       -0.06 &         nan &     -0.03 &     -0.07 &      -0.0 &    -0.22* \\
+5  &    -0.29** &    -0.31** &      -0.22* &         nan &     -0.07 &     -0.13 &     -0.14 &     -0.14 \\
+6  &    -0.31** &    -0.31** &     -0.26** &         nan &     -0.09 &     -0.17 &     -0.11 &   -0.26** \\
+7  &    -0.4*** &   -0.41*** &    -0.39*** &         nan &     -0.21 &   -0.27** &   -0.25** &  -0.32*** \\
+8  &   -0.44*** &   -0.44*** &    -0.41*** &         nan &     -0.21 &   -0.31** &   -0.25** &    -0.3** \\
+9  &   -0.47*** &   -0.48*** &    -0.36*** &         nan &   -0.31** &  -0.39*** &   -0.28** &   -0.26** \\
+10 &   -0.49*** &    -0.5*** &    -0.41*** &         nan &  -0.42*** &   -0.5*** &    -0.3** &    -0.3** \\
+11 &   -0.51*** &   -0.51*** &     -0.4*** &         nan &  -0.41*** &  -0.51*** &   -0.29** &    -0.25* \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
 \item *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
 \item This table reports correlation coefficients between different perceived income moments(inc for nominal 
 and rinc for real) at time 
-$t$ and the monthly s\&p500 return by the end of $t+k$ for $k=0,1,..,5$. 
+$t$ and the monthly s\&p500 return by the end of $t+k$ for $k=0,1,..,11$. 
 \end{tablenotes}
 \end{threeparttable}
+\end{adjustbox}
 \end{table}

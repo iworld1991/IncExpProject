@@ -430,7 +430,7 @@ indep_list_ct = ['UEprobInd','UEprobAgg','Stkprob']
 indep_list_dc = ['HHinc','selfemp','fulltime']
 
 
-# + {"code_folding": [0, 7, 36]}
+# + {"code_folding": [7, 36]}
 ## full-table for risks  
 
 rs_list = {}  ## list to store results 
@@ -481,7 +481,7 @@ print(dfoutput)
 beginningtex = """
 \\begin{table}[p]
 \\centering
-\\begin{adjustbox}{width={0.9\\textwidth}}
+\\begin{adjustbox}{width=\\textwidth}
 \\begin{threeparttable}
 \\caption{Perceived Income Risks and Individual Characteristics}
 \\label{micro_reg}"""
@@ -609,7 +609,7 @@ tb = table.drop(index = to_drop)
 beginningtex = """
 \\begin{table}[p]
 \\centering
-\\begin{adjustbox}{width={0.9\\textwidth}}
+\\begin{adjustbox}{width={\\textwidth}}
 \\begin{threeparttable}
 \\caption{Perceived Income Growth and Individual Characteristics}
 \\label{micro_reg_exp}"""

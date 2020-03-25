@@ -320,7 +320,7 @@ corr_table = dt_combM.corr()
 corr_table.to_excel('../Tables/corrM.xlsx')
 corr_table
 
-# + {"code_folding": [4, 15, 18, 20]}
+# + {"code_folding": [4, 15, 18, 20, 32]}
 ## try different lags or leads
 
 lead_loop = 12
@@ -402,36 +402,35 @@ corr_df = pd.DataFrame(corr_array,
                        index = col_list)
 # -
 
-corr_df
+corr_df.T
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## output tables to latex 
 
 beginningtex = """
 \\begin{table}[ht]
 \\centering
+\\begin{adjustbox}{width={\\textwidth}}
 \\begin{threeparttable}
 \\caption{Correlation between Perceived Income Risks and Stock Market Return}
-\\label{macro_corr}"""
+\\label{macro_corr}
+"""
 
 endtex = """\\begin{tablenotes}
 \item *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
 \item This table reports correlation coefficients between different perceived income moments(inc for nominal 
 and rinc for real) at time 
-$t$ and the monthly s\&p500 return by the end of $t+k$ for $k=0,1,..,5$. 
+$t$ and the monthly s\&p500 return by the end of $t+k$ for $k=0,1,..,11$. 
 \\end{tablenotes}
 \\end{threeparttable}
+\\end{adjustbox}
 \\end{table}"""
-
-
-to_drop = ['Intercept']
-
 
 ## write to latex 
 
 f = open('../Tables/latex/macro_corr.tex', 'w')
 f.write(beginningtex)
-tb_ltx = corr_df.to_latex().replace('llllll','cccccc')
+tb_ltx = corr_df.T.to_latex().replace('llllll','cccccc')
 f.write(tb_ltx)
 f.write(endtex)
 f.close()
@@ -440,7 +439,7 @@ f.close()
 ## output table to excel 
 corr_df.to_excel('../Tables/macro_corr.xlsx')
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## plots of correlation for MEDIAN population stats 
 
 figsize = (80,40)
@@ -673,3 +672,10 @@ for i,moms in enumerate( ['incexp','incvar','inciqr','rincvar','IncSkew']):
     rs = model.fit()
     print(rs.summary())
     
+# -
+
+
+
+
+
+
