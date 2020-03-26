@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Est_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}23 Mar 2020, 14:37:19
+ {txt}opened on:  {res}25 Mar 2020, 18:59:30
 {txt}
 {com}. 
 . *********************************************************
@@ -354,7 +354,6 @@
 > */
 . 
 . 
-. 
 . **********************************
 . *** time series pltos by group *****
 . **********************************
@@ -403,8 +402,8 @@
 >            ytitle("sp500 return (%)",axis(2)) ///
 >            title("`mom' by generation") ///
 >            legend(label(1 "sp500 (RHS)")  label(2 "1980s") col(3)) ///
->            caption("{c -(}superscript:1950s corr =`rho_1',1960s corr =`rho_2',1970s corr =`rho_3',1980s corr =`rho_4',{c )-}", ///
->            justification(left) position(11) size(large))
+>            caption("{c -(}superscript:1950s corr =`rho_1', 1960s corr =`rho_2', 1970s corr =`rho_3',1980s corr =`rho_4',{c )-}", ///
+>            justification(left) position(11) size(vlarge))
 {txt} 19{com}.  graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
 {txt} 20{com}.  
 . {c )-}
@@ -737,8 +736,8 @@
 >            ytitle("sp500 return (%)",axis(2)) ///
 >            title("`mom' by household income") ///
 >            legend(label(1 "sp500 (RHS)")  label(2 "high income") col(3)) ///
->            caption("{c -(}superscript:low corr =`rho_lw',med corr =`rho_md',high corr =`rho_hg',{c )-}", ///
->            justification(left) position(11) size(large))
+>            caption("{c -(}superscript:low corr =`rho_lw', med corr =`rho_md', high corr =`rho_hg',{c )-}", ///
+>            justification(left) position(11) size(vlarge))
 {txt} 17{com}.  graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
 {txt} 18{com}. {c )-}
 {txt} 19{com}.           
@@ -1011,8 +1010,8 @@
 >            ytitle("sp500 return (%)",axis(2)) ///
 >            title("`mom' by age") ///
 >            legend(label(1 "sp500 (RHS)") label(2 "old")  col(3)) ///
->            caption("{c -(}superscript:young corr =`rho_y',middle-age corr =`rho_m',old corr =`rho_o',{c )-}", ///
->            justification(left) position(11) size(large))
+>            caption("{c -(}superscript:young corr =`rho_y', middle-age corr =`rho_m', old corr =`rho_o',{c )-}", ///
+>            justification(left) position(11) size(vlarge))
 {txt} 17{com}.  graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
 {txt} 18{com}.   {c )-}
 {txt} 19{com}.  
@@ -1282,8 +1281,8 @@
 >            ytitle("sp500 return (%)",axis(2)) ///
 >            title("`mom' by education") ///
 >            legend(label(1 "sp500 (RHS)") label(2 "high") col(3)) ///
->            caption("{c -(}superscript:low corr =`rho_l',high corr =`rho_h',{c )-}", ///
->            justification(left) position(11) size(large))
+>            caption("{c -(}superscript:low corr =`rho_l', high corr =`rho_h',{c )-}", ///
+>            justification(left) position(11) size(vlarge))
 {txt} 15{com}. graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
 {txt} 16{com}.    {c )-}
 {txt} 17{com}.   
@@ -1453,14 +1452,89 @@
    {txt}F11.sp500 {c |} {res} -0.4545*  1.0000 
 {txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_edu_g_median_stk.png written in PNG format)
 
-{com}. ddd
-{err}unrecognized command:  ddd
-{txt}{search r(199):r(199);}
-
-end of do-file
-
-{search r(199):r(199);}
-
-{com}. clear
-
+{com}. 
 . 
+. /*
+> *******************
+> *** Seasonal ******
+> *******************
+> 
+> 
+> eststo clear
+> 
+> foreach mom in var iqr mean{c -(}
+> eststo: reg Q24_`mom' i.month, robust 
+> {c )-}
+> foreach mom in Mean Var Skew Kurt{c -(}
+> eststo: reg Inc`mom' i.month, robust 
+> {c )-}
+> 
+> esttab using "${c -(}sum_table_folder{c )-}/month_fe.csv", ///
+>              se r2 drop(_cons) ///
+>                          label replace
+> 
+> 
+> 
+> ********************
+> ** Regression ******
+> ********************
+> 
+> global other_control i.Q33 i.Q34 Q35_1 Q35_2 Q35_3 Q35_4 Q35_5 Q35_6 
+> global macro_ex_var Q4new Q6new Q9_mean Q13new
+> 
+> eststo clear
+> 
+> foreach mom in var iqr mean{c -(}
+> eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id, robust 
+> eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${c -(}other_control{c )-}, robust 
+> eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${c -(}other_control{c )-} ${c -(}macro_ex_var{c )-}, robust 
+> {c )-}
+> foreach mom in Mean Var Skew Kurt{c -(}
+> eststo: reg Inc`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id, robust 
+> eststo: reg Inc`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${c -(}other_control{c )-}, robust 
+> eststo: reg Inc`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${c -(}other_control{c )-} ${c -(}macro_ex_var{c )-}, robust 
+> 
+> {c )-}
+> 
+> esttab using "${c -(}sum_table_folder{c )-}/mom_group.csv", ///
+>              se r2 drop(0.age_g 0.edu_g 0.inc_g 0.cohort_g  *.year *state_id 1.Q33 1.Q34 _cons) ///
+>                          label replace
+> 
+> *****************************
+> ** Regression Full-table ******
+> *******************************
+>                          
+> eststo clear
+> 
+> label var D6 "HH income group"
+> label var Q10_1 "full-time"
+> label var Q10_2 "part-time"
+> label var Q36 "education"
+>         
+> foreach mom in mean var iqr rmean rvar{c -(}
+> eststo: reg Q24_`mom' i.Q10_2 i.Q12new i.month, vce(cl ID)
+> eststo: reg Q24_`mom' i.Q10_2 i.Q12new i.D6 i.month,vce(cl ID)
+> eststo: reg Q24_`mom' i.Q10_2 i.Q12new i.D6 Q4new Q13new Q6new i.month,vce(cl ID)
+> eststo: reg Q24_`mom' i.Q36 i.age_g i.month,vce(cl ID)
+> {c )-}
+> 
+> /*
+> foreach mom in Mean Var Skew Kurt{c -(}
+> eststo: xtreg Inc`mom' i.Q10_1 i.Q10_2 i.Q12new, fe robust 
+> eststo: xtreg Inc`mom' i.Q10_1 i.Q10_2 i.Q12new i.Q47, fe robust 
+> eststo: xtreg Inc`mom' i.Q10_1 i.Q10_2 i.Q12new i.Q47 Q4new Q13new Q6new, fe robust 
+> {c )-}
+> */
+> 
+> esttab using "${c -(}sum_table_folder{c )-}/mom_ind_reg.csv", ///
+>              se r2 drop(0.age_g 1.Q36 0.Q10_2 1.Q12new 1.D6 *.month _cons) ///
+>                          label replace
+> */      
+. log close 
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Est_log.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}25 Mar 2020, 19:02:27
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

@@ -298,8 +298,8 @@ twoway (bar sp500 date if `gp'== 3,yaxis(2) fcolor(gs10)) ///
 	   ytitle("sp500 return (%)",axis(2)) ///
 	   title("`mom' by generation") ///
 	   legend(label(1 "sp500 (RHS)")  label(2 "1980s") col(3)) ///
-	   caption("{superscript:1950s corr =`rho_1',1960s corr =`rho_2',1970s corr =`rho_3',1980s corr =`rho_4',}", ///
-	   justification(left) position(11) size(large))
+	   caption("{superscript:1950s corr =`rho_1', 1960s corr =`rho_2', 1970s corr =`rho_3',1980s corr =`rho_4',}", ///
+	   justification(left) position(11) size(vlarge))
  graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
  
 }
@@ -349,8 +349,8 @@ twoway (bar sp500 date if `gp'== 2,yaxis(2) fcolor(gs10)) ///
 	   ytitle("sp500 return (%)",axis(2)) ///
 	   title("`mom' by household income") ///
 	   legend(label(1 "sp500 (RHS)")  label(2 "high income") col(3)) ///
-	   caption("{superscript:low corr =`rho_lw',med corr =`rho_md',high corr =`rho_hg',}", ///
-	   justification(left) position(11) size(large))
+	   caption("{superscript:low corr =`rho_lw', med corr =`rho_md', high corr =`rho_hg',}", ///
+	   justification(left) position(11) size(vlarge))
  graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
 }
 	  
@@ -400,8 +400,8 @@ twoway (bar sp500 date if `gp'== 2,yaxis(2) fcolor(gs10)) ///
 	   ytitle("sp500 return (%)",axis(2)) ///
 	   title("`mom' by age") ///
 	   legend(label(1 "sp500 (RHS)") label(2 "old")  col(3)) ///
-	   caption("{superscript:young corr =`rho_y',middle-age corr =`rho_m',old corr =`rho_o',}", ///
-	   justification(left) position(11) size(large))
+	   caption("{superscript:young corr =`rho_y', middle-age corr =`rho_m', old corr =`rho_o',}", ///
+	   justification(left) position(11) size(vlarge))
  graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
   }
  
@@ -448,8 +448,8 @@ twoway (bar sp500 date if `gp'== 1,yaxis(2) fcolor(gs10)) ///
 	   ytitle("sp500 return (%)",axis(2)) ///
 	   title("`mom' by education") ///
 	   legend(label(1 "sp500 (RHS)") label(2 "high") col(3)) ///
-	   caption("{superscript:low corr =`rho_l',high corr =`rho_h',}", ///
-	   justification(left) position(11) size(large))
+	   caption("{superscript:low corr =`rho_l', high corr =`rho_h',}", ///
+	   justification(left) position(11) size(vlarge))
 graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
    }
   

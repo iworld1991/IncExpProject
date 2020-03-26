@@ -119,7 +119,7 @@ SCEM = pd.merge(SCEM_base, SCEM_est,  how='left', left_on = vars_id, right_on = 
 
 #SCEM.describe(include = all)
 
-# + {"code_folding": [12]}
+# + {"code_folding": []}
 ## renaming 
 
 SCEM = SCEM.rename(columns={'Q24_mean': 'incexp',
