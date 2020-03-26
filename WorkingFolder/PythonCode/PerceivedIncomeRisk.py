@@ -76,7 +76,7 @@ import pandas as pd
 
 path = os.getcwd()
 
-
+"""
 def in_ipynb():
     try:
         if str(type(get_ipython())) == "<class 'ipykernel.zmqshell.ZMQInteractiveShell'>":
@@ -94,6 +94,8 @@ if in_ipynb():
     get_ipython().run_line_magic('matplotlib', 'inline') 
 else:
     get_ipython().run_line_magic('matplotlib', 'auto') 
+    
+"""
 # -
 
 # # Data, variables and density estimation
@@ -222,6 +224,26 @@ plt.tight_layout(pad =0, w_pad=0, h_pad=0)
 macro_corr  = pd.read_excel('../Tables/macro_corr.xlsx',index_col=0)
 print('Correlation of perceived risks and stock return of x months ahead')
 macro_corr
+
+# + {"hide_input": true, "hide_output": true}
+macro_corr_HHinc  = pd.read_excel('../Tables/macro_corr_HHinc_gr.xlsx',index_col=0)
+print('Correlation of perceived risks and stock return of x months ahead (by income)')
+macro_corr_HHinc
+
+# + {"hide_input": true, "hide_output": true}
+macro_corr_educ  = pd.read_excel('../Tables/macro_corr_educ_gr.xlsx',index_col=0)
+print('Correlation of perceived risks and stock return of x months ahead (by education)')
+macro_corr_educ
+
+# + {"hide_input": true, "hide_output": true}
+macro_corr_age = pd.read_excel('../Tables/macro_corr_age_gr.xlsx',index_col=0)
+print('Correlation of perceived risks and stock return of x months ahead (by age)')
+macro_corr_age
+
+# + {"hide_input": true, "hide_output": true}
+macro_corr_byear = pd.read_excel('../Tables/macro_corr_byear_gr.xlsx',index_col=0)
+print('Correlation of perceived risks and stock return of x months ahead (by generation)')
+macro_corr_byear
 # -
 
 #

@@ -525,7 +525,7 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
 
 
 
-# + {"code_folding": [2, 27]}
+# + {"code_folding": [2]}
 ## plots of correlation for Mean population stats
 
 for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):

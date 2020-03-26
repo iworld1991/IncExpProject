@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  25 MAR 2020 16:14
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  25 MAR 2020 22:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1140,13 +1140,21 @@ If that doesn't work, type  X <return>  to quit.
 
 ] [25
 
+] [26
+
+] [27
+
+] [28
+
+] [29
+
 ]
-<figures/ts_incvar_HHinc_g_mean_stk.png, id=1027, 585.18625pt x 425.59pt>
+<figures/ts_incvar_HHinc_g_mean_stk.png, id=1144, 585.18625pt x 425.59pt>
 
 ! Undefined control sequence.
 \Gin@@eheight ->\0
                   .4\textheight 
-l.581 \end{frame}
+l.680 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1157,13 +1165,13 @@ and I'll forget about whatever was undefined.
 File: figures/ts_incvar_HHinc_g_mean_stk.png Graphic file (type png)
 <use figures/ts_incvar_HHinc_g_mean_stk.png>
 Package pdftex.def Info: figures/ts_incvar_HHinc_g_mean_stk.png  used on input 
-line 581.
+line 680.
 (pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
-<figures/ts_incskew_HHinc_g_mean_stk.png, id=1028, 585.18625pt x 425.59pt>
+<figures/ts_incskew_HHinc_g_mean_stk.png, id=1145, 585.18625pt x 425.59pt>
 ! Undefined control sequence.
 \Gin@@eheight ->\0
                   .4\textheight 
-l.581 \end{frame}
+l.680 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1174,22 +1182,22 @@ and I'll forget about whatever was undefined.
 File: figures/ts_incskew_HHinc_g_mean_stk.png Graphic file (type png)
 <use figures/ts_incskew_HHinc_g_mean_stk.png>
 Package pdftex.def Info: figures/ts_incskew_HHinc_g_mean_stk.png  used on input
- line 581.
+ line 680.
 (pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
 
-Overfull \vbox (5.39355pt too high) detected at line 581
+Overfull \vbox (5.39355pt too high) detected at line 680
  []
 
-[26
+[30
 
  <./figures/ts_incvar_HHinc_g_mean_stk.png> <./figures/ts_incskew_HHinc_g_mean_
 stk.png>]
-<figures/ts_incvar_age_g_mean_stk.png, id=1062, 585.18625pt x 425.59pt>
+<figures/ts_incvar_age_g_mean_stk.png, id=1179, 585.18625pt x 425.59pt>
 
 ! Undefined control sequence.
 \Gin@@eheight ->\0
                   .4\textheight 
-l.594 \end{frame}
+l.693 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1200,13 +1208,13 @@ and I'll forget about whatever was undefined.
 File: figures/ts_incvar_age_g_mean_stk.png Graphic file (type png)
 <use figures/ts_incvar_age_g_mean_stk.png>
 Package pdftex.def Info: figures/ts_incvar_age_g_mean_stk.png  used on input li
-ne 594.
+ne 693.
 (pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
-<figures/ts_incskew_age_g_mean_stk.png, id=1063, 585.18625pt x 425.59pt>
+<figures/ts_incskew_age_g_mean_stk.png, id=1180, 585.18625pt x 425.59pt>
 ! Undefined control sequence.
 \Gin@@eheight ->\0
                   .4\textheight 
-l.594 \end{frame}
+l.693 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1217,22 +1225,22 @@ and I'll forget about whatever was undefined.
 File: figures/ts_incskew_age_g_mean_stk.png Graphic file (type png)
 <use figures/ts_incskew_age_g_mean_stk.png>
 Package pdftex.def Info: figures/ts_incskew_age_g_mean_stk.png  used on input l
-ine 594.
+ine 693.
 (pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
 
-Overfull \vbox (5.39355pt too high) detected at line 594
+Overfull \vbox (5.39355pt too high) detected at line 693
  []
 
-[27
+[31
 
  <./figures/ts_incvar_age_g_mean_stk.png> <./figures/ts_incskew_age_g_mean_stk.
 png>]
-<figures/ts_incvar_byear_g_mean_stk.png, id=1097, 585.18625pt x 425.59pt>
+<figures/ts_incvar_byear_g_mean_stk.png, id=1216, 585.18625pt x 425.59pt>
 
 ! Undefined control sequence.
 \Gin@@eheight ->\0
                   .4\textheight 
-l.608 \end{frame}
+l.707 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1243,13 +1251,13 @@ and I'll forget about whatever was undefined.
 File: figures/ts_incvar_byear_g_mean_stk.png Graphic file (type png)
 <use figures/ts_incvar_byear_g_mean_stk.png>
 Package pdftex.def Info: figures/ts_incvar_byear_g_mean_stk.png  used on input 
-line 608.
+line 707.
 (pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
-<figures/ts_incskew_byear_g_mean_stk.png, id=1098, 585.18625pt x 425.59pt>
+<figures/ts_incskew_byear_g_mean_stk.png, id=1217, 585.18625pt x 425.59pt>
 ! Undefined control sequence.
 \Gin@@eheight ->\0
                   .4\textheight 
-l.608 \end{frame}
+l.707 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1260,22 +1268,22 @@ and I'll forget about whatever was undefined.
 File: figures/ts_incskew_byear_g_mean_stk.png Graphic file (type png)
 <use figures/ts_incskew_byear_g_mean_stk.png>
 Package pdftex.def Info: figures/ts_incskew_byear_g_mean_stk.png  used on input
- line 608.
+ line 707.
 (pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
 
-Overfull \vbox (5.39355pt too high) detected at line 608
+Overfull \vbox (5.39355pt too high) detected at line 707
  []
 
-[28
+[32
 
  <./figures/ts_incvar_byear_g_mean_stk.png> <./figures/ts_incskew_byear_g_mean_
 stk.png>]
-<figures/ts_incvar_edu_g_mean_stk.png, id=1132, 585.18625pt x 425.59pt>
+<figures/ts_incvar_edu_g_mean_stk.png, id=1250, 585.18625pt x 425.59pt>
 
 ! Undefined control sequence.
 \Gin@@eheight ->\0
                   .4\textheight 
-l.621 \end{frame}
+l.720 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1286,13 +1294,13 @@ and I'll forget about whatever was undefined.
 File: figures/ts_incvar_edu_g_mean_stk.png Graphic file (type png)
 <use figures/ts_incvar_edu_g_mean_stk.png>
 Package pdftex.def Info: figures/ts_incvar_edu_g_mean_stk.png  used on input li
-ne 621.
+ne 720.
 (pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
-<figures/ts_incskew_edu_g_mean_stk.png, id=1133, 585.18625pt x 425.59pt>
+<figures/ts_incskew_edu_g_mean_stk.png, id=1251, 585.18625pt x 425.59pt>
 ! Undefined control sequence.
 \Gin@@eheight ->\0
                   .4\textheight 
-l.621 \end{frame}
+l.720 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1303,51 +1311,51 @@ and I'll forget about whatever was undefined.
 File: figures/ts_incskew_edu_g_mean_stk.png Graphic file (type png)
 <use figures/ts_incskew_edu_g_mean_stk.png>
 Package pdftex.def Info: figures/ts_incskew_edu_g_mean_stk.png  used on input l
-ine 621.
+ine 720.
 (pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
 
-Overfull \vbox (5.39355pt too high) detected at line 621
+Overfull \vbox (5.39355pt too high) detected at line 720
  []
 
-[29
+[33
 
  <./figures/ts_incvar_edu_g_mean_stk.png> <./figures/ts_incskew_edu_g_mean_stk.
-png>] (./PerceivedIncomeRisk.toc) [30
+png>] (./PerceivedIncomeRisk.toc) [34
 
 ]
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 647.
+(amsmath)                trying to recover with `aligned' on input line 746.
 
-[31
+[35
 
 ]
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 672.
+(amsmath)                trying to recover with `aligned' on input line 771.
 
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 672.
+(amsmath)                trying to recover with `aligned' on input line 771.
 
-[32
+[36
 
-] [33
+] [37
 
-] [34
+] [38
 
-] [35
+] [39
 
-] [36
+] [40
 
 ] (./PerceivedIncomeRisk.bbl
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `\translate ' on input line 1.
 
-[37
+[41
 
-] [38]) [39]
+] [42]) [43]
 \tf@nav=\write6
 \openout6 = `PerceivedIncomeRisk.nav'.
 
@@ -1361,19 +1369,19 @@ Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 
 Package natbib Warning: There were undefined citations.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 724.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 724.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 823.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 823.
 (./PerceivedIncomeRisk.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 724.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 724.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 823.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 823.
 Package rerunfilecheck Info: File `PerceivedIncomeRisk.out' has not changed.
-(rerunfilecheck)             Checksum: C6AB42AAD3B24B342DE6AD583BA7F911;585.
+(rerunfilecheck)             Checksum: CE6CDD2DEF99089EDFD12B67A2513627;585.
  ) 
 Here is how much of TeX's memory you used:
- 20389 strings out of 492616
- 387610 string characters out of 6129482
- 484579 words of memory out of 5000000
- 23682 multiletter control sequences out of 15000+600000
+ 20413 strings out of 492616
+ 387888 string characters out of 6129482
+ 484943 words of memory out of 5000000
+ 23694 multiletter control sequences out of 15000+600000
  11824 words of font info for 46 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,20n,96p,806b,733s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1391,10 +1399,10 @@ e/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2
 019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/20
 19/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2019
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on PerceivedIncomeRisk.pdf (39 pages, 2378849 bytes).
+Output written on PerceivedIncomeRisk.pdf (43 pages, 2388834 bytes).
 PDF statistics:
- 1584 PDF objects out of 1728 (max. 8388607)
- 1361 compressed objects within 14 object streams
- 123 named destinations out of 1000 (max. 500000)
+ 1704 PDF objects out of 1728 (max. 8388607)
+ 1476 compressed objects within 15 object streams
+ 135 named destinations out of 1000 (max. 500000)
  874 words of extra memory for PDF output out of 10000 (max. 10000000)
 

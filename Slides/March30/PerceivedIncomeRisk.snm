@@ -14,7 +14,11 @@
 \beamer@slide {micro_reg}{21}
 \beamer@slide {spending_reg}{23}
 \beamer@slide {macro_corr}{25}
-\beamer@slide {ts_stk_hhinc}{26}
-\beamer@slide {ts_stk_age_g}{27}
-\beamer@slide {ts_stk_byear_g}{28}
-\beamer@slide {ts_stk_edu_g}{29}
+\beamer@slide {macro_corr_HHinc}{26}
+\beamer@slide {macro_corr_age}{27}
+\beamer@slide {macro_corr_byear}{28}
+\beamer@slide {macro_corr_educ}{29}
+\beamer@slide {ts_stk_hhinc}{30}
+\beamer@slide {ts_stk_age_g}{31}
+\beamer@slide {ts_stk_byear_g}{32}
+\beamer@slide {ts_stk_edu_g}{33}
