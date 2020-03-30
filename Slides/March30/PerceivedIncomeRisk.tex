@@ -125,7 +125,7 @@
 			\item Since idiosyncratic risks are not perfectly insured 
 			\item Different wealth $\rightarrow$ different MPCs $\rightarrow$ distributional channel of macroeconomic policies 
 		\end{itemize}  %%\textcolor{blue}{Uninsurance} of idiosyncratic risks make it matter in macroeconomics, i,e. the important assumption by the HANK literature  
-		\item Risks estimated from the inequality $\approx$  ``The truth''  $\approx$ perceptions? %%It is unclear if perceptions consistent with econometricians' estimates of income risks from cross-sectional inequality and the those used in structural models   What enter in people's calculation are \textcolor{blue}{perceived} risks 
+		\item Risks estimated from the inequality $\approx$  ``the truth''  $\approx$ perceptions? %%It is unclear if perceptions consistent with econometricians' estimates of income risks from cross-sectional inequality and the those used in structural models   What enter in people's calculation are \textcolor{blue}{perceived} risks 
 		%%People make  their decisions based on there \textit{their} perceptions
 	\end{itemize}
 \end{frame}
@@ -491,17 +491,16 @@
 	\begin{figure}
 		\centering
 		\label{ts_var}
-		\includegraphics[width=\textwidth]{figures/tsMeanvar.jpg}
+		\includegraphics[width=\textwidth]{figures/tsMean3mvvar.jpg}
 	\end{figure}
 \end{frame}
 
 
-
-\begin{frame}{Tail risks and stock market performance}
+\begin{frame}{Right-skewness and stock market performance}
 	\begin{figure}
 		\centering 
 		\label{ts_skew}
-		\includegraphics[width=\textwidth]{figures/tsEstMeanskew.jpg}
+		\includegraphics[width=\textwidth]{figures/tsMean3mvskew.jpg}
 	\end{figure}
 \end{frame}
 
@@ -509,7 +508,7 @@
 \begin{frame}{Perceived income risks and stock market performance}
 	
 \begin{itemize}
-	\item Stock market return: $log(\text{sp500}_{t+k+12}) - log(\text{sp500}_{t+k})$ $\forall k =0,1...11$  
+	\item Stock market return: $log(\text{sp500}_{t+k}) - log(\text{sp500}_{t+k-12})$ $\forall k =1...12$  
 	\item Income risks: average or median of $\overline{var}_{i,t}(\Delta Y_{i,t+12})$,  $\overline{iqr}_{i,t}(\Delta Y_{i,t+12})$, $\overline{skew}_{i,t}(\Delta Y_{i,t+12})$, etc. 
 \end{itemize}
 \begin{table}
@@ -718,25 +717,25 @@
 \end{frame}
 
 
-\begin{frame}{Perveived risk for 1-year-ahead growth}
+\begin{frame}{From montly to yearly}
 	\begin{itemize}
 		\item Under a perfect understanding of the income process
 	\end{itemize}
 	\begin{itemize}
-		\item Perceived risks about next-month growth $\Delta y_{i,t}$
+		\item Perceived risks about \textcolor{blue}{next-month} growth $\Delta y_{i,t}$
 		\begin{eqnarray*}
 			\begin{split}
 				& \overline {var_{i,t}}(\Delta y_{i,t+1}) & = E_{i,t}( {\sigma^2_{\theta,t+1}}) + \sigma^2_{\epsilon} \\
-				& & = \rho e^{-0.5\gamma} \sigma^2_{\theta,t}  + \sigma^2_{\epsilon} + \underbrace{\omega_{i,t}}_{\text{perception shock}}
+				& & = \rho e^{-0.5\gamma} \sigma^2_{i,\theta,t}  + \sigma^2_{\epsilon} 
 			\end{split}
 		\end{eqnarray*}
 		
-		\item Perceived risks about next-year growth $\Delta Y_{i,t}$
+		\item Perceived risks about \textcolor{blue}{next-year} growth $\Delta Y_{i,t}$
 		\begin{eqnarray*}
 		\begin{split}
 			& \overline {var_{i,t}}(\Delta Y_{i,t+12}) \\
-			& = \sum^{12}_{k=1} (12-k+1)^2 E_{i,t}( {\sigma^2_{\theta,t+k}}) + 12 \sigma^2_{\epsilon}  \\ 
-			& = \sum^{12}_{k=1} (12-k+1)^2 \rho^k e^{-0.5k\gamma} \sigma^2_{\theta,t}+ 12 \sigma^2_{\epsilon} \\ 	 
+			& = \sum^{12}_{k=1} (12-k+1)^2 E_{i,t}( {\sigma^2_{\theta,t+k}}) + 12^2 \sigma^2_{\epsilon} \\ 
+			& = \sum^{12}_{k=1} (12-k+1)^2 \rho^k e^{-0.5k\gamma} \sigma^2_{i,\theta,t}+ 12^2 \sigma^2_{\epsilon}  	 
 		\end{split}
 	\end{eqnarray*}
 	\end{itemize}
@@ -744,11 +743,11 @@
 
 \begin{frame}{Perceived permanent and transitory decomposition}
 	\begin{enumerate}
-	\item Do GMM estimation using observed perceived risks from the data 
+	\item SMM estimation using the following moments of perceptions 
 	\begin{itemize}
-     \item Using average perceived risks, variance, autocovariance across the whole population or within specified cohort
+     \item average perceived risks, variance, autocovariance across the whole population or within specified cohort
 	\end{itemize}
-\item A breakdown of perceived income risks into permanent and transitory components %With the estimated paramete, we will have a breakdown of the permanent and transitory risks. We can redo the exercises in previous sections seperately. 
+\item A breakdown of perceived risks into permanent and transitory components %With the estimated paramete, we will have a breakdown of the permanent and transitory risks. We can redo the exercises in previous sections seperately. 
 \end{enumerate}
 \end{frame}
 

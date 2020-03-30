@@ -91,7 +91,7 @@ sp500M
 sp500M.plot(lw = 3)
 #sp500Mplt = plt.title('S&P 500 (end of month)')
 
-sp500MR = np.log(sp500M).diff(periods = 1)
+sp500MR = np.log(sp500M).diff(periods = 12)
 
 sp500MR.plot(lw = 3 )
 sp500MRplt = plt.title('Monthly return of S&P 500')
@@ -270,6 +270,8 @@ dt_combM = pd.concat([sp500MR,
 # -
 
 dt_combM.tail()
+
+dt_combM.to_stata('../SurveyData/SCE/IncExpSCEPopMacroM.dta')
 
 # +
 ## save sp500 as stata for other analysis
@@ -706,27 +708,51 @@ corr_df.T.to_excel('../Tables/macro_corr_educ_gr.xlsx')
 
 corr_df
 
+mom_dict = {'exp':'expected nominal growth',
+          'rexp':'expected real growth',
+          'var':'nominal income risk',
+          'rvar':'real income risk',
+          'iqr':'nomial 75/25 IQR',
+           'skew':'skewness'}
+
+
+# + {"code_folding": []}
+## plot sp500 return forward months later and realized income 
+
+forward = 12
+
 # + {"code_folding": []}
 ## plots of correlation for MEDIAN population stats
 
 figsize = (80,40)
 lw = 20
-fontsize = 70
+fontsize = 80
 
 for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
-    ax.bar(dt_combM.index, dt_combM['sp500'], color='gray', width=25,label='SP500')
-    ax2.plot(dt_combM[str(moms)+'Med'],
+    ax.bar(dt_combM.index[:-forward], 
+           dt_combM['sp500'][forward:],
+           color = 'gray', 
+           width = 25,
+           label = 'sp500 YoY '+str(forward)+'m later')
+    ax2.plot(dt_combM.index,
+             dt_combM[str(moms)+'Med'],
              'r--',
              lw = lw,
-             label=str(moms)+' (RHS)')
+             label=str(mom_dict[moms])+' (RHS)')
     #ax.set_xticklabels(dt_combM.index)
-    ax.legend(loc = 0,
+    ax.legend(loc = 2,
               fontsize = fontsize)
     ax.set_xlabel("month",fontsize = fontsize)
     ax.set_ylabel('% return',fontsize = fontsize)
-    ax2.legend(loc=2,
+    ax.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.legend(loc = 1,
                fontsize = fontsize)
     ax2.set_ylabel(moms,fontsize = fontsize)
     plt.savefig('../Graphs/pop/tsMed'+str(moms)+'.jpg')
@@ -736,27 +762,33 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
 
 
 
-# + {"code_folding": [2]}
+# + {"code_folding": []}
 ## plots of correlation for Mean population stats
 
 for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
-    ax.bar(dt_combM.index,
-           dt_combM['sp500'],
+    ax.bar(dt_combM.index[:-forward],
+           dt_combM['sp500'][forward:],
            color='gray',
-           width=25,
-           label='SP500')
+           width= 25,
+           label= 'sp500 YoY '+str(forward)+'m later')
     ax2.plot(dt_combM[str(moms)+'Mean'],
              'r--',
              lw = lw,
-             label=str(moms)+' (RHS)')
+             label = str(mom_dict[moms])+' (RHS)')
     #ax.set_xticklabels(dt_combM.index)
-    ax.legend(loc=0,
+    ax.legend(loc = 2,
              fontsize = fontsize)
     ax.set_xlabel("month",fontsize = fontsize)
     ax.set_ylabel('% return',fontsize = fontsize)
-    ax2.legend(loc=2,
+    ax.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.legend(loc = 1,
               fontsize = fontsize)
     plt.savefig('../Graphs/pop/tsMean'+str(moms)+'.jpg')
 
@@ -780,21 +812,27 @@ crr3mv_table
 for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
-    ax.bar(dt_combM3mv.index,
-           dt_combM3mv['sp500'],
+    ax.bar(dt_combM3mv.index[:-forward],
+           dt_combM3mv['sp500'][forward:],
            color='gray',
            width=25,
-           label='SP500')
+           label = 'sp500 YoY '+str(forward)+'m later')
     ax2.plot(dt_combM3mv[str(moms)+'Med'],
              'r--',
              lw = lw,
-             label=str(moms)+' (RHS)')
+             label = str(mom_dict[moms])+' (RHS)')
     #ax.set_xticklabels(dt_combM.index)
     ax.legend(loc=0,
               fontsize = fontsize)
     ax.set_xlabel("month",fontsize = fontsize)
     ax.set_ylabel('% return',fontsize = fontsize)
-    ax2.legend(loc=2,
+    ax.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.legend(loc = 2,
               fontsize = fontsize)
     plt.savefig('../Graphs/pop/tsMed3mv'+str(moms)+'.jpg')
     #cor,pval = st.pearsonr(np.array(dt_combM3mv['sp500']),
@@ -808,15 +846,15 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
 for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
-    ax.bar(dt_combM3mv.index,
-           dt_combM3mv['sp500'],
+    ax.bar(dt_combM3mv.index[:-forward],
+           dt_combM3mv['sp500'][forward:],
            color='gray',
            width=25,
-           label='SP500')
+           label='sp500 YoY '+str(forward)+'m later')
     ax2.plot(dt_combM3mv[str(moms)+'Mean'],
              'r--',
              lw = lw,
-             label=str(moms)+' (RHS)')
+             label=str(mom_dict[moms])+' (RHS)')
     #ax.set_xticklabels(dt_combM.index)
     ax.legend(loc=0,
              fontsize = fontsize)
@@ -824,6 +862,12 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
     ax.set_ylabel('% return',fontsize = fontsize)
     ax2.legend(loc=2,
              fontsize = fontsize)
+    ax.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.tick_params(axis='both',
+                    which='major',
+                    labelsize = fontsize)
     plt.savefig('../Graphs/pop/tsMean3mv'+str(moms)+'.jpg')
     #cor,pval =st.pearsonr(np.array(dt_combM['sp500']),
     #                      np.array(dt_combM3mv[str(moms)+'Mean']))
@@ -835,14 +879,15 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
 # ### 7. Individual regressions
 
 # + {"code_folding": []}
-lead = 2
-
 for i,moms in enumerate( ['incexp','incvar','inciqr','rincvar','incskew']):
     print(moms)
-    Y = np.array(dt_combIndM[moms])[lead+1:]
-    X = np.array(dt_combIndM['sp500'])[:-(lead+1)]
+    Y = np.array(dt_combIndM[moms])[forward:]
+    X = np.array(dt_combIndM['sp500'])[:-forward]
     X = sm.add_constant(X)
     model = sm.OLS(Y,X)
     rs = model.fit()
     print(rs.summary())
+
+# -
+
 

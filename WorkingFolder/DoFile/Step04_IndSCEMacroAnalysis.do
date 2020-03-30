@@ -29,17 +29,30 @@ drop date_str
 order userid date 
 xtset userid date 
 
+**********************
+***** Other measures **
+************************
+
+
+local Moments incvar rincvar inciqr incskew 
+
+foreach mom in `Moments'{
+gen `mom'_ch = `mom' - l1.`mom'
+label var `mom'_ch "change in `mom'"
+}
+
 
 ************************
 ***** regression *******
 ***********************
 
-local Moments incexp rincexp incvar rincvar inciqr incskew 
 
+xtset userid date 
 
 foreach mom in `Moments'{
+*newey  `mom'  c.f1.sp500, lag(10)
 *reg `mom'  c.l1.sp500##i.byear_gr c.l1.sp500##i.HHinc_gr c.l1.sp500##i.educ_gr c.l1.sp500##i.age_gr
-reg `mom'  c.Stkprob##i.byear_gr c.Stkprob##i.HHinc_gr c.Stkprob##i.educ_gr c.Stkprob##i.age_gr
+*reg `mom'  c.Stkprob##i.byear_gr c.Stkprob##i.HHinc_gr c.Stkprob##i.educ_gr c.Stkprob##i.age_gr
 
 }
 
