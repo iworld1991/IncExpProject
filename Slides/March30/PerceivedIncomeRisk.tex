@@ -117,17 +117,16 @@
 		\item Risks matter for individual decisions
 		\begin{itemize}
 			\item precautionary saving
-			\item portfolio choice 
+			\item portfolio choice and stock market participation
 		\end{itemize} 
 		%%Not just expectation of income but also \textcolor{blue}{high moments} such as income risks matter for consumption/portfolio decisions, i.e. precautionary motives, stock market investment, etc. 
-	    \item \textcolor{blue}{Perceived} risks enter in their calculation 
-	    %%People make  their decisions based on there \textit{their} perceptions
 		\item Risks matter for macroeconomic outcomes
 		\begin{itemize}
-			\item If idiosyncratic risks are not perfectly insured 
+			\item Since idiosyncratic risks are not perfectly insured 
 			\item Different wealth $\rightarrow$ different MPCs $\rightarrow$ distributional channel of macroeconomic policies 
 		\end{itemize}  %%\textcolor{blue}{Uninsurance} of idiosyncratic risks make it matter in macroeconomics, i,e. the important assumption by the HANK literature  
-		\item Perceptions $\approx$ `` the truth'' $\approx$  estimates from inequality  ? %%It is unclear if perceptions consistent with econometricians' estimates of income risks from cross-sectional inequality and the those used in structural models
+		\item Risks estimated from the inequality $\approx$  ``The truth''  $\approx$ perceptions? %%It is unclear if perceptions consistent with econometricians' estimates of income risks from cross-sectional inequality and the those used in structural models   What enter in people's calculation are \textcolor{blue}{perceived} risks 
+		%%People make  their decisions based on there \textit{their} perceptions
 	\end{itemize}
 \end{frame}
 
@@ -137,18 +136,21 @@
 	\begin{enumerate}
 		\item \textbf{Empirics:} subjective risk profiles from density surveys
 		\begin{itemize}
-			\item differ systematically by \textcolor{blue}{age, generation, gender and education}
-			\item non-normality, i.e half of population have \textcolor{blue}{non-zero skewness}
+			\item differ systematically by \textcolor{blue}{income, age, generation,  and education}
+			\item affect  \textcolor{blue}{planned spendings} 
+			\item non-normality, i.e half of population have
+		    \textcolor{blue}{non-zero skewness}
 			\item \textcolor{blue}{negatively correlate with stock market returns}
-			 \item how persistent ? (work in progress)
+			 \item how persistent? (work in progress)
 		\end{itemize}
-		\item \textbf{Theory}: a heterogeneous-agent  model with \textcolor{blue}{imperfect understanding} of income process
+		\item \textbf{Theory}: a \textcolor{blue}{subjective} heterogeneous-agent model 
 		\begin{itemize}
-			\item a  model of income expectation
+			\item  \textcolor{blue}{imperfect understanding} of income process
 			\begin{itemize}
-				\item for instance, the experience-learning to account for perceptual dfferences 
+				\item i.e. experiences $\rightarrow$ perceptual dfferences across age and generation 
 			\end{itemize}
-			\item build it in a structural heterogenous-agent model 
+			\item life-cycle consumption and portfolio choice 
+			\item uninsured idioyncratic risks (and aggregate risks)
 		\end{itemize} 
 \end{enumerate}
 \end{frame}
@@ -157,12 +159,13 @@
 \begin{frame}{Literature}
 	%% Let me not spend too much time on the literature. But 
 \begin{itemize}
+	 \item subjective survey, especially on probabilist surveys.  \cite{manski_measuring_2004}, \cite{delavande2011measuring}, \cite{manski_survey_2018},  \cite{bertrand_people_2001}, \cite{armantier_overview_2017}
 	\item ``insurance or information'':  \cite{kaufmann_disentangling_2009},  \cite{meghir2011earnings}, \cite{pistaferri_superior_2001}, New York Fed Blog (2019),  \cite{flavin_excess_1988}
-   \item consumption/saving and portfolio choice incorporating imperfect perception/understanding. \cite{rozsypal_overpersistence_2017}, \cite{carroll_sticky_2018}, \cite{lian2019imperfect}
+   \item consumption/saving and portfolio choice under imperfect perception/understanding. \cite{rozsypal_overpersistence_2017}, \cite{carroll_sticky_2018}, \cite{lian2019imperfect}
    \item expectation formation, mostly on macroeconomic variables, \cite{coibion2012can}, \cite{fuhrer2018intrinsic}, etc
-   \item subjective survey, especially on probabilist surveys.  \cite{manski_measuring_2004}, \cite{delavande2011measuring}, \cite{manski_survey_2018},  \cite{bertrand_people_2001}, \cite{armantier_overview_2017}
-   \item heterogeneous agent macro (HANK): uninsured idiosyncratic risks lead to ex-post heterogeneity and macro policy transmission. \cite{xxx}
-   \item long-run risk \cite{xxx} 
+
+   \item counter-cyclical labor income risks: \cite{storesletten2004cyclical}, \cite{guvenen2014nature}, \cite{catherine_countercyclical_2019}
+      \item heterogeneous-agent New Keyesian models (HANK)
   \end{itemize}
 \end{frame}
 
@@ -182,20 +185,21 @@
 				Sample size                                    & 1,300                                  \\
 				Density variable                    &  \textcolor{blue}{1-yr-ahead earning growth   (same position/hours) }           \\
 				Pannel structure                               & 12 months      \\
-				Demographics                     & educ, income, age        \\
+				Demographics                     & educ, income, age, gender, state       \\
 				\hline 
 			\end{tabular}
 		}
 	\end{table}
 	\begin{itemize}
-		\item density estimation following (\cite{engelberg_comparing_2009})
-		\item exclude top and bottom 3\% values for forecast errors and uncertainty
+		\item density estimation following \cite{engelberg_comparing_2009}
+		\item exclude top and bottom 1\% values of each moment
 	\end{itemize}
 \end{frame}
 
 
 \begin{frame}{Definition}
 	\begin{itemize}
+		\item $\Delta Y_{i,t+12}$ : next-year growth of the same job/position/hours
 		\item Moments to look
 		\begin{itemize}
 			\item expected growth, $E_{i,t} (\Delta Y_{i,t+12})$
@@ -207,7 +211,7 @@
 			\item $E_{i,t}(\Delta Y^r_{i,t+12}) =E_i(\Delta Y_{i,t+12}^n) - E_{i,t+12}(\pi_{t+12})$
 			\item $\overline{var}_{i,t}(\Delta Y_{i,t+12}^r) =\overline {var}_{i,t}(\Delta Y_{i,t+12}^n) +  \overline {var}_{i,t}(\pi_{t+12})$
 		\end{itemize}
-		\item Conditional on employment
+		\item Does not reflect unemployment risk 
 		\begin{itemize}
 			\item Can be converted into the unconditional risk using perceived unemployment risk ( same-job-hour risk is just a lower bound).  %% I did not do the adjustment. I use same-job-hour income growth throughout my analysis.
 		\end{itemize}
@@ -218,27 +222,28 @@
 
 %%% the purpose of examining cross-sectional distribituon are twofold. First, since there are not many work that has been showing these basic facts. I think it is important to be aware of the new facts. Second, for those of you who are still a little doubtful about the survey data, it helps us assure the surveyed data shows some patterns that are intuitive and consistent.  
 
-\begin{frame}{Cross-sectional distribution of expected income growth}
+\begin{frame}{Cross-sectional of income growth expectation}
 	\begin{figure}
 	\centering
 	\label{incexp_hist}
 	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\caption{nominal income expectation}
+		\caption{expected growth of nominal}
 		\includegraphics[width=\textwidth]{figures/hist_incexp}
 	\end{subfigure}
 	\begin{subfigure}[b]{0.45\textwidth}
 		\centering
-		\caption{real income expectation}
+		\caption{expected growth of real}
 		\includegraphics[width=\textwidth]{figures/hist_rincexp}
 	\end{subfigure}
 \end{figure}
 	\begin{itemize}
-		\item Nominal rigity can be seen from the expected norminal earning growth, while real expected growth become symmetric 
+		\item nominal income: right-skewed and mostly positive   
+		\item real income: symmetric around zero  
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Cross-sectional distribution of income dispersion}
+\begin{frame}{Cross-section of income risks}
 	\begin{figure}
 		\centering
 		\label{incvar_hist}
@@ -254,12 +259,12 @@
 	\end{subfigure}
 	\end{figure}
 	\begin{itemize}
-		\item average perceived income risks:  $3\%$ standard deviation for nominal and $4\%$ standard deviation for real income
+		\item average perceived income risks:  $2.5\%$ standard deviation for nominal and $3.5\%$ standard deviation for real income
 		\item just a lower bound: before adjustment of unemployment risk 
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Cross-sectional distribution of tail risks}
+\begin{frame}{Cross-section of tail risks}
 	\begin{figure}
 	\centering
 	\label{incskew_hist}
@@ -276,31 +281,30 @@
 
 
 
-\begin{frame}{Perceived income risks by household income}
-	\begin{figure}[ht]
-		\label{ts_incvar_HHinc_g_mean}
-		\begin{subfigure}[b]{0.7\textwidth}
-			\centering
-			\caption{income risks}
-			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incvar_HHinc_g_mean.png}
-		\end{subfigure}
-		\begin{subfigure}[b]{0.7\textwidth}
-			\caption{skewness}
-			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incskew_HHinc_g_mean.png}
-		\end{subfigure}
-	\end{figure}
-\end{frame}
+%\begin{frame}{Perceived income risks by household income}
+%	\begin{figure}[ht]
+%		\label{ts_incvar_HHinc_g_mean}
+%		\begin{subfigure}[b]{0.7\textwidth}
+%			\centering
+%			\caption{income risks}
+%			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_rincvar_HHinc_g_mean.png}
+%		\end{subfigure}
+%		\begin{subfigure}[b]{0.7\textwidth}
+%			\caption{skewness}
+%			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incskew_HHinc_g_mean.png}
+%		\end{subfigure}
+%	\end{figure}
+%\end{frame}
 
 
 \begin{frame}{Perceived income risks by household income}
 	\begin{figure}
 		\centering
 		\label{boxplot_hhinc}
-		\includegraphics[width=0.8\textwidth]{figures/boxplot_exp_HHinc} \\
 		\includegraphics[width=0.8\textwidth]{figures/boxplot_var_HHinc}
 	\end{figure}
 	\begin{itemize}
-		\item 
+		\item Similar to the pattern of earning growth dispersion conditional on income in \cite{bloom2018great}. 
 	\end{itemize}
 \end{frame}
 
@@ -309,125 +313,96 @@
 \begin{frame}{Perceived income risks by age}
 	\begin{figure}[ht]
 		\label{ts_incvar_age_g_mean}
-		\begin{subfigure}[b]{0.7\textwidth}
+		\begin{subfigure}[b]{0.46\textwidth}
 			\centering
 			\caption{risks}
-			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incvar_age_g_mean.png}
+			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_rincvar_age_g_median.png}
 		\end{subfigure}
-		\begin{subfigure}[b]{0.7\textwidth}
+		\begin{subfigure}[b]{0.46\textwidth}
 			\caption{skewness}
 			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incskew_age_g_mean.png}
-		\end{subfigure}
+	\end{subfigure}
 	\end{figure}
-\end{frame}
+\begin{itemize}
+	\item in line with existing findings, for instance  
+	\cite{bloom2018great}. 
+\end{itemize}
+ \end{frame}
 
-\begin{frame}{Perceived income risks by age}
-	\begin{figure}
-		\centering
-		\label{boxplot_age_gr}
-		\includegraphics[width=0.8\textwidth]{figures/boxplot_exp_age_gr} \\
-		\includegraphics[width=0.8\textwidth]{figures/boxplot_var_age_gr}
-	\end{figure}
-	\begin{itemize}
-		\item 
-	\end{itemize}
-\end{frame}
+%\begin{frame}{Perceived income risks by age}
+%	\begin{figure}
+%		\centering
+%		\label{boxplot_age_gr}
+%		\includegraphics[width=0.8\textwidth]{figures/boxplot_exp_age_gr} \\
+%		\includegraphics[width=0.8\textwidth]{figures/boxplot_var_age_gr}
+%	\end{figure}
+%	\begin{itemize}
+%		\item 
+%	\end{itemize}
+%\end{frame}
 
 
 \begin{frame}{Perceived income risks by generation}
 	\begin{figure}[ht]
 		\label{ts_incvar_byear_g_mean}
-		\begin{subfigure}[b]{0.7\textwidth}
+		\begin{subfigure}[b]{0.46\textwidth}
 			\centering
 			\caption{risks}
-			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incvar_byear_g_mean.png}
+			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_rincvar_byear_g_median.png}
 		\end{subfigure}
-		\begin{subfigure}[b]{0.7\textwidth}
+		\begin{subfigure}[b]{0.46\textwidth}
 			\caption{skewness}
-			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incskew_byear_g_mean.png}
+			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incskew_byear_g_median.png}
 		\end{subfigure}
 	\end{figure}
 \end{frame}
 
 
-\begin{frame}{Perceived income risks by generation}
-	\begin{figure}
-		\centering
-		\label{boxplot_byear_gr}
-		\includegraphics[width=0.8\textwidth]{figures/boxplot_exp_byear_gr} \\
-		\includegraphics[width=0.8\textwidth]{figures/boxplot_var_byear_gr}
-	\end{figure}
-	\begin{itemize}
-		\item 
-	\end{itemize}
-\end{frame}
+%\begin{frame}{Perceived income risks by generation}
+%	\begin{figure}
+%		\centering
+	%	\label{boxplot_byear_gr}
+%	\includegraphics[width=0.8\textwidth]{figures/boxplot_var_byear_gr}
+%	\end{figure}
+%	\begin{itemize}
+	%	\item 
+%	\5end{itemize}
+%\end{frame}
 
 
 \begin{frame}{Perceived income risks by education}
 	\begin{figure}[ht]
 		\label{ts_incvar_educ_g_mean}
-		\begin{subfigure}[b]{0.7\textwidth}
+		\begin{subfigure}[b]{0.46\textwidth}
 			\centering
 			\caption{risks}
-			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incvar_edu_g_mean.png}
+			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_rincvar_edu_g_mean.png}
 		\end{subfigure}
-		\begin{subfigure}[b]{0.7\textwidth}
+		\begin{subfigure}[b]{0.46\textwidth}
 			\caption{skewness}
 			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incskew_edu_g_mean.png}
 		\end{subfigure}
 	\end{figure}
-\end{frame}
-
-
-\begin{frame}{Perceived income risks by education}
-	\begin{figure}
-		\centering
-		\label{boxplot_educ_gr}
-		\includegraphics[width=0.8\textwidth]{figures/boxplot_exp_edu_gr} \\
-		\includegraphics[width=0.8\textwidth]{figures/boxplot_var_edu_gr}
-	\end{figure}
 	\begin{itemize}
-		\item 
-	\end{itemize}
-
+			\item not the same to findings, for instance  
+			\cite{meghir2004income}
+		\end{itemize}
 \end{frame}
 
 
-\begin{frame}{Covariants of expected income growth}
-	\begin{table}
-		\centering
-		\caption{Expected income growth and individual characteristics}
-		\label{micro_reg_exp}
-		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
-			\begin{tabular}{ccccccccc}
-				\hline 
-				{} &  incexp I & incexp II & incexp III & incexp IIII & rincexp I & rincexp II & rincexp III & rincexp IIII \\
-				\hline 
-				HHinc\_gr=low inc &           &           &      -0.03 &             &           &            &    -0.39*** &              \\
-				&           &           &     (0.02) &             &           &            &      (0.03) &              \\
-				educ\_gr=low educ &           &           &            &    -0.25*** &           &            &             &     -0.63*** \\
-				&           &           &            &      (0.02) &           &            &             &       (0.03) \\
-				gender=male      &           &           &            &    -0.32*** &           &            &             &     -0.78*** \\
-				&           &           &            &      (0.02) &           &            &             &       (0.03) \\
-				parttime=yes     &  -0.47*** &  -0.36*** &   -0.35*** &             &  -0.63*** &   -0.53*** &    -0.44*** &              \\
-				&    (0.03) &    (0.03) &     (0.03) &             &    (0.04) &     (0.04) &      (0.04) &              \\
-				selfemp=yes      &   0.86*** &  -0.00*** &    0.00*** &             &   0.84*** &   -0.00*** &    -0.00*** &              \\
-				&    (0.03) &    (0.00) &     (0.00) &             &    (0.05) &     (0.00) &      (0.00) &              \\
-				Stkprob          &           &   0.01*** &    0.01*** &             &           &    0.02*** &     0.02*** &              \\
-				&           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-				UEprobInd        &           &  -0.01*** &   -0.01*** &             &           &   -0.02*** &    -0.02*** &              \\
-				&           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-				Intercept        &   2.82*** &   2.57*** &    2.58*** &     3.05*** &  -0.29*** &   -0.92*** &    -0.80*** &      0.20*** \\
-				&    (0.01) &    (0.02) &     (0.02) &      (0.02) &    (0.02) &     (0.03) &      (0.03) &       (0.02) \\
-				\hline 
-				N                &     54275 &     48606 &      48606 &       47712 &     49702 &      44446 &       44446 &        43694 \\
-				R2               &      0.01 &      0.02 &       0.02 &        0.01 &      0.01 &       0.04 &        0.04 &         0.02 \\
-				
-				\hline 
-			\end{tabular}
-		}
-	\end{table}
-\end{frame}
+%\begin{frame}{Perceived income risks by education}
+%	\begin{figure}
+%		\centering
+%		\label{boxplot_educ_gr}
+%		\includegraphics[width=0.8\textwidth]{figures/boxplot_exp_edu_gr} \\
+%		\includegraphics[width=0.8\textwidth]{figures/boxplot_var_edu_gr}
+%	\end{figure}
+%	\begin{itemize}
+%		\item 
+%	\end{itemize}
+% \end{frame}
+
+
 
 \begin{frame}{Covariants of perceived income risks}
 	\begin{table}
@@ -435,7 +410,6 @@
 		\caption{Perceived income risks and individual characteristics}
 		\label{micro_reg}
 		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
-
 \begin{tabular}{ccccccccc}
 	\hline 
 	{} & incvar I & incvar II & incvar III & incvar IIII & rincvar I & rincvar II & rincvar III & rincvar IIII \\
@@ -513,7 +487,31 @@
 \subsection{Correlation with the stock market}
 
 
+\begin{frame}{Dispersion risks and stock market performance}
+	\begin{figure}
+		\centering
+		\label{ts_var}
+		\includegraphics[width=\textwidth]{figures/tsMeanvar.jpg}
+	\end{figure}
+\end{frame}
+
+
+
+\begin{frame}{Tail risks and stock market performance}
+	\begin{figure}
+		\centering 
+		\label{ts_skew}
+		\includegraphics[width=\textwidth]{figures/tsEstMeanskew.jpg}
+	\end{figure}
+\end{frame}
+
+
 \begin{frame}{Perceived income risks and stock market performance}
+	
+\begin{itemize}
+	\item Stock market return: $log(\text{sp500}_{t+k+12}) - log(\text{sp500}_{t+k})$ $\forall k =0,1...11$  
+	\item Income risks: average or median of $\overline{var}_{i,t}(\Delta Y_{i,t+12})$,  $\overline{iqr}_{i,t}(\Delta Y_{i,t+12})$, $\overline{skew}_{i,t}(\Delta Y_{i,t+12})$, etc. 
+\end{itemize}
 \begin{table}
 	\centering
 \caption{Correlation between Perceived Income Risks and Stock Market Return}
@@ -565,7 +563,7 @@
 \end{frame}
 
 
-\begin{frame}{Perceived income risks and stock market performance by age}
+\begin{frame}{By age}
 	\begin{table}
 		\centering
 		\caption{Correlation between Perceived Income Risks and Stock Market Return}
@@ -592,7 +590,7 @@
 
 
 
-\begin{frame}{Perceived income risks and stock market performance by generation}
+\begin{frame}{By generation}
 	\begin{table}
 		\centering
 		\caption{Correlation between Perceived Income Risks and Stock Market Return}
@@ -619,7 +617,7 @@
 \end{frame}
 
 
-\begin{frame}{Perceived income risks and stock market performance by education}
+\begin{frame}{By education}
 	\begin{table}
 		\centering
 		\caption{Correlation between Perceived Income Risks and Stock Market Return}
@@ -627,7 +625,7 @@
 		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
 			\begin{tabular}{lllllllllllll}
 					\hline 
-				{leads} & 0                          & 1     & 2     & 3      & 4     & 5      & 6      & 7       & 8      & 9     & 10      & 11             \\
+				{leads} & 0       & 1     & 2     & 3      & 4     & 5      & 6      & 7       & 8      & 9     & 10      & 11             \\
 					\hline 
 				mean:incvar for low educ   & 0.06  & 0.11  & 0.13   & 0.1   & -0.0   & 0.05   & 0.01    & -0.08  & -0.17 & -0.25** & -0.31** & -0.22*  \\
 				mean:incvar for high educ  & 0.02  & 0.04  & -0.01  & -0.1  & -0.21* & -0.22* & -0.27** & -0.3** & -0.21 & -0.27** & -0.31** & -0.24*  \\
@@ -641,11 +639,25 @@
 \end{frame}
 
 
-%\begin{frame}{Dispersion risks and stock market performance}
+
+
+%\begin{frame}{Perceived correlaton with stock market by income}
 %	\begin{figure}
 %		\centering
-%		\label{ts_var}
-%		\includegraphics[width=\textwidth]{figures/tsMeanvar.jpg}
+%		\label{ts_stk_hhinc}
+%		\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_incvar_HHinc_g_mean_stk} \\
+%		\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_incskew_HHinc_g_mean_stk} 
+%	\end{figure}
+%\end{frame}
+
+
+
+%\begin{frame}{Perceived correlaton with stock market by age}
+%	\begin{figure}
+%		\centering
+%		\label{ts_stk_age_g}
+%		\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_incvar_age_g_mean_stk} \\
+%		\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_incskew_age_g_mean_stk} 
 %	\end{figure}
 %	\begin{itemize}
 %		\item 
@@ -654,11 +666,12 @@
 
 
 
-%\begin{frame}{Tail risks and stock market performance}
+%\begin{frame}{Perceived correlaton with stock market by generation}
 %	\begin{figure}
 %		\centering
-%		\label{ts_skew}
-%		\includegraphics[width=\textwidth]{figures/tsEstMeanskew.jpg}
+%		\label{ts_stk_byear_g}
+%		\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_rincvar_byear_g_mean_stk} \\
+%			\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_incskew_byear_g_median_stk} 
 %	\end{figure}
 %	\begin{itemize}
 %		\item 
@@ -666,58 +679,17 @@
 %\end{frame}
 
 
-
-\begin{frame}{Perceived correlaton with stock market by income}
-	\begin{figure}
-		\centering
-		\label{ts_stk_hhinc}
-		\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_incvar_HHinc_g_mean_stk} \\
-		\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_incskew_HHinc_g_mean_stk} 
-	\end{figure}
-	\begin{itemize}
-		\item 
-	\end{itemize}
-\end{frame}
-
-
-\begin{frame}{Perceived correlaton with stock market by age}
-	\begin{figure}
-		\centering
-		\label{ts_stk_age_g}
-		\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_incvar_age_g_mean_stk} \\
-		\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_incskew_age_g_mean_stk} 
-	\end{figure}
-	\begin{itemize}
-		\item 
-	\end{itemize}
-\end{frame}
-
-
-
-\begin{frame}{Perceived correlaton with stock market by generation}
-	\begin{figure}
-		\centering
-		\label{ts_stk_byear_g}
-		\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_incvar_byear_g_mean_stk} \\
-			\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_incskew_byear_g_mean_stk} 
-	\end{figure}
-	\begin{itemize}
-		\item 
-	\end{itemize}
-\end{frame}
-
-
-\begin{frame}{Perceived correlaton with stock market by education}
-	\begin{figure}
-		\centering
-		\label{ts_stk_edu_g}
-		\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_incvar_edu_g_mean_stk} \\
-			\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_incskew_edu_g_mean_stk} 
-	\end{figure}
-	\begin{itemize}
-		\item 
-	\end{itemize}
-\end{frame}
+%\begin{frame}{Perceived correlaton with stock market by education}
+%	\begin{figure}
+%		\centering
+%		\label{ts_stk_edu_g}
+%		\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_incvar_edu_g_mean_stk} \\
+%			\includegraphics[width=0.8\textwidth, height=\0.4\textheight]{figures/ts_incskew_edu_g_mean_stk} 
+%	\end{figure}
+%	\begin{itemize}
+%		\item 
+%	\end{itemize}
+%\end{frame}
 
 
 \subsection{Permanent/transitory decomposition (work in progress)}
@@ -808,12 +780,42 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section{Conclusion}
+\section*{Appendix}
 
-\begin{frame}{Conclusion}
-	\begin{itemize}
-		\item ddddd
-	\end{itemize}	
+\begin{frame}{Covariants of expected income growth}
+	\begin{table}
+		\centering
+		\caption{Expected income growth and individual characteristics}
+		\label{micro_reg_exp}
+		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
+			\begin{tabular}{ccccccccc}
+				\hline 
+				{} &  incexp I & incexp II & incexp III & incexp IIII & rincexp I & rincexp II & rincexp III & rincexp IIII \\
+				\hline 
+				HHinc\_gr=low inc &           &           &      -0.03 &             &           &            &    -0.39*** &              \\
+				&           &           &     (0.02) &             &           &            &      (0.03) &              \\
+				educ\_gr=low educ &           &           &            &    -0.25*** &           &            &             &     -0.63*** \\
+				&           &           &            &      (0.02) &           &            &             &       (0.03) \\
+				gender=male      &           &           &            &    -0.32*** &           &            &             &     -0.78*** \\
+				&           &           &            &      (0.02) &           &            &             &       (0.03) \\
+				parttime=yes     &  -0.47*** &  -0.36*** &   -0.35*** &             &  -0.63*** &   -0.53*** &    -0.44*** &              \\
+				&    (0.03) &    (0.03) &     (0.03) &             &    (0.04) &     (0.04) &      (0.04) &              \\
+				selfemp=yes      &   0.86*** &  -0.00*** &    0.00*** &             &   0.84*** &   -0.00*** &    -0.00*** &              \\
+				&    (0.03) &    (0.00) &     (0.00) &             &    (0.05) &     (0.00) &      (0.00) &              \\
+				Stkprob          &           &   0.01*** &    0.01*** &             &           &    0.02*** &     0.02*** &              \\
+				&           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+				UEprobInd        &           &  -0.01*** &   -0.01*** &             &           &   -0.02*** &    -0.02*** &              \\
+				&           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+				Intercept        &   2.82*** &   2.57*** &    2.58*** &     3.05*** &  -0.29*** &   -0.92*** &    -0.80*** &      0.20*** \\
+				&    (0.01) &    (0.02) &     (0.02) &      (0.02) &    (0.02) &     (0.03) &      (0.03) &       (0.02) \\
+				\hline 
+				N                &     54275 &     48606 &      48606 &       47712 &     49702 &      44446 &       44446 &        43694 \\
+				R2               &      0.01 &      0.02 &       0.02 &        0.01 &      0.01 &       0.04 &        0.04 &         0.02 \\
+				
+				\hline 
+			\end{tabular}
+		}
+	\end{table}
 \end{frame}
 
 \bibliographystyle{apalike}

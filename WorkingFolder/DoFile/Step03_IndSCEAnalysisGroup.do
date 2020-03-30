@@ -19,7 +19,7 @@ log using "${mainfolder}/indSCE_Est_log",replace
 use "${mainfolder}/OtherData/sp500.dta",clear 
 
 generate new_date = dofc(DATE)
-format new_date %tm
+*format new_date %tm
 gen year = year(new_date)
 gen month = month(new_date)
 gen date_str = string(year)+ "m"+string(month)
@@ -97,6 +97,7 @@ rename Q13new UEprobInd
 rename Q26v2 spending_dum
 rename Q26v2part2 spending 
 
+
 ************************
 ** focus on non-zero skewness
 ****************************
@@ -116,16 +117,15 @@ foreach var in `Moments'{
 	  replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
 }
 
-
+/*
 * other thresholds 
-
 
 foreach var in `Moments'{
       egen `var'l_truc=pctile(`var'),p(8)
 	  egen `var'u_truc=pctile(`var'),p(92)
 	  replace `var' = . if `var' <`var'l_truc | (`var' >`var'u_truc & `var'!=.)
 }
-
+*/
 
 *****************************
 *** generate other vars *****
@@ -141,9 +141,11 @@ label var state_id "state id"
 *** generate group vars *****
 *****************************
 
-egen byear_g = cut(byear), group(4)
+*egen byear_g = cut(byear), group(4)
 
-label define byearglb 0 "1950s" 1 "1960s" 2 "1970s" 3 "1980s"
+gen byear_g = cond(byear>=1980,1,0)
+label define byearglb 0 "before 1980s" 1 "after 1980s"
+*label define byearglb 0 "1950s" 1 "1960s" 2 "1970s" 3 "1980s"
 label value byear_g byearlb
 
 egen age_g = cut(age), group(3)  
@@ -159,10 +161,13 @@ label value edu_g edulb
 label define gdlb 0 "Male" 1 "Female" 
 label value gender gdlb
 
-egen HHinc_g = cut(HHinc), group(3)
+egen HHinc_g = cut(HHinc), group(2)
 label var HHinc_g "Household income group"
-label define HHinc_glb 0 "low inc" 1 "middle inc" 2 "high inc"
+label define HHinc_glb 0 "low inc" 1 "high inc"
 label value HHinc_g HHinc_glb
+
+label define gender_glb 1 "male" 2 "female"
+label value gender gender_glb
 
 local group_vars byear_g age_g edu_g HHinc_g 
 
@@ -254,7 +259,58 @@ graph export "${sum_graph_folder}/hist/hist_`mom'_`gp'.png",as(png) replace
 *** time series pltos by group *****
 **********************************
 
+** 2 groups 
+foreach agg in mean median{
+  foreach gp in byear_g{
+   preserve 
+   
+   collapse (`agg') `Moments' sp500, by(date `gp')
+   xtset `gp' date 
 
+foreach mom in `Moments'{
+keep if `mom'!=.
+* moments only 
+
+twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
+       (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)), ///
+       xtitle("date") ///
+	   ytitle("") ///
+	   title("`mom' by generation") ///
+	   legend(label(1 "before 1980s") label(2 "after 1980s") col(4))
+ graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
+ 
+ 
+** compute correlation coefficients 
+pwcorr `mom' f2.sp500 if `gp'==0, star(0.05)
+local rho_1: display %4.2f r(rho) 
+pwcorr `mom' f2.sp500 if `gp'==1, star(0.05)
+local rho_2: display %4.2f r(rho) 
+pwcorr `mom' f2.sp500 if `gp'==2, star(0.05)
+local rho_3: display %4.2f r(rho) 
+pwcorr `mom' f2.sp500 if `gp'==3, star(0.05)
+local rho_4: display %4.2f r(rho) 
+
+** moments and sp500 
+*** correlation with stock market by group *****
+
+twoway (bar sp500 date if `gp'== 1,yaxis(2) fcolor(gs10)) ///
+       (tsline `mom' if `gp'== 1,lp(shortdash) lwidth(thick)), ///	   
+       xtitle("date") ///
+	   ytitle("") ///
+	   ytitle("sp500 return (%)",axis(2)) ///
+	   title("`mom' by generation") ///
+	   legend(label(1 "sp500 (RHS)")  label(2 "1980s") col(3)) ///
+	   caption("{superscript:1950s corr =`rho_1', 1960s corr =`rho_2', 1970s corr =`rho_3',1980s corr =`rho_4',}", ///
+	   justification(left) position(11) size(vlarge))
+ graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
+ 
+}
+  restore
+}
+}
+
+
+/*
 ** 4 groups 
 foreach agg in mean median{
   foreach gp in byear_g{
@@ -306,6 +362,7 @@ twoway (bar sp500 date if `gp'== 3,yaxis(2) fcolor(gs10)) ///
   restore
 }
 }
+*/
 
 ** 3 groups fo HH income 
 foreach agg in mean median{
@@ -323,12 +380,11 @@ keep if `mom'!=.
 
 * moments only 
 twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
-       (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)) ///
-	   (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)), ///
+       (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)), ///
        xtitle("date") ///
 	   ytitle("") ///
 	   title("`mom' by household income") ///
-	   legend(label(1 "low") label(2 "median") label(3 "high")  col(3))
+	   legend(label(1 "low") label(2 "high")  col(3))
  graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
  
 ** compute correlation coefficients 
@@ -336,14 +392,14 @@ pwcorr `mom' f2.sp500 if `gp'==0, star(0.05)
 local rho_lw: display %4.2f r(rho) 
 pwcorr `mom' f2.sp500 if `gp'==1, star(0.05)
 local rho_md: display %4.2f r(rho) 
-pwcorr `mom' f2.sp500 if `gp'==2, star(0.05)
-local rho_hg: display %4.2f r(rho) 
+*pwcorr `mom' f2.sp500 if `gp'==2, star(0.05)
+*local rho_hg: display %4.2f r(rho) 
 
 ** moments and sp500 
 *** correlation with stock market by group *****
 
-twoway (bar sp500 date if `gp'== 2,yaxis(2) fcolor(gs10)) ///
-	   (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)), ///
+twoway (bar sp500 date if `gp'== 1,yaxis(2) fcolor(gs10)) ///
+	   (tsline `mom' if `gp'== 1,lp(shortdash) lwidth(thick)), ///
        xtitle("date") ///
 	   ytitle("") ///
 	   ytitle("sp500 return (%)",axis(2)) ///
@@ -357,7 +413,6 @@ twoway (bar sp500 date if `gp'== 2,yaxis(2) fcolor(gs10)) ///
   restore
 }
 }
-
 
 
 ** 3 groups fo age
@@ -383,11 +438,11 @@ twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
  
  
 ** compute correlation coefficients 
-pwcorr `mom' f11.sp500 if `gp'==0, star(0.05)
+pwcorr `mom' f2.sp500 if `gp'==0, star(0.05)
 local rho_y: display %4.2f r(rho) 
-pwcorr `mom' f11.sp500 if `gp'==1, star(0.05)
+pwcorr `mom' f2.sp500 if `gp'==1, star(0.05)
 local rho_m: display %4.2f r(rho) 
-pwcorr `mom' f11.sp500 if `gp'==2, star(0.05)
+pwcorr `mom' f2.sp500 if `gp'==2, star(0.05)
 local rho_o: display %4.2f r(rho) 
 
 ** moments and sp500 
@@ -409,7 +464,7 @@ twoway (bar sp500 date if `gp'== 2,yaxis(2) fcolor(gs10)) ///
 }
 }
 
-*/
+
 
 
 ** 2 groups 
@@ -433,9 +488,9 @@ twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
 
  
 ** compute correlation coefficients 
-pwcorr `mom' f11.sp500 if `gp'==0, star(0.05)
+pwcorr `mom' f2.sp500 if `gp'==0, star(0.05)
 local rho_l: display %4.2f r(rho) 
-pwcorr `mom' f11.sp500 if `gp'==1, star(0.05)
+pwcorr `mom' f2.sp500 if `gp'==1, star(0.05)
 local rho_h: display %4.2f r(rho) 
 
 ** moments and sp500 

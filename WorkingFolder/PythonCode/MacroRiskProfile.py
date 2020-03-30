@@ -91,7 +91,7 @@ sp500M
 sp500M.plot(lw = 3)
 #sp500Mplt = plt.title('S&P 500 (end of month)')
 
-sp500MR = np.log(sp500M).diff(periods = 12)
+sp500MR = np.log(sp500M).diff(periods = 1)
 
 sp500MR.plot(lw = 3 )
 sp500MRplt = plt.title('Monthly return of S&P 500')
@@ -125,7 +125,8 @@ dem_var = ['Q32',  ## age
            'Q33',  ## gender
            'Q36',  ## education (1-8 low to high, 9 other)
            'byear', ## cohort
-           'D6']
+           'D6',
+           'Q6new']
 
 sub_var2 = ['IncSkew']
 
@@ -149,7 +150,8 @@ IncSCEIndMoms = IncSCEIndMoms.rename(columns={'Q24_mean': 'incexp',
                                               'D6':'HHinc',
                                               'Q32':'age',
                                               'Q33':'gender',
-                                              'Q36':'educ'
+                                              'Q36':'educ',
+                                              'Q6new': 'Stkprob'
                                              })
 
 
@@ -213,7 +215,7 @@ IncSCEPopMomsMean = pd.pivot_table(data = IncSCEIndMoms,
                                                                                   'incskew':'skewMean'})
 # -
 
-T = len(IncSCEPopMomsEstMean)
+T = len(IncSCEPopMomsMed)
 
 # ### 3. Cross-sectional patterns of subjective distributions
 #
@@ -294,6 +296,9 @@ dt_combIndM = pd.merge(dt_combMacroM,
                        IncSCEIndMoms,
                        left_index = True,
                        right_index = True)
+
+
+dt_combIndM.to_stata('../SurveyData/SCE/IncExpSCEIndMacroM.dta')
 # -
 
 # ### 5. Seasonal adjustment (not successful yet)
@@ -341,7 +346,7 @@ corr_table
 # + {"code_folding": [4, 18]}
 ## try different lags or leads
 
-lead_loop = 12
+lead_loop = 13
 
 def pval_str(pval):
     if pval < 0.01:
@@ -433,9 +438,160 @@ f.close()
 
 ## output table to excel
 corr_df.to_excel('../Tables/macro_corr.xlsx')
+# -
+
+IncSCEIndMoms = IncSCEIndMoms.drop(columns='date')
 
 # + {"code_folding": []}
-## correlation coefficients by sub group 
+## correlation coefficients by sub group generation
+
+### subgroup population summary statistics
+
+gr_vars = ['byear_gr']
+lead_loop = 12
+
+moms = ['incvar','rincvar','incskew']
+
+
+## mean est 
+
+for gr in gr_vars:
+    
+    corr_list = []
+    col_list = []
+    
+    sub_pd = pd.pivot_table(data = IncSCEIndMoms,
+                            index=['date',gr],
+                            values = moms,
+                            aggfunc= 'mean').unstack()  ## index being time only 
+    sub_pd = sub_pd.dropna(how='any')
+    ## mean moments 
+    for mom in moms:
+        # group 1 
+        col_list.append('mean:'+str(mom)+str(' for 50s'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'50s'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+            
+        # group 2 
+        col_list.append('mean:'+str(mom)+str(' for 60s'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'60s'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+            
+            
+        # group 3
+        col_list.append('mean:'+str(mom)+str(' for 70s'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'70s'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+            
+           # group 3
+        col_list.append('mean:'+str(mom)+str(' for 80s'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'80s'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+            
+
+    corr_array = np.array(corr_list).reshape([int(len(corr_list)/lead_loop),
+                                              lead_loop])
+    corr_df = pd.DataFrame(corr_array,
+                           index = col_list)
+    
+## save 
+corr_df.T.to_excel('../Tables/macro_corr_byear_gr.xlsx')
+
+# + {"code_folding": []}
+## correlation coefficients by sub group age
+
+### subgroup population summary statistics
+
+gr_vars = ['age_gr']
+lead_loop = 12
+
+moms = ['incvar','rincvar','incskew']
+
+
+## mean est 
+
+for gr in gr_vars:
+    
+    corr_list = []
+    col_list = []
+    
+    sub_pd = pd.pivot_table(data = IncSCEIndMoms,
+                            index=['date',gr],
+                            values = moms,
+                            aggfunc= 'mean').unstack()  ## index being time only 
+    sub_pd = sub_pd.dropna(how='any')
+    ## mean moments 
+    for mom in moms:
+        # group 1 
+        col_list.append('mean:'+str(mom)+str(' for young'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'young'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+            
+        # group 2 
+        col_list.append('mean:'+str(mom)+str(' for middle-age'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'middle-age'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+            
+            
+        # group 3
+        col_list.append('mean:'+str(mom)+str(' for old'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'old'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+            
+            
+
+    corr_array = np.array(corr_list).reshape([int(len(corr_list)/lead_loop),
+                                              lead_loop])
+    corr_df = pd.DataFrame(corr_array,
+                           index = col_list)
+    
+## save 
+corr_df.T.to_excel('../Tables/macro_corr_age_gr.xlsx')
+
+# + {"code_folding": []}
+## correlation coefficients by sub group HHinc
 
 ### subgroup population summary statistics
 
@@ -444,7 +600,6 @@ lead_loop = 12
 
 moms = ['incvar','rincvar','incskew']
 
-#IncSCEIndMoms = IncSCEIndMoms.drop(columns='date')
 
 ## mean est 
 
@@ -471,8 +626,63 @@ for gr in gr_vars:
             corr_str = corrtostr(corr)
             corr_list.append(corr_str)
             
+        # group 2 
+        col_list.append('mean:'+str(mom)+str(' for high'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'high'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+     
+
+    corr_array = np.array(corr_list).reshape([int(len(corr_list)/lead_loop),
+                                              lead_loop])
+    corr_df = pd.DataFrame(corr_array,
+                           index = col_list)
+    
+## save 
+corr_df.T.to_excel('../Tables/macro_corr_HHinc_gr.xlsx')
+
+# + {"code_folding": []}
+## correlation coefficients by sub group educ 
+
+### subgroup population summary statistics
+
+gr_vars = ['educ_gr']
+lead_loop = 12
+
+moms = ['incvar','rincvar','incskew']
+
+
+## mean est 
+
+for gr in gr_vars:
+    
+    corr_list = []
+    col_list = []
+    
+    sub_pd = pd.pivot_table(data = IncSCEIndMoms,
+                            index=['date',gr],
+                            values = moms,
+                            aggfunc= 'mean').unstack()  ## index being time only 
+    sub_pd = sub_pd.dropna(how='any')
+    ## mean moments 
+    for mom in moms:
+        # group 1 
+        col_list.append('mean:'+str(mom)+str(' for low'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'low'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
             
-        # group 3
+        # group 2 
         col_list.append('mean:'+str(mom)+str(' for high'))
         sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
         
@@ -483,17 +693,18 @@ for gr in gr_vars:
             corr_str = corrtostr(corr)
             corr_list.append(corr_str)
             
+            
 
     corr_array = np.array(corr_list).reshape([int(len(corr_list)/lead_loop),
                                               lead_loop])
     corr_df = pd.DataFrame(corr_array,
                            index = col_list)
     
+## save 
+corr_df.T.to_excel('../Tables/macro_corr_educ_gr.xlsx')
 # -
 
 corr_df
-
-corr_df.to_excel('../Tables/macro_corr_HHinc_gr.xlsx')
 
 # + {"code_folding": []}
 ## plots of correlation for MEDIAN population stats

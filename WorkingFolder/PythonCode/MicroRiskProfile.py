@@ -200,7 +200,7 @@ SCEM.replace(cleanup_nums,
 
 SCEM['age_gr'] = pd.cut(SCEM['age'],
                         5,
-                        labels= [1,2,3,4,5])
+                        labels= ["20-30","30-39","40-48","49-57",">57"])
 
 
 ## create cohort group
@@ -240,12 +240,12 @@ for mom in ['rincvar']:
     plt.title('')
     plt.xlabel('group by the year of birth \n (from young to old)',
               size = 15)
-    plt.ylabel('dd',size = 15)
+    plt.ylabel('',size = 15)
 
 # + {"code_folding": []}
 ## by cohort 
 
-for mom in ['rincvar']:
+for mom in ['incvar']:
     plt.style.use('ggplot')
     SCEM.groupby('byear_gr')[mom].mean().plot.bar(title = mom)
     plt.xlabel('group by the year of birth \n (from older generation to the young)')
@@ -253,17 +253,16 @@ for mom in ['rincvar']:
 # +
 ## by hh income 
 
-
-for mom in ['incskew']:
-    SCEM.groupby('HHinc')[mom].mean().plot.bar(title = mom)
+for mom in ['incvar']:
+    SCEM.groupby('HHinc_gr')[mom].mean().plot.bar(title = mom)
     plt.xlabel('group by household income (from low to high)')
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## by education
 
 
-for mom in ['incskew']:
-    SCEM.groupby('educ')[mom].mean().plot.bar(title = mom)
+for mom in ['rincvar']:
+    SCEM.groupby('educ_gr')[mom].mean().plot.bar(title = mom)
     plt.xlabel('group by education (from low to high)')
 
 # + {"code_folding": []}

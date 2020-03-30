@@ -11,11 +11,24 @@ Bertrand, M. and Mullainathan, S. (2001).
   data.
 \newblock {\em American Economic Review}, 91(2):67--72.
 
+\bibitem[Bloom et~al., 2018]{bloom2018great}
+Bloom, N., Guvenen, Fatih, P.~L., Sabelhaus, J., Salgado, S., and Song, J.
+  (2018).
+\newblock The great micro moderation.
+\newblock Working paper.
+
 \bibitem[Carroll et~al., 2018]{carroll_sticky_2018}
 Carroll, C.~D., Crawley, E., Slacalek, J., Tokuoka, K., and White, M.~N.
   (2018).
 \newblock Sticky expectations and consumption dynamics.
 \newblock Technical report, National Bureau of Economic Research.
+
+\bibitem[Catherine, 2019]{catherine_countercyclical_2019}
+Catherine, S. (2019).
+\newblock Countercyclical {Labor} {Income} {Risk} and {Portfolio} {Choices}
+  over the {Life}-{Cycle}.
+\newblock {SSRN} {Scholarly} {Paper} ID 2778892, Social Science Research
+  Network, Rochester, NY.
 
 \bibitem[Coibion and Gorodnichenko, 2012]{coibion2012can}
 Coibion, O. and Gorodnichenko, Y. (2012).
@@ -45,6 +58,11 @@ Fuhrer, J.~C. (2018).
 \newblock Intrinsic expectations persistence: evidence from professional and
   household survey expectations.
 
+\bibitem[Guvenen et~al., 2014]{guvenen2014nature}
+Guvenen, F., Ozkan, S., and Song, J. (2014).
+\newblock The nature of countercyclical income risk.
+\newblock {\em Journal of Political Economy}, 122(3):621--660.
+
 \bibitem[Kaufmann and Pistaferri, 2009]{kaufmann_disentangling_2009}
 Kaufmann, K. and Pistaferri, L. (2009).
 \newblock Disentangling insurance and information in intertemporal consumption
@@ -67,6 +85,11 @@ Manski, C.~F. (2018).
   progress and promise.
 \newblock {\em NBER Macroeconomics Annual}, 32(1):411--471.
 
+\bibitem[Meghir and Pistaferri, 2004]{meghir2004income}
+Meghir, C. and Pistaferri, L. (2004).
+\newblock Income variance dynamics and heterogeneity.
+\newblock {\em Econometrica}, 72(1):1--32.
+
 \bibitem[Meghir and Pistaferri, 2011]{meghir2011earnings}
 Meghir, C. and Pistaferri, L. (2011).
 \newblock Earnings, consumption and life cycle choices.
@@ -83,5 +106,10 @@ Pistaferri, L. (2001).
 Rozsypal, F. and Schlafmann, K. (2017).
 \newblock Overpersistence bias in individual income expectations and its
   aggregate implications.
+
+\bibitem[Storesletten et~al., 2004]{storesletten2004cyclical}
+Storesletten, K., Telmer, C.~I., and Yaron, A. (2004).
+\newblock Cyclical dynamics in idiosyncratic labor market risk.
+\newblock {\em Journal of political Economy}, 112(3):695--717.
 
 \end{thebibliography}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  25 MAR 2020 22:34
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  30 MAR 2020 10:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -901,11 +901,11 @@ eivedIncomeRisk.toc)
 [2
 
 ]
-LaTeX Font Info:    Try loading font information for U+msa on input line 132.
+LaTeX Font Info:    Try loading font information for U+msa on input line 131.
  (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 132.
+LaTeX Font Info:    Try loading font information for U+msb on input line 131.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -914,12 +914,6 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ] [4
 
 ]
-
-Package natbib Warning: Citation `xxx' on page 5 undefined on input line 167.
-
-
-Package natbib Warning: Citation `xxx' on page 5 undefined on input line 167.
-
 [5
 
 ] [6
@@ -929,433 +923,170 @@ Package natbib Warning: Citation `xxx' on page 5 undefined on input line 167.
 ] (./PerceivedIncomeRisk.toc) [8
 
 ]
-<figures/hist_incexp.jpg, id=438, 433.62pt x 289.08pt>
+<figures/hist_incexp.jpg, id=443, 433.62pt x 289.08pt>
 File: figures/hist_incexp.jpg Graphic file (type jpg)
 <use figures/hist_incexp.jpg>
-Package pdftex.def Info: figures/hist_incexp.jpg  used on input line 239.
+Package pdftex.def Info: figures/hist_incexp.jpg  used on input line 244.
 (pdftex.def)             Requested size: 154.03183pt x 102.68806pt.
-<figures/hist_rincexp.jpg, id=439, 433.62pt x 289.08pt>
+<figures/hist_rincexp.jpg, id=444, 433.62pt x 289.08pt>
 File: figures/hist_rincexp.jpg Graphic file (type jpg)
 <use figures/hist_rincexp.jpg>
-Package pdftex.def Info: figures/hist_rincexp.jpg  used on input line 239.
+Package pdftex.def Info: figures/hist_rincexp.jpg  used on input line 244.
 (pdftex.def)             Requested size: 154.03183pt x 102.68806pt.
  [9
 
  <./figures/hist_incexp.jpg> <./figures/hist_rincexp.jpg>]
-<figures/hist_incvar.jpg, id=471, 433.62pt x 289.08pt>
+<figures/hist_incvar.jpg, id=478, 433.62pt x 289.08pt>
 File: figures/hist_incvar.jpg Graphic file (type jpg)
 <use figures/hist_incvar.jpg>
-Package pdftex.def Info: figures/hist_incvar.jpg  used on input line 260.
+Package pdftex.def Info: figures/hist_incvar.jpg  used on input line 265.
 (pdftex.def)             Requested size: 154.03183pt x 102.68806pt.
-<figures/hist_rincvar.jpg, id=472, 433.62pt x 289.08pt>
+<figures/hist_rincvar.jpg, id=479, 433.62pt x 289.08pt>
 File: figures/hist_rincvar.jpg Graphic file (type jpg)
 <use figures/hist_rincvar.jpg>
-Package pdftex.def Info: figures/hist_rincvar.jpg  used on input line 260.
+Package pdftex.def Info: figures/hist_rincvar.jpg  used on input line 265.
 (pdftex.def)             Requested size: 154.03183pt x 102.68806pt.
  [10
 
  <./figures/hist_incvar.jpg> <./figures/hist_rincvar.jpg>]
-<figures/histincSkew.jpg, id=506, 433.62pt x 289.08pt>
+<figures/histincSkew.jpg, id=513, 433.62pt x 289.08pt>
 File: figures/histincSkew.jpg Graphic file (type jpg)
 <use figures/histincSkew.jpg>
-Package pdftex.def Info: figures/histincSkew.jpg  used on input line 275.
+Package pdftex.def Info: figures/histincSkew.jpg  used on input line 280.
 (pdftex.def)             Requested size: 154.03183pt x 102.68806pt.
  [11
 
  <./figures/histincSkew.jpg>]
-<figures/ts_incvar_HHinc_g_mean.png, id=539, 585.18625pt x 425.59pt>
-File: figures/ts_incvar_HHinc_g_mean.png Graphic file (type png)
-<use figures/ts_incvar_HHinc_g_mean.png>
-Package pdftex.def Info: figures/ts_incvar_HHinc_g_mean.png  used on input line
- 292.
-(pdftex.def)             Requested size: 239.60646pt x 82.5059pt.
-<figures/ts_incskew_HHinc_g_mean.png, id=541, 585.18625pt x 425.59pt>
-File: figures/ts_incskew_HHinc_g_mean.png Graphic file (type png)
-<use figures/ts_incskew_HHinc_g_mean.png>
-Package pdftex.def Info: figures/ts_incskew_HHinc_g_mean.png  used on input lin
-e 292.
-(pdftex.def)             Requested size: 239.60646pt x 82.5059pt.
-
-Overfull \vbox (3.79105pt too high) detected at line 292
- []
-
-[12
-
- <./figures/ts_incvar_HHinc_g_mean.png> <./figures/ts_incskew_HHinc_g_mean.png>
-]
-<figures/boxplot_exp_HHinc.jpg, id=573, 939.51pt x 361.35pt>
-File: figures/boxplot_exp_HHinc.jpg Graphic file (type jpg)
-<use figures/boxplot_exp_HHinc.jpg>
-Package pdftex.def Info: figures/boxplot_exp_HHinc.jpg  used on input line 305.
-
-(pdftex.def)             Requested size: 273.83728pt x 105.31813pt.
-<figures/boxplot_var_HHinc.jpg, id=574, 939.51pt x 361.35pt>
+<figures/boxplot_var_HHinc.jpg, id=546, 939.51pt x 361.35pt>
 File: figures/boxplot_var_HHinc.jpg Graphic file (type jpg)
 <use figures/boxplot_var_HHinc.jpg>
-Package pdftex.def Info: figures/boxplot_var_HHinc.jpg  used on input line 305.
+Package pdftex.def Info: figures/boxplot_var_HHinc.jpg  used on input line 309.
 
 (pdftex.def)             Requested size: 273.83728pt x 105.31813pt.
+ [12
 
-Overfull \vbox (16.0155pt too high) detected at line 305
- []
-
-[13
-
- <./figures/boxplot_exp_HHinc.jpg> <./figures/boxplot_var_HHinc.jpg>]
-<figures/ts_incvar_age_g_mean.png, id=607, 585.18625pt x 425.59pt>
-File: figures/ts_incvar_age_g_mean.png Graphic file (type png)
-<use figures/ts_incvar_age_g_mean.png>
-Package pdftex.def Info: figures/ts_incvar_age_g_mean.png  used on input line 3
-22.
-(pdftex.def)             Requested size: 239.60646pt x 82.5059pt.
-<figures/ts_incskew_age_g_mean.png, id=608, 585.18625pt x 425.59pt>
+ <./figures/boxplot_var_HHinc.jpg>]
+<figures/ts_rincvar_age_g_median.png, id=580, 585.18625pt x 425.59pt>
+File: figures/ts_rincvar_age_g_median.png Graphic file (type png)
+<use figures/ts_rincvar_age_g_median.png>
+Package pdftex.def Info: figures/ts_rincvar_age_g_median.png  used on input lin
+e 330.
+(pdftex.def)             Requested size: 157.45772pt x 82.5059pt.
+<figures/ts_incskew_age_g_mean.png, id=582, 585.18625pt x 425.59pt>
 File: figures/ts_incskew_age_g_mean.png Graphic file (type png)
 <use figures/ts_incskew_age_g_mean.png>
 Package pdftex.def Info: figures/ts_incskew_age_g_mean.png  used on input line 
-322.
-(pdftex.def)             Requested size: 239.60646pt x 82.5059pt.
+330.
+(pdftex.def)             Requested size: 157.45772pt x 82.5059pt.
+ [13
 
-Overfull \vbox (3.79105pt too high) detected at line 322
- []
+ <./figures/ts_rincvar_age_g_median.png> <./figures/ts_incskew_age_g_mean.png>]
+<figures/ts_rincvar_byear_g_median.png, id=618, 585.18625pt x 425.59pt>
+File: figures/ts_rincvar_byear_g_median.png Graphic file (type png)
+<use figures/ts_rincvar_byear_g_median.png>
+Package pdftex.def Info: figures/ts_rincvar_byear_g_median.png  used on input l
+ine 358.
+(pdftex.def)             Requested size: 157.45772pt x 82.5059pt.
+<figures/ts_incskew_byear_g_median.png, id=619, 585.18625pt x 425.59pt>
+File: figures/ts_incskew_byear_g_median.png Graphic file (type png)
+<use figures/ts_incskew_byear_g_median.png>
+Package pdftex.def Info: figures/ts_incskew_byear_g_median.png  used on input l
+ine 358.
+(pdftex.def)             Requested size: 157.45772pt x 82.5059pt.
+ [14
 
-[14
-
- <./figures/ts_incvar_age_g_mean.png> <./figures/ts_incskew_age_g_mean.png>]
-<figures/boxplot_exp_age_gr.jpg, id=640, 939.51pt x 361.35pt>
-File: figures/boxplot_exp_age_gr.jpg Graphic file (type jpg)
-<use figures/boxplot_exp_age_gr.jpg>
-Package pdftex.def Info: figures/boxplot_exp_age_gr.jpg  used on input line 334
-.
-(pdftex.def)             Requested size: 273.83728pt x 105.31813pt.
-<figures/boxplot_var_age_gr.jpg, id=641, 939.51pt x 361.35pt>
-File: figures/boxplot_var_age_gr.jpg Graphic file (type jpg)
-<use figures/boxplot_var_age_gr.jpg>
-Package pdftex.def Info: figures/boxplot_var_age_gr.jpg  used on input line 334
-.
-(pdftex.def)             Requested size: 273.83728pt x 105.31813pt.
-
-Overfull \vbox (16.0155pt too high) detected at line 334
- []
-
-[15
-
- <./figures/boxplot_exp_age_gr.jpg> <./figures/boxplot_var_age_gr.jpg>]
-<figures/ts_incvar_byear_g_mean.png, id=674, 585.18625pt x 425.59pt>
-File: figures/ts_incvar_byear_g_mean.png Graphic file (type png)
-<use figures/ts_incvar_byear_g_mean.png>
-Package pdftex.def Info: figures/ts_incvar_byear_g_mean.png  used on input line
- 350.
-(pdftex.def)             Requested size: 239.60646pt x 82.5059pt.
-<figures/ts_incskew_byear_g_mean.png, id=675, 585.18625pt x 425.59pt>
-File: figures/ts_incskew_byear_g_mean.png Graphic file (type png)
-<use figures/ts_incskew_byear_g_mean.png>
-Package pdftex.def Info: figures/ts_incskew_byear_g_mean.png  used on input lin
-e 350.
-(pdftex.def)             Requested size: 239.60646pt x 82.5059pt.
-
-Overfull \vbox (3.79105pt too high) detected at line 350
- []
-
-[16
-
- <./figures/ts_incvar_byear_g_mean.png> <./figures/ts_incskew_byear_g_mean.png>
-]
-<figures/boxplot_exp_byear_gr.jpg, id=707, 939.51pt x 361.35pt>
-File: figures/boxplot_exp_byear_gr.jpg Graphic file (type jpg)
-<use figures/boxplot_exp_byear_gr.jpg>
-Package pdftex.def Info: figures/boxplot_exp_byear_gr.jpg  used on input line 3
-63.
-(pdftex.def)             Requested size: 273.83728pt x 105.31813pt.
-<figures/boxplot_var_byear_gr.jpg, id=708, 939.51pt x 361.35pt>
-File: figures/boxplot_var_byear_gr.jpg Graphic file (type jpg)
-<use figures/boxplot_var_byear_gr.jpg>
-Package pdftex.def Info: figures/boxplot_var_byear_gr.jpg  used on input line 3
-63.
-(pdftex.def)             Requested size: 273.83728pt x 105.31813pt.
-
-Overfull \vbox (16.0155pt too high) detected at line 363
- []
-
-[17
-
- <./figures/boxplot_exp_byear_gr.jpg> <./figures/boxplot_var_byear_gr.jpg>]
-<figures/ts_incvar_edu_g_mean.png, id=740, 585.18625pt x 425.59pt>
-File: figures/ts_incvar_edu_g_mean.png Graphic file (type png)
-<use figures/ts_incvar_edu_g_mean.png>
-Package pdftex.def Info: figures/ts_incvar_edu_g_mean.png  used on input line 3
-79.
-(pdftex.def)             Requested size: 239.60646pt x 82.5059pt.
-<figures/ts_incskew_edu_g_mean.png, id=741, 585.18625pt x 425.59pt>
+ <./figures/ts_rincvar_byear_g_median.png> <./figures/ts_incskew_byear_g_median
+.png>]
+<figures/ts_rincvar_edu_g_mean.png, id=651, 585.18625pt x 425.59pt>
+File: figures/ts_rincvar_edu_g_mean.png Graphic file (type png)
+<use figures/ts_rincvar_edu_g_mean.png>
+Package pdftex.def Info: figures/ts_rincvar_edu_g_mean.png  used on input line 
+390.
+(pdftex.def)             Requested size: 157.45772pt x 82.5059pt.
+<figures/ts_incskew_edu_g_mean.png, id=652, 585.18625pt x 425.59pt>
 File: figures/ts_incskew_edu_g_mean.png Graphic file (type png)
 <use figures/ts_incskew_edu_g_mean.png>
 Package pdftex.def Info: figures/ts_incskew_edu_g_mean.png  used on input line 
-379.
-(pdftex.def)             Requested size: 239.60646pt x 82.5059pt.
+390.
+(pdftex.def)             Requested size: 157.45772pt x 82.5059pt.
+ [15
 
-Overfull \vbox (3.79105pt too high) detected at line 379
+ <./figures/ts_rincvar_edu_g_mean.png> <./figures/ts_incskew_edu_g_mean.png>] [
+16
+
+] (./PerceivedIncomeRisk.toc) [17
+
+] [18
+
+]
+(./PerceivedIncomeRisk.toc) [19
+
+]
+<figures/tsMeanvar.jpg, id=845, 5781.6pt x 2890.8pt>
+File: figures/tsMeanvar.jpg Graphic file (type jpg)
+<use figures/tsMeanvar.jpg>
+Package pdftex.def Info: figures/tsMeanvar.jpg  used on input line 496.
+(pdftex.def)             Requested size: 342.2953pt x 171.14679pt.
+ [20
+
+ <./figures/tsMeanvar.jpg>]
+<figures/tsEstMeanskew.jpg, id=875, 5781.6pt x 2890.8pt>
+File: figures/tsEstMeanskew.jpg Graphic file (type jpg)
+<use figures/tsEstMeanskew.jpg>
+Package pdftex.def Info: figures/tsEstMeanskew.jpg  used on input line 506.
+(pdftex.def)             Requested size: 342.2953pt x 171.14679pt.
+ [21
+
+ <./figures/tsEstMeanskew.jpg>]
+Overfull \vbox (0.96896pt too high) detected at line 540
  []
 
-[18
-
- <./figures/ts_incvar_edu_g_mean.png> <./figures/ts_incskew_edu_g_mean.png>]
-
-! LaTeX Error: File `figures/boxplot_exp_edu_gr' not found.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.393 \end{frame}
-                 
-I could not locate the file with any of these extensions:
-.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-! LaTeX Error: File `figures/boxplot_var_edu_gr' not found.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.393 \end{frame}
-                 
-I could not locate the file with any of these extensions:
-.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-[19
-
-] [20
-
-] [21
-
-] (./PerceivedIncomeRisk.toc) [22
+[22
 
 ] [23
 
-] (./PerceivedIncomeRisk.toc) [24
+] [24
 
 ] [25
 
 ] [26
 
-] [27
-
-] [28
-
-] [29
-
-]
-<figures/ts_incvar_HHinc_g_mean_stk.png, id=1144, 585.18625pt x 425.59pt>
-
-! Undefined control sequence.
-\Gin@@eheight ->\0
-                  .4\textheight 
-l.680 \end{frame}
-                 
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-File: figures/ts_incvar_HHinc_g_mean_stk.png Graphic file (type png)
-<use figures/ts_incvar_HHinc_g_mean_stk.png>
-Package pdftex.def Info: figures/ts_incvar_HHinc_g_mean_stk.png  used on input 
-line 680.
-(pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
-<figures/ts_incskew_HHinc_g_mean_stk.png, id=1145, 585.18625pt x 425.59pt>
-! Undefined control sequence.
-\Gin@@eheight ->\0
-                  .4\textheight 
-l.680 \end{frame}
-                 
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-File: figures/ts_incskew_HHinc_g_mean_stk.png Graphic file (type png)
-<use figures/ts_incskew_HHinc_g_mean_stk.png>
-Package pdftex.def Info: figures/ts_incskew_HHinc_g_mean_stk.png  used on input
- line 680.
-(pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
-
-Overfull \vbox (5.39355pt too high) detected at line 680
- []
-
-[30
-
- <./figures/ts_incvar_HHinc_g_mean_stk.png> <./figures/ts_incskew_HHinc_g_mean_
-stk.png>]
-<figures/ts_incvar_age_g_mean_stk.png, id=1179, 585.18625pt x 425.59pt>
-
-! Undefined control sequence.
-\Gin@@eheight ->\0
-                  .4\textheight 
-l.693 \end{frame}
-                 
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-File: figures/ts_incvar_age_g_mean_stk.png Graphic file (type png)
-<use figures/ts_incvar_age_g_mean_stk.png>
-Package pdftex.def Info: figures/ts_incvar_age_g_mean_stk.png  used on input li
-ne 693.
-(pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
-<figures/ts_incskew_age_g_mean_stk.png, id=1180, 585.18625pt x 425.59pt>
-! Undefined control sequence.
-\Gin@@eheight ->\0
-                  .4\textheight 
-l.693 \end{frame}
-                 
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-File: figures/ts_incskew_age_g_mean_stk.png Graphic file (type png)
-<use figures/ts_incskew_age_g_mean_stk.png>
-Package pdftex.def Info: figures/ts_incskew_age_g_mean_stk.png  used on input l
-ine 693.
-(pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
-
-Overfull \vbox (5.39355pt too high) detected at line 693
- []
-
-[31
-
- <./figures/ts_incvar_age_g_mean_stk.png> <./figures/ts_incskew_age_g_mean_stk.
-png>]
-<figures/ts_incvar_byear_g_mean_stk.png, id=1216, 585.18625pt x 425.59pt>
-
-! Undefined control sequence.
-\Gin@@eheight ->\0
-                  .4\textheight 
-l.707 \end{frame}
-                 
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-File: figures/ts_incvar_byear_g_mean_stk.png Graphic file (type png)
-<use figures/ts_incvar_byear_g_mean_stk.png>
-Package pdftex.def Info: figures/ts_incvar_byear_g_mean_stk.png  used on input 
-line 707.
-(pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
-<figures/ts_incskew_byear_g_mean_stk.png, id=1217, 585.18625pt x 425.59pt>
-! Undefined control sequence.
-\Gin@@eheight ->\0
-                  .4\textheight 
-l.707 \end{frame}
-                 
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-File: figures/ts_incskew_byear_g_mean_stk.png Graphic file (type png)
-<use figures/ts_incskew_byear_g_mean_stk.png>
-Package pdftex.def Info: figures/ts_incskew_byear_g_mean_stk.png  used on input
- line 707.
-(pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
-
-Overfull \vbox (5.39355pt too high) detected at line 707
- []
-
-[32
-
- <./figures/ts_incvar_byear_g_mean_stk.png> <./figures/ts_incskew_byear_g_mean_
-stk.png>]
-<figures/ts_incvar_edu_g_mean_stk.png, id=1250, 585.18625pt x 425.59pt>
-
-! Undefined control sequence.
-\Gin@@eheight ->\0
-                  .4\textheight 
-l.720 \end{frame}
-                 
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-File: figures/ts_incvar_edu_g_mean_stk.png Graphic file (type png)
-<use figures/ts_incvar_edu_g_mean_stk.png>
-Package pdftex.def Info: figures/ts_incvar_edu_g_mean_stk.png  used on input li
-ne 720.
-(pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
-<figures/ts_incskew_edu_g_mean_stk.png, id=1251, 585.18625pt x 425.59pt>
-! Undefined control sequence.
-\Gin@@eheight ->\0
-                  .4\textheight 
-l.720 \end{frame}
-                 
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-File: figures/ts_incskew_edu_g_mean_stk.png Graphic file (type png)
-<use figures/ts_incskew_edu_g_mean_stk.png>
-Package pdftex.def Info: figures/ts_incskew_edu_g_mean_stk.png  used on input l
-ine 720.
-(pdftex.def)             Requested size: 273.84999pt x 100.00716pt.
-
-Overfull \vbox (5.39355pt too high) detected at line 720
- []
-
-[33
-
- <./figures/ts_incvar_edu_g_mean_stk.png> <./figures/ts_incskew_edu_g_mean_stk.
-png>] (./PerceivedIncomeRisk.toc) [34
+] (./PerceivedIncomeRisk.toc) [27
 
 ]
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 746.
+(amsmath)                trying to recover with `aligned' on input line 718.
 
-[35
+[28
 
 ]
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 771.
+(amsmath)                trying to recover with `aligned' on input line 743.
 
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 771.
+(amsmath)                trying to recover with `aligned' on input line 743.
 
-[36
+[29
 
-] [37
+] [30
 
-] [38
+] [31
 
-] [39
+] [32
 
-] [40
+] [33
 
 ] (./PerceivedIncomeRisk.bbl
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `\translate ' on input line 1.
 
-[41
+[34
 
-] [42]) [43]
+] [35] [36]) [37]
 \tf@nav=\write6
 \openout6 = `PerceivedIncomeRisk.nav'.
 
@@ -1365,24 +1096,20 @@ Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 \tf@snm=\write8
 \openout8 = `PerceivedIncomeRisk.snm'.
 
-
-
-Package natbib Warning: There were undefined citations.
-
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 823.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 823.
-(./PerceivedIncomeRisk.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 823.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 823.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 825.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 825.
+ (./PerceivedIncomeRisk.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 825.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 825.
 Package rerunfilecheck Info: File `PerceivedIncomeRisk.out' has not changed.
-(rerunfilecheck)             Checksum: CE6CDD2DEF99089EDFD12B67A2513627;585.
+(rerunfilecheck)             Checksum: B9D5322D1A4D9DB8B3050C8DAD8FC9A0;583.
  ) 
 Here is how much of TeX's memory you used:
- 20413 strings out of 492616
- 387888 string characters out of 6129482
- 484943 words of memory out of 5000000
- 23694 multiletter control sequences out of 15000+600000
- 11824 words of font info for 46 fonts, out of 8000000 for 9000
+ 20325 strings out of 492616
+ 385497 string characters out of 6129482
+ 477576 words of memory out of 5000000
+ 23642 multiletter control sequences out of 15000+600000
+ 13070 words of font info for 51 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,20n,96p,806b,733s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
@@ -1398,11 +1125,12 @@ live/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texliv
 e/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2
 019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/20
 19/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2019
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on PerceivedIncomeRisk.pdf (43 pages, 2388834 bytes).
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2019/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on PerceivedIncomeRisk.pdf (37 pages, 4041238 bytes).
 PDF statistics:
- 1704 PDF objects out of 1728 (max. 8388607)
- 1476 compressed objects within 15 object streams
- 135 named destinations out of 1000 (max. 500000)
- 874 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1500 PDF objects out of 1728 (max. 8388607)
+ 1307 compressed objects within 14 object streams
+ 122 named destinations out of 1000 (max. 500000)
+ 773 words of extra memory for PDF output out of 10000 (max. 10000000)
 
