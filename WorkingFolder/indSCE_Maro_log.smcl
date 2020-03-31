@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Maro_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}30 Mar 2020, 19:50:40
+ {txt}opened on:  {res}30 Mar 2020, 22:27:17
 {txt}
 {com}. 
 . use "${c -(}folder{c )-}/SCE/IncExpSCEPopMacroM.dta"
@@ -39,7 +39,7 @@
 . ************************
 . 
 . 
-. local Moments varMean iqrMean rvarMean skewMean
+. local Moments varMean iqrMean rvarMean skewMean varMed iqrMed rvarMed skewMed
 {txt}
 {com}. 
 . foreach mom in `Moments'{c -(}
@@ -50,14 +50,2343 @@
 (1 missing value generated)
 (1 missing value generated)
 (1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
 
 {com}. 
 . 
+. 
 . ************************
-. ***** correlation plot *******
+. ***** regression *******
 . ***********************
 . 
 . 
+. foreach mom in `Moments'{c -(}
+{txt}  2{com}. forvalues i=1(1)12{c -(}
+{txt}  3{com}. newey  `mom'  f`i'.sp500, lag(18)
+{txt}  4{com}. return list 
+{txt}  5{com}. local id = `i'+1
+{txt}  6{com}. putexcel set "${c -(}sum_table_folder{c )-}/macro_corr_stata.xls", sheet("`mom'") modify 
+{txt}  7{com}. local coeff = _b[f`i'.sp500]
+{txt}  8{com}. local coeff : display %5.3f `coeff'
+{txt}  9{com}. local se = _se[f`i'.sp500]
+{txt} 10{com}. local t = `coeff'/`se'
+{txt} 11{com}. local p = 2*ttail(e(df_r),abs(`t'))
+{txt} 12{com}. 
+. local star = ""
+{txt} 13{com}. if `p'< =0.01 local star = "***"
+{txt} 14{com}. if `p'<=0.05 & `p'> 0.01 local star = "**"
+{txt} 15{com}. if `p' <=0.1 & `p'> 0.05 local star = "*"
+{txt} 16{com}. *local coeff_str: display `coeff' `star'
+. 
+. putexcel A`id' =(`i')
+{txt} 17{com}. putexcel B`id' = (`coeff')
+{txt} 18{com}. *putexcel C`id' = (`se')
+. *putexcel D`id' =(`p')
+. putexcel C`id' =("`star'")
+{txt} 19{com}. 
+. {c )-}
+{txt} 20{com}. putexcel A1 =("# months ahead")
+{txt} 21{com}. putexcel B1 = ("coefficients")
+{txt} 22{com}. putexcel C1 = ("star")
+{txt} 23{com}. putexcel D1 = ("`mom'")
+{txt} 24{com}. 
+. {c )-}
+
+{txt}Regression with Newey-West standard errors{col 53}Number of obs  ={res}        71
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    69){col 68}={res}      0.15
+{col 53}{txt}Prob > F       =    {res}0.7016
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F1. {c |}{col 14}{res}{space 2} .2287123{col 26}{space 2} .5944235{col 37}{space 1}    0.38{col 46}{space 3}0.702{col 54}{space 4}-.9571303{col 67}{space 3} 1.414555
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.382021{col 26}{space 2} .0798952{col 37}{space 1}   42.33{col 46}{space 3}0.000{col 54}{space 4} 3.222634{col 67}{space 3} 3.541407
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        70
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    68){col 68}={res}      1.43
+{col 53}{txt}Prob > F       =    {res}0.2366
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F2. {c |}{col 14}{res}{space 2} .5167998{col 26}{space 2} .4327621{col 37}{space 1}    1.19{col 46}{space 3}0.237{col 54}{space 4}-.3467635{col 67}{space 3} 1.380363
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.356659{col 26}{space 2} .0829132{col 37}{space 1}   40.48{col 46}{space 3}0.000{col 54}{space 4} 3.191209{col 67}{space 3}  3.52211
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        69
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    67){col 68}={res}      0.63
+{col 53}{txt}Prob > F       =    {res}0.4292
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F3. {c |}{col 14}{res}{space 2} .4691023{col 26}{space 2} .5898352{col 37}{space 1}    0.80{col 46}{space 3}0.429{col 54}{space 4}-.7082136{col 67}{space 3} 1.646418
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.367674{col 26}{space 2} .0974615{col 37}{space 1}   34.55{col 46}{space 3}0.000{col 54}{space 4}  3.17314{col 67}{space 3} 3.562208
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        68
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    66){col 68}={res}      0.06
+{col 53}{txt}Prob > F       =    {res}0.8031
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F4. {c |}{col 14}{res}{space 2} .1698701{col 26}{space 2} .6784251{col 37}{space 1}    0.25{col 46}{space 3}0.803{col 54}{space 4}-1.184649{col 67}{space 3} 1.524389
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.399899{col 26}{space 2} .1076183{col 37}{space 1}   31.59{col 46}{space 3}0.000{col 54}{space 4} 3.185032{col 67}{space 3} 3.614766
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        67
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    65){col 68}={res}      0.44
+{col 53}{txt}Prob > F       =    {res}0.5077
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F5. {c |}{col 14}{res}{space 2}-.4722773{col 26}{space 2} .7090555{col 37}{space 1}   -0.67{col 46}{space 3}0.508{col 54}{space 4}-1.888359{col 67}{space 3} .9438042
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.472612{col 26}{space 2} .1220243{col 37}{space 1}   28.46{col 46}{space 3}0.000{col 54}{space 4} 3.228912{col 67}{space 3} 3.716311
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        66
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    64){col 68}={res}      0.25
+{col 53}{txt}Prob > F       =    {res}0.6203
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F6. {c |}{col 14}{res}{space 2}-.2745291{col 26}{space 2} .5514407{col 37}{space 1}   -0.50{col 46}{space 3}0.620{col 54}{space 4}-1.376159{col 67}{space 3} .8271004
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.455428{col 26}{space 2} .1133827{col 37}{space 1}   30.48{col 46}{space 3}0.000{col 54}{space 4}  3.22892{col 67}{space 3} 3.681936
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        65
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    63){col 68}={res}      1.92
+{col 53}{txt}Prob > F       =    {res}0.1711
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F7. {c |}{col 14}{res}{space 2}-.6300046{col 26}{space 2} .4550438{col 37}{space 1}   -1.38{col 46}{space 3}0.171{col 54}{space 4}-1.539337{col 67}{space 3} .2793278
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.493305{col 26}{space 2} .0988741{col 37}{space 1}   35.33{col 46}{space 3}0.000{col 54}{space 4} 3.295721{col 67}{space 3} 3.690889
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        64
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    62){col 68}={res}      4.60
+{col 53}{txt}Prob > F       =    {res}0.0359
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F8. {c |}{col 14}{res}{space 2}-1.047942{col 26}{space 2} .4885297{col 37}{space 1}   -2.15{col 46}{space 3}0.036{col 54}{space 4}-2.024499{col 67}{space 3}-.0713854
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.541482{col 26}{space 2} .0897677{col 37}{space 1}   39.45{col 46}{space 3}0.000{col 54}{space 4} 3.362039{col 67}{space 3} 3.720925
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        63
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    61){col 68}={res}      7.29
+{col 53}{txt}Prob > F       =    {res}0.0089
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F9. {c |}{col 14}{res}{space 2}-1.238742{col 26}{space 2} .4586754{col 37}{space 1}   -2.70{col 46}{space 3}0.009{col 54}{space 4} -2.15592{col 67}{space 3}-.3215641
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.567136{col 26}{space 2} .0867905{col 37}{space 1}   41.10{col 46}{space 3}0.000{col 54}{space 4} 3.393588{col 67}{space 3} 3.740684
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        62
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    60){col 68}={res}     14.29
+{col 53}{txt}Prob > F       =    {res}0.0004
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F10. {c |}{col 14}{res}{space 2}-1.726845{col 26}{space 2} .4567875{col 37}{space 1}   -3.78{col 46}{space 3}0.000{col 54}{space 4}-2.640556{col 67}{space 3}-.8131344
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}  3.61862{col 26}{space 2} .0795695{col 37}{space 1}   45.48{col 46}{space 3}0.000{col 54}{space 4} 3.459457{col 67}{space 3} 3.777783
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        61
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    59){col 68}={res}     12.70
+{col 53}{txt}Prob > F       =    {res}0.0007
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F11. {c |}{col 14}{res}{space 2}-2.037755{col 26}{space 2} .5717199{col 37}{space 1}   -3.56{col 46}{space 3}0.001{col 54}{space 4}-3.181764{col 67}{space 3}-.8937463
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}  3.64719{col 26}{space 2}   .07626{col 37}{space 1}   47.83{col 46}{space 3}0.000{col 54}{space 4} 3.494594{col 67}{space 3} 3.799786
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        60
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    58){col 68}={res}      9.52
+{col 53}{txt}Prob > F       =    {res}0.0031
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F12. {c |}{col 14}{res}{space 2}-1.415603{col 26}{space 2} .4587147{col 37}{space 1}   -3.09{col 46}{space 3}0.003{col 54}{space 4} -2.33382{col 67}{space 3}-.4973856
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}  3.58123{col 26}{space 2} .0826146{col 37}{space 1}   43.35{col 46}{space 3}0.000{col 54}{space 4} 3.415859{col 67}{space 3} 3.746601
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        71
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    69){col 68}={res}      0.80
+{col 53}{txt}Prob > F       =    {res}0.3733
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F1. {c |}{col 14}{res}{space 2} .1455204{col 26}{space 2} .1624026{col 37}{space 1}    0.90{col 46}{space 3}0.373{col 54}{space 4}-.1784639{col 67}{space 3} .4695047
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 2.043306{col 26}{space 2} .0269573{col 37}{space 1}   75.80{col 46}{space 3}0.000{col 54}{space 4} 1.989528{col 67}{space 3} 2.097084
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        70
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    68){col 68}={res}      2.03
+{col 53}{txt}Prob > F       =    {res}0.1589
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F2. {c |}{col 14}{res}{space 2} .1987352{col 26}{space 2} .1395151{col 37}{space 1}    1.42{col 46}{space 3}0.159{col 54}{space 4}-.0796628{col 67}{space 3} .4771333
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 2.039368{col 26}{space 2}  .029679{col 37}{space 1}   68.71{col 46}{space 3}0.000{col 54}{space 4} 1.980145{col 67}{space 3} 2.098592
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        69
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    67){col 68}={res}      1.23
+{col 53}{txt}Prob > F       =    {res}0.2720
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F3. {c |}{col 14}{res}{space 2} .1939892{col 26}{space 2} .1751506{col 37}{space 1}    1.11{col 46}{space 3}0.272{col 54}{space 4}-.1556128{col 67}{space 3} .5435913
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 2.041799{col 26}{space 2} .0356368{col 37}{space 1}   57.29{col 46}{space 3}0.000{col 54}{space 4} 1.970667{col 67}{space 3}  2.11293
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        68
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    66){col 68}={res}      0.34
+{col 53}{txt}Prob > F       =    {res}0.5593
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F4. {c |}{col 14}{res}{space 2} .1119752{col 26}{space 2} .1907912{col 37}{space 1}    0.59{col 46}{space 3}0.559{col 54}{space 4}-.2689516{col 67}{space 3} .4929021
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 2.050832{col 26}{space 2} .0380877{col 37}{space 1}   53.85{col 46}{space 3}0.000{col 54}{space 4} 1.974788{col 67}{space 3} 2.126877
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        67
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    65){col 68}={res}      0.14
+{col 53}{txt}Prob > F       =    {res}0.7064
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F5. {c |}{col 14}{res}{space 2}-.0701779{col 26}{space 2} .1854642{col 37}{space 1}   -0.38{col 46}{space 3}0.706{col 54}{space 4}-.4405755{col 67}{space 3} .3002197
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}  2.07128{col 26}{space 2} .0393436{col 37}{space 1}   52.65{col 46}{space 3}0.000{col 54}{space 4} 1.992706{col 67}{space 3} 2.149855
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        66
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    64){col 68}={res}      0.09
+{col 53}{txt}Prob > F       =    {res}0.7712
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F6. {c |}{col 14}{res}{space 2}-.0558314{col 26}{space 2} .1911876{col 37}{space 1}   -0.29{col 46}{space 3}0.771{col 54}{space 4}-.4377725{col 67}{space 3} .3261097
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 2.071291{col 26}{space 2} .0398609{col 37}{space 1}   51.96{col 46}{space 3}0.000{col 54}{space 4}  1.99166{col 67}{space 3} 2.150923
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        65
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    63){col 68}={res}      1.11
+{col 53}{txt}Prob > F       =    {res}0.2967
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F7. {c |}{col 14}{res}{space 2}-.1635218{col 26}{space 2} .1553904{col 37}{space 1}   -1.05{col 46}{space 3}0.297{col 54}{space 4}-.4740447{col 67}{space 3} .1470011
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 2.083645{col 26}{space 2}  .034886{col 37}{space 1}   59.73{col 46}{space 3}0.000{col 54}{space 4} 2.013931{col 67}{space 3} 2.153359
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        64
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    62){col 68}={res}      3.47
+{col 53}{txt}Prob > F       =    {res}0.0674
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F8. {c |}{col 14}{res}{space 2}-.2983568{col 26}{space 2}  .160253{col 37}{space 1}   -1.86{col 46}{space 3}0.067{col 54}{space 4} -.618698{col 67}{space 3} .0219843
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 2.099522{col 26}{space 2} .0316063{col 37}{space 1}   66.43{col 46}{space 3}0.000{col 54}{space 4} 2.036342{col 67}{space 3} 2.162702
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        63
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    61){col 68}={res}      4.72
+{col 53}{txt}Prob > F       =    {res}0.0337
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F9. {c |}{col 14}{res}{space 2}-.3676714{col 26}{space 2} .1692435{col 37}{space 1}   -2.17{col 46}{space 3}0.034{col 54}{space 4}-.7060946{col 67}{space 3}-.0292482
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 2.107775{col 26}{space 2} .0311628{col 37}{space 1}   67.64{col 46}{space 3}0.000{col 54}{space 4} 2.045461{col 67}{space 3} 2.170088
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        62
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    60){col 68}={res}     10.65
+{col 53}{txt}Prob > F       =    {res}0.0018
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F10. {c |}{col 14}{res}{space 2}-.5130615{col 26}{space 2} .1572115{col 37}{space 1}   -3.26{col 46}{space 3}0.002{col 54}{space 4}-.8275313{col 67}{space 3}-.1985918
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 2.123129{col 26}{space 2} .0281064{col 37}{space 1}   75.54{col 46}{space 3}0.000{col 54}{space 4} 2.066907{col 67}{space 3}  2.17935
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        61
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    59){col 68}={res}     11.90
+{col 53}{txt}Prob > F       =    {res}0.0010
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F11. {c |}{col 14}{res}{space 2}-.5674102{col 26}{space 2} .1644646{col 37}{space 1}   -3.45{col 46}{space 3}0.001{col 54}{space 4}-.8965031{col 67}{space 3}-.2383173
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 2.129447{col 26}{space 2} .0269327{col 37}{space 1}   79.07{col 46}{space 3}0.000{col 54}{space 4} 2.075555{col 67}{space 3} 2.183339
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        60
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    58){col 68}={res}      7.78
+{col 53}{txt}Prob > F       =    {res}0.0071
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F12. {c |}{col 14}{res}{space 2}  -.46673{col 26}{space 2} .1673247{col 37}{space 1}   -2.79{col 46}{space 3}0.007{col 54}{space 4}-.8016668{col 67}{space 3}-.1317931
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 2.117951{col 26}{space 2} .0292558{col 37}{space 1}   72.39{col 46}{space 3}0.000{col 54}{space 4} 2.059389{col 67}{space 3} 2.176512
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        71
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    69){col 68}={res}      0.49
+{col 53}{txt}Prob > F       =    {res}0.4848
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F1. {c |}{col 14}{res}{space 2} 1.508559{col 26}{space 2} 2.147897{col 37}{space 1}    0.70{col 46}{space 3}0.485{col 54}{space 4} -2.77638{col 67}{space 3} 5.793497
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 8.720719{col 26}{space 2} .2614453{col 37}{space 1}   33.36{col 46}{space 3}0.000{col 54}{space 4}  8.19915{col 67}{space 3} 9.242288
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        70
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    68){col 68}={res}      1.95
+{col 53}{txt}Prob > F       =    {res}0.1670
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F2. {c |}{col 14}{res}{space 2} 2.456672{col 26}{space 2} 1.758597{col 37}{space 1}    1.40{col 46}{space 3}0.167{col 54}{space 4}-1.052553{col 67}{space 3} 5.965897
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 8.639315{col 26}{space 2}  .273099{col 37}{space 1}   31.63{col 46}{space 3}0.000{col 54}{space 4} 8.094354{col 67}{space 3} 9.184275
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        69
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    67){col 68}={res}      4.50
+{col 53}{txt}Prob > F       =    {res}0.0376
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F3. {c |}{col 14}{res}{space 2} 3.783894{col 26}{space 2} 1.783754{col 37}{space 1}    2.12{col 46}{space 3}0.038{col 54}{space 4} .2235063{col 67}{space 3} 7.344281
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 8.523729{col 26}{space 2} .2938413{col 37}{space 1}   29.01{col 46}{space 3}0.000{col 54}{space 4} 7.937219{col 67}{space 3} 9.110238
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        68
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    66){col 68}={res}      2.63
+{col 53}{txt}Prob > F       =    {res}0.1099
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F4. {c |}{col 14}{res}{space 2} 3.097676{col 26}{space 2} 1.911352{col 37}{space 1}    1.62{col 46}{space 3}0.110{col 54}{space 4}-.7184608{col 67}{space 3} 6.913812
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 8.607213{col 26}{space 2} .3198223{col 37}{space 1}   26.91{col 46}{space 3}0.000{col 54}{space 4} 7.968667{col 67}{space 3} 9.245759
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        67
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    65){col 68}={res}      0.18
+{col 53}{txt}Prob > F       =    {res}0.6736
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F5. {c |}{col 14}{res}{space 2} .7014988{col 26}{space 2} 1.657948{col 37}{space 1}    0.42{col 46}{space 3}0.674{col 54}{space 4}-2.609652{col 67}{space 3} 4.012649
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 8.863209{col 26}{space 2} .3021227{col 37}{space 1}   29.34{col 46}{space 3}0.000{col 54}{space 4} 8.259828{col 67}{space 3}  9.46659
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        66
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    64){col 68}={res}      0.00
+{col 53}{txt}Prob > F       =    {res}0.9730
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F6. {c |}{col 14}{res}{space 2} .0568409{col 26}{space 2} 1.673282{col 37}{space 1}    0.03{col 46}{space 3}0.973{col 54}{space 4}-3.285924{col 67}{space 3} 3.399606
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}  8.95353{col 26}{space 2} .2779866{col 37}{space 1}   32.21{col 46}{space 3}0.000{col 54}{space 4} 8.398188{col 67}{space 3} 9.508872
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        65
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    63){col 68}={res}      0.02
+{col 53}{txt}Prob > F       =    {res}0.9004
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F7. {c |}{col 14}{res}{space 2}-.1582102{col 26}{space 2} 1.258744{col 37}{space 1}   -0.13{col 46}{space 3}0.900{col 54}{space 4} -2.67361{col 67}{space 3}  2.35719
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 8.986764{col 26}{space 2}  .236158{col 37}{space 1}   38.05{col 46}{space 3}0.000{col 54}{space 4}  8.51484{col 67}{space 3} 9.458688
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        64
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    62){col 68}={res}      2.03
+{col 53}{txt}Prob > F       =    {res}0.1597
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F8. {c |}{col 14}{res}{space 2}-1.827236{col 26}{space 2} 1.284024{col 37}{space 1}   -1.42{col 46}{space 3}0.160{col 54}{space 4}-4.393964{col 67}{space 3} .7394919
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 9.176219{col 26}{space 2} .2023249{col 37}{space 1}   45.35{col 46}{space 3}0.000{col 54}{space 4} 8.771777{col 67}{space 3} 9.580661
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        63
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    61){col 68}={res}      1.81
+{col 53}{txt}Prob > F       =    {res}0.1831
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F9. {c |}{col 14}{res}{space 2}-1.886372{col 26}{space 2} 1.400879{col 37}{space 1}   -1.35{col 46}{space 3}0.183{col 54}{space 4}-4.687604{col 67}{space 3}  .914859
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 9.209594{col 26}{space 2} .1937187{col 37}{space 1}   47.54{col 46}{space 3}0.000{col 54}{space 4} 8.822229{col 67}{space 3} 9.596958
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        62
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    60){col 68}={res}      3.62
+{col 53}{txt}Prob > F       =    {res}0.0621
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F10. {c |}{col 14}{res}{space 2} -2.59743{col 26}{space 2} 1.366093{col 37}{space 1}   -1.90{col 46}{space 3}0.062{col 54}{space 4}-5.330022{col 67}{space 3} .1351629
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 9.286915{col 26}{space 2} .2135183{col 37}{space 1}   43.49{col 46}{space 3}0.000{col 54}{space 4} 8.859815{col 67}{space 3} 9.714015
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        61
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    59){col 68}={res}      3.63
+{col 53}{txt}Prob > F       =    {res}0.0615
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F11. {c |}{col 14}{res}{space 2}-2.409575{col 26}{space 2} 1.264278{col 37}{space 1}   -1.91{col 46}{space 3}0.062{col 54}{space 4}-4.939389{col 67}{space 3} .1202396
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 9.283676{col 26}{space 2} .2127578{col 37}{space 1}   43.63{col 46}{space 3}0.000{col 54}{space 4} 8.857948{col 67}{space 3} 9.709403
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        60
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    58){col 68}={res}      1.23
+{col 53}{txt}Prob > F       =    {res}0.2717
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F12. {c |}{col 14}{res}{space 2}-1.543145{col 26}{space 2} 1.390716{col 37}{space 1}   -1.11{col 46}{space 3}0.272{col 54}{space 4}-4.326966{col 67}{space 3} 1.240676
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 9.192521{col 26}{space 2} .2417949{col 37}{space 1}   38.02{col 46}{space 3}0.000{col 54}{space 4} 8.708516{col 67}{space 3} 9.676526
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        71
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    69){col 68}={res}      0.99
+{col 53}{txt}Prob > F       =    {res}0.3241
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    skewMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F1. {c |}{col 14}{res}{space 2}  .023103{col 26}{space 2} .0232631{col 37}{space 1}    0.99{col 46}{space 3}0.324{col 54}{space 4}-.0233057{col 67}{space 3} .0695116
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .1080799{col 26}{space 2} .0034353{col 37}{space 1}   31.46{col 46}{space 3}0.000{col 54}{space 4} .1012266{col 67}{space 3} .1149332
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        70
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    68){col 68}={res}      0.19
+{col 53}{txt}Prob > F       =    {res}0.6631
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    skewMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F2. {c |}{col 14}{res}{space 2}-.0094563{col 26}{space 2} .0216135{col 37}{space 1}   -0.44{col 46}{space 3}0.663{col 54}{space 4}-.0525853{col 67}{space 3} .0336727
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .1117247{col 26}{space 2} .0036411{col 37}{space 1}   30.68{col 46}{space 3}0.000{col 54}{space 4}  .104459{col 67}{space 3} .1189905
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        69
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    67){col 68}={res}      3.47
+{col 53}{txt}Prob > F       =    {res}0.0668
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    skewMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F3. {c |}{col 14}{res}{space 2} -.051544{col 26}{space 2} .0276582{col 37}{space 1}   -1.86{col 46}{space 3}0.067{col 54}{space 4}  -.10675{col 67}{space 3}  .003662
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .1160144{col 26}{space 2} .0033354{col 37}{space 1}   34.78{col 46}{space 3}0.000{col 54}{space 4}  .109357{col 67}{space 3} .1226719
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        68
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    66){col 68}={res}      2.71
+{col 53}{txt}Prob > F       =    {res}0.1044
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    skewMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F4. {c |}{col 14}{res}{space 2} -.051351{col 26}{space 2} .0311838{col 37}{space 1}   -1.65{col 46}{space 3}0.104{col 54}{space 4}-.1136114{col 67}{space 3} .0109094
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .1157197{col 26}{space 2} .0035305{col 37}{space 1}   32.78{col 46}{space 3}0.000{col 54}{space 4} .1086709{col 67}{space 3} .1227686
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        67
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    65){col 68}={res}      0.75
+{col 53}{txt}Prob > F       =    {res}0.3902
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    skewMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F5. {c |}{col 14}{res}{space 2}-.0276261{col 26}{space 2} .0319386{col 37}{space 1}   -0.86{col 46}{space 3}0.390{col 54}{space 4}-.0914119{col 67}{space 3} .0361598
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}  .113163{col 26}{space 2}   .00373{col 37}{space 1}   30.34{col 46}{space 3}0.000{col 54}{space 4} .1057136{col 67}{space 3} .1206123
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        66
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    64){col 68}={res}      0.30
+{col 53}{txt}Prob > F       =    {res}0.5865
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    skewMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F6. {c |}{col 14}{res}{space 2}-.0176108{col 26}{space 2} .0322141{col 37}{space 1}   -0.55{col 46}{space 3}0.586{col 54}{space 4}-.0819659{col 67}{space 3} .0467443
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .1122105{col 26}{space 2}  .003139{col 37}{space 1}   35.75{col 46}{space 3}0.000{col 54}{space 4} .1059396{col 67}{space 3} .1184814
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        65
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    63){col 68}={res}      2.34
+{col 53}{txt}Prob > F       =    {res}0.1307
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    skewMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F7. {c |}{col 14}{res}{space 2}-.0494504{col 26}{space 2} .0322951{col 37}{space 1}   -1.53{col 46}{space 3}0.131{col 54}{space 4}-.1139869{col 67}{space 3} .0150862
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .1147704{col 26}{space 2} .0029804{col 37}{space 1}   38.51{col 46}{space 3}0.000{col 54}{space 4} .1088146{col 67}{space 3} .1207262
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        64
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    62){col 68}={res}      3.75
+{col 53}{txt}Prob > F       =    {res}0.0573
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    skewMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F8. {c |}{col 14}{res}{space 2}-.0759222{col 26}{space 2}  .039192{col 37}{space 1}   -1.94{col 46}{space 3}0.057{col 54}{space 4}-.1542659{col 67}{space 3} .0024215
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .1171418{col 26}{space 2} .0031945{col 37}{space 1}   36.67{col 46}{space 3}0.000{col 54}{space 4} .1107561{col 67}{space 3} .1235275
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        63
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    61){col 68}={res}      4.25
+{col 53}{txt}Prob > F       =    {res}0.0435
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    skewMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F9. {c |}{col 14}{res}{space 2}-.0646169{col 26}{space 2} .0313404{col 37}{space 1}   -2.06{col 46}{space 3}0.043{col 54}{space 4}-.1272859{col 67}{space 3}-.0019479
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .1159187{col 26}{space 2} .0029633{col 37}{space 1}   39.12{col 46}{space 3}0.000{col 54}{space 4} .1099932{col 67}{space 3} .1218442
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        62
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    60){col 68}={res}      4.80
+{col 53}{txt}Prob > F       =    {res}0.0324
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    skewMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F10. {c |}{col 14}{res}{space 2}-.0614941{col 26}{space 2} .0280774{col 37}{space 1}   -2.19{col 46}{space 3}0.032{col 54}{space 4}-.1176573{col 67}{space 3} -.005331
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .1153497{col 26}{space 2}  .002843{col 37}{space 1}   40.57{col 46}{space 3}0.000{col 54}{space 4} .1096629{col 67}{space 3} .1210366
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        61
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    59){col 68}={res}      8.69
+{col 53}{txt}Prob > F       =    {res}0.0046
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    skewMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F11. {c |}{col 14}{res}{space 2}-.0885783{col 26}{space 2} .0300516{col 37}{space 1}   -2.95{col 46}{space 3}0.005{col 54}{space 4}-.1487114{col 67}{space 3}-.0284451
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .1180644{col 26}{space 2} .0035799{col 37}{space 1}   32.98{col 46}{space 3}0.000{col 54}{space 4}  .110901{col 67}{space 3} .1252277
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        60
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    58){col 68}={res}     24.01
+{col 53}{txt}Prob > F       =    {res}0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}    skewMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F12. {c |}{col 14}{res}{space 2}-.0883858{col 26}{space 2} .0180366{col 37}{space 1}   -4.90{col 46}{space 3}0.000{col 54}{space 4}-.1244899{col 67}{space 3}-.0522817
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .1179032{col 26}{space 2} .0023605{col 37}{space 1}   49.95{col 46}{space 3}0.000{col 54}{space 4} .1131781{col 67}{space 3} .1226282
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        71
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    69){col 68}={res}      0.67
+{col 53}{txt}Prob > F       =    {res}0.4158
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F1. {c |}{col 14}{res}{space 2}-.0610673{col 26}{space 2} .0745868{col 37}{space 1}   -0.82{col 46}{space 3}0.416{col 54}{space 4}-.2098639{col 67}{space 3} .0877293
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .7026606{col 26}{space 2}  .017013{col 37}{space 1}   41.30{col 46}{space 3}0.000{col 54}{space 4} .6687207{col 67}{space 3} .7366005
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        70
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    68){col 68}={res}      1.44
+{col 53}{txt}Prob > F       =    {res}0.2343
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F2. {c |}{col 14}{res}{space 2}-.1299991{col 26}{space 2} .1083302{col 37}{space 1}   -1.20{col 46}{space 3}0.234{col 54}{space 4}-.3461686{col 67}{space 3} .0861705
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .7103781{col 26}{space 2} .0214089{col 37}{space 1}   33.18{col 46}{space 3}0.000{col 54}{space 4} .6676574{col 67}{space 3} .7530988
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        69
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    67){col 68}={res}      0.47
+{col 53}{txt}Prob > F       =    {res}0.4945
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F3. {c |}{col 14}{res}{space 2} -.118686{col 26}{space 2} .1727941{col 37}{space 1}   -0.69{col 46}{space 3}0.495{col 54}{space 4}-.4635844{col 67}{space 3} .2262123
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .7094433{col 26}{space 2} .0263281{col 37}{space 1}   26.95{col 46}{space 3}0.000{col 54}{space 4} .6568922{col 67}{space 3} .7619943
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        68
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    66){col 68}={res}      0.37
+{col 53}{txt}Prob > F       =    {res}0.5447
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F4. {c |}{col 14}{res}{space 2} -.116432{col 26}{space 2} .1912284{col 37}{space 1}   -0.61{col 46}{space 3}0.545{col 54}{space 4}-.4982317{col 67}{space 3} .2653678
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .7095761{col 26}{space 2} .0274927{col 37}{space 1}   25.81{col 46}{space 3}0.000{col 54}{space 4} .6546852{col 67}{space 3} .7644671
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        67
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    65){col 68}={res}      0.46
+{col 53}{txt}Prob > F       =    {res}0.5009
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F5. {c |}{col 14}{res}{space 2}-.1263441{col 26}{space 2} .1866694{col 37}{space 1}   -0.68{col 46}{space 3}0.501{col 54}{space 4}-.4991485{col 67}{space 3} .2464604
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .7109771{col 26}{space 2} .0255078{col 37}{space 1}   27.87{col 46}{space 3}0.000{col 54}{space 4} .6600344{col 67}{space 3} .7619197
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        66
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    64){col 68}={res}      2.19
+{col 53}{txt}Prob > F       =    {res}0.1438
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F6. {c |}{col 14}{res}{space 2}-.2292081{col 26}{space 2} .1548893{col 37}{space 1}   -1.48{col 46}{space 3}0.144{col 54}{space 4} -.538635{col 67}{space 3} .0802189
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .7217327{col 26}{space 2} .0234236{col 37}{space 1}   30.81{col 46}{space 3}0.000{col 54}{space 4} .6749387{col 67}{space 3} .7685267
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        65
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    63){col 68}={res}      1.03
+{col 53}{txt}Prob > F       =    {res}0.3152
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F7. {c |}{col 14}{res}{space 2}-.1953572{col 26}{space 2} .1929481{col 37}{space 1}   -1.01{col 46}{space 3}0.315{col 54}{space 4}-.5809333{col 67}{space 3} .1902188
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .7183402{col 26}{space 2} .0260689{col 37}{space 1}   27.56{col 46}{space 3}0.000{col 54}{space 4} .6662457{col 67}{space 3} .7704346
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        64
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    62){col 68}={res}      1.71
+{col 53}{txt}Prob > F       =    {res}0.1958
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F8. {c |}{col 14}{res}{space 2} -.279001{col 26}{space 2} .2133693{col 37}{space 1}   -1.31{col 46}{space 3}0.196{col 54}{space 4}-.7055201{col 67}{space 3} .1475181
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .7265061{col 26}{space 2} .0277445{col 37}{space 1}   26.19{col 46}{space 3}0.000{col 54}{space 4} .6710457{col 67}{space 3} .7819666
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        63
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    61){col 68}={res}      1.40
+{col 53}{txt}Prob > F       =    {res}0.2415
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F9. {c |}{col 14}{res}{space 2}-.2499337{col 26}{space 2} .2113111{col 37}{space 1}   -1.18{col 46}{space 3}0.241{col 54}{space 4}-.6724764{col 67}{space 3}  .172609
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}  .723889{col 26}{space 2} .0277485{col 37}{space 1}   26.09{col 46}{space 3}0.000{col 54}{space 4} .6684024{col 67}{space 3} .7793756
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        62
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    60){col 68}={res}      1.71
+{col 53}{txt}Prob > F       =    {res}0.1960
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F10. {c |}{col 14}{res}{space 2}-.2580027{col 26}{space 2} .1972909{col 37}{space 1}   -1.31{col 46}{space 3}0.196{col 54}{space 4}-.6526433{col 67}{space 3} .1366379
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .7247475{col 26}{space 2} .0265239{col 37}{space 1}   27.32{col 46}{space 3}0.000{col 54}{space 4} .6716919{col 67}{space 3} .7778031
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        61
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    59){col 68}={res}      0.94
+{col 53}{txt}Prob > F       =    {res}0.3370
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F11. {c |}{col 14}{res}{space 2}-.2009954{col 26}{space 2} .2076296{col 37}{space 1}   -0.97{col 46}{space 3}0.337{col 54}{space 4}-.6164613{col 67}{space 3} .2144705
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}  .719644{col 26}{space 2}  .027266{col 37}{space 1}   26.39{col 46}{space 3}0.000{col 54}{space 4} .6650848{col 67}{space 3} .7742032
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        60
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    58){col 68}={res}      2.67
+{col 53}{txt}Prob > F       =    {res}0.1076
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F12. {c |}{col 14}{res}{space 2}-.2670038{col 26}{space 2} .1633661{col 37}{space 1}   -1.63{col 46}{space 3}0.108{col 54}{space 4}-.5940166{col 67}{space 3}  .060009
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} .7256115{col 26}{space 2} .0249263{col 37}{space 1}   29.11{col 46}{space 3}0.000{col 54}{space 4} .6757162{col 67}{space 3} .7755068
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        71
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    69){col 68}={res}      0.08
+{col 53}{txt}Prob > F       =    {res}0.7801
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F1. {c |}{col 14}{res}{space 2}-.0140141{col 26}{space 2} .0500031{col 37}{space 1}   -0.28{col 46}{space 3}0.780{col 54}{space 4}-.1137676{col 67}{space 3} .0857394
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 1.189728{col 26}{space 2} .0108394{col 37}{space 1}  109.76{col 46}{space 3}0.000{col 54}{space 4} 1.168104{col 67}{space 3} 1.211352
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        70
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    68){col 68}={res}      0.82
+{col 53}{txt}Prob > F       =    {res}0.3689
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F2. {c |}{col 14}{res}{space 2}-.0651494{col 26}{space 2} .0720282{col 37}{space 1}   -0.90{col 46}{space 3}0.369{col 54}{space 4}-.2088795{col 67}{space 3} .0785807
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 1.195404{col 26}{space 2} .0137612{col 37}{space 1}   86.87{col 46}{space 3}0.000{col 54}{space 4} 1.167944{col 67}{space 3} 1.222864
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        69
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    67){col 68}={res}      0.22
+{col 53}{txt}Prob > F       =    {res}0.6412
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F3. {c |}{col 14}{res}{space 2}-.0605644{col 26}{space 2} .1293885{col 37}{space 1}   -0.47{col 46}{space 3}0.641{col 54}{space 4}-.3188248{col 67}{space 3} .1976961
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 1.195078{col 26}{space 2} .0179952{col 37}{space 1}   66.41{col 46}{space 3}0.000{col 54}{space 4} 1.159159{col 67}{space 3} 1.230997
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        68
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    66){col 68}={res}      0.13
+{col 53}{txt}Prob > F       =    {res}0.7232
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F4. {c |}{col 14}{res}{space 2} -.051828{col 26}{space 2} .1457111{col 37}{space 1}   -0.36{col 46}{space 3}0.723{col 54}{space 4}-.3427495{col 67}{space 3} .2390935
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 1.194377{col 26}{space 2} .0191733{col 37}{space 1}   62.29{col 46}{space 3}0.000{col 54}{space 4} 1.156096{col 67}{space 3} 1.232658
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        67
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    65){col 68}={res}      0.04
+{col 53}{txt}Prob > F       =    {res}0.8456
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F5. {c |}{col 14}{res}{space 2}-.0271293{col 26}{space 2} .1387613{col 37}{space 1}   -0.20{col 46}{space 3}0.846{col 54}{space 4}-.3042547{col 67}{space 3} .2499961
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 1.192033{col 26}{space 2} .0178853{col 37}{space 1}   66.65{col 46}{space 3}0.000{col 54}{space 4} 1.156314{col 67}{space 3} 1.227753
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        66
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    64){col 68}={res}      1.21
+{col 53}{txt}Prob > F       =    {res}0.2749
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F6. {c |}{col 14}{res}{space 2}-.1219847{col 26}{space 2} .1107662{col 37}{space 1}   -1.10{col 46}{space 3}0.275{col 54}{space 4}-.3432657{col 67}{space 3} .0992964
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 1.201938{col 26}{space 2} .0156852{col 37}{space 1}   76.63{col 46}{space 3}0.000{col 54}{space 4} 1.170603{col 67}{space 3} 1.233273
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        65
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    63){col 68}={res}      0.58
+{col 53}{txt}Prob > F       =    {res}0.4486
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F7. {c |}{col 14}{res}{space 2}-.1147289{col 26}{space 2} .1504693{col 37}{space 1}   -0.76{col 46}{space 3}0.449{col 54}{space 4}-.4154179{col 67}{space 3} .1859601
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 1.201224{col 26}{space 2} .0184801{col 37}{space 1}   65.00{col 46}{space 3}0.000{col 54}{space 4} 1.164295{col 67}{space 3} 1.238154
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        64
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    62){col 68}={res}      1.28
+{col 53}{txt}Prob > F       =    {res}0.2614
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F8. {c |}{col 14}{res}{space 2}-.1813345{col 26}{space 2} .1599929{col 37}{space 1}   -1.13{col 46}{space 3}0.261{col 54}{space 4}-.5011557{col 67}{space 3} .1384868
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 1.207713{col 26}{space 2} .0190545{col 37}{space 1}   63.38{col 46}{space 3}0.000{col 54}{space 4} 1.169623{col 67}{space 3} 1.245802
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        63
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    61){col 68}={res}      1.22
+{col 53}{txt}Prob > F       =    {res}0.2732
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F9. {c |}{col 14}{res}{space 2}-.1726108{col 26}{space 2} .1561151{col 37}{space 1}   -1.11{col 46}{space 3}0.273{col 54}{space 4}-.4847823{col 67}{space 3} .1395606
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 1.206946{col 26}{space 2} .0187431{col 37}{space 1}   64.39{col 46}{space 3}0.000{col 54}{space 4} 1.169467{col 67}{space 3} 1.244425
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        62
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    60){col 68}={res}      1.25
+{col 53}{txt}Prob > F       =    {res}0.2676
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F10. {c |}{col 14}{res}{space 2}-.1625187{col 26}{space 2} .1452211{col 37}{space 1}   -1.12{col 46}{space 3}0.268{col 54}{space 4}-.4530042{col 67}{space 3} .1279669
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 1.205993{col 26}{space 2} .0176363{col 37}{space 1}   68.38{col 46}{space 3}0.000{col 54}{space 4} 1.170715{col 67}{space 3}  1.24127
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        61
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    59){col 68}={res}      0.48
+{col 53}{txt}Prob > F       =    {res}0.4930
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F11. {c |}{col 14}{res}{space 2}-.1127294{col 26}{space 2} .1634208{col 37}{space 1}   -0.69{col 46}{space 3}0.493{col 54}{space 4}-.4397338{col 67}{space 3} .2142749
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}  1.20145{col 26}{space 2} .0188731{col 37}{space 1}   63.66{col 46}{space 3}0.000{col 54}{space 4} 1.163685{col 67}{space 3} 1.239215
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        60
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    58){col 68}={res}      1.98
+{col 53}{txt}Prob > F       =    {res}0.1650
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F12. {c |}{col 14}{res}{space 2}-.1786667{col 26}{space 2} .1270453{col 37}{space 1}   -1.41{col 46}{space 3}0.165{col 54}{space 4}-.4329755{col 67}{space 3}  .075642
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 1.207699{col 26}{space 2} .0168295{col 37}{space 1}   71.76{col 46}{space 3}0.000{col 54}{space 4} 1.174011{col 67}{space 3} 1.241387
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        71
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    69){col 68}={res}      0.27
+{col 53}{txt}Prob > F       =    {res}0.6018
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F1. {c |}{col 14}{res}{space 2} .4568908{col 26}{space 2} .8716536{col 37}{space 1}    0.52{col 46}{space 3}0.602{col 54}{space 4} -1.28201{col 67}{space 3} 2.195792
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.249238{col 26}{space 2} .1441077{col 37}{space 1}   22.55{col 46}{space 3}0.000{col 54}{space 4} 2.961752{col 67}{space 3} 3.536725
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        70
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    68){col 68}={res}      0.60
+{col 53}{txt}Prob > F       =    {res}0.4425
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F2. {c |}{col 14}{res}{space 2}  .740251{col 26}{space 2} .9582516{col 37}{space 1}    0.77{col 46}{space 3}0.442{col 54}{space 4} -1.17191{col 67}{space 3} 2.652412
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.231241{col 26}{space 2} .1630361{col 37}{space 1}   19.82{col 46}{space 3}0.000{col 54}{space 4} 2.905908{col 67}{space 3} 3.556575
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        69
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    67){col 68}={res}      0.41
+{col 53}{txt}Prob > F       =    {res}0.5223
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F3. {c |}{col 14}{res}{space 2}  .694964{col 26}{space 2} 1.080608{col 37}{space 1}    0.64{col 46}{space 3}0.522{col 54}{space 4}-1.461938{col 67}{space 3} 2.851866
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.245012{col 26}{space 2} .1830024{col 37}{space 1}   17.73{col 46}{space 3}0.000{col 54}{space 4} 2.879737{col 67}{space 3} 3.610286
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        68
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    66){col 68}={res}      0.10
+{col 53}{txt}Prob > F       =    {res}0.7511
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F4. {c |}{col 14}{res}{space 2} .3575955{col 26}{space 2} 1.122489{col 37}{space 1}    0.32{col 46}{space 3}0.751{col 54}{space 4}-1.883526{col 67}{space 3} 2.598717
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.289344{col 26}{space 2} .1875597{col 37}{space 1}   17.54{col 46}{space 3}0.000{col 54}{space 4} 2.914869{col 67}{space 3} 3.663819
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        67
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    65){col 68}={res}      0.01
+{col 53}{txt}Prob > F       =    {res}0.9030
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F5. {c |}{col 14}{res}{space 2}-.1168726{col 26}{space 2} .9551605{col 37}{space 1}   -0.12{col 46}{space 3}0.903{col 54}{space 4} -2.02446{col 67}{space 3} 1.790715
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.337895{col 26}{space 2} .1751651{col 37}{space 1}   19.06{col 46}{space 3}0.000{col 54}{space 4} 2.988067{col 67}{space 3} 3.687724
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        66
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    64){col 68}={res}      0.43
+{col 53}{txt}Prob > F       =    {res}0.5140
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F6. {c |}{col 14}{res}{space 2}-.7092874{col 26}{space 2} 1.080839{col 37}{space 1}   -0.66{col 46}{space 3}0.514{col 54}{space 4}-2.868512{col 67}{space 3} 1.449938
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.408162{col 26}{space 2} .1751454{col 37}{space 1}   19.46{col 46}{space 3}0.000{col 54}{space 4} 3.058269{col 67}{space 3} 3.758055
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        65
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    63){col 68}={res}      0.92
+{col 53}{txt}Prob > F       =    {res}0.3406
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F7. {c |}{col 14}{res}{space 2}-.9586474{col 26}{space 2} .9983606{col 37}{space 1}   -0.96{col 46}{space 3}0.341{col 54}{space 4}-2.953712{col 67}{space 3} 1.036417
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.439585{col 26}{space 2} .1499811{col 37}{space 1}   22.93{col 46}{space 3}0.000{col 54}{space 4} 3.139872{col 67}{space 3} 3.739299
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        64
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    62){col 68}={res}      3.22
+{col 53}{txt}Prob > F       =    {res}0.0775
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F8. {c |}{col 14}{res}{space 2}-1.655491{col 26}{space 2} .9220864{col 37}{space 1}   -1.80{col 46}{space 3}0.077{col 54}{space 4}-3.498716{col 67}{space 3}  .187733
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.515891{col 26}{space 2} .1267233{col 37}{space 1}   27.74{col 46}{space 3}0.000{col 54}{space 4} 3.262575{col 67}{space 3} 3.769207
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        63
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    61){col 68}={res}      3.19
+{col 53}{txt}Prob > F       =    {res}0.0788
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F9. {c |}{col 14}{res}{space 2}-1.688659{col 26}{space 2} .9447811{col 37}{space 1}   -1.79{col 46}{space 3}0.079{col 54}{space 4}-3.577865{col 67}{space 3} .2005477
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.525055{col 26}{space 2} .1173037{col 37}{space 1}   30.05{col 46}{space 3}0.000{col 54}{space 4} 3.290492{col 67}{space 3} 3.759619
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        62
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    60){col 68}={res}      2.43
+{col 53}{txt}Prob > F       =    {res}0.1240
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F10. {c |}{col 14}{res}{space 2} -1.48875{col 26}{space 2}  .954293{col 37}{space 1}   -1.56{col 46}{space 3}0.124{col 54}{space 4} -3.39762{col 67}{space 3} .4201203
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}  3.51443{col 26}{space 2} .1179504{col 37}{space 1}   29.80{col 46}{space 3}0.000{col 54}{space 4} 3.278494{col 67}{space 3} 3.750366
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        61
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    59){col 68}={res}      3.44
+{col 53}{txt}Prob > F       =    {res}0.0687
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F11. {c |}{col 14}{res}{space 2}-1.567889{col 26}{space 2} .8454802{col 37}{space 1}   -1.85{col 46}{space 3}0.069{col 54}{space 4}-3.259691{col 67}{space 3} .1239133
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.528302{col 26}{space 2} .1280436{col 37}{space 1}   27.56{col 46}{space 3}0.000{col 54}{space 4} 3.272087{col 67}{space 3} 3.784517
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        60
+{txt}maximum lag: {res}18{col 53}{txt}F(  1,    58){col 68}={res}      1.62
+{col 53}{txt}Prob > F       =    {res}0.2086
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F12. {c |}{col 14}{res}{space 2}-1.369999{col 26}{space 2} 1.077363{col 37}{space 1}   -1.27{col 46}{space 3}0.209{col 54}{space 4}-3.526574{col 67}{space 3} .7865768
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 3.508928{col 26}{space 2} .1562069{col 37}{space 1}   22.46{col 46}{space 3}0.000{col 54}{space 4} 3.196246{col 67}{space 3}  3.82161
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        71
+{txt}maximum lag: {res}18{col 53}{txt}F(  0,    69){col 68}={res}         .
+{col 53}{txt}Prob > F       =    {res}     .
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     skewMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F1. {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}macros:
+             r(label2) : "{res}(omitted){txt}"
+             r(label1) : "{res}(omitted){txt}"
+
+matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        70
+{txt}maximum lag: {res}18{col 53}{txt}F(  0,    68){col 68}={res}         .
+{col 53}{txt}Prob > F       =    {res}     .
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     skewMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F2. {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}macros:
+             r(label2) : "{res}(omitted){txt}"
+             r(label1) : "{res}(omitted){txt}"
+
+matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        69
+{txt}maximum lag: {res}18{col 53}{txt}F(  0,    67){col 68}={res}         .
+{col 53}{txt}Prob > F       =    {res}     .
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     skewMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F3. {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}macros:
+             r(label2) : "{res}(omitted){txt}"
+             r(label1) : "{res}(omitted){txt}"
+
+matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        68
+{txt}maximum lag: {res}18{col 53}{txt}F(  0,    66){col 68}={res}         .
+{col 53}{txt}Prob > F       =    {res}     .
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     skewMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F4. {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}macros:
+             r(label2) : "{res}(omitted){txt}"
+             r(label1) : "{res}(omitted){txt}"
+
+matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        67
+{txt}maximum lag: {res}18{col 53}{txt}F(  0,    65){col 68}={res}         .
+{col 53}{txt}Prob > F       =    {res}     .
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     skewMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F5. {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}macros:
+             r(label2) : "{res}(omitted){txt}"
+             r(label1) : "{res}(omitted){txt}"
+
+matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        66
+{txt}maximum lag: {res}18{col 53}{txt}F(  0,    64){col 68}={res}         .
+{col 53}{txt}Prob > F       =    {res}     .
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     skewMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F6. {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}macros:
+             r(label2) : "{res}(omitted){txt}"
+             r(label1) : "{res}(omitted){txt}"
+
+matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        65
+{txt}maximum lag: {res}18{col 53}{txt}F(  0,    63){col 68}={res}         .
+{col 53}{txt}Prob > F       =    {res}     .
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     skewMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F7. {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}macros:
+             r(label2) : "{res}(omitted){txt}"
+             r(label1) : "{res}(omitted){txt}"
+
+matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        64
+{txt}maximum lag: {res}18{col 53}{txt}F(  0,    62){col 68}={res}         .
+{col 53}{txt}Prob > F       =    {res}     .
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     skewMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F8. {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}macros:
+             r(label2) : "{res}(omitted){txt}"
+             r(label1) : "{res}(omitted){txt}"
+
+matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        63
+{txt}maximum lag: {res}18{col 53}{txt}F(  0,    61){col 68}={res}         .
+{col 53}{txt}Prob > F       =    {res}     .
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     skewMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 9}F9. {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}macros:
+             r(label2) : "{res}(omitted){txt}"
+             r(label1) : "{res}(omitted){txt}"
+
+matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        62
+{txt}maximum lag: {res}18{col 53}{txt}F(  0,    60){col 68}={res}         .
+{col 53}{txt}Prob > F       =    {res}     .
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     skewMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F10. {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}macros:
+             r(label2) : "{res}(omitted){txt}"
+             r(label1) : "{res}(omitted){txt}"
+
+matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        61
+{txt}maximum lag: {res}18{col 53}{txt}F(  0,    59){col 68}={res}         .
+{col 53}{txt}Prob > F       =    {res}     .
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     skewMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F11. {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}macros:
+             r(label2) : "{res}(omitted){txt}"
+             r(label1) : "{res}(omitted){txt}"
+
+matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+Regression with Newey-West standard errors{col 53}Number of obs  ={res}        60
+{txt}maximum lag: {res}18{col 53}{txt}F(  0,    58){col 68}={res}         .
+{col 53}{txt}Prob > F       =    {res}     .
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}  Newey-West
+{col 1}     skewMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 7}sp500 {c |}
+{space 8}F12. {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+scalars:
+              r(level) =  {res}95
+
+{txt}macros:
+             r(label2) : "{res}(omitted){txt}"
+             r(label1) : "{res}(omitted){txt}"
+
+matrices:
+              r(table) : {res} 9 x 2
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata.xls saved
+
+{com}. 
+. ************************
+. ***** correlation plot *******
+. ***********************
 . 
 . foreach mom in `Moments'{c -(}
 {txt}  2{com}. xcorr `mom' sp500, lag(12) title("`mom' and stock market")
@@ -69,87 +2398,17 @@
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/corr_iqrMean_stk.png written in PNG format)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/corr_rvarMean_stk.png written in PNG format)
 {res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/corr_skewMean_stk.png written in PNG format)
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/corr_varMed_stk.png written in PNG format)
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/corr_iqrMed_stk.png written in PNG format)
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/corr_rvarMed_stk.png written in PNG format)
+{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/corr_skewMed_stk.png written in PNG format)
 
 {com}. 
-. 
-. ************************
-. ***** regression *******
-. ***********************
-. 
-. 
-. foreach mom in `Moments'{c -(}
-{txt}  2{com}. newey  `mom'  f12.sp500, lag(12)
-{txt}  3{com}. *reg `mom'  c.l1.sp500##i.byear_gr c.l1.sp500##i.HHinc_gr c.l1.sp500##i.educ_gr c.l1.sp500##i.age_gr
-. *reg `mom'  c.Stkprob##i.byear_gr c.Stkprob##i.HHinc_gr c.Stkprob##i.educ_gr c.Stkprob##i.age_gr
-. 
-. {c )-}
-
-{txt}Regression with Newey-West standard errors{col 53}Number of obs  ={res}        60
-{txt}maximum lag: {res}12{col 53}{txt}F(  1,    58){col 68}={res}      7.32
-{col 53}{txt}Prob > F       =    {res}0.0089
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}  Newey-West
-{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 7}sp500 {c |}
-{space 8}F12. {c |}{col 14}{res}{space 2}-1.415603{col 26}{space 2} .5232447{col 37}{space 1}   -2.71{col 46}{space 3}0.009{col 54}{space 4}-2.462991{col 67}{space 3}-.3682147
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2}  3.58123{col 26}{space 2} .0830921{col 37}{space 1}   43.10{col 46}{space 3}0.000{col 54}{space 4} 3.414903{col 67}{space 3} 3.747557
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-
-Regression with Newey-West standard errors{col 53}Number of obs  ={res}        60
-{txt}maximum lag: {res}12{col 53}{txt}F(  1,    58){col 68}={res}      6.67
-{col 53}{txt}Prob > F       =    {res}0.0123
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}  Newey-West
-{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 7}sp500 {c |}
-{space 8}F12. {c |}{col 14}{res}{space 2}  -.46673{col 26}{space 2} .1806756{col 37}{space 1}   -2.58{col 46}{space 3}0.012{col 54}{space 4}-.8283914{col 67}{space 3}-.1050685
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} 2.117951{col 26}{space 2} .0288964{col 37}{space 1}   73.29{col 46}{space 3}0.000{col 54}{space 4} 2.060108{col 67}{space 3} 2.175793
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-
-Regression with Newey-West standard errors{col 53}Number of obs  ={res}        60
-{txt}maximum lag: {res}12{col 53}{txt}F(  1,    58){col 68}={res}      0.85
-{col 53}{txt}Prob > F       =    {res}0.3610
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}  Newey-West
-{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 7}sp500 {c |}
-{space 8}F12. {c |}{col 14}{res}{space 2}-1.543145{col 26}{space 2} 1.675878{col 37}{space 1}   -0.92{col 46}{space 3}0.361{col 54}{space 4}-4.897779{col 67}{space 3} 1.811489
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} 9.192521{col 26}{space 2} .2402372{col 37}{space 1}   38.26{col 46}{space 3}0.000{col 54}{space 4} 8.711634{col 67}{space 3} 9.673408
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-
-Regression with Newey-West standard errors{col 53}Number of obs  ={res}        60
-{txt}maximum lag: {res}12{col 53}{txt}F(  1,    58){col 68}={res}     18.97
-{col 53}{txt}Prob > F       =    {res}0.0001
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}  Newey-West
-{col 1}    skewMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 7}sp500 {c |}
-{space 8}F12. {c |}{col 14}{res}{space 2}-.0883858{col 26}{space 2} .0202942{col 37}{space 1}   -4.36{col 46}{space 3}0.000{col 54}{space 4}-.1290091{col 67}{space 3}-.0477625
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .1179032{col 26}{space 2} .0026592{col 37}{space 1}   44.34{col 46}{space 3}0.000{col 54}{space 4} .1125802{col 67}{space 3} .1232261
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-
-{com}. 
-. 
-. ddd
-{err}unrecognized command:  ddd
-{txt}{search r(199):r(199);}
-
-end of do-file
-
-{search r(199):r(199);}
-
-{com}. clear
-
-. 
+. log close 
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Maro_log.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}30 Mar 2020, 22:27:39
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}
