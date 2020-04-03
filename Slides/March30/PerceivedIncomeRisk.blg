@@ -10,45 +10,45 @@ Too many commas in name 2 of "Bloom, Nicholas and Guvenen,Fatih, Pistaferri, Lui
 while executing---line 1098 of file apalike.bst
 Warning--empty journal in fuhrer2018intrinsic
 Warning--empty journal in rozsypal_overpersistence_2017
-You've used 20 entries,
+You've used 21 entries,
             1935 wiz_defined-function locations,
-            586 strings with 6903 characters,
-and the built_in function-call counts, 7501 in all, are:
-= -- 753
-> -- 278
-< -- 17
-+ -- 98
-- -- 90
-* -- 643
-:= -- 1328
-add.period$ -- 59
-call.type$ -- 20
-change.case$ -- 146
-chr.to.int$ -- 20
-cite$ -- 23
-duplicate$ -- 274
-empty$ -- 519
-format.name$ -- 122
-if$ -- 1437
+            593 strings with 7013 characters,
+and the built_in function-call counts, 7864 in all, are:
+= -- 791
+> -- 285
+< -- 18
++ -- 100
+- -- 92
+* -- 674
+:= -- 1390
+add.period$ -- 62
+call.type$ -- 21
+change.case$ -- 152
+chr.to.int$ -- 21
+cite$ -- 24
+duplicate$ -- 288
+empty$ -- 549
+format.name$ -- 125
+if$ -- 1508
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 15
-newline$ -- 101
-num.names$ -- 60
-pop$ -- 105
+missing$ -- 16
+newline$ -- 106
+num.names$ -- 63
+pop$ -- 108
 preamble$ -- 1
-purify$ -- 145
+purify$ -- 151
 quote$ -- 0
-skip$ -- 214
+skip$ -- 225
 stack$ -- 0
-substring$ -- 556
-swap$ -- 25
+substring$ -- 593
+swap$ -- 26
 text.length$ -- 4
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 120
+type$ -- 126
 warning$ -- 3
-while$ -- 67
+while$ -- 71
 width$ -- 0
-write$ -- 257
+write$ -- 270
 (There were 2 error messages)

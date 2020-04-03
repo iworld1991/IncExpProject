@@ -19,6 +19,8 @@ from scipy.optimize import minimize
 from scipy.optimize import root 
 import copy as cp
 
+x,y = np.random.randn(6).reshape([2,3]).shape
+
 
 # + {"code_folding": [0, 8]}
 def toVec(ma_coeffs,
@@ -36,7 +38,7 @@ def toPara(vec,
     return vec[:ma_q-1], vec[ma_q:].reshape(2,t)
 
 
-# + {"code_folding": [10, 26, 30, 37, 55, 85, 106, 120, 129, 147, 181, 217, 233, 253, 267, 284, 304, 310, 332, 354, 382, 400, 410, 420]}
+# + {"code_folding": [1, 38, 42, 54, 67, 75, 95, 121, 146, 154, 163, 167, 181, 206, 215, 247, 255, 259, 275, 295, 309, 326, 346, 352, 374, 396, 421, 439, 467, 485, 495, 505, 510, 521]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''
@@ -46,6 +48,12 @@ class IMAProcess:
     process_para, dict, includes 
        - ma_coeffs: size f q for MA(q),  moving average coeffcients of transitory shocks. q = 0 by default.
        - sigmas:  size of 2 x t, draws of permanent and transitory risks from time varying volatility 
+       In the case of stochastical volatility with constant transitory volatility and time 
+       past-dependent permanent volatility, following parameters are used as well
+       
+       - rho: how persistent the innovation to permanent risks is
+       - gamma: size of the innovation 
+       - sigma_eps: constant transitory volatility 
     '''
     def __init__(self,
                  t = 100,                   ## length of sample period  
@@ -61,6 +69,12 @@ class IMAProcess:
         self.n_agg = 1
         self.init_sigmas = np.array([0.1,0.1])
         self.init_sv = np.array([0.1,0.1])
+        
+        ## stochastic vol paras
+        
+        self.rho = 0.5
+        self.gamma = 0.1
+        self.sigma_eps = 0.1
         
     ## auxiliary function for ma cum sum
     def cumshocks(self,
@@ -113,6 +127,71 @@ class IMAProcess:
         self.SimMoms = {'Mean':mean_diff,
                        'Var':varcov_diff}
         return self.SimMoms
+    
+#########################
+## estimate volatility #
+########################
+    
+    ## simulated cross sectional vols before time aggregatio, i.e. monthly 
+    
+    def SimulateSVols(self,
+                            n_sim = 200):
+        rho = self.rho
+        gamma = self.gamma
+        sigma_eps = self.sigma_eps
+        t = self.t
+        init_sigmas = self.init_sigmas        
+        sigmas_eps = sigma_eps*np.ones([n_sim,t])
+        sigmas_theta = np.empty([n_sim,t])
+        sigmas_theta[:,0] = 0.1
+        
+        random.seed(1235)
+        mu_draws = gamma*np.random.randn(n_sim*t).reshape([n_sim,t]) 
+        
+        for i in range(n_sim):
+            for j in range(t-1):
+                sigmas_theta[i,j+1] = np.sqrt(np.exp(rho*np.log(sigmas_theta[i,j]**2) + mu_draws[i,j+1]))
+        
+        self.sigmas_theta_sim = sigmas_theta
+        self.sigmas_eps_sim = sigmas_eps
+        self.sigmas_sim = sigmas_theta + sigmas_eps 
+    
+        return self.sigmas_sim 
+    
+    ## time aggregated cross sectional vols
+    
+    def SimulateSVolsAgg(self,
+                               n_agg = 12):
+        
+        # get the simulate monthly volatility 
+        sigmas_theta_sim = self.sigmas_theta
+        sigmas_eps_sim =  self.sigmas_eps
+        
+        ## create locations for yearly volatility 
+        nsim, t = sigmas_theta_sim.shape
+        sigmas_sim_agg = np.empty_like(sigmas_theta_sim)
+        
+        
+        ## fill the volatility  
+        for i in range (nsim):
+            for j in range(t):
+                sigma_theta_this = sum([(n_agg-k-1)**2*self.hstep_sigma_theta(sigmas_theta[i,j],k) for h in range(n_agg)])
+                sigma_eps_this = n_agg**2*sigma_eps[i,j]
+                sigmas_sim_agg[i,j] = sigma_theta_this + sigma_eps_this
+                
+                
+        self.sigmas_sim_agg = sigmas_sim_agg
+        return self.sigmas_sim_agg
+    
+    ## moms of time aggregated vols
+                        
+    def SimulateSVolsAggMoms(self):
+        sigmas_sim_agg = self.sigmas_sim_agg
+        sigmas_agg_av = np.mean(sigmas_sim_agg,
+                                axis = 1)
+        sigmas_agg_cov = np.cov(sigmas_sim_agg.T)
+        self.sigmas_agg_sim_moms = {'Mean':sigmas_agg_av,
+                                   'Var':sigmas_agg_cov}
     
     def TimeAggregate(self,
                       n_periods = 1):
@@ -210,6 +289,14 @@ class IMAProcess:
     def GetDataMomentsAgg(self,
                           data_moms_agg_dct):
         self.data_moms_agg_dct = data_moms_agg_dct    
+
+###################
+#### vols 
+###################
+
+    def GetDataMomentsVolsAgg(self,
+                              data_vols_moms_agg_dct):
+        self.data_vols_moms_agg_dct = data_vols_moms_agg_dct 
         
     def ObjFunc(self,
                 para):
@@ -344,6 +431,49 @@ class IMAProcess:
                                    ma_q)
         return self.para_est_agg  
     
+##########################
+#### vols 
+#########################
+
+    def ObjFuncAggVols(self,
+                       para_vols_agg):
+        
+        self.rho,self.gamma,self.sigma_eps = para_vols_agg
+        
+        ## data agg vols
+        data_vols_moms_agg_dct = self.data_vols_moms_agg_dct
+        
+        new_instance = cp.deepcopy(self)
+        new_instance.SimulateSVols()
+        new_instance.SimulateSVolsAgg()
+        model_moms_agg_dct = new_instance.SimulateSVolsAggMoms()
+        
+        ## criteria 
+        model_moms = np.array([model_moms_agg_dct[key] for key in ['Var']]).flatten()
+        data_moms = np.array([data_moms_agg_dct[key] for key in ['Var']]).flatten()
+        if len(model_moms) > len(data_moms):
+            n_burn = len(model_moms) - len(data_moms)
+            model_moms = model_moms[n_burn:]
+        if len(model_moms) < len(data_moms):
+            n_burn = -(len(model_moms) - len(data_moms))
+            data_moms = data_moms[n_burn:]
+        diff = np.linalg.norm(model_moms - data_moms)
+        return diff
+    
+    def EstimateSVolsParaAgg(self,
+                             method = 'Nelder-Mede',
+                             bounds = None,
+                             para_guess = None,
+                             options = {'disp':True}):
+        self.para_svols_est_agg = minimize(self.ObjFuncAggVols,
+                                x0 = para_guess,
+                                method = method,
+                                bounds = bounds,
+                                options = options)['x']
+
+        return self.para_svols_est_agg 
+
+    
 ##########
 ## new ###
 ########## 
@@ -425,6 +555,16 @@ class IMAProcess:
         self.autovaragg = autovar
 
         return self.autovaragg 
+    
+    
+#################
+## other funcs
+##################
+    def hstep_sigma_theta(self,
+                          sigma_theta_now
+                          k):
+        k_step_sigma_theta = self.rho**k*np.exp(-0.5*self.gamma)*sigma_theta_now**2 
+        return k_step_sigma_theta
 # + {"code_folding": [0]}
 ## debugging test of the data 
 

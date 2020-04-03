@@ -49,10 +49,10 @@ label var `mom'_ch "change in `mom'"
 
 foreach mom in `Moments'{
 forvalues i=1(1)12{
-newey  `mom'  f`i'.sp500, lag(18)
+reg  `mom'  f`i'.sp500
 return list 
 local id = `i'+1
-putexcel set "${sum_table_folder}/macro_corr_stata.xls", sheet("`mom'") modify 
+putexcel set "${sum_table_folder}/macro_corr_stata_3m.xls", sheet("`mom'") modify 
 local coeff = _b[f`i'.sp500]
 local coeff : display %5.3f `coeff'
 local se = _se[f`i'.sp500]
@@ -87,7 +87,7 @@ foreach mom in `Moments'{
 xcorr `mom' sp500, lag(12) title("`mom' and stock market")
 *reg `mom'  c.l1.sp500##i.byear_gr c.l1.sp500##i.HHinc_gr c.l1.sp500##i.educ_gr c.l1.sp500##i.age_gr
 *reg `mom'  c.Stkprob##i.byear_gr c.Stkprob##i.HHinc_gr c.Stkprob##i.educ_gr c.Stkprob##i.age_gr
-graph export "${sum_graph_folder}/ts/corr_`mom'_stk.png",as(png) replace 
+graph export "${sum_graph_folder}/ts/corr_`mom'_stk_3m.png",as(png) replace 
 }
 
 log close 

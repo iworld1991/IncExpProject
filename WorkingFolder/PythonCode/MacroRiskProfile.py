@@ -91,7 +91,7 @@ sp500M
 sp500M.plot(lw = 3)
 #sp500Mplt = plt.title('S&P 500 (end of month)')
 
-sp500MR = np.log(sp500M).diff(periods = 12)
+sp500MR = np.log(sp500M).diff(periods = 3)
 
 sp500MR.plot(lw = 3 )
 sp500MRplt = plt.title('Monthly return of S&P 500')
