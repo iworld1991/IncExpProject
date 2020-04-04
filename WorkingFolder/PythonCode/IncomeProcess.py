@@ -38,7 +38,7 @@ def toPara(vec,
     return vec[:ma_q-1], vec[ma_q:].reshape(2,t)
 
 
-# + {"code_folding": [38, 42, 53, 66, 74, 89, 97, 115, 140, 149, 177, 181, 186, 202, 222, 236, 253, 273, 279, 301, 324, 352, 370, 380, 390, 410, 459, 473]}
+# + {"code_folding": [16, 38, 42, 53, 66, 74, 89, 97, 115, 140, 149, 177, 181, 186, 202, 222, 236, 253, 273, 279, 301, 324, 352, 370, 380, 390, 410, 436, 459, 473, 499, 516]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''
@@ -458,7 +458,7 @@ class IMAProcess:
         init_sigmas = self.init_sigmas        
         sigmas_eps = sigma_eps*np.ones([n_sim,t])
         sigmas_theta = np.empty([n_sim,t])
-        sigmas_theta[:,0] = 0.1
+        sigmas_theta[:,0] = 0.4
         
         np.random.seed(1235)
         mu_draws = gamma*np.random.randn(n_sim*t).reshape([n_sim,t]) 
@@ -469,9 +469,9 @@ class IMAProcess:
         
         self.sigmas_theta_sim = sigmas_theta
         self.sigmas_eps_sim = sigmas_eps
-        self.sigmas_sim = sigmas_theta + sigmas_eps 
+        self.vols_sim = sigmas_theta**2 + sigmas_eps**2
     
-        return self.sigmas_sim 
+        return self.vols_sim 
     
     ## time aggregated cross sectional vols
     
@@ -483,29 +483,29 @@ class IMAProcess:
         
         ## create locations for yearly volatility 
         nsim, t = sigmas_theta_sim.shape
-        sigmas_sim_agg = np.empty_like(sigmas_theta_sim)
+        vols_sim_agg = np.empty_like(sigmas_theta_sim)
         
         
         ## fill the volatility  
         for i in range (nsim):
             for j in range(t):
-                sigma_theta_this = sum([(n_agg-k-1)**2*self.hstep_sigma_theta(sigmas_theta_sim[i,j],k) for k in range(n_agg)])
-                sigma_eps_this = n_agg**2*sigmas_eps_sim[i,j]**2
-                sigmas_sim_agg[i,j] = sigma_theta_this + sigma_eps_this
+                vols_theta_this = sum([(n_agg-k-1)**2*self.hstep_sigma_theta(sigmas_theta_sim[i,j],k) for k in range(n_agg)])
+                vols_eps_this = n_agg**2*sigmas_eps_sim[i,j]**2
+                vols_sim_agg[i,j] = vols_theta_this + vols_eps_this
                 
-        self.sigmas_sim_agg = sigmas_sim_agg
-        return self.sigmas_sim_agg
+        self.vols_sim_agg = vols_sim_agg
+        return self.vols_sim_agg
     
     ## moms of time aggregated vols
                         
     def SimulateSVolsAggMoms(self):
-        sigmas_sim_agg = self.sigmas_sim_agg
-        sigmas_agg_av = np.mean(sigmas_sim_agg,
+        vols_sim_agg = self.vols_sim_agg
+        vols_agg_av = np.mean(vols_sim_agg,
                                 axis = 1)
-        sigmas_agg_cov = np.cov(sigmas_sim_agg.T)
-        self.sigmas_agg_sim_moms = {'Mean':sigmas_agg_av,
-                                   'Var':sigmas_agg_cov}
-        return self.sigmas_agg_sim_moms 
+        vols_agg_cov = np.cov(vols_sim_agg.T)
+        self.vols_agg_sim_moms = {'Mean':vols_agg_av,
+                                   'Var':vols_agg_cov}
+        return self.vols_agg_sim_moms 
     
 
     def GetDataMomentsVolsAgg(self,
@@ -523,8 +523,7 @@ class IMAProcess:
         new_instance = cp.deepcopy(self)
         new_instance.SimulateSVols()
         new_instance.SimulateSVolsAgg()
-        new_instance.SimulateSVolsAggMoms()
-        model_vols_moms_agg_dct = new_instance.sigmas_agg_sim_moms 
+        model_vols_moms_agg_dct = new_instance.SimulateSVolsAggMoms()
         #print(model_vols_moms_agg_dct)
         
         ## criteria 
@@ -578,7 +577,7 @@ sigmas = np.array([p_sigmas_draw,
 dt = IMAProcess(t = t,
                 ma_coeffs = ma_nosa)
 dt.sigmas = sigmas
-dt.n_agg = 12
+dt.n_agg = 1
 
 sim_data = dt.SimulateSeries(n_sim = 800)
 sim_moms = dt.SimulatedMoments()
@@ -589,7 +588,7 @@ sim_moms = dt.SimulatedMoments()
 dt_fake = IMAProcess(t = t,
                      ma_coeffs = ma_nosa)
 dt_fake.sigmas = sigmas 
-dt_fake.n_agg = 12 
+dt_fake.n_agg = 1
 
 #data_fake= dt_fake.SimulateSeries(n_sim = 500)
 #moms_fake = dt_fake.SimulatedMoments()
@@ -650,13 +649,15 @@ dt.EstimateSVolsParaAgg()
 
 ## after estimation 
 dt.rho,dt.gamma, dt.sigma_eps = dt.para_svols_est_agg
-dt.SimulateSVols()
-dt.SimulateSVolsAgg()
-dt.SimulateSVolsAggMoms()
+vols_sim = dt.SimulateSVols()
+vols_agg_sim = dt.SimulateSVolsAgg()
+vols_agg_sim_mom = dt.SimulateSVolsAggMoms()
 
 ## permanent and transitory 
-plt.plot(dt.sigmas_sim_agg[1,:])
-
 plt.plot(vols_sim[0:3,:].T)
 
-plt.plot(dt.sigmas_sim_agg[0:5,:].T)
+plt.plot(vols_sim[0:5,:].T)
+
+plt.plot(vols_agg_sim[0:5,:].T)
+
+
