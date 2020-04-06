@@ -43,8 +43,8 @@ sigmas = np.array([p_sigmas_draw,
                    t_sigmas])
 
 dt = ima(t = t,
-         ma_coeffs = ma_nosa,
-         sigmas = sigmas)
+         ma_coeffs = ma_nosa)
+dt.sigmas = sigmas
 sim_data = dt.SimulateSeries(n_sim = 8000)
 sim_moms = dt.SimulatedMoments()
 
@@ -109,7 +109,8 @@ plt.legend(loc=1)
 ## time aggregation 
 
 sim_data = dt.SimulateSeries(n_sim = 1000)
-agg_series = dt.TimeAggregate(n_periods = 3)
+dt.n_agg = 3
+agg_series = dt.TimeAggregate()
 agg_series_moms = dt.SimulateMomentsAgg()
 
 # + {"code_folding": [1]}

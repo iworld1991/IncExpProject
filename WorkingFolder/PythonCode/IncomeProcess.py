@@ -19,8 +19,6 @@ from scipy.optimize import minimize
 from scipy.optimize import root 
 import copy as cp
 
-x,y = np.random.randn(6).reshape([2,3]).shape
-
 
 # + {"code_folding": [0, 8]}
 def toVec(ma_coeffs,
@@ -38,7 +36,7 @@ def toPara(vec,
     return vec[:ma_q-1], vec[ma_q:].reshape(2,t)
 
 
-# + {"code_folding": [16, 38, 42, 53, 66, 74, 89, 97, 115, 140, 149, 177, 181, 186, 202, 222, 236, 253, 273, 279, 301, 324, 352, 370, 380, 390, 410, 436, 459, 473, 499, 516]}
+# + {"code_folding": [16, 38, 42, 53, 66, 74, 89, 97, 115, 140, 149, 177, 181, 186, 202, 222, 236, 253, 273, 279, 301, 324, 352, 370, 380, 390, 410, 438, 461, 505, 522]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''
@@ -73,8 +71,8 @@ class IMAProcess:
         ## stochastic vol paras
         
         self.rho = 0.5
-        self.gamma = 0.01
-        self.sigma_eps = 0.1
+        self.gamma = 0.001
+        self.sigma_eps = 0.1/12
         
     ## auxiliary function for ma cum sum
     def cumshocks(self,
@@ -455,20 +453,22 @@ class IMAProcess:
         gamma = self.gamma
         sigma_eps = self.sigma_eps
         t = self.t
+        t_burn = int(0.1*t)
+        t_long = t + t_burn 
         init_sigmas = self.init_sigmas        
-        sigmas_eps = sigma_eps*np.ones([n_sim,t])
-        sigmas_theta = np.empty([n_sim,t])
-        sigmas_theta[:,0] = 0.4
+        sigmas_eps = sigma_eps*np.ones([n_sim,t_long])
+        sigmas_theta = np.empty([n_sim,t_long])
+        sigmas_theta[:,0] = 0.001
         
         np.random.seed(1235)
-        mu_draws = gamma*np.random.randn(n_sim*t).reshape([n_sim,t]) 
+        mu_draws = gamma*np.random.randn(n_sim*t_long).reshape([n_sim,t_long]) 
         
         for i in range(n_sim):
-            for j in range(t-1):
+            for j in range(t_long-1):
                 sigmas_theta[i,j+1] = np.sqrt(np.exp(rho*np.log(sigmas_theta[i,j]**2) + mu_draws[i,j+1]))
         
-        self.sigmas_theta_sim = sigmas_theta
-        self.sigmas_eps_sim = sigmas_eps
+        self.sigmas_theta_sim = sigmas_theta[:,t_burn:]
+        self.sigmas_eps_sim = sigmas_eps[:,t_burn:]
         self.vols_sim = sigmas_theta**2 + sigmas_eps**2
     
         return self.vols_sim 
@@ -500,14 +500,18 @@ class IMAProcess:
                         
     def SimulateSVolsAggMoms(self):
         vols_sim_agg = self.vols_sim_agg
-        vols_agg_av = np.mean(vols_sim_agg,
-                                axis = 1)
+        vols_agg_av = np.mean(vols_sim_agg)
         vols_agg_cov = np.cov(vols_sim_agg.T)
+        vols_agg_atv = np.empty(self.n_agg)
+        
+        for k in range(self.n_agg):
+            vols_agg_atv[k] = np.mean([vols_agg_cov[i,i+k] for i in range(self.t) if i< (self.t-k)])
+        
         self.vols_agg_sim_moms = {'Mean':vols_agg_av,
-                                   'Var':vols_agg_cov}
+                                  'Var':vols_agg_cov,
+                                 'ATV':vols_agg_atv}
         return self.vols_agg_sim_moms 
     
-
     def GetDataMomentsVolsAgg(self,
                               data_vols_moms_agg_dct):
         self.data_vols_moms_agg_dct = data_vols_moms_agg_dct 
@@ -527,8 +531,11 @@ class IMAProcess:
         #print(model_vols_moms_agg_dct)
         
         ## criteria 
-        model_moms = np.array([model_vols_moms_agg_dct[key] for key in ['Var']]).flatten()
-        data_moms = np.array([data_vols_moms_agg_dct[key] for key in ['Var']]).flatten()
+        model_moms = np.array([model_vols_moms_agg_dct[key] for key in ['ATV']]).flatten()
+        model_moms = np.hstack([model_moms, model_vols_moms_agg_dct['Mean']])
+        data_moms = np.array([data_vols_moms_agg_dct[key] for key in ['ATV']]).flatten()
+        data_moms = np.hstack([data_moms, data_vols_moms_agg_dct['Mean']])
+        
         if len(model_moms) > len(data_moms):
             n_burn = len(model_moms) - len(data_moms)
             model_moms = model_moms[n_burn:]
@@ -577,7 +584,7 @@ sigmas = np.array([p_sigmas_draw,
 dt = IMAProcess(t = t,
                 ma_coeffs = ma_nosa)
 dt.sigmas = sigmas
-dt.n_agg = 1
+dt.n_agg = 12
 
 sim_data = dt.SimulateSeries(n_sim = 800)
 sim_moms = dt.SimulatedMoments()
@@ -588,7 +595,7 @@ sim_moms = dt.SimulatedMoments()
 dt_fake = IMAProcess(t = t,
                      ma_coeffs = ma_nosa)
 dt_fake.sigmas = sigmas 
-dt_fake.n_agg = 1
+dt_fake.n_agg = 12
 
 #data_fake= dt_fake.SimulateSeries(n_sim = 500)
 #moms_fake = dt_fake.SimulatedMoments()
@@ -596,7 +603,8 @@ dt_fake.n_agg = 1
 
 # + {"code_folding": []}
 ## time aggregation 
-#dt_fake.n_agg = 3
+#dt_fake.n_agg = 12
+
 #dt_fake.TimeAggregate()
 #moms_fake_agg = dt_fake.SimulateMomentsAgg()
 
@@ -632,7 +640,7 @@ dt_fake.n_agg = 1
 
 # ## Estimate volatility 
 
-# +
+# + {"code_folding": [0]}
 ## simulate volatility 
 
 dt.SimulateSVols()
@@ -642,22 +650,30 @@ dt.SimulateSVolsAggMoms()
 dt_fake.SimulateSVols()
 dt_fake.SimulateSVolsAgg()
 svols_fake = dt_fake.SimulateSVolsAggMoms()
-# -
 
-dt.GetDataMomentsVolsAgg(svols_fake)
-dt.EstimateSVolsParaAgg()
+# + {"code_folding": []}
+#plt.plot(dt.vols_agg_sim_moms['ATV'])
 
+# +
+#dt.GetDataMomentsVolsAgg(svols_fake)
+#dt.EstimateSVolsParaAgg()
+
+# +
 ## after estimation 
-dt.rho,dt.gamma, dt.sigma_eps = dt.para_svols_est_agg
-vols_sim = dt.SimulateSVols()
-vols_agg_sim = dt.SimulateSVolsAgg()
-vols_agg_sim_mom = dt.SimulateSVolsAggMoms()
+#dt.rho,dt.gamma, dt.sigma_eps = dt.para_svols_est_agg
+#vols_sim = dt.SimulateSVols()
+#vols_agg_sim = dt.SimulateSVolsAgg()
+#vols_agg_sim_mom = dt.SimulateSVolsAggMoms()
 
+# + {"code_folding": []}
 ## permanent and transitory 
-plt.plot(vols_sim[0:3,:].T)
+#plt.plot(vols_agg_sim[0:3,12:].T)
 
-plt.plot(vols_sim[0:5,:].T)
+# + {"code_folding": []}
+#plt.plot(vols_sim[0:3,12:].T)
 
-plt.plot(vols_agg_sim[0:5,:].T)
+# +
+#plt.plot(vols_agg_sim_mom['Mean'][12:])
+# -
 
 
