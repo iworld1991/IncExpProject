@@ -90,8 +90,8 @@ vixM = vixD.resample('M').mean()
 sp500M.plot(lw = 3)
 #sp500Mplt = plt.title('S&P 500 (end of month)')
 
-sp500MR = np.log(sp500M).diff(periods = 1)
-he = he.diff(periods = 1)
+sp500MR = np.log(sp500M).diff(periods = 3)
+he = he.diff(periods = 3)
 he.columns = ['he']
 
 sp500MR.plot(lw = 3 )
@@ -351,8 +351,8 @@ corr_table = dt_combM.corr()
 corr_table.to_excel('../Tables/corrM.xlsx')
 corr_table
 
-# + {"code_folding": [17, 41]}
-lead_loop = 2
+# + {"code_folding": [16]}
+lag_loop = 2
 
 def pval_str(pval):
     if pval < 0.01:
@@ -384,9 +384,9 @@ col_list = []
 #print('median')
 for moms in ['var','iqr','rvar','skew']:
     col_list.append('median:'+str(moms))
-    for lead in range(lead_loop):
-        corr = st.pearsonr(np.array(dt_combM['he'][lead+1:]),
-                           np.array(dt_combM[str(moms)+'Med'])[:-(lead+1)]
+    for lag in range(lag_loop):
+        corr = st.pearsonr(np.array(dt_combM['he'][:-(lag+1)]),
+                           np.array(dt_combM[str(moms)+'Med'])[(lag+1):]
                           )
         corr_str = corrtostr(corr)
         corr_list.append(corr_str)
@@ -394,17 +394,17 @@ for moms in ['var','iqr','rvar','skew']:
 
 for moms in ['var','iqr','rvar','skew']:
     col_list.append('mean:'+str(moms))
-    for lead in range(lead_loop):
-        corr = st.pearsonr(np.array(dt_combM['he'][lead+1:]),
-                           np.array(dt_combM[str(moms)+'Mean'])[:-(lead+1)]
+    for lag in range(lag_loop):
+        corr = st.pearsonr(np.array(dt_combM['he'][:-(lag+1)]),
+                           np.array(dt_combM[str(moms)+'Mean'])[(lag+1):]
                           )
         corr_str = corrtostr(corr)
         corr_list.append(corr_str)
         #corrprint(corr,moms)
 
 
-corr_array = np.array(corr_list).reshape([int(len(corr_list)/lead_loop),
-                                          lead_loop])
+corr_array = np.array(corr_list).reshape([int(len(corr_list)/lag_loop),
+                                          lag_loop])
 corr_df = pd.DataFrame(corr_array,
                        index = col_list)
 
@@ -418,22 +418,20 @@ mom_dict = {'exp':'expected nominal growth',
           'iqr':'nomial 75/25 IQR',
            'skew':'skewness'}
 
-# + {"code_folding": [7]}
+# + {"code_folding": []}
 ## plots of correlation for Mean population stats
 
 figsize = (80,40)
 lw = 20
 fontsize = 80
-forward = 1
 
 for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
-    ax.bar(dt_combM.index[:-forward],
-           dt_combM['he'][forward:],
-           color='gray',
-           width= 25,
-           label= 'wage YoY '+str(forward)+'m later')
+    ax.plot(dt_combM['he'],
+           color='black',
+           lw= lw,
+           label= 'wage YoY ')
     ax2.plot(dt_combM[str(moms)+'Mean'],
              'r--',
              lw = lw,
@@ -442,6 +440,7 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
     ax.legend(loc = 2,
              fontsize = fontsize)
     ax.set_xlabel("month",fontsize = fontsize)
+    ax.grid()
     ax.set_ylabel('% growth',fontsize = fontsize)
     ax.tick_params(axis='both', 
                    which='major', 
@@ -452,6 +451,39 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
     ax2.legend(loc = 1,
               fontsize = fontsize)
     plt.savefig('../Graphs/pop/tsMean'+str(moms)+'_he.jpg')
+
+# +
+## moving average
+
+dt_combM3mv = dt_combM.rolling(3).mean()
+
+# +
+## plots of correlation for 3-month moving mean average
+
+for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
+    fig, ax = plt.subplots(figsize = figsize)
+    ax2 = ax.twinx()
+    ax.plot(dt_combM3mv['he'],
+           color='black',
+           lw = lw,
+           label=' wage YoY')
+    ax2.plot(dt_combM3mv[str(moms)+'Mean'],
+             'r--',
+             lw = lw,
+             label=str(mom_dict[moms])+' (RHS)')
+    ax.legend(loc= 1,
+             fontsize = fontsize)
+    ax.set_xlabel("month",fontsize = fontsize)
+    ax.set_ylabel('% growth',fontsize = fontsize)
+    ax2.legend(loc = 2,
+             fontsize = fontsize)
+    ax.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.tick_params(axis='both',
+                    which='major',
+                    labelsize = fontsize)
+    plt.savefig('../Graphs/pop/tsMean3mv'+str(moms)+'_he.jpg')
 # -
 
 # ### 6b. Individual regressions
@@ -911,11 +943,6 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
     #cor,pval = st.pearsonr(np.array(dt_combM['sp500']),
     #                      np.array(dt_combM[str(moms)+'Mean']))
     #print('Correlation coefficient is '+str(round(cor,3)) + ', p-value is '+ str(round(pval,3)))
-
-# + {"code_folding": []}
-## moving average
-
-dt_combM3mv = dt_combM.rolling(3).mean()
 # -
 
 crr3mv_table = dt_combM3mv.corr()
