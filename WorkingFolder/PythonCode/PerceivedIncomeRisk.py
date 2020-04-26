@@ -177,7 +177,7 @@ for i in range(nb_fig):
 
 # ##  Correlation with past labor market outcome
 #
-# This section shows that the perceived income risks are countercylical, i.e. perceived risks is negatively correlated with the recent labor market outcomes. 
+# This section shows that the perceived income risks are countercylical, i.e. perceived risks are negatively correlated with the recent labor market outcomes. 
 
 # + {"caption": "Recent Labor Market Outcome and Perceived Risks", "code_folding": [], "label": "fig:tshe", "note": "Recent labor market outcome is measured by hourly earning growth (YoY)."}
 ## insert figures 
@@ -651,7 +651,7 @@ for i in range(nb_fig):
 # Figure \ref{average_chg_var_agg} illustrates the first point. The scatter plots showcase the correlation between average income changes across population and average perceive risks under purely idiosyncratic risks and aggregate risks. The negative correlation with aggregate risks illustrate the counter-cylical perceived risks. There is no such a correlation under purely idiosyncratic risks. Figure \ref{average_chg_var_ab} testifies the second point. It plots the same correlation with and without attribution errors when the aggregate risk exists. Attribution errors brings about the asymmetry not seen when the bias is absent. 
 
 #
-# #  Colusion
+# #  Coclusion
 #
 # This paper first documents following empirical findings of perceived income risks.  
 #
