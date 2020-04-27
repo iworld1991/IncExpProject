@@ -626,7 +626,57 @@ for i in range(nb_fig):
 #
 # A subtle but interesting point is that the U-shape is skewed toward left, meaning perceived risks decrease with the income over the most part of the income distribution before the pattern reverses. More intuitively, it means that although low and high income perceived risks to be higher because of its deviation from the its long-run mean. This force is muted for the high income group because they have a lower peceived risks due to the attribution errors. 
 
+# + {"caption": "Simulated Income Profile of Perceived Risk", "code_folding": [], "label": "fig:recent_var_sim", "widefigure": true}
+## insert figures 
+graph_path = os.path.join(path,'../Graphs/theory/')
+
+fig_list = ['var_recent_sim.jpg']
+            
+nb_fig = len(fig_list)
+file_list = [graph_path+fig for fig in fig_list]
+
+## show figures 
+plt.figure(figsize=(10,10))
+for i in range(nb_fig):
+    plt.subplot(nb_fig,1,i+1)
+    plt.imshow(mpimg.imread(file_list[i]))
+    plt.axis("off")
+# -
+
 # ### Age and experience and perceived risks 
+
+# + {"caption": "Simulated Experience of Volatility and Perceived Risk", "code_folding": [], "label": "fig:var_experience_var_sim", "widefigure": true}
+## insert figures 
+graph_path = os.path.join(path,'../Graphs/theory/')
+
+fig_list = ['var_experience_var_sim.jpg']
+            
+nb_fig = len(fig_list)
+file_list = [graph_path+fig for fig in fig_list]
+
+## show figures 
+plt.figure(figsize=(10,10))
+for i in range(nb_fig):
+    plt.subplot(nb_fig,1,i+1)
+    plt.imshow(mpimg.imread(file_list[i]))
+    plt.axis("off")
+
+# + {"caption": "Simulated Age Profile of Perceived Risk", "code_folding": [], "label": "fig:var_age_sim", "widefigure": true}
+## insert figures 
+graph_path = os.path.join(path,'../Graphs/theory/')
+
+fig_list = ['var_age_sim.jpg']
+            
+nb_fig = len(fig_list)
+file_list = [graph_path+fig for fig in fig_list]
+
+## show figures 
+plt.figure(figsize=(10,10))
+for i in range(nb_fig):
+    plt.subplot(nb_fig,1,i+1)
+    plt.imshow(mpimg.imread(file_list[i]))
+    plt.axis("off")
+# -
 
 #
 # ### Aggregate risk
@@ -649,6 +699,39 @@ for i in range(nb_fig):
 # This naturally leads to a counter-cyclical pattern of the average perceived risks in the economy. The interplay of aggregate risks and attribution errors adds cyclical movements of the average perceived risks. The two conditions are both necessary to generate this pattern. Without the aggregate risk, both income shocks and perceived income shocks are purely idiosyncratic and they are averaged out in the aggregate level. Without attribution errors, agents symmetrically process experiences when forming future risk perceptions.
 #
 # Figure \ref{average_chg_var_agg} illustrates the first point. The scatter plots showcase the correlation between average income changes across population and average perceive risks under purely idiosyncratic risks and aggregate risks. The negative correlation with aggregate risks illustrate the counter-cylical perceived risks. There is no such a correlation under purely idiosyncratic risks. Figure \ref{average_chg_var_ab} testifies the second point. It plots the same correlation with and without attribution errors when the aggregate risk exists. Attribution errors brings about the asymmetry not seen when the bias is absent. 
+
+# + {"caption": "Simulatd Average Labor Market and Perceived Risk", "code_folding": [], "label": "fig:recent_change_var_sim1", "widefigure": true}
+## insert figures 
+graph_path = os.path.join(path,'../Graphs/theory/')
+
+fig_list = ['var_recent_change_sim.jpg']
+            
+nb_fig = len(fig_list)
+file_list = [graph_path+fig for fig in fig_list]
+
+## show figures 
+plt.figure(figsize=(50,25))
+for i in range(nb_fig):
+    plt.subplot(nb_fig,1,i+1)
+    plt.imshow(mpimg.imread(file_list[i]))
+    plt.axis("off")
+
+# + {"caption": "Simulated Average Labor Market Outcome and Perceived Risk", "code_folding": [], "label": "fig:recent_change_var_sim2", "widefigure": true}
+## insert figures 
+graph_path = os.path.join(path,'../Graphs/theory/')
+
+fig_list = ['var_recent_change_sim2.jpg']
+            
+nb_fig = len(fig_list)
+file_list = [graph_path+fig for fig in fig_list]
+
+## show figures 
+plt.figure(figsize=(50,25))
+for i in range(nb_fig):
+    plt.subplot(nb_fig,1,i+1)
+    plt.imshow(mpimg.imread(file_list[i]))
+    plt.axis("off")
+# -
 
 #
 # #  Coclusion

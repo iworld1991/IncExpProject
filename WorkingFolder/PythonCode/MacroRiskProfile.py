@@ -35,6 +35,7 @@ from statsmodels.graphics import tsaplots as tsplt
 
 # +
 plt.style.use('ggplot')
+plt.rcParams.update({'figure.max_open_warning': 0})
 #from IPython.display import set_matplotlib_formats
 #set_matplotlib_formats('pdf','png','jpg')
 #plt.rcParams['savefig.dpi'] = 75

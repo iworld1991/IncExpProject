@@ -32,7 +32,7 @@
 #       or 'no': takes the stored estimates as input.                      ##
 #############################################################################
 
-import os 
+import os
 import sys
 
 # Find pathname to this file:
@@ -40,13 +40,15 @@ my_file_path = os.path.dirname(os.path.abspath("do_all.py"))
 
 # -
 
-## python codes to run 
+## python codes to run
 DoDensityEst_py =  os.path.join(my_file_path,"DoDensityEst.py")
 MicroRiskProfile_py = os.path.join(my_file_path,"MicroRiskProfile.py")
 MacroRiskProfile_py = os.path.join(my_file_path,"MacroRiskProfile.py")
 PerceivedIncomeRisk_py = os.path.join(my_file_path,"PerceivedIncomeRisk.py")
+TheoryLearning_py = os.path.join(my_file_path,"TheoryLearning.py")
 
-do_denst = str(input("Do you want to redo density estimation?"   
+
+do_denst = str(input("Do you want to redo density estimation?"
                      "\n if yes, it takes about 30mins; if no, existing estimates are used, taking only 2-3 mins."))
 
 # + {"code_folding": []}
@@ -59,9 +61,11 @@ if do_denst =='yes':
     exec(open(MicroRiskProfile_py).read())
     print('3. Macro analysis')
     exec(open(MacroRiskProfile_py).read())
-    print('4. Compile master notebook')
+    print('4. Theory and Simulation')
+    exec(open(TheoryLearning_py).read())
+    print('5. Compile master notebook')
     exec(open(PerceivedIncomeRisk_py).read())
-    print('5. Compile the latex file.')
+    print('6. Compile the latex file.')
 
 elif do_denst == 'no':
     print("Started running the codes.")
@@ -69,10 +73,12 @@ elif do_denst == 'no':
     exec(open(MicroRiskProfile_py).read())
     print('3. Macro analysis')
     exec(open(MacroRiskProfile_py).read())
-    print('4. Compile master notebook')
+    print('4. Theory and Simulation')
+    exec(open(TheoryLearning_py).read())
+    print('5. Compile master notebook')
     exec(open(PerceivedIncomeRisk_py).read())
-    
+
 else:
     print('Wrong input. Need to type yes or no.')
-    
+
 print('Complete.\n Now, ready to run bash script "to_tex.sh" to compile the most recent PerceivedIncomeRisk.pdf' )
