@@ -140,7 +140,7 @@ IncSCEIndMoms = SCEIndM[sub_var+dem_var+sub_var2]
 IncSCEIndMoms = IncSCEIndMoms.dropna(how='any')
 #IncSCEIndMomsEst = IncSCEIndMomsEst.dropna(how='any')
 
-# +
+# + {"code_folding": [2]}
 ## rename
 
 IncSCEIndMoms = IncSCEIndMoms.rename(columns={'Q24_mean': 'incexp',
@@ -427,7 +427,7 @@ endtex = """\\begin{tablenotes}
 \item *** p$<$0.001, ** p$<$0.01 and * p$<$0.05.
 \item This table reports correlation coefficients between different perceived income moments(inc for nominal
 and rinc for real) at time
-$t$ and the YoY growth rate hourly earning at different lags.
+$t$ and the quarterly growth rate in hourly earning at $t,t-1,...,t-k$.
 \\end{tablenotes}
 \\end{threeparttable}
 \\end{adjustbox}
@@ -598,7 +598,7 @@ corr_df = pd.DataFrame(corr_array,
 
 corr_df.T
 
-# +
+# + {"code_folding": [0]}
 ## output tables to latex
 
 beginningtex = """

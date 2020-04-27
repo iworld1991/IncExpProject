@@ -37,11 +37,11 @@ from numba import njit
 # +
 ## figure configurations 
 
-fontsize = 15
-titlesize = 18
-figsize = (6,5)
-legendsize = 12
-lw = 3 
+fontsize = 23
+titlesize = 26
+figsize = (10,8)
+legendsize = 20
+lw = 6 
 
 # + {"code_folding": [4]}
 """
@@ -66,7 +66,7 @@ spec = [
 """
 
 
-# + {"code_folding": [20, 31, 36, 46, 58, 75, 91, 132, 152, 170, 171, 186, 207, 216, 284, 301, 304, 305, 308, 358, 362, 371, 380, 388, 402, 412, 419, 439]}
+# + {"code_folding": [1, 20, 31, 36, 46, 58, 75, 91, 132, 152, 171, 186, 216, 217, 284, 301, 304, 305, 308, 358, 362, 371, 380, 388, 402, 412, 419, 439]}
 class LearningIncome:
     def __init__(self,
                  ar_paras = np.array([0.95,0.01]),
@@ -139,8 +139,8 @@ class LearningIncome:
         self.rs_correct = rs
         self.errs = rs.resid.reshape(n_sim,N-1) ## residuals matrix 
         self.recent = sample[which,-1]
-        self.change = sample[which,-1] - sample[which,-2]
-        #self.change  = self.errs[which,-1]
+        #self.change = sample[which,-1] - sample[which,-2]
+        self.change  = self.errs[which,-1]
         
         if self.shock_type_perceived == 'iid':
             self.sigma2_est = np.sum(self.errs**2)/(rs.nobs-1)
@@ -761,7 +761,7 @@ plt.legend(loc = 0)
 
 """
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## simple attribution function
 """
 chgs = np.linspace(-1,1,200)
@@ -786,7 +786,7 @@ plt.ylabel(r'$\hat \delta_{i,t}$',
           
 """
 
-# + {"code_folding": [0, 8]}
+# + {"code_folding": []}
 ## extrapolative attribution function
 
 chgs = np.linspace(-2,2,20)
@@ -805,13 +805,15 @@ with plt.xkcd():
         #plt.axhline(0,
         #           label =r'$\hat \delta_{i}$')
         plt.legend(loc = 0,
-                  fontsize = 10)
+                  fontsize = fontsize)
     plt.xlabel(r'$\Delta y_{i,t}$',
-               fontsize = 15)
+               fontsize = fontsize)
     plt.ylabel(r'$\tilde \delta_{i,t}$',
-               fontsize = 15)
+               fontsize = fontsize)
     plt.title('Attribution function with different degrees of errors',
-             fontsize = 15)
+             fontsize = fontsize)
+    plt.xticks(fontsize = fontsize)
+    plt.yticks(fontsize = fontsize)
     plt.savefig('../Graphs/theory/theta_corr.jpg')
 
 # + {"code_folding": [0]}
@@ -893,7 +895,7 @@ def notnanboth(xx,yy):
     return xx[bothnotnan],yy[bothnotnan]
 
 
-# + {"code_folding": [0]}
+# + {"code_folding": [22]}
 ## simulate a historical sample populated by agents at different ages 
 
 ## attribution bias 
@@ -917,6 +919,7 @@ coef_vars_est_ab = coef_vars_est_ab.flatten()
 ## average experienced volatility and the perceived income risk
 
 with plt.xkcd():
+    fig = plt.figure(figsize = figsize)
     #plt.plot(sigma2s,
     #         vars_predict_chg_ab,'v',
     #         label = r'$\tilde{var}$')
@@ -947,11 +950,14 @@ with plt.xkcd():
     #            color ='red',
     #            label =r'$\sigma^2$')
 
-    plt.title('Experienced volatility and future perceived risk')
+    plt.title('Experienced volatility and future perceived risk',
+             fontsize = titlesize)
     plt.xlabel('average experienced volatility',
-               fontsize = 15)
-    plt.ylabel('perceived risk',fontsize = 15)
-    plt.legend(loc = 0)
+               fontsize = fontsize)
+    plt.ylabel('perceived risk',fontsize = fontsize)
+    plt.legend(loc = 0,fontsize = fontsize)
+    plt.xticks(fontsize = fontsize)
+    plt.yticks(fontsize = fontsize)
     plt.savefig('../Graphs/theory/var_experience_var_sim.jpg')
 # -
 
@@ -959,9 +965,10 @@ with plt.xkcd():
 #
 # We can see individuals that have had bad income realizations extrapolate the average size of past shocks into future income risks, even though the past income shocks are the best estimate of future income risks according to the underlying model. 
 
-# + {"code_folding": [0, 16]}
+# + {"code_folding": []}
 ## simulation plot
 
+fig = plt.figure(figsize = figsize)
 plt.plot(recent,
          vars_predict_chg_ab,'r.',
          label = r'$\tilde{var}$')
@@ -984,11 +991,13 @@ with plt.xkcd():
              vars_predict_chg_iid,'yo',
              label = r'$\widehat{var}$')
     plt.title('Recent income and perceived risk',
-             fontsize = 15)
+             fontsize = titlesize)
     plt.xlabel('Recent income',
-               fontsize = 15)
-    plt.ylabel('var',fontsize = 15)
-    plt.legend(loc = 0)
+               fontsize = fontsize)
+    plt.ylabel('var',fontsize = fontsize)
+    plt.legend(loc = 0,fontsize = fontsize)
+    plt.xticks(fontsize = fontsize)
+    plt.yticks(fontsize = fontsize)
     plt.savefig('../Graphs/theory/var_recent_sim.jpg')
 # -
 
@@ -1001,8 +1010,23 @@ with plt.xkcd():
 #plt.xlabel('age',fontsize = 15)
 #plt.ylabel('var',fontsize = 15)
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
+## fit a line
+ages_,vars_predict_chg_ab_ = notnanboth(ages,
+                                        vars_predict_chg_ab)
+
+a, b,c= np.polyfit(ages_,
+                   vars_predict_chg_ab_,
+                   deg = 2)
+
+ages_uq = np.unique(ages)
+
 with plt.xkcd():
+    fig = plt.figure(figsize = figsize)
+   #plt.plot(ages_uq,
+   #          a*ages_uq**2+ages_uq*b+c,
+   #          'b-',
+   #         label =r'$\tilde{var}$')
     plt.plot(ages,vars_predict_chg_ab,
              'r.',
             label =r'$\tilde{var}$')
@@ -1010,10 +1034,12 @@ with plt.xkcd():
              'y*',
             label =r'$\hat{var}$')
     plt.title('Age and perceived risk',
-             fontsize = 15)
-    plt.xlabel('age',fontsize = 15)
-    plt.ylabel('var',fontsize = 15)
-    plt.legend(loc = 0)
+             fontsize = titlesize)
+    plt.xlabel('age',fontsize = fontsize)
+    plt.ylabel('var',fontsize = fontsize)
+    plt.legend(loc = 0,fontsize = fontsize)
+    plt.xticks(fontsize = fontsize)
+    plt.yticks(fontsize = fontsize)
     plt.savefig('../Graphs/theory/var_age_sim.jpg')
 
 # + {"code_folding": [0]}
@@ -1031,14 +1057,14 @@ with plt.xkcd():
     plt.xlabel('age',fontsize = 15)
     plt.ylabel(r'$var_\rho$',fontsize = 15)
     plt.legend(loc = 0)
-    
+
 
 # +
 #plt.plot(ages,sigma2s,'*')
 #plt.xlabel('age',fontsize = 15)
 #plt.ylabel(r'$\hat \sigma^2$',fontsize = 15)
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## plot average past income changes and perceived risks with aggregate risks
 
 one.shock_type = 'correlated'  ## reset the true model to be with aggregate the risks
@@ -1062,7 +1088,8 @@ changes_eab_ag_av = np.nanmean(one.changes,axis = 0)
 # + {"code_folding": []}
 ## plot
 with plt.xkcd():
-    fig, ax = plt.subplots(1,2,figsize = (15,5))
+    fig, ax = plt.subplots(1,2,figsize = (28,9))
+    fig.subplots_adjust(wspace = 0.5)
     ax2 = ax[0].twinx()
     ax[0].plot(changes_iid_ag_av,
                'r--',
@@ -1073,12 +1100,18 @@ with plt.xkcd():
              lw = lw,
              label = r'$\widehat{var}_{ag}$')
     ax[0].set_xlabel('t',
-               fontsize = 15)
-    ax[0].set_ylabel('average income change')
-    ax2.set_ylabel('average var',fontsize = 15)
-    ax[0].legend(loc = 1)
-    ax2.legend(loc = 2)
-    ax[0].set_title('No attribution errors')
+               fontsize = fontsize)
+    ax[0].set_ylabel('average income change',
+                     fontsize = fontsize)
+    ax2.set_ylabel('average var',fontsize = fontsize)
+    ax[0].legend(loc = 1,fontsize = fontsize)
+    ax2.legend(loc = 2,fontsize = fontsize)
+    ## ticklabels 
+    ax[0].tick_params(axis='x', labelsize= fontsize)
+    ax[0].tick_params(axis='y', labelsize= fontsize)
+    ax2.tick_params(axis='x', labelsize= fontsize)
+    ax2.tick_params(axis='y', labelsize= fontsize)
+    ax[0].set_title('No attribution errors',fontsize = titlesize)
 
     ax3 = ax[1].twinx()
     ax[1].plot(changes_eab_ag_av,
@@ -1090,15 +1123,21 @@ with plt.xkcd():
              lw = lw,
              label = r'$\tilde{var}_{ag}$')
     ax[1].set_xlabel('t',
-               fontsize = 15)
-    ax[1].set_ylabel('average income change')
-    ax3.set_ylabel('average var',fontsize = 15)
-    ax[1].legend(loc = 1)
-    ax3.legend(loc = 2)
-    ax[1].set_title('With attribution errors')
+                     fontsize = fontsize)
+    ax[1].set_ylabel('average income change',
+                    fontsize = fontsize)
+    ax3.set_ylabel('average var',fontsize = fontsize)
+    ax[1].legend(loc = 1,fontsize = fontsize)
+    ax3.legend(loc = 2,fontsize = fontsize)
+    ## tick labels 
+    ax[1].tick_params(axis='x', labelsize= fontsize)
+    ax[1].tick_params(axis='y', labelsize= fontsize)
+    ax3.tick_params(axis='x', labelsize= fontsize)
+    ax3.tick_params(axis='y', labelsize= fontsize)
+    ax[1].set_title('With attribution errors',fontsize = titlesize)
     plt.savefig('../Graphs/theory/var_recent_change_sim.jpg')
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## aggregate risks versus indiosyncratic risks we
 
 ### only idiosyncratic risks
@@ -1124,10 +1163,11 @@ coeffs_est_eab_ag,coef_vars_est_eab_ag,sigma2s_est_eab_ag,var_predict_chg_est_ea
 vars_predict_chg_eab_av = np.nanmean(var_predict_chg_est_eab_ag,axis = 0)
 changes_eab_ag_av =  np.nanmean(one.changes,axis = 0)
 
-# + {"code_folding": []}
+# + {"code_folding": [1]}
 ## plot idiosyncratic risks and aggregate risks 
 with plt.xkcd():
-    fig, ax = plt.subplots(1,2,figsize = (15,5))
+    fig, ax = plt.subplots(1,2,figsize = (28,9))
+    fig.subplots_adjust(wspace = 0.5)
     ax2 = ax[0].twinx()
     ax[0].plot(changes_eab_id_av,
            'r--',
@@ -1138,12 +1178,17 @@ with plt.xkcd():
              lw = lw,
              label = r'$\widehat{var}_{ag}$')
     ax[0].set_xlabel('t',
-               fontsize = 15)
+               fontsize = fontsize)
     ax[0].set_ylabel('average income change')
-    ax2.set_ylabel('average var',fontsize = 15)
-    ax[0].legend(loc = 1)
-    ax2.legend(loc = 2)
-    ax[0].set_title('Idiosyncratic risks with attribution errors')
+    ax2.set_ylabel('average var',fontsize = fontsize)
+    ax[0].legend(loc = 1,fontsize = fontsize)
+    ax2.legend(loc = 2,fontsize = fontsize)
+    ## tick labels 
+    ax[0].tick_params(axis='x', labelsize= fontsize)
+    ax[0].tick_params(axis='y', labelsize= fontsize)
+    ax2.tick_params(axis='x', labelsize= fontsize)
+    ax2.tick_params(axis='y', labelsize= fontsize)
+    ax[0].set_title('Idiosyncratic risks with attribution errors',fontsize = titlesize)
 
     ax3 = ax[1].twinx()
     ax[1].plot(changes_eab_ag_av,
@@ -1155,12 +1200,17 @@ with plt.xkcd():
              lw = lw,
              label = r'$\widehat{var}_{ag}$')
     ax[1].set_ylabel('average income change')
-    ax3.set_ylabel('average var',fontsize = 15)
+    ax3.set_ylabel('average var',fontsize = fontsize)
     ax[1].set_xlabel('t',
-               fontsize = 15)
-    ax[1].legend(loc = 1)
-    ax3.legend(loc = 2)
-    ax[1].set_title('Aggregate risks with attribution errors')
+                     fontsize = fontsize)
+    ax[1].legend(loc = 1,fontsize = fontsize)
+    ax3.legend(loc = 2,fontsize = fontsize)
+    ## tick labels 
+    ax[1].tick_params(axis='x', labelsize= fontsize)
+    ax[1].tick_params(axis='y', labelsize= fontsize)
+    ax3.tick_params(axis='x', labelsize= fontsize)
+    ax3.tick_params(axis='y', labelsize= fontsize)
+    ax[1].set_title('Aggregate risks with attribution errors',fontsize = titlesize)
     plt.savefig('../Graphs/theory/var_recent_change_sim2.jpg')
 # -
 
