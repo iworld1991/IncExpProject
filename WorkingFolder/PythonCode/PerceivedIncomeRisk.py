@@ -202,6 +202,11 @@ for i in range(nb_fig):
     ax[i].imshow(mpimg.imread(file_list[i]))
     ax[i].axis("off") 
 plt.tight_layout(pad =0, w_pad=0, h_pad=0)
+
+# + {"hide_input": true, "hide_output": true}
+macro_corr  = pd.read_excel('../Tables/macro_corr_he.xlsx',index_col=0)
+print('Correlation of perceived risks and past labor market conditions')
+macro_corr
 # -
 
 # ##  Correlation with asset returns

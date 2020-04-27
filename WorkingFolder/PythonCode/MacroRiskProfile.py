@@ -353,7 +353,7 @@ corr_table.to_excel('../Tables/corrM.xlsx')
 corr_table
 
 # + {"code_folding": [16]}
-lag_loop = 2
+lag_loop = 5
 
 def pval_str(pval):
     if pval < 0.01:
@@ -410,6 +410,40 @@ corr_df = pd.DataFrame(corr_array,
                        index = col_list)
 
 corr_df.T
+
+# +
+## output tables to latex
+
+beginningtex = """
+\\begin{table}[ht]
+\\centering
+\\begin{adjustbox}{width={\\textwidth}}
+\\begin{threeparttable}
+\\caption{Current Labor Market Conditions and Perceived Income Risks}
+\\label{macro_corr_he}
+"""
+
+endtex = """\\begin{tablenotes}
+\item *** p$<$0.001, ** p$<$0.01 and * p$<$0.05.
+\item This table reports correlation coefficients between different perceived income moments(inc for nominal
+and rinc for real) at time
+$t$ and the YoY growth rate hourly earning at different lags.
+\\end{tablenotes}
+\\end{threeparttable}
+\\end{adjustbox}
+\\end{table}"""
+
+## write to latex
+
+f = open('../Tables/latex/macro_corr_he.tex', 'w')
+f.write(beginningtex)
+tb_ltx = corr_df.T.to_latex().replace('llllll','cccccc')
+f.write(tb_ltx)
+f.write(endtex)
+f.close()
+
+## output table to excel
+corr_df.to_excel('../Tables/macro_corr_he.xlsx')
 # -
 
 mom_dict = {'exp':'expected nominal growth',
