@@ -601,7 +601,7 @@ with plt.xkcd():
              fontsize = titlesize)
     plt.savefig('../Graphs/theory/corr_var.jpg')
 
-# + {"code_folding": [8, 14]}
+# + {"code_folding": [8]}
 n_grid = 20
 simga2s = np.linspace(0,2*one.sigma,n_grid)
 tilde_var_paras = np.empty(n_grid)
@@ -627,7 +627,7 @@ with plt.xkcd():
             hat_var_paras,
             'r--',
             lw = lw,
-            label =r'External attribution: $ \tilde \delta = 0$')
+            label =r'Internal attribution: $ \tilde \delta = 0$')
     plt.xlabel(r'$\tilde \sigma^2$',
                fontsize = fontsize)
     plt.ylabel(r'$\tilde{var}$',
@@ -800,7 +800,7 @@ with plt.xkcd():
         corrs = one.extrapolate(chgs)
         plt.plot(chgs,
                  corrs,
-                 lw = 2,
+                 lw = lw,
                  label = r'$\theta =$'+str(theta))
         #plt.axhline(0,
         #           label =r'$\hat \delta_{i}$')

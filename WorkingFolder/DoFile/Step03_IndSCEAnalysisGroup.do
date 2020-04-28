@@ -169,13 +169,20 @@ label value HHinc_g HHinc_glb
 label define gender_glb 1 "male" 2 "female"
 label value gender gender_glb
 
-local group_vars byear_g age_g edu_g HHinc_g 
+gen fbetter =cond(Q1>2,1,0)
+replace fbetter = . if Q1 ==3  
+label var fbetter "finance better"
+
+label define better_glb 0 "worse" 1 "better"
+label value fbetter better_glb
+
+local group_vars byear_g age_g edu_g HHinc_g fbetter
 
 **********************************
 *** tables and hists of Vars *****
 **********************************
-/*
 
+/*
 local Moments incmean incvar inciqr rincmean rincvar incskew
 
 foreach gp in `group_vars' {
@@ -186,7 +193,6 @@ tabstat `Moments', st(p10 p50 p90) by(`gp')
 foreach gp in `group_vars' {
 table `gp', c(median incvar mean incvar median rincvar mean rincvar) by(year)
 }
-
 
 
 ** histograms 
@@ -237,7 +243,7 @@ graph export "${sum_graph_folder}/hist/hist_`mom'_`gp'.png",as(png) replace
 * 2 groups 
 
 
-foreach gp in edu_g{
+foreach gp in edu_g fbetter{
 foreach mom in `Moments'{
 
 twoway (hist `mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
@@ -254,10 +260,37 @@ graph export "${sum_graph_folder}/hist/hist_`mom'_`gp'.png",as(png) replace
 
 */
 
-
+/*
 **********************************
 *** time series pltos by group *****
 **********************************
+
+
+** 2 groups 
+foreach agg in mean median{
+  foreach gp in fbetter{
+   preserve 
+   
+   collapse (`agg') `Moments' sp500, by(date `gp')
+   xtset `gp' date 
+
+foreach mom in `Moments'{
+keep if `mom'!=.
+* moments only 
+
+twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
+       (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)), ///
+       xtitle("date") ///
+	   ytitle("") ///
+	   title("`mom' by recent household finance condition") ///
+	   legend(label(1 "worse") label(2 "better") col(4))
+ graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
+ 
+}
+  restore
+}
+}
+
 
 ** 2 groups 
 foreach agg in mean median{
@@ -310,7 +343,7 @@ twoway (bar sp500 date if `gp'== 1,yaxis(2) fcolor(gs10)) ///
 }
 
 
-/*
+
 ** 4 groups 
 foreach agg in mean median{
   foreach gp in byear_g{
