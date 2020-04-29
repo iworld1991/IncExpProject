@@ -66,10 +66,10 @@ spec = [
 """
 
 
-# + {"code_folding": [1, 20, 31, 36, 46, 58, 75, 91, 132, 152, 171, 186, 216, 217, 284, 301, 304, 305, 308, 358, 362, 371, 380, 388, 402, 412, 419, 439]}
+# + {"code_folding": [20, 31, 36, 46, 58, 75, 91, 132, 152, 171, 186, 216, 284, 301, 304, 305, 308, 358, 362, 371, 380, 388, 402, 412, 419, 439]}
 class LearningIncome:
     def __init__(self,
-                 ar_paras = np.array([0.95,0.01]),
+                 ar_paras = np.array([0.95,0.1]),
                  N = 60):
         self.ar_paras = ar_paras
         self.rho = ar_paras[0]
@@ -601,7 +601,7 @@ with plt.xkcd():
              fontsize = titlesize)
     plt.savefig('../Graphs/theory/corr_var.jpg')
 
-# + {"code_folding": [8]}
+# + {"code_folding": [8, 14, 16]}
 n_grid = 20
 simga2s = np.linspace(0,2*one.sigma,n_grid)
 tilde_var_paras = np.empty(n_grid)
@@ -657,7 +657,7 @@ with plt.xkcd():
              fontsize = titlesize)
     plt.savefig('../Graphs/theory/var_experience_var.jpg')
 
-# + {"code_folding": [0, 11, 20]}
+# + {"code_folding": [9, 11, 20, 22]}
 ## current income and perceived risks 
 
 n_grid = 20
@@ -684,17 +684,17 @@ with plt.xkcd():
             tilde_vars,
             'b-.',
             lw = lw,
-            label =r'$\tilde{var}, \tilde \delta = 1$')
+            label =r'$\tilde{var}$, with attribution error')
     plt.plot(y_nows,
             hat_vars,
             'r--',
             lw = lw,
-            label =r'$\tilde{var}, \tilde \delta = 0$')
-    plt.plot(y_nows,
-            hat_vars_special,
-            'g-',
-            lw = lw,
-            label =r'$\tilde{\sigma}^2$')
+            label =r'$\tilde{var}, no attribution error$')
+    #plt.plot(y_nows,
+    #        hat_vars_special,
+    #        'g-',
+    #        lw = lw,
+    #        label =r'$\tilde{\sigma}^2$')
     plt.axvline(0,
                 lw = lw,
                label = r'$E(y)$')
@@ -786,7 +786,7 @@ plt.ylabel(r'$\hat \delta_{i,t}$',
           
 """
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## extrapolative attribution function
 
 chgs = np.linspace(-2,2,20)

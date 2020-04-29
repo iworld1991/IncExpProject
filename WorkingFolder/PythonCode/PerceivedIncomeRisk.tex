@@ -1222,11 +1222,12 @@ are the following.
 \hat \rho_{i,t} = (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y_{j,t-k-1}y_{j,t-k})
 \end{eqnarray}
 
-The variance of sample residuls are used for estimating the income
-volatility \(\sigma^2\).
+The variance of sample residuls \(\widehat e\) are used for estimating
+the income volatility \(\sigma^2\). It can be seen as the experienced
+volatility over the past history.
 
 \begin{eqnarray}
-\widehat{\sigma}^2_{i,t} = s^2_{i,t} = \frac{1}{N_{i,t}-1} \sum^{N_{i,t}}_{j=1}\sum^{t-c}_{k=0} \hat e_{j,t-k}^2
+\widehat{\sigma}^2_{i,t} = s^2_{i,t} = \frac{1}{N_{i,t}-1} \sum^{n}_{j=1}\sum^{t-c}_{k=0} \hat e_{j,t-k}^2
 \end{eqnarray}
 
 where \(N_{i,t}\) is the size of the panel sample available to the agent
@@ -1236,7 +1237,7 @@ sample times the duration of agent \(i\)'s career.
 Under i.i.d. assumption, the estimated uncertainty about the estimate is
 
 \begin{eqnarray}
-\widehat {Var}^{\rho}_{i,t} = (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}\widehat{\sigma}^2_{i,t}I_{N_{i,t}}
+\widehat {Var}^{\rho}_{i,t} = (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}\widehat{\sigma}^2_{i,t}
 \end{eqnarray}
 
 Experience-based learning naturally introduces a mechanism for the
@@ -1256,7 +1257,7 @@ We can rewrite the perceived risk under correct model specification as
 the following.
 
 \begin{eqnarray}
-\widehat{Var}_{i,t}(\Delta y_{i,t+1}) = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}I_{N_{i,t}}y^2_{i,t} + 1] \hat{\sigma}^2_{i,t}
+\widehat{Var}_{i,t}(\Delta y_{i,t+1}) = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}y^2_{i,t} + 1] \hat{\sigma}^2_{i,t}
 \end{eqnarray}
 
     \hypertarget{attribution}{%
@@ -1288,7 +1289,7 @@ income and income shocks within each point of time.
 
 \begin{eqnarray}
 \begin{split}
-\tilde \Omega_{t} = \tilde E_{i,t}(Y_{t-1}\epsilon_{t}'\epsilon_{t}Y_{t-1})
+\tilde \Omega_{t} = \tilde E_{i,t}(Y_{t-1}e_{t}'e_{t}Y_{t-1})
 \end{split}
 \end{eqnarray}
 
@@ -1304,7 +1305,7 @@ both long-run and short-run correlation are subjective now. )
 
 \begin{eqnarray}
 \begin{split}
-\tilde \Omega_{t} & \approx \tilde \sigma^2_{t} (1+\tilde \delta_{y,i,t}\tilde \delta_{\epsilon,i,t}(n-1)) \sum^{n}_{j=1}y^2_{j,t}
+\tilde \Omega_{t} & \approx \sum^{n}_{j=1}y^2_{j,t} (1+\tilde \delta_{y,i,t}\tilde \delta_{\epsilon,i,t}(n-1))\tilde \sigma^2_{t}
 \end{split}
 \end{eqnarray}
 
@@ -1314,7 +1315,7 @@ previous section.
 
 \begin{eqnarray}
 \begin{split}
-\tilde {Var}^{\rho}_{i,t} & = (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}\tilde{\sigma}^2_{t}(1+ \tilde\delta_{i,t}(n-1))
+\tilde {Var}^{\rho}_{i,t} & = (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(1+ \tilde\delta_{i,t}(n-1))\tilde{\sigma}^2_{t}
 \end{split}
 \end{eqnarray}
 
@@ -1440,14 +1441,14 @@ the analysis.
   volatility by proportionately depending on their subjective
   attribution. A higher degree of external attribution reflected by a
   higher \(\tilde \delta_{i,t}\) implies a higher inflaiton of past
-  volatility into future. (See Figure \ref{corr_var}.)
+  volatility into future. (See Figure \ref{fig:corr_var}.)
 \item
   With attribution errors, people project past experienced volatility
   into perceived risks disproportionately depending on the subjective
   attribution. A higher perceived attribution to common shocks, a bigger
   \(\tilde \delta_{i,t}\) induces a higher perceived risk. See the
-  comparison between Figure \ref{var_experience_var}. This is different
-  from the scenario without attribution errors.
+  comparison between Figure \ref{fig:var_experience_var}. This is
+  different from the scenario without attribution errors.
 \end{itemize}
 
 It is important to note that this difference still arises even if one
@@ -1499,7 +1500,7 @@ Although the qualitative pattern induced by the attribution errors
 stands for any positive \(\theta\), letting it be a parameter leaves
 modelers the room to recover it from subjective risks data. The
 attribution function under different \(\theta\) is shown in Figure
-\ref{theta_corr}. The higher \(\theta\) is, the more sensitive the
+\ref{fig:theta_corr}. The higher \(\theta\) is, the more sensitive the
 assigned correlation is to the size of the shock, thus inducing a higher
 dispersion of the perceived correlation between the lucky group and the
 unlucky group.
@@ -1536,17 +1537,18 @@ a positive, it will amplify the loading of the current level of income
 into perceived risks about future income. This generates a U-shaped
 perceived income profile depending on current level income.
 
-Figure \ref{var_experience_income} plots the simulated correlation
-between \(y_{i,t}\) and perceived income risks with/without attribution
-errors. In the former scenario, perceived risks only mildly change with
-current income and the entire income profile of perceived risk is
-approximately flat. In the latter scenario, in contrast, perceived risks
-exhibit a clear U-shape across the income distribution. People sitting
-at both ends of the income distribution have high perceived risks than
-ones in the middle. The non-monotonic of the income profile arise due to
-the combined effects directly from \(y_{i,t}\) and indirectly via its
-impact on \(\tilde Var^{\rho}\). The former effect is symmetric around
-the long-run average of income (zero here). Deviations from the long-run
+Figure \ref{fig:var_recent} and \ref{fig:var_recent_sim} plots both the
+theory-predicted and simulated correlation between \(y_{i,t}\) and
+perceived income risks with/without attribution errors. In the former
+scenario, perceived risks only mildly change with current income and the
+entire income profile of perceived risk is approximately flat. In the
+latter scenario, in contrast, perceived risks exhibit a clear U-shape
+across the income distribution. People sitting at both ends of the
+income distribution have high perceived risks than ones in the middle.
+The non-monotonic of the income profile arise due to the combined
+effects directly from \(y_{i,t}\) and indirectly via its impact on
+\(\tilde Var^{\rho}\). The former effect is symmetric around the
+long-run average of income (zero here). Deviations from the long-run
 mean on both sides lead to higher perceived risk. The latter
 monotonically decreases with current income because higher income level
 is associated with a more positive income change recently. The two
@@ -1564,7 +1566,7 @@ peceived risks due to the attribution errors.
     \begin{figure*}[!ht]
         \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_32_0.png}\end{center}
         \caption{Simulated Income Profile of Perceived Risk}
-        \label{fig:recent_var_sim}
+        \label{fig:var_recent_sim}
     \end{figure*}
     
     \hypertarget{age-and-experience-and-perceived-risks}{%
@@ -1636,16 +1638,16 @@ shocks are purely idiosyncratic and they are averaged out in the
 aggregate level. Without attribution errors, agents symmetrically
 process experiences when forming future risk perceptions.
 
-Figure \ref{average_chg_var_agg} illustrates the first point. The
+Figure \ref{fig:recent_change_var_sim1} illustrates the first point. The
 scatter plots showcase the correlation between average income changes
 across population and average perceive risks under purely idiosyncratic
 risks and aggregate risks. The negative correlation with aggregate risks
 illustrate the counter-cylical perceived risks. There is no such a
 correlation under purely idiosyncratic risks. Figure
-\ref{average_chg_var_ab} testifies the second point. It plots the same
-correlation with and without attribution errors when the aggregate risk
-exists. Attribution errors brings about the asymmetry not seen when the
-bias is absent.
+\ref{fig:recent_change_var_sim2} testifies the second point. It plots
+the same correlation with and without attribution errors when the
+aggregate risk exists. Attribution errors brings about the asymmetry not
+seen when the bias is absent.
 
 
     \begin{figure*}[!ht]
