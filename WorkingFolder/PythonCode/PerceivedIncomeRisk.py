@@ -412,10 +412,10 @@ spending_reg_tb
 # \hat \rho_{i,t} = (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y_{j,t-k-1}y_{j,t-k})
 # \end{eqnarray}
 #
-# The variance of sample residuls are used for estimating the income volatility $\sigma^2$. 
+# The variance of sample residuls $\widehat e$ are used for estimating the income volatility $\sigma^2$. It can be seen as the experienced volatility over the past history. 
 #
 # \begin{eqnarray}
-# \widehat{\sigma}^2_{i,t} = s^2_{i,t} = \frac{1}{N_{i,t}-1} \sum^{N_{i,t}}_{j=1}\sum^{t-c}_{k=0} \hat e_{j,t-k}^2
+# \widehat{\sigma}^2_{i,t} = s^2_{i,t} = \frac{1}{N_{i,t}-1} \sum^{n}_{j=1}\sum^{t-c}_{k=0} \hat e_{j,t-k}^2
 # \end{eqnarray}
 #
 # where $N_{i,t}$ is the size of the panel sample available to the agent $i$ at time t. It is equal to $n(t-c)$, the number of people in the sample times the duration of agent $i$'s career. 
@@ -423,7 +423,7 @@ spending_reg_tb
 # Under i.i.d. assumption, the estimated uncertainty about the estimate is 
 #
 # \begin{eqnarray}
-# \widehat {Var}^{\rho}_{i,t} = (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}\widehat{\sigma}^2_{i,t}I_{N_{i,t}}
+# \widehat {Var}^{\rho}_{i,t} = (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}\widehat{\sigma}^2_{i,t}
 # \end{eqnarray}
 #
 # Experience-based learning naturally introduces a mechanism for the perceived income risks to be cohort-specific and age-specific. Different generations who have experienced different realizations of the income shocks have different estimates of $Var^{\rho}$ and $\sigma^2$, thus differ in their uncertainty about future income. In the meantime, people at an older age are faced with a larger sample size than younger ones, this will drive the age profile of perceived risks in line with the observation that the perceived risk is lower as one grows older. Also, note that the learning literature has explored a wide variety of assumptions on the gains from learning to decline over time or age. These features can be easily incorporated into my framework. For now, equal weighting of the past experience suffices for the exposition here. 
@@ -432,7 +432,7 @@ spending_reg_tb
 #
 #
 # \begin{eqnarray}
-# \widehat{Var}_{i,t}(\Delta y_{i,t+1}) = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}I_{N_{i,t}}y^2_{i,t} + 1] \hat{\sigma}^2_{i,t}
+# \widehat{Var}_{i,t}(\Delta y_{i,t+1}) = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}y^2_{i,t} + 1] \hat{\sigma}^2_{i,t}
 # \end{eqnarray}
 #
 #
@@ -454,7 +454,7 @@ spending_reg_tb
 #
 # \begin{eqnarray}
 # \begin{split}
-# \tilde \Omega_{t} = \tilde E_{i,t}(Y_{t-1}\epsilon_{t}'\epsilon_{t}Y_{t-1})
+# \tilde \Omega_{t} = \tilde E_{i,t}(Y_{t-1}e_{t}'e_{t}Y_{t-1})
 # \end{split}
 # \end{eqnarray}
 #
@@ -463,7 +463,7 @@ spending_reg_tb
 #
 # \begin{eqnarray}
 # \begin{split}
-# \tilde \Omega_{t} & \approx \tilde \sigma^2_{t} (1+\tilde \delta_{y,i,t}\tilde \delta_{\epsilon,i,t}(n-1)) \sum^{n}_{j=1}y^2_{j,t}
+# \tilde \Omega_{t} & \approx \sum^{n}_{j=1}y^2_{j,t} (1+\tilde \delta_{y,i,t}\tilde \delta_{\epsilon,i,t}(n-1))\tilde \sigma^2_{t}
 # \end{split}
 # \end{eqnarray}
 #
@@ -471,7 +471,7 @@ spending_reg_tb
 #
 # \begin{eqnarray}
 # \begin{split}
-# \tilde {Var}^{\rho}_{i,t} & = (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}\tilde{\sigma}^2_{t}(1+ \tilde\delta_{i,t}(n-1))
+# \tilde {Var}^{\rho}_{i,t} & = (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(1+ \tilde\delta_{i,t}(n-1))\tilde{\sigma}^2_{t}
 # \end{split}
 # \end{eqnarray}
 #
@@ -549,9 +549,9 @@ for i in range(nb_fig):
 # We have the following predictions about the perceived income risks from the analysis. 
 #
 # - Higher experienced volatility, measured by $s^2 \equiv \tilde{\sigma}^2_{i,t}$ leads to higher perceived income risks. 
-# - In the same time, future perceptions of the risks inflate the past volatility by proportionately depending on their subjective attribution. A higher degree of external attribution reflected by a higher $\tilde \delta_{i,t}$ implies a higher inflaiton of past volatility into future.  (See Figure \ref{corr_var}.)
+# - In the same time, future perceptions of the risks inflate the past volatility by proportionately depending on their subjective attribution. A higher degree of external attribution reflected by a higher $\tilde \delta_{i,t}$ implies a higher inflaiton of past volatility into future.  (See Figure \ref{fig:corr_var}.)
 #
-# - With attribution errors, people project past experienced volatility into perceived risks disproportionately depending on the subjective attribution. A higher perceived attribution to common shocks, a bigger $\tilde \delta_{i,t}$ induces a higher perceived risk. See the comparison between Figure \ref{var_experience_var}. This is different from the scenario without attribution errors.
+# - With attribution errors, people project past experienced volatility into perceived risks disproportionately depending on the subjective attribution. A higher perceived attribution to common shocks, a bigger $\tilde \delta_{i,t}$ induces a higher perceived risk. See the comparison between Figure \ref{fig:var_experience_var}. This is different from the scenario without attribution errors.
 #
 # It is important to note that this difference still arises even if one assumes the underlying shocks are indeed non-independent. Although different types of income shocks have different implications as to which group correctly or mis-specifies the model, it does not alter the distinction between the lucky and unlucky group. To put it bluntly,  the underlying process determines who is over-confident or under-confident. But the lucky group is always more confident than the unlucky group. 
 
@@ -586,7 +586,7 @@ for i in range(nb_fig):
 # \end{eqnarray}
 #
 #
-# Basically, the attribution function is a variant of a logistic function with its function value bounded between $[0,1]$. It takes an s-shape and the parameter $\theta$ governs the steepness of the s-shape around its input value. In the model, $\theta$ is the parameter that governs the degree of the attribution errors. It takes any non-negative value. Although the qualitative pattern induced by the attribution errors stands for any positive $\theta$, letting it be a parameter leaves modelers the room to recover it from subjective risks data. The attribution function under different $\theta$ is shown in Figure \ref{theta_corr}. The higher $\theta$ is, the more sensitive the assigned correlation is to the size of the shock, thus inducing a higher dispersion of the perceived correlation between the lucky group and the unlucky group. 
+# Basically, the attribution function is a variant of a logistic function with its function value bounded between $[0,1]$. It takes an s-shape and the parameter $\theta$ governs the steepness of the s-shape around its input value. In the model, $\theta$ is the parameter that governs the degree of the attribution errors. It takes any non-negative value. Although the qualitative pattern induced by the attribution errors stands for any positive $\theta$, letting it be a parameter leaves modelers the room to recover it from subjective risks data. The attribution function under different $\theta$ is shown in Figure \ref{fig:theta_corr}. The higher $\theta$ is, the more sensitive the assigned correlation is to the size of the shock, thus inducing a higher dispersion of the perceived correlation between the lucky group and the unlucky group. 
 
 # + {"caption": "Attribution Function", "code_folding": [], "label": "fig:theta_corr", "widefigure": true}
 ## insert figures 
@@ -627,7 +627,7 @@ for i in range(nb_fig):
 #
 # How do perceived risks depend on the current income level of $y_{i,t}$? Since the recent income changes $\Delta y_{i,t}$ triggers asymmetric attribution, the perceived risks depend on the current level of income beyond the past-dependence of future income on current income that is embodied in the AR(1) process. In particular, $\widehat{Var}^\rho_{i,t}$ does not depend on $\Delta y_{i,t}$ while $\tilde{Var}^\rho_{i,t}$ does and is always greater than the former as a positive, it will amplify the loading of the current level of income into perceived risks about future income. This generates a U-shaped perceived income profile depending on current level income.  
 #
-# Figure \ref{var_experience_income} plots the simulated correlation between $y_{i,t}$ and perceived income risks with/without attribution errors. In the former scenario, perceived risks only mildly change with current income and the entire income profile of perceived risk is approximately flat. In the latter scenario, in contrast, perceived risks exhibit a clear U-shape across the income distribution. People sitting at both ends of the income distribution have high perceived risks than ones in the middle. The non-monotonic of the income profile arise due to the combined effects directly from $y_{i,t}$ and indirectly via its impact on $\tilde Var^{\rho}$. The former effect is symmetric around the long-run average of income (zero here). Deviations from the long-run mean on both sides lead to higher perceived risk. The latter monotonically decreases with current income because higher income level is associated with a more positive income change recently. The two effects combined create a U-shaped pattern.
+# Figure \ref{fig:var_recent} and \ref{fig:var_recent_sim} plots both the theory-predicted and simulated correlation between $y_{i,t}$ and perceived income risks with/without attribution errors. In the former scenario, perceived risks only mildly change with current income and the entire income profile of perceived risk is approximately flat. In the latter scenario, in contrast, perceived risks exhibit a clear U-shape across the income distribution. People sitting at both ends of the income distribution have high perceived risks than ones in the middle. The non-monotonic of the income profile arise due to the combined effects directly from $y_{i,t}$ and indirectly via its impact on $\tilde Var^{\rho}$. The former effect is symmetric around the long-run average of income (zero here). Deviations from the long-run mean on both sides lead to higher perceived risk. The latter monotonically decreases with current income because higher income level is associated with a more positive income change recently. The two effects combined create a U-shaped pattern.
 #
 # A subtle but interesting point is that the U-shape is skewed toward left, meaning perceived risks decrease with the income over the most part of the income distribution before the pattern reverses. More intuitively, it means that although low and high income perceived risks to be higher because of its deviation from the its long-run mean. This force is muted for the high income group because they have a lower peceived risks due to the attribution errors. 
 
