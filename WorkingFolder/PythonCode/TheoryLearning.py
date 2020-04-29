@@ -66,7 +66,7 @@ spec = [
 """
 
 
-# + {"code_folding": [20, 31, 36, 46, 58, 75, 91, 132, 152, 171, 186, 216, 284, 301, 304, 305, 308, 358, 362, 371, 380, 388, 402, 412, 419, 439]}
+# + {"code_folding": [1, 20, 31, 36, 46, 75, 91, 132, 152, 171, 186, 284, 301, 304, 305, 308, 358, 362, 371, 380, 388, 402, 412, 419, 439]}
 class LearningIncome:
     def __init__(self,
                  ar_paras = np.array([0.95,0.1]),
@@ -657,7 +657,7 @@ with plt.xkcd():
              fontsize = titlesize)
     plt.savefig('../Graphs/theory/var_experience_var.jpg')
 
-# + {"code_folding": [9, 11, 20, 22]}
+# + {"code_folding": [9, 22]}
 ## current income and perceived risks 
 
 n_grid = 20
@@ -689,7 +689,7 @@ with plt.xkcd():
             hat_vars,
             'r--',
             lw = lw,
-            label =r'$\tilde{var}, no attribution error$')
+            label =r'$\tilde{var}$, no attribution error')
     #plt.plot(y_nows,
     #        hat_vars_special,
     #        'g-',

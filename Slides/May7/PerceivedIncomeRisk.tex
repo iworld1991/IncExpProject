@@ -125,7 +125,7 @@
 			\item Since idiosyncratic risks are not perfectly insured 
 			\item Different wealth $\rightarrow$ different MPCs $\rightarrow$ distributional channel of macroeconomic policies 
 		\end{itemize}  %%\textcolor{blue}{Uninsurance} of idiosyncratic risks make it matter in macroeconomics, i,e. the important assumption by the HANK literature  
-		\item \textcolor{red}{Risks estimated from the inequality $\approx$  ``the truth''  $\approx$ perceptions?} %%It is unclear if perceptions consistent with econometricians' estimates of income risks from cross-sectional inequality and the those used in structural models   What enter in people's calculation are \textcolor{blue}{perceived} risks 
+		\item \textcolor{red}{Risks estimated from cross-sectional microdata $\approx$  ``the truth''  $\approx$ perceptions?} %%It is unclear if perceptions consistent with econometricians' estimates of income risks from cross-sectional inequality and the those used in structural models   What enter in people's calculation are \textcolor{blue}{perceived} risks 
 		%%People make  their decisions based on there \textit{their} perceptions
 	\end{itemize}
 \end{frame}
@@ -253,12 +253,12 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 	
 	
 \begin{eqnarray}
-\underbrace{\widehat{\sigma}^2_{i,t}}_{\text{estimated shock uncertainty}}=  \underbrace{\frac{1}{N_{i,t}-1} \sum^{n}_{j=1}\sum^{t-c}_{k=0} \hat e_{j,t-k}^2}_{\text{experienced volatility}}
+\underbrace{\tilde{\sigma}^2_{i,t}}_{\text{estimated shock uncertainty}}=\underbrace{ s^2_{i,t}}_{\text{experienced volatility}} =\underbrace{\frac{1}{N_{i,t}-1} \sum^{n}_{j=1}\sum^{t-c}_{k=0} \hat e_{j,t-k}^2}_{\text{variance of residuals}}
 \end{eqnarray}
 
 	\begin{itemize}
-	\item $N_{i,t} = n (t-c)$, sample size
-	\item $\hat e_{i,t}$: unexpected income shocks (or learning residuals)
+	\item $N_{i,t} = n (t-c)$: sample size
+	\item $\hat e_{i,t}$: unexpected income shocks 
 \end{itemize} 
 \end{frame}
 
@@ -294,10 +294,6 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 		\item $\tilde \delta_{\epsilon, i,t}$: \textcolor{red}{short-run attribution} -  perceived correlation in income shocks 
 		\item $\tilde \delta_{y, i,t}$: \textcolor{red}{long-run attribution} -perceived correlation in income 
 		\item $\textcolor{red}{\tilde \delta_{i,t}} \in [0,1]$: \textcolor{red}{attribution parameter} - perceived correlation of individual outcome with others 
-		\begin{itemize}
-			\item internal: $\tilde \delta_{i,t} =0$, i.e. ``my income has nothing to do with others''
-			\item external: $\tilde \delta_{i,t} >0$, i.e. ``something common affects all of us''
-		\end{itemize}
 	\end{itemize}
 \end{frame}
 
@@ -306,23 +302,23 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 \begin{frame}{Perceived risk under internal  v.s. external attribution}
 	
 	\begin{itemize}
-		\item \textcolor{blue}{External: $\tilde \delta_{i,t} >0$}: 
+		\item \textcolor{blue}{External: $\tilde \delta_{i,t} >0$}, i.e. ``my income has nothing to do with others''
 	\begin{eqnarray}
 	\begin{split}
 	\tilde {Var}_{i,t}(\Delta y_{i,t+1}) & = y_{i,t-1}^2 \tilde{Var}^{\rho}_{i,t} + \tilde{\sigma}^2_{i,t} \\
-	& = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(1+\textcolor{red}{ \tilde\delta_{i,t}(n-1))}y^2_{i,t} + 1] \tilde{\sigma}^2_{i,t} 
+	& = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(1+\textcolor{red}{ \tilde\delta_{i,t}(n-1))}y^2_{i,t} + 1] s^2_{i,t}
 	\end{split}
 	\end{eqnarray}
-		\item \textcolor{blue}{Internal: $\tilde \delta_{i,t} =0$}: 
+		\item \textcolor{blue}{Internal: $\tilde \delta_{i,t} =0$}, i.e. ``something common affects all of us''
 		\begin{eqnarray}
 	\begin{split}
 	\widehat{Var}_{i,t}(\Delta y_{i,t+1}) & = \\
-	& [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}y^2_{i,t} + 1] \hat{\sigma}^2_{i,t} \quad \forall \tilde \delta_{i,t} >0
+	& [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}y^2_{i,t} + 1] s^2_{i,t} \quad \forall \tilde \delta_{i,t} >0
 		\end{split}
 	\end{eqnarray}
-		\item Comparison 
+		\item Comparison
 		\begin{eqnarray}
-		\tilde {Var}_{i,t}(\Delta y_{i,t+1}) \geq \widehat{Var}_{i,t}(\Delta y_{i,t+1})
+		\tilde {Var}_{i,t}(\Delta y_{i,t+1}) > \widehat{Var}_{i,t}(\Delta y_{i,t+1})
 		\end{eqnarray}
 	\end{itemize}
 	
@@ -352,15 +348,12 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 	\begin{itemize}
 		\item positive (negative) shock $\rightarrow$ internal (external) attribution
 		\item $\approx$ ``self-serving bias'' in social psychology
-		\item \textcolor{blue}{Attribution function}
-		
-		\begin{eqnarray}
-		\begin{split}
-		\tilde \delta(\Delta y_{i,t}) = 1- \frac{1}{(1+e^{-\theta \Delta y_{i,t}})}
-		\end{split}
-		\end{eqnarray}
 	\end{itemize}
-
+	\begin{eqnarray}
+\begin{split}
+\textcolor{blue}{\text{Attribution function:}} \quad \tilde \delta(\Delta y_{i,t}) = 1- \frac{1}{(1+e^{-\theta \Delta y_{i,t}})}
+\end{split}
+\end{eqnarray}
 	
 	\begin{figure}
 		\centering 
@@ -373,10 +366,15 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 
 
 \begin{frame}{Prediction 3. skewned U-shaped income profile}
+	\begin{eqnarray}
+		\begin{split}
+			\tilde {Var}_{i,t}(\Delta y_{i,t+1})  = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(1+\tilde\delta_{i,t}(n-1))y^2_{i,t} + 1] \tilde{\sigma}^2_{i,t} 
+		\end{split}
+	\end{eqnarray}
 		\begin{figure}
 		\centering 
 		\label{var_experience_var}
-		\includegraphics[width=0.7\textwidth]{figures/var_recent.jpg}
+		\includegraphics[width=0.6\textwidth, height = 0.6\textheight]{figures/var_recent.jpg}
 	\end{figure}
 \end{frame}
 
