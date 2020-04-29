@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  28 APR 2020 16:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  28 APR 2020 20:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -772,6 +772,21 @@ LaTeX Warning: Label `var_experience_var' multiply defined.
 
 LaTeX Warning: Label `var_experience_var' multiply defined.
 
+
+LaTeX Warning: Label `var_experience_var' multiply defined.
+
+
+LaTeX Warning: Label `var_experience_var' multiply defined.
+
+
+LaTeX Warning: Label `var_experience_var' multiply defined.
+
+
+LaTeX Warning: Label `var_experience_var' multiply defined.
+
+
+LaTeX Warning: Label `var_experience_var' multiply defined.
+
 )
 \openout1 = `PerceivedIncomeRisk.aux'.
 
@@ -1038,7 +1053,7 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 ]
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 326.
+(amsmath)                trying to recover with `aligned' on input line 325.
 
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
@@ -1050,16 +1065,16 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 ]
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 352.
+(amsmath)                trying to recover with `aligned' on input line 351.
 
 
-Overfull \hbox (6.80699pt too wide) in alignment at lines 352--352
+Overfull \hbox (6.80699pt too wide) in alignment at lines 351--351
  [][][] []
  []
 
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 352.
+(amsmath)                trying to recover with `aligned' on input line 351.
 
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
@@ -1069,11 +1084,10 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 [15
 
 ]
-<figures/var_experience_var.jpg, id=698, 722.7pt x 578.16pt>
-File: figures/var_experience_var.jpg Graphic file (type jpg)
-<use figures/var_experience_var.jpg>
-Package pdftex.def Info: figures/var_experience_var.jpg  used on input line 360
-.
+<figures/corr_var.jpg, id=708, 722.7pt x 578.16pt>
+File: figures/corr_var.jpg Graphic file (type jpg)
+<use figures/corr_var.jpg>
+Package pdftex.def Info: figures/corr_var.jpg  used on input line 360.
 (pdftex.def)             Requested size: 239.60567pt x 191.6844pt.
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
@@ -1082,22 +1096,17 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 
 [16
 
- <./figures/var_experience_var.jpg>]pdfTeX warning (ext4): destination with the
- same identifier (name{var_experience_var}) has been already used, duplicate ig
-nored
+ <./figures/corr_var.jpg>]pdfTeX warning (ext4): destination with the same iden
+tifier (name{var_experience_var}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.374 \end{frame}
                  
-<figures/theta_corr.jpg, id=732, 722.7pt x 578.16pt>
+<figures/theta_corr.jpg, id=742, 722.7pt x 578.16pt>
 File: figures/theta_corr.jpg Graphic file (type jpg)
 <use figures/theta_corr.jpg>
 Package pdftex.def Info: figures/theta_corr.jpg  used on input line 374.
-(pdftex.def)             Requested size: 239.60567pt x 191.6844pt.
-
-Overfull \vbox (11.79282pt too high) detected at line 374
- []
-
+(pdftex.def)             Requested size: 205.37926pt x 164.30092pt.
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
@@ -1109,12 +1118,13 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 entifier (name{var_experience_var}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.383 \end{frame}
+l.384 \end{frame}
                  
-<figures/var_recent.jpg, id=761, 722.7pt x 578.16pt>
-File: figures/var_recent.jpg Graphic file (type jpg)
-<use figures/var_recent.jpg>
-Package pdftex.def Info: figures/var_recent.jpg  used on input line 383.
+<figures/var_experience_var.jpg, id=771, 722.7pt x 578.16pt>
+File: figures/var_experience_var.jpg Graphic file (type jpg)
+<use figures/var_experience_var.jpg>
+Package pdftex.def Info: figures/var_experience_var.jpg  used on input line 384
+.
 (pdftex.def)             Requested size: 239.60567pt x 191.6844pt.
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
@@ -1123,52 +1133,101 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 
 [18
 
- <./figures/var_recent.jpg>]
+ <./figures/var_experience_var.jpg>]pdfTeX warning (ext4): destination with the
+ same identifier (name{var_experience_var}) has been already used, duplicate ig
+nored
+<to be read again> 
+                   \relax 
+l.394 \end{frame}
+                 
+<figures/var_recent.jpg, id=800, 722.7pt x 578.16pt>
+File: figures/var_recent.jpg Graphic file (type jpg)
+<use figures/var_recent.jpg>
+Package pdftex.def Info: figures/var_recent.jpg  used on input line 394.
+(pdftex.def)             Requested size: 239.60567pt x 191.6844pt.
+
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
 [19
 
-] (./PerceivedIncomeRisk.toc)
+ <./figures/var_recent.jpg>] (./PerceivedIncomeRisk.toc)
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
 [20
 
-]
+]pdfTeX warning (ext4): destination with the same identifier (name{var_experien
+ce_var}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.407 \end{frame}
+                 
+<figures/var_recent_sim.jpg, id=884, 722.7pt x 578.16pt>
+File: figures/var_recent_sim.jpg Graphic file (type jpg)
+<use figures/var_recent_sim.jpg>
+Package pdftex.def Info: figures/var_recent_sim.jpg  used on input line 407.
+(pdftex.def)             Requested size: 239.60567pt x 191.6844pt.
+
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
 [21
 
-]
+ <./figures/var_recent_sim.jpg>]pdfTeX warning (ext4): destination with the sam
+e identifier (name{var_experience_var}) has been already used, duplicate ignore
+d
+<to be read again> 
+                   \relax 
+l.415 \end{frame}
+                 
+<figures/var_age_sim.jpg, id=914, 722.7pt x 578.16pt>
+File: figures/var_age_sim.jpg Graphic file (type jpg)
+<use figures/var_age_sim.jpg>
+Package pdftex.def Info: figures/var_age_sim.jpg  used on input line 415.
+(pdftex.def)             Requested size: 239.60567pt x 191.6844pt.
+
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
 [22
 
-] (./PerceivedIncomeRisk.toc)
+ <./figures/var_age_sim.jpg>]pdfTeX warning (ext4): destination with the same i
+dentifier (name{var_experience_var}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.424 \end{frame}
+                 
+<figures/var_recent_change_sim.jpg, id=943, 2023.56pt x 650.43pt>
+File: figures/var_recent_change_sim.jpg Graphic file (type jpg)
+<use figures/var_recent_change_sim.jpg>
+Package pdftex.def Info: figures/var_recent_change_sim.jpg  used on input line 
+424.
+(pdftex.def)             Requested size: 342.2953pt x 110.01584pt.
+
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
 [23
 
-]
-<figures/hist_incvar.jpg, id=1002, 433.62pt x 289.08pt>
-File: figures/hist_incvar.jpg Graphic file (type jpg)
-<use figures/hist_incvar.jpg>
-Package pdftex.def Info: figures/hist_incvar.jpg  used on input line 489.
-(pdftex.def)             Requested size: 154.03183pt x 102.68806pt.
-<figures/hist_rincvar.jpg, id=1003, 433.62pt x 289.08pt>
-File: figures/hist_rincvar.jpg Graphic file (type jpg)
-<use figures/hist_rincvar.jpg>
-Package pdftex.def Info: figures/hist_rincvar.jpg  used on input line 489.
-(pdftex.def)             Requested size: 154.03183pt x 102.68806pt.
+ <./figures/var_recent_change_sim.jpg>]pdfTeX warning (ext4): destination with 
+the same identifier (name{var_experience_var}) has been already used, duplicate
+ ignored
+<to be read again> 
+                   \relax 
+l.433 \end{frame}
+                 
+<figures/var_recent_change_sim2.jpg, id=971, 2023.56pt x 650.43pt>
+File: figures/var_recent_change_sim2.jpg Graphic file (type jpg)
+<use figures/var_recent_change_sim2.jpg>
+Package pdftex.def Info: figures/var_recent_change_sim2.jpg  used on input line
+ 433.
+(pdftex.def)             Requested size: 342.2953pt x 110.01584pt.
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
@@ -1176,11 +1235,50 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 
 [24
 
+ <./figures/var_recent_change_sim2.jpg>]
+Overfull \hbox (43.64578pt too wide) has occurred while \output is active
+ [][][][][][]  
+ []
+
+[25
+
+]
+Overfull \hbox (43.64578pt too wide) has occurred while \output is active
+ [][][][][][]  
+ []
+
+[26
+
+] (./PerceivedIncomeRisk.toc)
+Overfull \hbox (43.64578pt too wide) has occurred while \output is active
+ [][][][][][]  
+ []
+
+[27
+
+]
+<figures/hist_incvar.jpg, id=1138, 433.62pt x 289.08pt>
+File: figures/hist_incvar.jpg Graphic file (type jpg)
+<use figures/hist_incvar.jpg>
+Package pdftex.def Info: figures/hist_incvar.jpg  used on input line 531.
+(pdftex.def)             Requested size: 154.03183pt x 102.68806pt.
+<figures/hist_rincvar.jpg, id=1139, 433.62pt x 289.08pt>
+File: figures/hist_rincvar.jpg Graphic file (type jpg)
+<use figures/hist_rincvar.jpg>
+Package pdftex.def Info: figures/hist_rincvar.jpg  used on input line 531.
+(pdftex.def)             Requested size: 154.03183pt x 102.68806pt.
+
+Overfull \hbox (43.64578pt too wide) has occurred while \output is active
+ [][][][][][]  
+ []
+
+[28
+
  <./figures/hist_incvar.jpg> <./figures/hist_rincvar.jpg>]
-<figures/boxplot_var_HHinc.jpg, id=1036, 939.51pt x 361.35pt>
+<figures/boxplot_var_HHinc.jpg, id=1171, 939.51pt x 361.35pt>
 File: figures/boxplot_var_HHinc.jpg Graphic file (type jpg)
 <use figures/boxplot_var_HHinc.jpg>
-Package pdftex.def Info: figures/boxplot_var_HHinc.jpg  used on input line 517.
+Package pdftex.def Info: figures/boxplot_var_HHinc.jpg  used on input line 559.
 
 (pdftex.def)             Requested size: 273.83728pt x 105.31813pt.
 
@@ -1188,47 +1286,47 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
-[25
+[29
 
  <./figures/boxplot_var_HHinc.jpg>]
-<figures/ts_rincvar_age_g_median.png, id=1071, 585.18625pt x 425.59pt>
+<figures/ts_rincvar_age_g_median.png, id=1205, 585.18625pt x 425.59pt>
 File: figures/ts_rincvar_age_g_median.png Graphic file (type png)
 <use figures/ts_rincvar_age_g_median.png>
 Package pdftex.def Info: figures/ts_rincvar_age_g_median.png  used on input lin
-e 538.
+e 580.
 (pdftex.def)             Requested size: 157.45772pt x 82.5059pt.
-<figures/ts_incskew_age_g_mean.png, id=1073, 585.18625pt x 425.59pt>
+<figures/ts_incskew_age_g_mean.png, id=1207, 585.18625pt x 425.59pt>
 File: figures/ts_incskew_age_g_mean.png Graphic file (type png)
 <use figures/ts_incskew_age_g_mean.png>
 Package pdftex.def Info: figures/ts_incskew_age_g_mean.png  used on input line 
-538.
+580.
 (pdftex.def)             Requested size: 157.45772pt x 82.5059pt.
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
-[26
+[30
 
  <./figures/ts_rincvar_age_g_median.png> <./figures/ts_incskew_age_g_mean.png>]
-<figures/ts_rincvar_byear_g_median.png, id=1108, 585.18625pt x 425.59pt>
+<figures/ts_rincvar_byear_g_median.png, id=1243, 585.18625pt x 425.59pt>
 File: figures/ts_rincvar_byear_g_median.png Graphic file (type png)
 <use figures/ts_rincvar_byear_g_median.png>
 Package pdftex.def Info: figures/ts_rincvar_byear_g_median.png  used on input l
-ine 566.
+ine 608.
 (pdftex.def)             Requested size: 157.45772pt x 82.5059pt.
-<figures/ts_incskew_byear_g_median.png, id=1109, 585.18625pt x 425.59pt>
+<figures/ts_incskew_byear_g_median.png, id=1244, 585.18625pt x 425.59pt>
 File: figures/ts_incskew_byear_g_median.png Graphic file (type png)
 <use figures/ts_incskew_byear_g_median.png>
 Package pdftex.def Info: figures/ts_incskew_byear_g_median.png  used on input l
-ine 566.
+ine 608.
 (pdftex.def)             Requested size: 157.45772pt x 82.5059pt.
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
-[27
+[31
 
  <./figures/ts_rincvar_byear_g_median.png> <./figures/ts_incskew_byear_g_median
 .png>]
@@ -1236,61 +1334,68 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
-[28
-
-] (./PerceivedIncomeRisk.toc)
-Overfull \hbox (43.64578pt too wide) has occurred while \output is active
- [][][][][][]  
- []
-
-[29
-
-]
-Overfull \hbox (43.64578pt too wide) has occurred while \output is active
- [][][][][][]  
- []
-
-[30
-
-] (./PerceivedIncomeRisk.toc)
-Overfull \hbox (43.64578pt too wide) has occurred while \output is active
- [][][][][][]  
- []
-
-[31
-
-]
-<figures/tsMeanvar_he.jpg, id=1309, 5781.6pt x 2890.8pt>
-File: figures/tsMeanvar_he.jpg Graphic file (type jpg)
-<use figures/tsMeanvar_he.jpg>
-Package pdftex.def Info: figures/tsMeanvar_he.jpg  used on input line 694.
-(pdftex.def)             Requested size: 342.2953pt x 171.14679pt.
-
-Overfull \hbox (43.64578pt too wide) has occurred while \output is active
- [][][][][][]  
- []
-
 [32
 
- <./figures/tsMeanvar_he.jpg>]
-<figures/tsMeanrvar_he.jpg, id=1343, 5781.6pt x 2890.8pt>
-File: figures/tsMeanrvar_he.jpg Graphic file (type jpg)
-<use figures/tsMeanrvar_he.jpg>
-Package pdftex.def Info: figures/tsMeanrvar_he.jpg  used on input line 707.
-(pdftex.def)             Requested size: 342.2953pt x 171.14679pt.
-
+] (./PerceivedIncomeRisk.toc)
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
 [33
 
- <./figures/tsMeanrvar_he.jpg>]
+]
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
 [34
+
+] (./PerceivedIncomeRisk.toc)
+Overfull \hbox (43.64578pt too wide) has occurred while \output is active
+ [][][][][][]  
+ []
+
+[35
+
+]
+<figures/tsMeanvar_he.jpg, id=1449, 5781.6pt x 2890.8pt>
+File: figures/tsMeanvar_he.jpg Graphic file (type jpg)
+<use figures/tsMeanvar_he.jpg>
+Package pdftex.def Info: figures/tsMeanvar_he.jpg  used on input line 736.
+(pdftex.def)             Requested size: 342.2953pt x 171.14679pt.
+
+Overfull \hbox (43.64578pt too wide) has occurred while \output is active
+ [][][][][][]  
+ []
+
+[36
+
+ <./figures/tsMeanvar_he.jpg>]
+<figures/tsMeanrvar_he.jpg, id=1484, 5781.6pt x 2890.8pt>
+File: figures/tsMeanrvar_he.jpg Graphic file (type jpg)
+<use figures/tsMeanrvar_he.jpg>
+Package pdftex.def Info: figures/tsMeanrvar_he.jpg  used on input line 749.
+(pdftex.def)             Requested size: 342.2953pt x 171.14679pt.
+
+Overfull \hbox (43.64578pt too wide) has occurred while \output is active
+ [][][][][][]  
+ []
+
+[37
+
+ <./figures/tsMeanrvar_he.jpg>]
+Overfull \hbox (43.64578pt too wide) has occurred while \output is active
+ [][][][][][]  
+ []
+
+[38
+
+]
+Overfull \hbox (43.64578pt too wide) has occurred while \output is active
+ [][][][][][]  
+ []
+
+[39
 
 ] (./PerceivedIncomeRisk.bbl
 
@@ -1302,24 +1407,24 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
-[35
+[40
 
 ]
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
-[36]
+[41]
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
-[37])
+[42])
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
-[38]
+[43]
 \tf@nav=\write6
 \openout6 = `PerceivedIncomeRisk.nav'.
 
@@ -1329,23 +1434,23 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 \tf@snm=\write8
 \openout8 = `PerceivedIncomeRisk.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 744.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 744.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 793.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 793.
  (./PerceivedIncomeRisk.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 744.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 744.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 793.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 793.
 Package rerunfilecheck Info: File `PerceivedIncomeRisk.out' has not changed.
-(rerunfilecheck)             Checksum: F3FCFDB81C8E6DBB17AD473DEE934102;545.
+(rerunfilecheck)             Checksum: 99333EFCC88990BB14DEAFD81DAB8644;591.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 20323 strings out of 492616
- 385665 string characters out of 6129482
- 474165 words of memory out of 5000000
- 23644 multiletter control sequences out of 15000+600000
+ 20372 strings out of 492616
+ 386612 string characters out of 6129482
+ 474151 words of memory out of 5000000
+ 23678 multiletter control sequences out of 15000+600000
  13070 words of font info for 51 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,21n,96p,806b,733s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1365,10 +1470,10 @@ ve/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2019/t
 exmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2019/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on PerceivedIncomeRisk.pdf (38 pages, 4161831 bytes).
+Output written on PerceivedIncomeRisk.pdf (43 pages, 4830224 bytes).
 PDF statistics:
- 1594 PDF objects out of 1728 (max. 8388607)
- 1374 compressed objects within 14 object streams
- 118 named destinations out of 1000 (max. 500000)
- 937 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1764 PDF objects out of 2073 (max. 8388607)
+ 1526 compressed objects within 16 object streams
+ 129 named destinations out of 1000 (max. 500000)
+ 1006 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -2,7 +2,8 @@
 \beamer@sectionintoc {2}{Model}{6}{0}{2}
 \beamer@subsectionintoc {2}{1}{Learning and attribution}{7}{0}{2}
 \beamer@subsectionintoc {2}{2}{Simulation}{20}{0}{2}
-\beamer@sectionintoc {3}{Empirical facts}{21}{0}{3}
-\beamer@subsectionintoc {3}{1}{Cross-sectional patterns}{23}{0}{3}
-\beamer@subsectionintoc {3}{2}{Perceived risks and decisions}{29}{0}{3}
-\beamer@subsectionintoc {3}{3}{Coutercylical perceived risks}{31}{0}{3}
+\beamer@sectionintoc {3}{Empirical facts}{25}{0}{3}
+\beamer@subsectionintoc {3}{1}{Cross-sectional patterns}{27}{0}{3}
+\beamer@subsectionintoc {3}{2}{Perceived risks and decisions}{33}{0}{3}
+\beamer@subsectionintoc {3}{3}{Coutercylical perceived risks}{35}{0}{3}
+\beamer@sectionintoc {4}{Conclusion}{39}{0}{4}

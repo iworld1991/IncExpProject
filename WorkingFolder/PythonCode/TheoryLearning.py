@@ -571,12 +571,12 @@ with plt.xkcd():
     plt.figure(figsize = figsize)
     plt.plot(corrs,
             tilde_var_paras,
-            'r-.',
+            'k-',
             lw = lw,
-            label =r'External attribution: $\tilde{\delta} > 0$')
-    plt.axhline(tilde_var_paras[0],
-                lw = lw,
-                label =r'Internal attribution: $\tilde{\delta} = 0$')
+            label =r'External attribution: $\tilde{\delta} \geq 0$')
+    #plt.axhline(tilde_var_paras[0],
+    #            lw = lw,
+    #            label =r'Internal attribution: $\tilde{\delta} = 0$')
     plt.xlabel(r'$\tilde \delta$',
                fontsize = fontsize)
     plt.ylabel(r'$\tilde{var}^\rho}$',
@@ -593,7 +593,7 @@ with plt.xkcd():
     #             fontsize= 14,
     #             arrowprops={"facecolor": "lightgreen"})
     #plt.grid(True)
-    plt.xticks([])
+    #plt.xticks([])
     plt.yticks([])
     plt.legend(loc = 0,
                fontsize = legendsize)

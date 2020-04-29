@@ -245,7 +245,7 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 		\item $n$, an arbitrarily small $n$ is sufficient
 		 \item $t-c$, the duration of career (approximate for age)   
 		 \end{itemize}
-		\item least-square learning rule (see, for instance, \cite{evans2012learning})
+		\item learning rule: ordinary least square (OLS) ( for instance, \cite{evans2012learning})
 	\end{itemize} 
 \end{frame}
 
@@ -270,7 +270,7 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 	\end{eqnarray}
 	\begin{eqnarray}
 	\begin{split}
-	\tilde \Omega_{t} = \tilde E_{i,t}(Y'_{t-1}\epsilon_{t}'\epsilon_{t}Y_{t-1}) \\
+	\tilde \Omega_{t} = \tilde E_{i,t}(Y'_{t-1}\epsilon_{t}\epsilon_{t}'Y_{t-1}) \\
 	Y'_{t-1} = [y_{1,t-1},y_{2,t-1}...y_{n,t-1}]'
 	\end{split}
 	\end{eqnarray}
@@ -306,7 +306,7 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 	\end{itemize}
 	
 	\begin{itemize}
-		\item \textcolor{blue}{A special case}
+		\item A special case under \textcolor{blue}{constant risk} (homoscedasticity)
 	\end{itemize}
 		\begin{eqnarray}
 	\begin{split}
@@ -314,7 +314,6 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 	\end{split}
 	\end{eqnarray}
 		\begin{itemize}
-		\item fixed sample size $n$ and time-invariant risk $\sigma^2$ 
 		\item $\tilde \delta_{\epsilon, i,t}$: subjective correlation in income shocks 
 		\item $\tilde \delta_{y, i,t}$: subjective correlation in income 
 		\item $\textcolor{red}{\tilde \delta_{i,t}} \in [0,1]$: \textcolor{red}{attribution parameter}, the subjective correlation of individual outcome with others. 
@@ -329,14 +328,14 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 \begin{frame}{Perceived risk under internal  v.s. external attribution}
 	
 	\begin{itemize}
-		\item \textcolor{blue}{Incorrect: $\tilde \delta_{i,t} >0$}
+		\item \textcolor{blue}{External: $\tilde \delta_{i,t} >0$}
 	\begin{eqnarray}
 	\begin{split}
 	\tilde {Var}_{i,t}(\Delta y_{i,t+1}) & = y_{i,t-1}^2 \tilde{Var}^{\rho}_{i,t} + \tilde{\sigma}^2_{i,t} \\
 	& = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(1+\textcolor{red}{ \tilde\delta_{i,t}(n-1))}y^2_{i,t} + 1] \tilde{\sigma}^2_{i,t} 
 	\end{split}
 	\end{eqnarray}
-		\item \textcolor{blue}{Correct: $\tilde \delta_{i,t} =0$}
+		\item \textcolor{blue}{Internal: $\tilde \delta_{i,t} =0$}
 		\begin{eqnarray}
 	\begin{split}
 	\widehat{Var}_{i,t}(\Delta y_{i,t+1}) & = \\
@@ -351,7 +350,32 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 	
 \end{frame}
 
-\begin{frame}{Prediction 1. experienced volatility extrapolated into perceived risks}
+
+\begin{frame}{Prediction 1. higher degree of external attribution leads to higher perceived risks}
+	\begin{figure}
+		\centering 
+		\label{var_experience_var}
+		\includegraphics[width=0.7\textwidth]{figures/corr_var.jpg}
+	\end{figure}
+\end{frame}
+
+
+\begin{frame}{Attribution errors}
+	\begin{itemize}
+		\item positive (negative) shock induces internal (external) attribution
+		\item reminiscent of the self-serving bias in the social psychology literature  
+	\end{itemize}
+	
+	\begin{figure}
+		\centering 
+		\label{var_experience_var}
+		\includegraphics[width=0.6\textwidth]{figures/theta_corr.jpg}
+	\end{figure}
+\end{frame}
+
+
+
+\begin{frame}{Prediction 2. extrapolation of experienced volatility into perceived risks}
 	\begin{figure}
 		\centering 
 		\label{var_experience_var}
@@ -360,21 +384,8 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 \end{frame}
 
 
-\begin{frame}{Attribution errors}
-	\begin{itemize}
-		\item positive (negative) shock induces internal (external) attribution
-		\item reminicent of the self-serving bias in the social psycology literature  
-	\end{itemize}
 
-		\begin{figure}
-			\centering 
-			\label{var_experience_var}
-			\includegraphics[width=0.7\textwidth]{figures/theta_corr.jpg}
-		\end{figure}
-\end{frame}
-
-
-\begin{frame}{Prediction 2. skewned U-shaped income profile}
+\begin{frame}{Prediction 3. skewned U-shaped income profile}
 		\begin{figure}
 		\centering 
 		\label{var_experience_var}
@@ -383,12 +394,43 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 \end{frame}
 
 
-\begin{frame}{Prediction 3. perceived risks declines over age}
-	
+
+\subsection{Simulation}	
+
+
+\begin{frame}{Simulated income profile}
+	\begin{figure}
+		\centering 
+		\label{var_experience_var}
+		\includegraphics[width=0.7\textwidth]{figures/var_recent_sim.jpg}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Simulated age profile}
+	\begin{figure}
+		\centering 
+		\label{var_experience_var}
+		\includegraphics[width=0.7\textwidth]{figures/var_age_sim.jpg}
+	\end{figure}
 \end{frame}
 
 
-\subsection{Simulation}	
+\begin{frame}{Simulated correlation with labor market outcomes}
+	\begin{figure}
+		\centering 
+		\label{var_experience_var}
+		\includegraphics[width=\textwidth]{figures/var_recent_change_sim.jpg}
+	\end{figure}
+\end{frame}
+
+
+\begin{frame}{Simulated correlation with labor market outcomes, continued}
+	\begin{figure}
+		\centering 
+		\label{var_experience_var}
+		\includegraphics[width=\textwidth]{figures/var_recent_change_sim2.jpg}
+	\end{figure}
+\end{frame}
 
 
 
@@ -736,6 +778,13 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 
 \end{frame}
 
+\section{Conclusion}
+
+\begin{frame}{Conclusion}
+\begin{itemize}
+	\item 
+\end{itemize}
+\end{frame}
 
 \bibliographystyle{apalike}
 \bibliography{PerceivedIncomeRisk}
