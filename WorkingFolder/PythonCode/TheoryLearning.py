@@ -66,7 +66,7 @@ spec = [
 """
 
 
-# + {"code_folding": [1, 20, 31, 36, 46, 75, 91, 132, 152, 171, 186, 284, 301, 304, 305, 308, 358, 362, 371, 380, 388, 402, 412, 419, 439]}
+# + {"code_folding": [1, 20, 31, 36, 46, 58, 75, 91, 132, 152, 171, 186, 216, 217, 284, 301, 304, 305, 308, 362, 371, 380, 388, 402, 412, 419, 439]}
 class LearningIncome:
     def __init__(self,
                  ar_paras = np.array([0.95,0.1]),
@@ -427,7 +427,7 @@ class LearningIncome:
 ## other functions
     def logisticfunc(self,
                      x):
-        return 1/(1+np.exp(-self.theta*x))
+        return 1/(1+np.exp(-2-self.theta*x))
     
     def extrapolate(self,
                     shock,
@@ -657,7 +657,7 @@ with plt.xkcd():
              fontsize = titlesize)
     plt.savefig('../Graphs/theory/var_experience_var.jpg')
 
-# + {"code_folding": [9, 22]}
+# + {"code_folding": [9, 22, 27, 42]}
 ## current income and perceived risks 
 
 n_grid = 20
@@ -786,12 +786,14 @@ plt.ylabel(r'$\hat \delta_{i,t}$',
           
 """
 
-# + {"code_folding": [0]}
+# + {"code_folding": [8]}
 ## extrapolative attribution function
 
 chgs = np.linspace(-2,2,20)
-
 thetas = np.array([0,1,2,10,30])
+one.theta = 0
+corr0 = one.extrapolate(1)
+
 
 with plt.xkcd():
     plt.figure(figsize = figsize)
@@ -810,6 +812,10 @@ with plt.xkcd():
                fontsize = fontsize)
     plt.ylabel(r'$\tilde \delta_{i,t}$',
                fontsize = fontsize)
+    plt.text(-2.35,
+             corr0,
+             r'$\delta$',
+             fontsize = fontsize )
     plt.title('Attribution function with different degrees of errors',
              fontsize = fontsize)
     plt.xticks(fontsize = fontsize)

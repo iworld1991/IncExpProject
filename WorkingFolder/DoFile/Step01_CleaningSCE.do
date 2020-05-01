@@ -10,6 +10,7 @@
 clear
 global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
 global folder "${mainfolder}/SurveyData/"
+global otherfolder "${mainfolder}/OtherData/"
 global sum_graph_folder "${mainfolder}/Graphs/pop"
 global sum_table_folder "${mainfolder}/Tables"
 
@@ -260,9 +261,21 @@ global keeplist date year month userid tenure weight ///
  
 keep ${keeplist}
 
+*************************
+*** Merge with state level 
+*************************
+
+rename _STATE state 
+
+
+merge m:1 state using "${otherfolder}statecode.dta"
+rename _merge state_code_merge 
+
+merge m:1 statecode year month using "${otherfolder}stateM.dta",keep(master match) 
+rename _merge stateM_merge 
 
 *************************
-*** Exclude outliers *****
+*** Exclude outliers ****
 *************************
 
 local Moments Q24_mean Q24_var Q9_mean Q9_var 

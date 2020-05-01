@@ -115,7 +115,6 @@ putexcel C1 = ("star")
 putexcel D1 = ("`mom'")
 }
 
-ddd
 
 ************************
 ***** correlation plot *******

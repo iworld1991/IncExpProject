@@ -446,19 +446,19 @@ spending_reg_tb
 #
 # \begin{eqnarray}
 # \begin{split}
-# \tilde {Var}^{\rho}_{i,t} & =   (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(\sum^{t-c}_{k=0}\tilde \Omega_{t-k})(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}
+# \tilde {Var}^{\rho}_{i,t} & =   (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(\sum^{t-c}_{k=0}\tilde \Omega_{i,t-k})(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}
 # \end{split}
 # \end{eqnarray}
 #
-# where $\tilde \Omega_{t-k}$ is the perceived variance-covariance of income and income shocks within each point of time. 
+# where $\tilde \Omega_{t-k}$ is the perceived variance-covariance of income and income shocks within each point of time. It reflect how individual $i$ thinks about the correlation between her own income and others'. 
 #
 # \begin{eqnarray}
 # \begin{split}
-# \tilde \Omega_{t} = \tilde E_{i,t}(Y_{t-1}e_{t}'e_{t}Y_{t-1})
+# \tilde \Omega_{i,t} = \tilde E_{i,t}(Y_{t-1}e_{t}'e_{t}Y_{t-1})
 # \end{split}
 # \end{eqnarray}
 #
-# If we assume constant group size $n$ over time and the homoscedasticity, i.e. income risks $\sigma$ do not change over time, given the individual ascribes a subjective correlation coefficient of $\tilde \delta_{\epsilon, i,t}$ across income shocks and a correlation $\tilde \delta_{y, i,t}$ across the levels of income, $\tilde \Omega_{t}$ can be approximated as the following. (See the appendix for derivation) (This is analogous to the cluster-robust standard error by <cite data-cite="cameron2011robust">Cameron et al. (2011)</cite>. But the distinction is that both long-run and short-run correlation are subjective now. ) 
+# If we assume constant group size $n$ over time and the homoscedasticity, i.e. income risks $\sigma$ do not change over time, given the individual ascribes a subjective correlation coefficient of $\tilde \delta_{\epsilon, i,t}$ across income shocks and a correlation $\tilde \delta_{y, i,t}$ across the levels of income, $\tilde \Omega_{i,t}$ can be approximated as the following. (See the appendix for derivation) (This is analogous to the cluster-robust standard error by <cite data-cite="cameron2011robust">Cameron et al. (2011)</cite>. But the distinction is that both long-run and short-run correlation are subjective now. ) 
 #
 #
 # \begin{eqnarray}
@@ -581,12 +581,12 @@ for i in range(nb_fig):
 #
 # \begin{eqnarray}
 # \begin{split}
-# \tilde \delta(\Delta y_{i,t}) = 1- \frac{1}{(1+e^{-\theta \Delta y_{i,t}})}
+# \tilde \delta(\Delta y_{i,t}) = 1- \frac{1}{(1+e^{\alpha-\theta \Delta y_{i,t}})}
 # \end{split}
 # \end{eqnarray}
 #
 #
-# Basically, the attribution function is a variant of a logistic function with its function value bounded between $[0,1]$. It takes an s-shape and the parameter $\theta$ governs the steepness of the s-shape around its input value. In the model, $\theta$ is the parameter that governs the degree of the attribution errors. It takes any non-negative value. Although the qualitative pattern induced by the attribution errors stands for any positive $\theta$, letting it be a parameter leaves modelers the room to recover it from subjective risks data. The attribution function under different $\theta$ is shown in Figure \ref{fig:theta_corr}. The higher $\theta$ is, the more sensitive the assigned correlation is to the size of the shock, thus inducing a higher dispersion of the perceived correlation between the lucky group and the unlucky group. 
+# Basically, the attribution function is a variant of a logistic function with its function value bounded between $[0,1]$. It takes an s-shape and the parameter $\theta$ governs the steepness of the s-shape around its input value. $\alpha$ is adjustable parameter chosen such that the attribution free of errors happen to be equal to the true correlation between individuals $\delta$, which here takes values of zero for independence assumption. In the model, $\theta$ is the parameter that governs the degree of the attribution errors. It takes any non-negative value. Although the qualitative pattern induced by the attribution errors stands for any positive $\theta$, letting it be a parameter leaves modelers the room to recover it from subjective risks data. The attribution function under different $\theta$ is shown in Figure \ref{fig:theta_corr}. The higher $\theta$ is, the more sensitive the assigned correlation is to the size of the shock, thus inducing a higher dispersion of the perceived correlation between the lucky group and the unlucky group. 
 
 # + {"caption": "Attribution Function", "code_folding": [], "label": "fig:theta_corr", "widefigure": true}
 ## insert figures 

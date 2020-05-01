@@ -538,13 +538,12 @@ twoway (bar sp500 date if `gp'== 1,yaxis(2) fcolor(gs10)) ///
 	   legend(label(1 "sp500 (RHS)") label(2 "high") col(3)) ///
 	   caption("{superscript:low corr =`rho_l', high corr =`rho_h',}", ///
 	   justification(left) position(11) size(vlarge))
-graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
-   }
+     graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'_stk.png",as(png) replace 
+}
   
  restore
 }
 }
-
 
 /*
 *******************

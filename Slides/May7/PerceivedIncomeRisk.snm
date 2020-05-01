@@ -6,12 +6,11 @@
 \beamer@slide {var_experience_var}{21}
 \beamer@slide {var_experience_var}{22}
 \beamer@slide {var_experience_var}{23}
-\beamer@slide {SCE_data_sum}{24}
-\beamer@slide {incvar_hist}{27}
-\beamer@slide {boxplot_hhinc}{28}
-\beamer@slide {ts_incvar_age_g_mean}{29}
-\beamer@slide {ts_incvar_byear_g_mean}{30}
-\beamer@slide {micro_reg}{31}
+\beamer@slide {SCE_data_sum}{25}
+\beamer@slide {incvar_hist}{28}
+\beamer@slide {boxplot_hhinc}{29}
+\beamer@slide {ts_incvar_age_g_mean}{30}
+\beamer@slide {ts_incvar_byear_g_mean}{31}
 \beamer@slide {spending_reg}{33}
 \beamer@slide {ts_var}{35}
 \beamer@slide {ts_skew}{36}

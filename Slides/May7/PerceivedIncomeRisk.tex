@@ -265,12 +265,12 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 \begin{frame}{Persistence uncertainty}
 	\begin{eqnarray}
 	\begin{split}
-	\tilde {Var}^{\rho}_{i,t} & =   (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(\sum^{t-c}_{k=0}\tilde \Omega_{t-k})(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}
+	\tilde {Var}^{\rho}_{i,t} & =   (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(\sum^{t-c}_{k=0}\tilde \Omega_{i,t-k})(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}
 	\end{split}
 	\end{eqnarray}
 	\begin{eqnarray}
 	\begin{split}
-	\tilde \Omega_{t} = \underbrace{\tilde E_{i,t}(Y'_{t-1}e_{t}e_{t}'Y_{t-1})}_{\textcolor{red}{\text{attribution matrix}}} \\
+	\tilde \Omega_{i,t} = \underbrace{\tilde E_{i,t}(Y'_{t-1}e_{t}e_{t}'Y_{t-1})}_{\textcolor{red}{\text{attribution matrix}}} \\
 	Y'_{t-1} = [y_{1,t-1},y_{2,t-1}...y_{n,t-1}]'
 	\end{split}
 	\end{eqnarray}
@@ -287,13 +287,14 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 	\end{itemize}
 	\begin{eqnarray}
 	\begin{split}
-	\tilde \Omega_{t}  & \approx \sum^{n}_{j=1}y^2_{j,t} \tilde (1+\underbrace{\tilde \delta_{y,i,t}\tilde \delta_{\epsilon,i,t}}_{\equiv \tilde \delta_{i,t}}(n-1)) \tilde \sigma^2_{t} 
+	\tilde \Omega_{i,t}  & \approx \sum^{n}_{j=1}y^2_{j,t} \tilde (1+\underbrace{\textcolor{red}{\tilde \delta_{i,t}}}_{\equiv \tilde \delta_{y,i,t}\tilde \delta_{\epsilon,i,t}}(n-1)) \tilde \sigma^2_{t} 
 	\end{split}
 	\end{eqnarray}
 	\begin{itemize}
+			\item $\tilde \delta_{i,t} \in \textbf{[0,1]}$: \textcolor{red}{attribution parameter} - perceived correlation of individual outcome with others 
 		\item $\tilde \delta_{\epsilon, i,t}$: \textcolor{red}{short-run attribution} -  perceived correlation in income shocks 
 		\item $\tilde \delta_{y, i,t}$: \textcolor{red}{long-run attribution} -perceived correlation in income 
-		\item $\textcolor{red}{\tilde \delta_{i,t}} \in [0,1]$: \textcolor{red}{attribution parameter} - perceived correlation of individual outcome with others 
+	
 	\end{itemize}
 \end{frame}
 
@@ -302,14 +303,14 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 \begin{frame}{Perceived risk under internal  v.s. external attribution}
 	
 	\begin{itemize}
-		\item \textcolor{blue}{External: $\tilde \delta_{i,t} >0$}, i.e. ``my income has nothing to do with others''
+		\item \textcolor{blue}{External: $\tilde \delta_{i,t} >0$}, i.e. ``something common affects all of us''
 	\begin{eqnarray}
 	\begin{split}
 	\tilde {Var}_{i,t}(\Delta y_{i,t+1}) & = y_{i,t-1}^2 \tilde{Var}^{\rho}_{i,t} + \tilde{\sigma}^2_{i,t} \\
 	& = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(1+\textcolor{red}{ \tilde\delta_{i,t}(n-1))}y^2_{i,t} + 1] s^2_{i,t}
 	\end{split}
 	\end{eqnarray}
-		\item \textcolor{blue}{Internal: $\tilde \delta_{i,t} =0$}, i.e. ``something common affects all of us''
+		\item \textcolor{blue}{Internal: $\tilde \delta_{i,t} =0$}, i.e. ``my income has nothing to do with others''
 		\begin{eqnarray}
 	\begin{split}
 	\widehat{Var}_{i,t}(\Delta y_{i,t+1}) & = \\
@@ -347,13 +348,17 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 \begin{frame}{Attribution errors}
 	\begin{itemize}
 		\item positive (negative) shock $\rightarrow$ internal (external) attribution
-		\item $\approx$ ``self-serving bias'' in social psychology
 	\end{itemize}
 	\begin{eqnarray}
 \begin{split}
-\textcolor{blue}{\text{Attribution function:}} \quad \tilde \delta(\Delta y_{i,t}) = 1- \frac{1}{(1+e^{-\theta \Delta y_{i,t}})}
+\textcolor{blue}{\text{Attribution function:}} \quad \tilde \delta(\Delta y_{i,t}) = 1- \frac{1}{(1+e^{\alpha-\theta\Delta y_{i,t}})}
 \end{split}
 \end{eqnarray}
+	\begin{itemize}
+	\item $\theta$: degree of attribution error
+	\item $\alpha$: unbiasedness of attribution
+\end{itemize}
+
 	
 	\begin{figure}
 		\centering 
@@ -365,10 +370,10 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 
 
 
-\begin{frame}{Prediction 3. skewned U-shaped income profile}
+\begin{frame}{Prediction 3. skewed U-shaped income profile}
 	\begin{eqnarray}
 		\begin{split}
-			\tilde {Var}_{i,t}(\Delta y_{i,t+1})  = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(1+\tilde\delta_{i,t}(n-1))y^2_{i,t} + 1] \tilde{\sigma}^2_{i,t} 
+			\tilde {Var}_{i,t}(\Delta y_{i,t+1})  = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(1+\tilde\delta_{i,t}(n-1))y^2_{i,t} + 1] s^2_{i,t} 
 		\end{split}
 	\end{eqnarray}
 		\begin{figure}
@@ -415,6 +420,15 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 		\label{var_experience_var}
 		\includegraphics[width=\textwidth]{figures/var_recent_change_sim2.jpg}
 	\end{figure}
+\end{frame}
+
+
+\begin{frame}{Robustness}
+	\begin{itemize}
+		\item Permanent risk and transitory income risk 
+		\item Serial correlation 
+		\item More regressors 
+	\end{itemize}
 \end{frame}
 
 
@@ -503,11 +517,11 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 			\caption{nominal income risk}
 		\includegraphics[width=\textwidth]{figures/hist_incvar}
 		\end{subfigure}
-		\begin{subfigure}[b]{0.45\textwidth}
-		\centering
-		\caption{real income risk}
-		\includegraphics[width=\textwidth]{figures/hist_rincvar}
-	\end{subfigure}
+%		\begin{subfigure}[b]{0.45\textwidth}
+%		\centering
+%		\caption{real income risk}
+%		\includegraphics[width=\textwidth]{figures/hist_rincvar}
+%	\end{subfigure}
 	\end{figure}
 	\begin{itemize}
 		\item average:  $2.5\%$ standard deviation for nominal and $3.5\%$ standard deviation for real income
@@ -553,15 +567,15 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 			\caption{risks}
 			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_rincvar_age_g_median.png}
 		\end{subfigure}
-		\begin{subfigure}[b]{0.46\textwidth}
-			\caption{skewness}
-			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incskew_age_g_mean.png}
-	\end{subfigure}
+%	\begin{subfigure}[b]{0.46\textwidth}
+%			\caption{skewness}
+%			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incskew_age_g_mean.png}
+%	\end{subfigure}
 	\end{figure}
-\begin{itemize}
-	\item in line with existing findings, for instance  
-	\cite{bloom2018great}. 
-\end{itemize}
+%\begin{itemize}
+%	\item in line with existing findings, for instance  
+%	\cite{bloom2018great}. 
+%\end{itemize}
  \end{frame}
 
 %\begin{frame}{Perceived income risks by age}
@@ -585,10 +599,10 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 			\caption{risks}
 			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_rincvar_byear_g_median.png}
 		\end{subfigure}
-		\begin{subfigure}[b]{0.46\textwidth}
-			\caption{skewness}
-			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incskew_byear_g_median.png}
-		\end{subfigure}
+%		\begin{subfigure}[b]{0.46\textwidth}
+%			\caption{skewness}
+%			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incskew_byear_g_median.png}
+%		\end{subfigure}
 	\end{figure}
 \end{frame}
 
@@ -620,40 +634,40 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 
 
 
-\begin{frame}{Covariants of perceived risks}
-	\begin{table}
-		\centering
-		\caption{Perceived income risks and individual characteristics}
-		\label{micro_reg}
-		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
-\begin{tabular}{ccccccccc}
-	\hline 
-	{} & incvar I & incvar II & incvar III & incvar IIII & rincvar I & rincvar II & rincvar III & rincvar IIII \\
-	\hline 
-	HHinc\_gr=low inc &          &           &    1.56*** &             &           &            &     7.01*** &              \\
-	&          &           &     (0.10) &             &           &            &      (0.19) &              \\
-	educ\_gr=low educ &          &           &            &     0.40*** &           &            &             &      3.82*** \\
-	&          &           &            &      (0.11) &           &            &             &       (0.21) \\
-	gender=male      &          &           &            &    -0.80*** &           &            &             &      2.76*** \\
-	&          &           &            &      (0.10) &           &            &             &       (0.19) \\
-	parttime=yes     &     0.05 &     0.24* &      -0.12 &             &   1.41*** &    1.81*** &        0.19 &              \\
-	&   (0.12) &    (0.13) &     (0.13) &             &    (0.23) &     (0.26) &      (0.26) &              \\
-	selfemp=yes      &  7.21*** &  -0.00*** &   -0.00*** &             &   6.27*** &   -0.00*** &     0.00*** &              \\
-	&   (0.15) &    (0.00) &     (0.00) &             &    (0.27) &     (0.00) &      (0.00) &              \\
-	UEprobAgg        &          &    0.01** &      0.00* &             &           &    0.05*** &     0.04*** &              \\
-	&          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-	UEprobInd        &          &   0.03*** &    0.02*** &             &           &    0.05*** &     0.04*** &              \\
-	&          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-	Intercept        &  4.64*** &   3.75*** &    3.28*** &     5.72*** &  12.42*** &   12.21*** &    10.16*** &     11.16*** \\
-	&   (0.05) &    (0.12) &     (0.12) &      (0.07) &    (0.10) &     (0.24) &      (0.25) &       (0.14) \\
-	\hline 
-	N                &    54029 &     47331 &      47331 &       47457 &     50730 &      44382 &       44382 &        44517 \\
-	R2               &     0.05 &      0.00 &       0.01 &        0.00 &      0.01 &       0.01 &        0.04 &         0.01 \\
-	\hline 
-\end{tabular}
-}
-	\end{table}
-\end{frame}
+%\begin{frame}{Covariants of perceived risks}
+%	\begin{table}
+%	\centering
+%		\caption{Perceived income risks and individual characteristics}
+%		\label{micro_reg}
+%		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
+%\begin{tabular}{ccccccccc}
+%	\hline 
+%	{} & incvar I & incvar II & incvar III & incvar IIII & rincvar I & rincvar II & rincvar III & rincvar IIII \\
+%	\hline 
+%	HHinc\_gr=low inc &          &           &    1.56*** &             &           &            &     7.01*** &              \\
+%	&          &           &     (0.10) &             &           &            &      (0.19) &              \\
+%	educ\_gr=low educ &          &           &            &     0.40*** &           &            &             &      3.82*** \\
+%	&          &           &            &      (0.11) &           &            &             &       (0.21) \\
+%	gender=male      &          &           &            &    -0.80*** &           &            &             &      2.76*** \\
+%	&          &           &            &      (0.10) &           &            &             &       (0.19) \\
+%	parttime=yes     &     0.05 &     0.24* &      -0.12 &             &   1.41*** &    1.81*** &        0.19 &              \\
+%	&   (0.12) &    (0.13) &     (0.13) &             &    (0.23) &     (0.26) &      (0.26) &              \\
+%	selfemp=yes      &  7.21*** &  -0.00*** &   -0.00*** &             &   6.27*** &   -0.00*** &     0.00*** &              \\
+%	&   (0.15) &    (0.00) &     (0.00) &             &    (0.27) &     (0.00) &      (0.00) &              \\
+%	UEprobAgg        &          &    0.01** &      0.00* &             &           &    0.05*** &     0.04*** &              \\
+%	&          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+%	UEprobInd        &          &   0.03*** &    0.02*** &             &           &    0.05*** &     0.04*** &              \\
+%	&          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+%	Intercept        &  4.64*** &   3.75*** &    3.28*** &     5.72*** &  12.42*** &   12.21*** &    10.16*** &     11.16*** \\
+%	&   (0.05) &    (0.12) &     (0.12) &      (0.07) &    (0.10) &     (0.24) &      (0.25) &       (0.14) \\
+%	\hline 
+%	N                &    54029 &     47331 &      47331 &       47457 &     50730 &      44382 &       44382 &        44517 \\
+%	R2               &     0.05 &      0.00 &       0.01 &        0.00 &      0.01 &       0.01 &        0.04 &         0.01 \\
+%	\hline 
+%\end{tabular}
+%}
+%	\end{table}
+%end{frame}
 
 
 \subsection{Perceived risks and decisions}
@@ -708,7 +722,7 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 \subsection{Coutercylical perceived risks}
 
 
-\begin{frame}{Perceived \textcolor{blue}{real} risks and past wage growth}
+\begin{frame}{Perceived \textcolor{blue}{nominal} risks and past wage growth}
 	\begin{itemize}
 		\item $\overline{\text{var}_{t}} $
 \item  $log(\text{wage}_t) - log(\text{wage}_{t-3})$

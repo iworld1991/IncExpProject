@@ -14,7 +14,6 @@ log using "${mainfolder}/indSCE_Maro_log",replace
 
 use "${folder}/SCE/IncExpSCEIndMacroM.dta"
 
-
 ************************
 ***** date *************
 ***********************
