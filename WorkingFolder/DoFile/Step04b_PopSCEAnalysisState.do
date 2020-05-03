@@ -101,5 +101,4 @@ esttab using "${sum_table_folder}/mom_group_state.csv", ///
              se r2 drop(_cons *.date) ///
 			 label replace
 
-
 log close 
