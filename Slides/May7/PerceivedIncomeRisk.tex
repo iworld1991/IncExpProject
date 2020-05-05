@@ -138,10 +138,10 @@
 		\begin{itemize}
 			\item  \textcolor{blue}{imperfect understanding} of income risks
 			\begin{itemize}
-				\item the \textcolor{blue}{size:} experienced volatility $\rightarrow$  perceived risks, different across age and generation groups
-				\item the \textcolor{blue}{nature:} subjective attribution, i.e.  aggregate v.s. idiosyncratic  $\rightarrow$ different perceptions
+				\item the \textcolor{blue}{size:} experienced volatility $\rightarrow$  perceived risks
+				\item the \textcolor{blue}{nature:} i.e.  aggregate v.s. idiosyncratic  $\rightarrow$ different perceptions
 			\end{itemize}
-			\item life-cycle agent with uninsured idioyncratic (and aggregate) risks)
+			\item life-cycle agent with uninsured idioyncratic (and aggregate) risks
 		\end{itemize} 
 		\item \textbf{Empirics:} subjective risk perceptions from density surveys
 		\begin{itemize}
@@ -240,10 +240,10 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 
 	\begin{itemize}
 		\item \textcolor{blue}{sample}: past experience of both $i$'s own and others' income
-		\item \textcolor{blue}{size}:   $N_{i,t} = n (t-c)$
+		\item \textcolor{blue}{size}:   $N_{i,t} = n_i (t-c_i )$
 		\begin{itemize}
-		\item $n$, an arbitrarily small $n$ is sufficient
-		 \item $t-c$, the duration of career (approximate for age)   
+		\item $n_i$, an arbitrarily small $n$ is sufficient
+		 \item $t-c_i$, the duration of career (approximate for age)   
 		 \end{itemize}
 		\item \textcolor{blue}{learning rule}: ordinary least square (OLS) (\cite{evans2012learning}), \cite{malmendier2015learning})
 	\end{itemize} 
@@ -257,7 +257,6 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 \end{eqnarray}
 
 	\begin{itemize}
-	\item $N_{i,t} = n (t-c)$: sample size
 	\item $\hat e_{i,t}$: unexpected income shocks 
 \end{itemize} 
 \end{frame}
@@ -313,8 +312,7 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 		\item \textcolor{blue}{Internal: $\tilde \delta_{i,t} =0$}, i.e. ``my income has nothing to do with others''
 		\begin{eqnarray}
 	\begin{split}
-	\widehat{Var}_{i,t}(\Delta y_{i,t+1}) & = \\
-	& [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}y^2_{i,t} + 1] s^2_{i,t} \quad \forall \tilde \delta_{i,t} >0
+	\widehat{Var}_{i,t}(\Delta y_{i,t+1}) = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}y^2_{i,t} + 1] s^2_{i,t} 
 		\end{split}
 	\end{eqnarray}
 		\item Comparison
@@ -368,44 +366,7 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 \end{frame}
 
 
-
-
-\begin{frame}{Prediction 3. skewed U-shaped income profile}
-	\begin{eqnarray}
-		\begin{split}
-			\tilde {Var}_{i,t}(\Delta y_{i,t+1})  = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(1+\tilde\delta_{i,t}(n-1))y^2_{i,t} + 1] s^2_{i,t} 
-		\end{split}
-	\end{eqnarray}
-		\begin{figure}
-		\centering 
-		\label{var_experience_var}
-		\includegraphics[width=0.6\textwidth, height = 0.6\textheight]{figures/var_recent.jpg}
-	\end{figure}
-\end{frame}
-
-
-
-\subsection{Simulation}	
-
-
-\begin{frame}{Simulated income profile}
-	\begin{figure}
-		\centering 
-		\label{var_experience_var}
-		\includegraphics[width=0.7\textwidth]{figures/var_recent_sim.jpg}
-	\end{figure}
-\end{frame}
-
-\begin{frame}{Simulated age profile}
-	\begin{figure}
-		\centering 
-		\label{var_experience_var}
-		\includegraphics[width=0.7\textwidth]{figures/var_age_sim.jpg}
-	\end{figure}
-\end{frame}
-
-
-\begin{frame}{Simulated correlation with labor market outcomes}
+\begin{frame}{Prediction 3. \textcolor{red}{Counter-cylical} perceived risks under aggregate risk and attribution error}
 	\begin{figure}
 		\centering 
 		\label{var_experience_var}
@@ -414,7 +375,8 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 \end{frame}
 
 
-\begin{frame}{Simulated correlation with labor market outcomes, continued}
+
+\begin{frame}{\textcolor{red}{Counter-cylical} perceived risks, continued}
 	\begin{figure}
 		\centering 
 		\label{var_experience_var}
@@ -423,10 +385,48 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 \end{frame}
 
 
+%\begin{frame}{Prediction 4. perceived risk declines over age}
+%	\begin{figure}
+%		\centering 
+%		\label{var_experience_var}
+%		\includegraphics[width=0.7\textwidth]{figures/var_age_sim.jpg}
+%	\end{figure}
+%\end{frame}
+
+
+%\begin{frame}{Prediction 3. skewed U-shaped income profile}
+%	\begin{eqnarray}
+%		\begin{split}
+%			\tilde {Var}_{i,t}(\Delta y_{i,t+1})  = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(1+\tilde\delta_{i,t}(n-1))y^2_{i,t} + 1] s^2_{i,t} 
+%		\end{split}
+%	\end{eqnarray}
+%		\begin{figure}
+%		\centering 
+%		\label{var_experience_var}
+%		\includegraphics[width=0.6\textwidth, height = 0.6\textheight]{figures/var_recent.jpg}
+%	\end{figure}
+%\end{frame}
+
+
+
+%\subsection{Simulation}	
+
+
+%\begin{frame}{Simulated income profile}
+%	\begin{figure}
+%		\centering 
+%		\label{var_experience_var}
+%		\includegraphics[width=0.7\textwidth]{figures/var_recent_sim.jpg}
+%	\end{figure}
+%\end{frame}
+
+
+
 \begin{frame}{Robustness}
 	\begin{itemize}
 		\item Permanent risk and transitory income risk 
 		\item Serial correlation 
+		\item Time-varying income risks 
 		\item More regressors 
 	\end{itemize}
 \end{frame}
@@ -461,27 +461,27 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 \end{frame}
 
 
-\begin{frame}{Definition}
-	\begin{itemize}
-		\item $\Delta Y_{i,t+12}$ : the next-year income growth of the same job/position/hours, seperate from unemployement risk
-		\item Moments of interest 
-		\begin{itemize}
-			\item expected growth, $\text{exp}_{i,t} = E_{i,t} (\Delta Y_{i,t+12})$
-			\item variance: $\overline {var}_{i,t}(\Delta Y_{i,t+12})$ 
-			\item iqr: $\overline {iqr}_{i,t}(\Delta Y_{i,t+12})$ 
-			\item skewness: $\overline {skew}_{i,t}(\Delta Y_{i,t+12})$
-		\end{itemize}
-		\item Nominal and real income growth 
-		\begin{itemize}
-			\item $\text{rexp}_{i,t} =E_{i,t}(\Delta Y^r_{i,t+12}) =E_i(\Delta Y_{i,t+12}^n) - E_{i,t+12}(\pi_{t+12})$
-			\item $\overline{rvar}_{i,t}=\overline {var}_{i,t}(\Delta Y_{i,t+12}^n) +  \overline {var}_{i,t}(\pi_{t+12})$
-		\end{itemize}
+%\begin{frame}{Definition}
+%	\begin{itemize}
+%		\item $\Delta Y_{i,t+12}$ : the next-year income growth of the same job/position/hours, seperate from unemployement risk
+%		\item Moments of interest 
+%		\begin{itemize}
+%			\item expected growth, $\text{exp}_{i,t} = E_{i,t} (\Delta Y_{i,t+12})$
+%			\item variance: $\overline {var}_{i,t}(\Delta Y_{i,t+12})$ 
+%			\item iqr: $\overline {iqr}_{i,t}(\Delta Y_{i,t+12})$ 
+%			\item skewness: $\overline {skew}_{i,t}(\Delta Y_{i,t+12})$
+%		\end{itemize}
+%		\item Nominal and real income growth 
+%		\begin{itemize}
+%			\item $\text{rexp}_{i,t} =E_{i,t}(\Delta Y^r_{i,t+12}) =E_i(\Delta Y_{i,t+12}^n) - E_{i,t+12}(\pi_{t+12})$
+%			\item $\overline{rvar}_{i,t}=\overline {var}_{i,t}(\Delta Y_{i,t+12}^n) +  \overline {var}_{i,t}(\pi_{t+12})$
+%		\end{itemize}
 		%\item Does not reflect unemployment risk 
 		%\begin{itemize}
 		%	\item Can be converted into the unconditional risk using perceived unemployment risk ( same-job-hour risk is just a lower bound).  %% I did not do the adjustment. I use same-job-hour income growth throughout my analysis.
 		%\end{itemize}
-	\end{itemize}
-\end{frame}
+%	\end{itemize}
+%\end{frame}
 
 \subsection{Cross-sectional patterns}
 
@@ -508,26 +508,26 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 %	\end{itemize}
 %\end{frame}
 
-\begin{frame}{Cross-section of income risks}
-	\begin{figure}
-		\centering
-		\label{incvar_hist}
-			\begin{subfigure}[b]{0.45\textwidth}
-			\centering
-			\caption{nominal income risk}
-		\includegraphics[width=\textwidth]{figures/hist_incvar}
-		\end{subfigure}
+%\begin{frame}{Cross-section of income risks}
+%	\begin{figure}
+%		\centering
+%		\label{incvar_hist}
+%			\begin{subfigure}[b]{0.45\textwidth}
+%			\centering
+%			\caption{nominal income risk}
+%		\includegraphics[width=\textwidth]{figures/hist_incvar}
+%		\end{subfigure}
 %		\begin{subfigure}[b]{0.45\textwidth}
 %		\centering
 %		\caption{real income risk}
 %		\includegraphics[width=\textwidth]{figures/hist_rincvar}
 %	\end{subfigure}
-	\end{figure}
-	\begin{itemize}
-		\item average:  $2.5\%$ standard deviation for nominal and $3.5\%$ standard deviation for real income
+%	\end{figure}
+%	\begin{itemize}
+%		\item average:  $2.5\%$ standard deviation for nominal and $3.5\%$ standard deviation for real income
 		%\item just a lower bound: before adjustment of unemployment risk 
-	\end{itemize}
-\end{frame}
+%	\end{itemize}
+%\end{frame}
 
 
 %\begin{frame}{Perceived income risks by household income}
@@ -735,17 +735,17 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 \end{frame}
 
 
-\begin{frame}{Perceived \textcolor{blue}{real} income risks and past wage growth}
-	\begin{itemize}
-	\item $\overline{\text{rvar}_{t}} $
-	\item  $log(\text{wage}_t) - log(\text{wage}_{t-3})$
-\end{itemize}
-	\begin{figure}
-		\centering 
-		\label{ts_skew}
-		\includegraphics[width=\textwidth]{figures/tsMeanrvar_he.jpg}
-	\end{figure}
-\end{frame}
+%\begin{frame}{Perceived \textcolor{blue}{real} income risks and past wage growth}
+%	\begin{itemize}
+%	\item $\overline{\text{rvar}_{t}} $
+%	\item  $log(\text{wage}_t) - log(\text{wage}_{t-3})$
+%\end{itemize}
+%	\begin{figure}
+%		\centering 
+%		\label{ts_skew}
+%		\includegraphics[width=\textwidth]{figures/tsMeanrvar_he.jpg}
+%	\end{figure}
+%\end{frame}
 
 
 

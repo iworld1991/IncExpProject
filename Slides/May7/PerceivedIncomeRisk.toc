@@ -1,8 +1,7 @@
 \beamer@sectionintoc {1}{Motivation}{3}{0}{1}
 \beamer@sectionintoc {2}{Model}{5}{0}{2}
 \beamer@subsectionintoc {2}{1}{Learning and attribution}{6}{0}{2}
-\beamer@subsectionintoc {2}{2}{Simulation}{18}{0}{2}
-\beamer@sectionintoc {3}{Empirical facts}{24}{0}{3}
-\beamer@subsectionintoc {3}{1}{Cross-sectional patterns}{26}{0}{3}
-\beamer@subsectionintoc {3}{2}{Coutercylical perceived risks}{31}{0}{3}
-\beamer@sectionintoc {4}{Conclusion}{35}{0}{4}
+\beamer@sectionintoc {3}{Empirical facts}{20}{0}{3}
+\beamer@subsectionintoc {3}{1}{Cross-sectional patterns}{21}{0}{3}
+\beamer@subsectionintoc {3}{2}{Coutercylical perceived risks}{25}{0}{3}
+\beamer@sectionintoc {4}{Conclusion}{28}{0}{4}

@@ -60,11 +60,7 @@ pd.options.display.float_format = '{:,.2f}'.format
 
 dataset = pd.read_stata('../SurveyData/SCE/IncExpSCEProbIndM.dta')   
 dataset_est = pd.read_stata('../SurveyData/SCE/IncExpSCEDstIndM.dta')
-
-# + {"code_folding": []}
-## panel data 
-
-#dataset.index = dataset[['date','userid']]
+dataset_psid = pd.read_stata('../OtherData/psid_history_vols.dta')
 
 # + {"code_folding": []}
 ## variable list by catogrories 
@@ -146,6 +142,18 @@ SCEM = SCEM.rename(columns = {'D6':'HHinc',
                               'Q26v2part2':'spending'})
 
 SCEM.columns
+# -
+
+SCEM['year'] = pd.DatetimeIndex(SCEM['date']).year
+
+# +
+## Merge historical volatilty 
+
+SCEM = pd.merge(SCEM, 
+                dataset_psid,  
+                how='outer', 
+                left_on = ['year','age'], 
+                right_on = ['year','age'])
 
 # +
 ## creat some less fine groups 
@@ -225,7 +233,7 @@ for var in vars_cat:
 
 # + {"code_folding": []}
 # correlation heatmap 
-fig, ax = plt.subplots(figsize=(10,10))
+fig, ax = plt.subplots(figsize=(15,15))
 sns.heatmap(SCEM.corr(), annot = True)
 # -
 
@@ -340,10 +348,10 @@ for gp in ['HHinc','educ','gender']:
     
 """
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## variances by groups 
 
-gplist = ['HHinc','educ','gender','age_gr']
+gplist = ['HHinc','age_gr']
 momlist = ['incvar','rincvar']
 incg_lb = list(inc_grp.values())
 
@@ -379,7 +387,7 @@ for i in range(len(gplist)):
         
 plt.savefig('../Graphs/ind/boxplot.jpg')
 
-# + {"code_folding": [0, 10]}
+# + {"code_folding": []}
 ## skewness and kurtosis by groups 
 
 momlist = ['incskew','inckurt']
@@ -418,18 +426,46 @@ for i in range(len(gplist)):
 plt.savefig('../Graphs/ind/boxplot2.jpg')
 # -
 
-# ###  4. Regressions
+# ### 4. Experienced volatility and risks
+
+# + {"code_folding": []}
+keeps = ['incexp','incvar','rincexp','rincvar','incskew','rmse']
+
+SCEM_cohort = pd.pivot_table(data = SCEM,
+                             index=['year','age'],
+                             values = keeps,
+                             aggfunc= 'mean').reset_index().rename(columns={'incexp': 'expMean',
+                                                                            'rincexp':'rexpMean',
+                                                                            'incvar': 'varMean',
+                                                                            'inciqr': 'iqrMean',
+                                                                            'rincvar':'rvarMean',
+                                                                            'incskew':'skewMean'})
+
+# + {"code_folding": [1]}
+plt.plot(figsize =(30,30))
+plt.plot(SCEM_cohort['rmse'],
+         SCEM_cohort['varMean']/100,
+        '*',
+        lw = 5)
+plt.xlabel('experienced volatility')
+plt.ylabel('perceived risk')
+
+
+plt.savefig('../Graphs/ind/scatter_history_vol_var.jpg')
+# -
+
+# ###  5. Regressions
 
 # +
 ## preps 
 
 dep_list =  ['incvar','rincvar'] 
 dep_list2 =['incexp','rincexp']
-indep_list_ct = ['UEprobInd','UEprobAgg','Stkprob']
+indep_list_ct = ['UEprobInd','UEprobAgg','Stkprob','rmse']
 indep_list_dc = ['HHinc','selfemp','fulltime']
 
 
-# + {"code_folding": [7, 36]}
+# + {"code_folding": [5, 7, 36]}
 ## full-table for risks  
 
 rs_list = {}  ## list to store results 
@@ -539,7 +575,7 @@ f.close()
 
 tb.to_excel('../Tables/micro_reg.xlsx')
 
-# + {"code_folding": [41, 55]}
+# + {"code_folding": [7, 41, 55]}
 ## full-table for expected growth, appendix 
 
 ## full-table for risks  
