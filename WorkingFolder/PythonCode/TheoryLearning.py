@@ -573,7 +573,7 @@ with plt.xkcd():
             tilde_var_paras,
             'k-',
             lw = lw,
-            label =r'External attribution: $\tilde{\delta} \geq 0$')
+            label =r'Attribution: $\tilde{\delta} \geq 0$')
     #plt.axhline(tilde_var_paras[0],
     #            lw = lw,
     #            label =r'Internal attribution: $\tilde{\delta} = 0$')

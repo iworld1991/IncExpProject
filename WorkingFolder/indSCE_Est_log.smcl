@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Est_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}27 Apr 2020, 20:51:15
+ {txt}opened on:  {res} 5 May 2020, 16:47:19
 {txt}
 {com}. 
 . *********************************************************
@@ -60,8 +60,13 @@
 . ************************************************
 . 
 . merge 1:1 year month userid using "${c -(}folder{c )-}/SCE/IncExpSCEProbIndM",keep(master match) 
-{res}
-{txt}{col 5}Result{col 38}# of obs.
+{res}{txt}{p 0 7 2}
+(note: variable
+month was 
+byte, now float to accommodate using data's values)
+{p_end}
+
+{col 5}Result{col 38}# of obs.
 {col 5}{hline 41}
 {col 5}not matched{col 30}{res}               0
 {txt}{col 5}matched{col 30}{res}          85,852{txt}  (_merge==3)
@@ -209,7 +214,7 @@
 {com}. label var age_sq "Age-squared"
 {txt}
 {com}. 
-. encode _STATE, gen(state_id)
+. encode state, gen(state_id)
 {txt}
 {com}. label var state_id "state id"
 {txt}
@@ -282,150 +287,26 @@
 . local group_vars byear_g age_g edu_g HHinc_g fbetter
 {txt}
 {com}. 
-. **********************************
-. *** tables and hists of Vars *****
-. **********************************
-. 
-. /*
-> local Moments incmean incvar inciqr rincmean rincvar incskew
-> 
-> foreach gp in `group_vars' {c -(}
-> tabstat `Moments', st(p10 p50 p90) by(`gp')
-> {c )-}
-> 
-> 
-> foreach gp in `group_vars' {c -(}
-> table `gp', c(median incvar mean incvar median rincvar mean rincvar) by(year)
-> {c )-}
-> 
-> 
-> ** histograms 
-> 
-> foreach mom in `Moments'{c -(}
-> 
-> twoway (hist `mom',fcolor(ltblue) lcolor(none)), ///
->            ytitle("") ///
->            title("`mom'")
-> graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'.png",as(png) replace  
-> 
-> {c )-}
-> 
-> 
-> * 4 groups 
-> foreach gp in byear_g{c -(}
-> foreach mom in `Moments'{c -(}
-> twoway (hist `mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
->        (hist `mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
->            (hist `mom' if `gp'==2,fcolor(red) lcolor("")) ///
->            (hist `mom' if `gp'==3,fcolor(green) lcolor("")), ///
->            xtitle("") ///
->            ytitle("") ///
->            title("`mom'") ///
->            legend(label(1 `gp'=0) label(2 `gp'=1) label(3 `gp'=2) label(4 `gp'=3) col(1))
-> 
-> graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'_`gp'.png",as(png) replace  
-> {c )-}
-> {c )-}
-> 
-> * 3 groups 
-> foreach gp in HHinc_g age_g{c -(}
-> foreach mom in `Moments'{c -(}
-> 
-> twoway (hist `mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
->        (hist `mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
->            (hist `mom' if `gp'==2,fcolor(red) lcolor("")), ///
->            xtitle("") ///
->            ytitle("") ///
->            title("`mom'") ///
->            legend(label(1 `gp'=0) label(2 `gp'=1) label(3 `gp'=2) col(1))
-> 
-> graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'_`gp'.png",as(png) replace  
-> 
-> {c )-}
-> {c )-}
-> 
-> * 2 groups 
-> 
-> 
-> foreach gp in edu_g fbetter{c -(}
-> foreach mom in `Moments'{c -(}
-> 
-> twoway (hist `mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
->        (hist `mom' if `gp'==1,fcolor(ltblue) lcolor("")), ///
->            xtitle("") ///
->            ytitle("") ///
->            title("`mom'") ///
->            legend(label(1 `gp'=0) label(2 `gp'=1) col(1))
-> 
-> graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'_`gp'.png",as(png) replace  
-> 
-> {c )-}
-> {c )-}
-> 
-> */
 . 
 . 
-. **********************************
-. *** time series pltos by group *****
+. 
+. *********************************
+. *** bar charts *****
 . **********************************
 . 
 . 
-. ** 2 groups 
-. foreach agg in mean median{c -(}
-{txt}  2{com}.   foreach gp in fbetter{c -(}
-{txt}  3{com}.    preserve 
-{txt}  4{com}.    
-.    collapse (`agg') `Moments' sp500, by(date `gp')
-{txt}  5{com}.    xtset `gp' date 
-{txt}  6{com}. 
-. foreach mom in `Moments'{c -(}
-{txt}  7{com}. keep if `mom'!=.
-{txt}  8{com}. * moments only 
-. 
-. twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
->        (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)), ///
->        xtitle("date") ///
->            ytitle("") ///
->            title("`mom' by recent household finance condition") ///
->            legend(label(1 "worse") label(2 "better") col(4))
-{txt}  9{com}.  graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
-{txt} 10{com}.  
-. {c )-}
-{txt} 11{com}.   restore
-{txt} 12{com}. {c )-}
-{txt} 13{com}. {c )-}
-{res}{txt}{col 8}panel variable:  {res}fbetter (weakly balanced)
-{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2019m5
-{txt}{col 17}delta:  {res}1 month
-{txt}(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_fbetter_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_fbetter_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incvar_fbetter_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincvar_fbetter_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_inciqr_fbetter_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_fbetter_mean.png written in PNG format)
-{res}{txt}{col 8}panel variable:  {res}fbetter (weakly balanced)
-{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2019m5
-{txt}{col 17}delta:  {res}1 month
-{txt}(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_fbetter_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_fbetter_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incvar_fbetter_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincvar_fbetter_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_inciqr_fbetter_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_fbetter_median.png written in PNG format)
+. graph bar incvar, ///
+>            over(HHinc,relabel(1 "<10k" 2 "<20k" 3 "<30k" 4 "<40k" 5 "<50k" 6 "<60k" 7 "<75k" 8 "<100k" 9 "<150k" 10 "<200k" 11 ">200k")) ///
+>                    bar(1, color(navy)) ///
+>                    title("Perceived Risk by household income") ///
+>                    b1title("Household income") ///
+>                    ytitle("Average perceived risk") 
+{res}{txt}
+{com}. graph export "${c -(}sum_graph_folder{c )-}/boxplot_var_stata.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/boxplot_var_stata.png written in PNG format)
 
-{com}. ddd
+{com}. */
+. ddd
 {err}unrecognized command:  ddd
 {txt}{search r(199):r(199);}
 
@@ -435,4 +316,34 @@ end of do-file
 
 {com}. clear
 
+. do "/Users/Myworld/Dropbox/2020 - Consumption and social networks/analysis/friends_spend.do"
+{txt}
+{com}. 
+. global friends "/Users/Myworld/Dropbox/2020 - Consumption and social networks/"
+{txt}
+{com}. 
+. set scheme s1color
+{txt}
+{com}. 
+. /*************
+> 
+> 
+> cleaning:
+> - clean spendbyzip daily data 
+> - merge it with SCI and census
+> analysis  
+> - preliminary analysis on consumption response to sci-weighted infection rate
+> 
+> international covid perceptions: https://covid19-survey.org/
+> 
+> ****************/
 . 
+. 
+. clear
+{txt}
+{com}. set more off, permanently 
+{txt}({cmd:set more} preference recorded)
+
+{com}. capture log close 
+{smcl}
+{com}{sf}{ul off}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  4 MAY 2020 10:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  6 MAY 2020 18:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -763,7 +763,7 @@ y)
 (/usr/local/texlive/2019/texmf-dist/tex/latex/beamer/beamerfontthemeserif.sty)
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\\' on input line 72.
+(hyperref)                removing `\\' on input line 74.
 
 (./PerceivedIncomeRisk.aux
 
@@ -773,31 +773,25 @@ LaTeX Warning: Label `var_experience_var' multiply defined.
 LaTeX Warning: Label `var_experience_var' multiply defined.
 
 
-LaTeX Warning: Label `var_experience_var' multiply defined.
-
-
-LaTeX Warning: Label `var_experience_var' multiply defined.
-
-
-LaTeX Warning: Label `var_experience_var' multiply defined.
+LaTeX Warning: Label `macro_corr_he' multiply defined.
 
 )
 \openout1 = `PerceivedIncomeRisk.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 103.
+LaTeX Font Info:    ... okay on input line 103.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 103.
+LaTeX Font Info:    ... okay on input line 103.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 103.
+LaTeX Font Info:    ... okay on input line 103.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 103.
+LaTeX Font Info:    ... okay on input line 103.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 103.
+LaTeX Font Info:    ... okay on input line 103.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 103.
+LaTeX Font Info:    ... okay on input line 103.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 103.
+LaTeX Font Info:    ... okay on input line 103.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -865,7 +859,7 @@ e
 ))
 ABD: EveryShipout initializing macros
 \AtBeginShipoutBox=\box61
-Package hyperref Info: Link coloring ON on input line 101.
+Package hyperref Info: Link coloring ON on input line 103.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -875,9 +869,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count176
 )
-LaTeX Info: Redefining \ref on input line 101.
-LaTeX Info: Redefining \pageref on input line 101.
-LaTeX Info: Redefining \nameref on input line 101.
+LaTeX Info: Redefining \ref on input line 103.
+LaTeX Info: Redefining \pageref on input line 103.
+LaTeX Info: Redefining \nameref on input line 103.
 
 (./PerceivedIncomeRisk.out) (./PerceivedIncomeRisk.out)
 \@outlinefile=\write5
@@ -911,7 +905,7 @@ Dictionary: translator-theorem-dictionary, Language: English
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
  (./PerceivedIncomeRisk.nav)
-Overfull \hbox (43.64578pt too wide) in paragraph at lines 101--101
+Overfull \hbox (43.64578pt too wide) in paragraph at lines 103--103
  [][][][][][]  
  []
 
@@ -931,11 +925,11 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 [2
 
 ]
-LaTeX Font Info:    Try loading font information for U+msa on input line 161.
+LaTeX Font Info:    Try loading font information for U+msa on input line 163.
  (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 161.
+LaTeX Font Info:    Try loading font information for U+msb on input line 163.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -970,7 +964,7 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 ]
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 214.
+(amsmath)                trying to recover with `aligned' on input line 212.
 
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
@@ -982,11 +976,11 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 ]
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 233.
+(amsmath)                trying to recover with `aligned' on input line 230.
 
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 233.
+(amsmath)                trying to recover with `aligned' on input line 230.
 
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
@@ -1012,11 +1006,11 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 ]
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 279.
+(amsmath)                trying to recover with `aligned' on input line 274.
 
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 279.
+(amsmath)                trying to recover with `aligned' on input line 274.
 
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
@@ -1028,7 +1022,7 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 ]
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 298.
+(amsmath)                trying to recover with `aligned' on input line 291.
 
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
@@ -1040,16 +1034,16 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 ]
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 324.
+(amsmath)                trying to recover with `aligned' on input line 316.
 
 
-Overfull \hbox (5.68282pt too wide) in alignment at lines 324--324
+Overfull \hbox (5.68282pt too wide) in alignment at lines 316--316
  [][][] []
  []
 
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 324.
+(amsmath)                trying to recover with `aligned' on input line 316.
 
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
@@ -1059,10 +1053,10 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 [13
 
 ]
-<figures/corr_var.jpg, id=600, 722.7pt x 578.16pt>
+<figures/corr_var.jpg, id=599, 722.7pt x 578.16pt>
 File: figures/corr_var.jpg Graphic file (type jpg)
 <use figures/corr_var.jpg>
-Package pdftex.def Info: figures/corr_var.jpg  used on input line 333.
+Package pdftex.def Info: figures/corr_var.jpg  used on input line 324.
 (pdftex.def)             Requested size: 239.60567pt x 191.6844pt.
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
@@ -1075,12 +1069,12 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 tifier (name{var_experience_var}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.342 \end{frame}
+l.333 \end{frame}
                  
-<figures/var_experience_var.jpg, id=630, 722.7pt x 578.16pt>
+<figures/var_experience_var.jpg, id=629, 722.7pt x 578.16pt>
 File: figures/var_experience_var.jpg Graphic file (type jpg)
 <use figures/var_experience_var.jpg>
-Package pdftex.def Info: figures/var_experience_var.jpg  used on input line 342
+Package pdftex.def Info: figures/var_experience_var.jpg  used on input line 333
 .
 (pdftex.def)             Requested size: 239.60567pt x 191.6844pt.
 
@@ -1093,18 +1087,18 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  <./figures/var_experience_var.jpg>]
 
 Package amsmath Warning: Cannot use `split' here;
-(amsmath)                trying to recover with `aligned' on input line 366.
+(amsmath)                trying to recover with `aligned' on input line 354.
 
 pdfTeX warning (ext4): destination with the same identifier (name{var_experienc
 e_var}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.366 \end{frame}
+l.354 \end{frame}
                  
-<figures/theta_corr.jpg, id=666, 722.7pt x 578.16pt>
+<figures/theta_corr.jpg, id=665, 722.7pt x 578.16pt>
 File: figures/theta_corr.jpg Graphic file (type jpg)
 <use figures/theta_corr.jpg>
-Package pdftex.def Info: figures/theta_corr.jpg  used on input line 366.
+Package pdftex.def Info: figures/theta_corr.jpg  used on input line 354.
 (pdftex.def)             Requested size: 136.91603pt x 109.53394pt.
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
@@ -1113,18 +1107,11 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 
 [16
 
- <./figures/theta_corr.jpg>]pdfTeX warning (ext4): destination with the same id
-entifier (name{var_experience_var}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.375 \end{frame}
-                 
-<figures/var_recent_change_sim.jpg, id=695, 2023.56pt x 650.43pt>
-File: figures/var_recent_change_sim.jpg Graphic file (type jpg)
-<use figures/var_recent_change_sim.jpg>
-Package pdftex.def Info: figures/var_recent_change_sim.jpg  used on input line 
-375.
-(pdftex.def)             Requested size: 342.2953pt x 110.01584pt.
+ <./figures/theta_corr.jpg>]
+
+Package amsmath Warning: Cannot use `split' here;
+(amsmath)                trying to recover with `aligned' on input line 375.
+
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
@@ -1132,82 +1119,79 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 
 [17
 
- <./figures/var_recent_change_sim.jpg>]pdfTeX warning (ext4): destination with 
-the same identifier (name{var_experience_var}) has been already used, duplicate
- ignored
-<to be read again> 
-                   \relax 
-l.385 \end{frame}
-                 
-<figures/var_recent_change_sim2.jpg, id=724, 2023.56pt x 650.43pt>
-File: figures/var_recent_change_sim2.jpg Graphic file (type jpg)
-<use figures/var_recent_change_sim2.jpg>
-Package pdftex.def Info: figures/var_recent_change_sim2.jpg  used on input line
- 385.
-(pdftex.def)             Requested size: 342.2953pt x 110.01584pt.
-
+] (./PerceivedIncomeRisk.toc)
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
 [18
 
- <./figures/var_recent_change_sim2.jpg>]
+]
+<figures/boxplot_var_HHinc_stata.png, id=784, 764.8575pt x 556.0775pt>
+File: figures/boxplot_var_HHinc_stata.png Graphic file (type png)
+<use figures/boxplot_var_HHinc_stata.png>
+Package pdftex.def Info: figures/boxplot_var_HHinc_stata.png  used on input lin
+e 562.
+(pdftex.def)             Requested size: 239.60567pt x 174.19804pt.
+
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
 [19
 
-]
+ <./figures/boxplot_var_HHinc_stata.png>]
+<figures/ts_rincvar_age_g_median.png, id=817, 585.18625pt x 425.59pt>
+File: figures/ts_rincvar_age_g_median.png Graphic file (type png)
+<use figures/ts_rincvar_age_g_median.png>
+Package pdftex.def Info: figures/ts_rincvar_age_g_median.png  used on input lin
+e 579.
+(pdftex.def)             Requested size: 239.60567pt x 174.25923pt.
+
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
 [20
 
-] (./PerceivedIncomeRisk.toc)
+ <./figures/ts_rincvar_age_g_median.png>]
+<figures/experience_var_var_data.png, id=852, 764.8575pt x 556.0775pt>
+File: figures/experience_var_var_data.png Graphic file (type png)
+<use figures/experience_var_var_data.png>
+Package pdftex.def Info: figures/experience_var_var_data.png  used on input lin
+e 608.
+(pdftex.def)             Requested size: 205.37926pt x 149.31987pt.
+
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
 [21
 
-]
-<figures/boxplot_var_HHinc.jpg, id=874, 939.51pt x 361.35pt>
-File: figures/boxplot_var_HHinc.jpg Graphic file (type jpg)
-<use figures/boxplot_var_HHinc.jpg>
-Package pdftex.def Info: figures/boxplot_var_HHinc.jpg  used on input line 558.
-
-(pdftex.def)             Requested size: 273.83728pt x 105.31813pt.
-
+ <./figures/experience_var_var_data.png>]
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
 [22
 
- <./figures/boxplot_var_HHinc.jpg>]
-<figures/ts_rincvar_age_g_median.png, id=909, 585.18625pt x 425.59pt>
-File: figures/ts_rincvar_age_g_median.png Graphic file (type png)
-<use figures/ts_rincvar_age_g_median.png>
-Package pdftex.def Info: figures/ts_rincvar_age_g_median.png  used on input lin
-e 579.
-(pdftex.def)             Requested size: 157.45772pt x 82.5059pt.
-
+] (./PerceivedIncomeRisk.toc)
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
 [23
 
- <./figures/ts_rincvar_age_g_median.png>]
-<figures/ts_rincvar_byear_g_median.png, id=941, 585.18625pt x 425.59pt>
-File: figures/ts_rincvar_byear_g_median.png Graphic file (type png)
-<use figures/ts_rincvar_byear_g_median.png>
-Package pdftex.def Info: figures/ts_rincvar_byear_g_median.png  used on input l
-ine 607.
-(pdftex.def)             Requested size: 157.45772pt x 82.5059pt.
+]
+<figures/tsMeanvar_he.jpg, id=964, 5781.6pt x 2890.8pt>
+File: figures/tsMeanvar_he.jpg Graphic file (type jpg)
+<use figures/tsMeanvar_he.jpg>
+Package pdftex.def Info: figures/tsMeanvar_he.jpg  used on input line 764.
+(pdftex.def)             Requested size: 342.2953pt x 171.14679pt.
+
+Overfull \vbox (4.85521pt too high) detected at line 764
+ []
+
 
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
@@ -1215,39 +1199,31 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 
 [24
 
- <./figures/ts_rincvar_byear_g_median.png>] (./PerceivedIncomeRisk.toc)
+ <./figures/tsMeanvar_he.jpg>]
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
 [25
 
-]
-<figures/tsMeanvar_he.jpg, id=1026, 5781.6pt x 2890.8pt>
-File: figures/tsMeanvar_he.jpg Graphic file (type jpg)
-<use figures/tsMeanvar_he.jpg>
-Package pdftex.def Info: figures/tsMeanvar_he.jpg  used on input line 735.
-(pdftex.def)             Requested size: 342.2953pt x 171.14679pt.
-
+]pdfTeX warning (ext4): destination with the same identifier (name{macro_corr_h
+e}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.837 	\end{frame}
+                  
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
 [26
 
- <./figures/tsMeanvar_he.jpg>]
-Overfull \hbox (43.64578pt too wide) has occurred while \output is active
- [][][][][][]  
- []
-
-[27
-
 ]
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
-[28
+[27
 
 ] (./PerceivedIncomeRisk.bbl
 
@@ -1259,24 +1235,19 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
-[29
+[28
 
 ]
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
 
+[29])
+Overfull \hbox (43.64578pt too wide) has occurred while \output is active
+ [][][][][][]  
+ []
+
 [30]
-Overfull \hbox (43.64578pt too wide) has occurred while \output is active
- [][][][][][]  
- []
-
-[31])
-Overfull \hbox (43.64578pt too wide) has occurred while \output is active
- [][][][][][]  
- []
-
-[32]
 \tf@nav=\write6
 \openout6 = `PerceivedIncomeRisk.nav'.
 
@@ -1286,60 +1257,45 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 \tf@snm=\write8
 \openout8 = `PerceivedIncomeRisk.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 796.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 796.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 859.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 859.
  (./PerceivedIncomeRisk.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 796.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 796.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 859.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 859.
+Package rerunfilecheck Info: File `PerceivedIncomeRisk.out' has not changed.
+(rerunfilecheck)             Checksum: B79C0900FAD4F6BE18F75D07CB49CE32;451.
 
-
-Package rerunfilecheck Warning: File `PerceivedIncomeRisk.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `PerceivedIncomeRisk.out':
-(rerunfilecheck)             Before: DE52B0BD1B28E95267BA1A612518E5B4;451
-(rerunfilecheck)             After:  B7B514898F0A2C89FDC42AC211CD9988;451.
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 20276 strings out of 492616
- 384861 string characters out of 6129482
- 460837 words of memory out of 5000000
- 23617 multiletter control sequences out of 15000+600000
+ 20219 strings out of 492616
+ 383593 string characters out of 6129482
+ 462804 words of memory out of 5000000
+ 23571 multiletter control sequences out of 15000+600000
  13691 words of font info for 53 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,22n,96p,806b,733s stack positions out of 5000i,500n,10000p,200000b,80000s
-pdfTeX warning (dest): name{Navigation33} has been referenced but does not ex
-ist, replaced by a fixed one
-
-pdfTeX warning (dest): name{Outline0.3.2.26} has been referenced but does not e
-xist, replaced by a fixed one
-
-pdfTeX warning (dest): name{Outline0.3.1.22} has been referenced but does not e
-xist, replaced by a fixed one
-
-</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><
-/usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></
-usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></u
-sr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr
-/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/l
-ocal/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/loc
-al/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local
-/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/t
-exlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texl
-ive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive
-/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/20
-19/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/201
-9/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2019/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2019/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on PerceivedIncomeRisk.pdf (32 pages, 2648037 bytes).
+ 57i,22n,96p,806b,714s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
+</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
+/usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></u
+sr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr
+/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/l
+ocal/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loc
+al/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local
+/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/te
+xlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texli
+ve/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/
+2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2
+019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/201
+9/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2019/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on PerceivedIncomeRisk.pdf (30 pages, 2222337 bytes).
 PDF statistics:
- 1304 PDF objects out of 1440 (max. 8388607)
- 1138 compressed objects within 12 object streams
- 104 named destinations out of 1000 (max. 500000)
- 674 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1240 PDF objects out of 1440 (max. 8388607)
+ 1077 compressed objects within 11 object streams
+ 95 named destinations out of 1000 (max. 500000)
+ 670 words of extra memory for PDF output out of 10000 (max. 10000000)
 

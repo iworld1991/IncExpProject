@@ -17,6 +17,8 @@
 	citecolor= {cyan}
 }
 
+
+
 %\usetheme{AnnArbor}
 %\usetheme{Antibes}
 %\usetheme{Bergen}
@@ -132,16 +134,16 @@
 
 
 \begin{frame}{This paper's agenda}
-	%% the first part mostly empirical.  The second part is the theory. My talk will be primarily about the first part. This is what I have achieved so far. But also I feel there are many interesting facts per se. More importantly, this empirical regularity can better discipline and guide my modeling work. 
+	
 	\begin{enumerate}
-			\item \textbf{Theory}: a \textcolor{blue}{subjective} heterogeneous-agent model 
+		\item \textbf{Theory}: a \textcolor{blue}{subjective} heterogeneous-agent model 
 		\begin{itemize}
 			\item  \textcolor{blue}{imperfect understanding} of income risks
 			\begin{itemize}
 				\item the \textcolor{blue}{size:} experienced volatility $\rightarrow$  perceived risks
 				\item the \textcolor{blue}{nature:} i.e.  aggregate v.s. idiosyncratic  $\rightarrow$ different perceptions
 			\end{itemize}
-			\item life-cycle agent with uninsured idioyncratic (and aggregate) risks
+			\item life-cycle agents with uninsured idioyncratic (and aggregate) risks
 		\end{itemize} 
 		\item \textbf{Empirics:} subjective risk perceptions from density surveys
 		\begin{itemize}
@@ -156,21 +158,18 @@
 			%\item \textcolor{blue}{negatively correlate with stock market returns}
 			% \item how persistent? (work in progress)
 		\end{itemize}
-	
+		
 	\end{enumerate}
 \end{frame}
-
-
 \begin{frame}{Literature}
-	%% Let me not spend too much time on the literature. But 
-\begin{itemize}
-	 \item experience-based learning: \cite{malmendier2015learning} 
-	 \item subjective survey, especially on probabilistic surveys: \cite{manski_measuring_2004}, \cite{delavande2011measuring}, \cite{manski_survey_2018},  \cite{bertrand_people_2001}, \cite{armantier_overview_2017}
-	\item ``insurance or information'':  \cite{kaufmann_disentangling_2009},  \cite{meghir2011earnings}, \cite{pistaferri_superior_2001}, New York Fed Blog (2019),  \cite{flavin_excess_1988}
-   \item consumption/saving and portfolio choice under imperfect perception/understanding:  \cite{rozsypal_overpersistence_2017}, \cite{carroll_sticky_2018}, \cite{lian2019imperfect}
-   \item macroeconomic expectation formation: \cite{coibion2012can}, \cite{fuhrer2018intrinsic}, etc
-   \item counter-cyclical labor income risks: \cite{storesletten2004cyclical}, \cite{guvenen2014nature}, \cite{catherine_countercyclical_2019}
-  \end{itemize}
+	\begin{itemize}
+		\item experience-based learning: \cite{malmendier2015learning} 
+		\item subjective survey, especially on probabilistic surveys: \cite{manski_measuring_2004}, \cite{delavande2011measuring}, \cite{manski_survey_2018},  \cite{bertrand_people_2001}, \cite{armantier_overview_2017}
+		\item ``insurance or information'':  \cite{kaufmann_disentangling_2009},  \cite{meghir2011earnings}, \cite{pistaferri_superior_2001}, New York Fed Blog (2019),  \cite{flavin_excess_1988}
+		\item consumption/saving and portfolio choice under imperfect perception/understanding:  \cite{rozsypal_overpersistence_2017}, \cite{carroll_sticky_2018}, \cite{lian2019imperfect}
+		\item macroeconomic expectation formation: \cite{coibion2012can}, \cite{fuhrer2018intrinsic}, etc
+		\item counter-cyclical labor income risks: \cite{storesletten2004cyclical}, \cite{guvenen2014nature}, \cite{catherine_countercyclical_2019}
+	\end{itemize}
 \end{frame}
 
 
@@ -187,16 +186,15 @@
 		\end{itemize}
 \end{frame}
 
-
 \subsection{Learning and attribution}
 
 \begin{frame}{Income process}
 	
 	\begin{eqnarray}
-	\begin{split}
-	y_{i,c,t} = \rho y_{i,c,t-1} + \epsilon_{i,c,t} \\
-	\epsilon_{i,c,t} \sim  N(0,\sigma^2)
-	\end{split}
+		\begin{split}
+			y_{i,c,t} = \rho y_{i,c,t-1} + \epsilon_{i,c,t} \\
+			\epsilon_{i,c,t} \sim  N(0,\sigma^2)
+		\end{split}
 	\end{eqnarray}
 	
 	\begin{itemize}
@@ -213,38 +211,36 @@
 	\end{itemize}
 \end{frame}
 
-
 \begin{frame}{Perceived risk}
-\begin{itemize}
-\item \textcolor{blue}{Perfect understanding}
-\begin{eqnarray}
-\begin{split}
-Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
-& = \sigma^2
-\end{split}
-\end{eqnarray}
-\item \textcolor{blue}{Imperfect understanding} 
-\begin{eqnarray}
-\begin{split}
-\widehat Var_{i,t}(\Delta y_{i,t+1}) & = y_{i,t-1}^2 \underbrace{\widehat{Var}^{\rho}_{i,t}}_{\text{Persistence uncertainty}} + \underbrace{\hat{\sigma}^2_{i,t}}_{\text{Shock uncertainty}}
-\end{split}
-\end{eqnarray}
-\end{itemize}	
+	\begin{itemize}
+		\item \textcolor{blue}{Perfect understanding}
+		\begin{eqnarray}
+			\begin{split}
+				Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
+				& = \sigma^2
+			\end{split}
+		\end{eqnarray}
+		\item \textcolor{blue}{Imperfect understanding} 
+		\begin{eqnarray}
+			\begin{split}
+				\widehat Var_{i,t}(\Delta y_{i,t+1}) & = y_{i,t-1}^2 \underbrace{\widehat{Var}^{\rho}_{i,t}}_{\text{Persistence uncertainty}} + \underbrace{\hat{\sigma}^2_{i,t}}_{\text{Shock uncertainty}}
+			\end{split}
+		\end{eqnarray}
+	\end{itemize}	
 \end{frame}
 
-
 \begin{frame}{Learning}
-\begin{eqnarray}
-\underbrace{\hat \rho_{i,t}}_{\text{estimated parameter}}= (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y_{j,t-k-1}y_{j,t-k})
-\end{eqnarray}
-
+	\begin{eqnarray}
+		\underbrace{\hat \rho_{i,t}}_{\text{estimated parameter}}= (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y_{j,t-k-1}y_{j,t-k})
+	\end{eqnarray}
+	
 	\begin{itemize}
 		\item \textcolor{blue}{sample}: past experience of both $i$'s own and others' income
 		\item \textcolor{blue}{size}:   $N_{i,t} = n_i (t-c_i )$
 		\begin{itemize}
-		\item $n_i$, an arbitrarily small $n$ is sufficient
-		 \item $t-c_i$, the duration of career (approximate for age)   
-		 \end{itemize}
+			\item $n_i$, an arbitrarily small $n$ is sufficient
+			\item $t-c_i$, the duration of career (approximate for age)   
+		\end{itemize}
 		\item \textcolor{blue}{learning rule}: ordinary least square (OLS) (\cite{evans2012learning}), \cite{malmendier2015learning})
 	\end{itemize} 
 \end{frame}
@@ -260,69 +256,64 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 	\item $\hat e_{i,t}$: unexpected income shocks 
 \end{itemize} 
 \end{frame}
-
 \begin{frame}{Persistence uncertainty}
 	\begin{eqnarray}
-	\begin{split}
-	\tilde {Var}^{\rho}_{i,t} & =   (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(\sum^{t-c}_{k=0}\tilde \Omega_{i,t-k})(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}
-	\end{split}
+		\begin{split}
+			\tilde {Var}^{\rho}_{i,t} & =   (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(\sum^{t-c}_{k=0}\tilde \Omega_{i,t-k})(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}
+		\end{split}
 	\end{eqnarray}
 	\begin{eqnarray}
-	\begin{split}
-	\tilde \Omega_{i,t} = \underbrace{\tilde E_{i,t}(Y'_{t-1}e_{t}e_{t}'Y_{t-1})}_{\textcolor{red}{\text{attribution matrix}}} \\
-	Y'_{t-1} = [y_{1,t-1},y_{2,t-1}...y_{n,t-1}]'
-	\end{split}
+		\begin{split}
+			\tilde \Omega_{i,t} = \underbrace{\tilde E_{i,t}(Y'_{t-1}e_{t}e_{t}'Y_{t-1})}_{\textcolor{red}{\text{attribution matrix}}} \\
+			Y'_{t-1} = [y_{1,t-1},y_{2,t-1}...y_{n,t-1}]'
+		\end{split}
 	\end{eqnarray}
 	\begin{itemize}	  
 		\item \textbf{\textcolor{red}{Attribution}}: how $i$ thinks about the correlation between her own income and others
 	\end{itemize}
 \end{frame}
-
-
 \begin{frame}{Attribution}
 	
 	\begin{itemize}
 		\item Under constant risk across people and time (homoscedasticity)
 	\end{itemize}
 	\begin{eqnarray}
-	\begin{split}
-	\tilde \Omega_{i,t}  & \approx \sum^{n}_{j=1}y^2_{j,t} \tilde (1+\underbrace{\textcolor{red}{\tilde \delta_{i,t}}}_{\equiv \tilde \delta_{y,i,t}\tilde \delta_{\epsilon,i,t}}(n-1)) \tilde \sigma^2_{t} 
-	\end{split}
+		\begin{split}
+			\tilde \Omega_{i,t}  & \approx \sum^{n}_{j=1}y^2_{j,t} \tilde (1+\underbrace{\textcolor{red}{\tilde \delta_{i,t}}}_{\equiv \tilde \delta_{y,i,t}\tilde \delta_{\epsilon,i,t}}(n-1)) \tilde \sigma^2_{t} 
+		\end{split}
 	\end{eqnarray}
 	\begin{itemize}
-			\item $\tilde \delta_{i,t} \in \textbf{[0,1]}$: \textcolor{red}{attribution parameter} - perceived correlation of individual outcome with others 
+		\item $\tilde \delta_{i,t} \in \textbf{[0,1]}$: \textcolor{red}{attribution parameter} - perceived correlation of individual outcome with others 
 		\item $\tilde \delta_{\epsilon, i,t}$: \textcolor{red}{short-run attribution} -  perceived correlation in income shocks 
 		\item $\tilde \delta_{y, i,t}$: \textcolor{red}{long-run attribution} -perceived correlation in income 
-	
+		
 	\end{itemize}
 \end{frame}
-
 
 
 \begin{frame}{Perceived risk under internal  v.s. external attribution}
 	
 	\begin{itemize}
 		\item \textcolor{blue}{External: $\tilde \delta_{i,t} >0$}, i.e. ``something common affects all of us''
-	\begin{eqnarray}
-	\begin{split}
-	\tilde {Var}_{i,t}(\Delta y_{i,t+1}) & = y_{i,t-1}^2 \tilde{Var}^{\rho}_{i,t} + \tilde{\sigma}^2_{i,t} \\
-	& = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(1+\textcolor{red}{ \tilde\delta_{i,t}(n-1))}y^2_{i,t} + 1] s^2_{i,t}
-	\end{split}
-	\end{eqnarray}
+		\begin{eqnarray}
+			\begin{split}
+				\tilde {Var}_{i,t}(\Delta y_{i,t+1}) & = y_{i,t-1}^2 \tilde{Var}^{\rho}_{i,t} + \tilde{\sigma}^2_{i,t} \\
+				& = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(1+\textcolor{red}{ \tilde\delta_{i,t}(n-1))}y^2_{i,t} + 1] s^2_{i,t}
+			\end{split}
+		\end{eqnarray}
 		\item \textcolor{blue}{Internal: $\tilde \delta_{i,t} =0$}, i.e. ``my income has nothing to do with others''
 		\begin{eqnarray}
-	\begin{split}
-	\widehat{Var}_{i,t}(\Delta y_{i,t+1}) = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}y^2_{i,t} + 1] s^2_{i,t} 
-		\end{split}
-	\end{eqnarray}
+			\begin{split}
+				\widehat{Var}_{i,t}(\Delta y_{i,t+1}) = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}y^2_{i,t} + 1] s^2_{i,t} 
+			\end{split}
+		\end{eqnarray}
 		\item Comparison
 		\begin{eqnarray}
-		\tilde {Var}_{i,t}(\Delta y_{i,t+1}) > \widehat{Var}_{i,t}(\Delta y_{i,t+1})
+			\tilde {Var}_{i,t}(\Delta y_{i,t+1}) > \widehat{Var}_{i,t}(\Delta y_{i,t+1})
 		\end{eqnarray}
 	\end{itemize}
 	
 \end{frame}
-
 
 \begin{frame}{Prediction 1. higher degree of external attribution leads to higher perceived risks}
 	\begin{figure}
@@ -341,48 +332,61 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 	\end{figure}
 \end{frame}
 
-
-
 \begin{frame}{Attribution errors}
 	\begin{itemize}
 		\item positive (negative) shock $\rightarrow$ internal (external) attribution
 	\end{itemize}
 	\begin{eqnarray}
-\begin{split}
-\textcolor{blue}{\text{Attribution function:}} \quad \tilde \delta(\Delta y_{i,t}) = 1- \frac{1}{(1+e^{\alpha-\theta\Delta y_{i,t}})}
-\end{split}
-\end{eqnarray}
+		\begin{split}
+			\textcolor{blue}{\text{Attribution function:}} \quad \tilde \delta(\Delta y_{i,t}) = 1- \frac{1}{(1+e^{\alpha-\theta\Delta y_{i,t}})}
+		\end{split}
+	\end{eqnarray}
 	\begin{itemize}
-	\item $\theta$: degree of attribution error
-	\item $\alpha$: unbiasedness of attribution
-\end{itemize}
-
+		\item $\theta$: degree of attribution error
+		\item $\alpha$: unbiasedness of attribution
+	\end{itemize}
 	
-	\begin{figure}
-		\centering 
-		\label{var_experience_var}
-		\includegraphics[width=0.4\textwidth]{figures/theta_corr.jpg}
-	\end{figure}
+\begin{figure}
+	\centering 
+	\label{var_experience_var}
+	\includegraphics[width=0.4\textwidth]{figures/theta_corr.jpg}
+\end{figure}
 \end{frame}
-
 
 \begin{frame}{Prediction 3. \textcolor{red}{Counter-cylical} perceived risks under aggregate risk and attribution error}
-	\begin{figure}
-		\centering 
-		\label{var_experience_var}
-		\includegraphics[width=\textwidth]{figures/var_recent_change_sim.jpg}
-	\end{figure}
+	\begin{eqnarray}
+		\begin{split}
+			\tilde {Var}_{t}(\Delta y_{i,t+1}) & = \underbrace{\lambda_t}_{\text{lucky fraction}} \tilde{Var_t}^{internal} + (1-\lambda_t) \tilde{Var_t}^{external} 
+		\end{split}
+	\end{eqnarray}
+	\begin{itemize} 
+		\item Aggregate  versus idionsyncratic risks
+		\begin{itemize}
+			\item Aggregate: $\lambda_t$ is procyclical.   
+			\item Idionsyncratic: $\lambda_t \approx 0.5$ 
+		\end{itemize}
+		\item With and without attribution errors
+		\begin{itemize}
+			\item Attribution error: $\tilde{Var_t}^{external} >\tilde{Var_t}^{internal}$ 
+			\item No error: $\tilde{Var_t}^{external} =\tilde{Var_t}^{internal}$
+		\end{itemize}
+	\end{itemize}
+	
 \end{frame}
 
 
-
-\begin{frame}{\textcolor{red}{Counter-cylical} perceived risks, continued}
-	\begin{figure}
-		\centering 
-		\label{var_experience_var}
-		\includegraphics[width=\textwidth]{figures/var_recent_change_sim2.jpg}
-	\end{figure}
-\end{frame}
+%\begin{frame}{\textcolor{red}{Counter-cyclical} perceived risks, continued}
+%		\begin{figure}
+%		\centering 
+%		\label{var_experience_var}
+%		\includegraphics[width=\textwidth]{figures/var_recent_change_sim.jpg}
+%	\end{figure}
+%	\begin{figure}
+%		\centering 
+%		\label{var_experience_var}
+%		\includegraphics[width=\textwidth]{figures/var_recent_change_sim2.jpg}
+%	\end{figure}
+%\end{frame}
 
 
 %\begin{frame}{Prediction 4. perceived risk declines over age}
@@ -422,43 +426,43 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 
 
 
-\begin{frame}{Robustness}
-	\begin{itemize}
-		\item Permanent risk and transitory income risk 
-		\item Serial correlation 
-		\item Time-varying income risks 
-		\item More regressors 
-	\end{itemize}
-\end{frame}
+%\begin{frame}{Robustness}
+%	\begin{itemize}
+%		\item Permanent and transitory income risk 
+%		\item Serial correlation 
+%		\item Time-varying income risks 
+%		\item More regressors 
+%	\end{itemize}
+%\end{frame}
 
 
 
 \section{Empirical facts}
 
 
-\begin{frame}{Data}
-	\begin{table}
-		\centering
-		\caption{Survey of Consumer Expectations}
-		\label{SCE_data_sum}
-		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
-			\begin{tabular}{lll}
-				\hline 
-				Time period                                    & 2013M6-2019M6           \\
-				Frequency                                      & monthly                                 \\
-				Sample size                                    & 1,300                                  \\
-				Density variable                    &  \textcolor{blue}{1-yr-ahead earning growth   (same position/hours) }           \\
-				Pannel structure                               & 12 months      \\
-				Demographics                     & educ, income, age, gender, state       \\
-				\hline 
-			\end{tabular}
-		}
-	\end{table}
-	\begin{itemize}
-		\item density estimation following \cite{engelberg_comparing_2009}
-		\item exclude top and bottom 1\% values of each moment
-	\end{itemize}
-\end{frame}
+%\begin{frame}{Data}
+%	\begin{table}
+%		\centering
+%		\caption{Survey of Consumer Expectations}
+%		\label{SCE_data_sum}
+%		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
+%			\begin{tabular}{lll}
+%				\hline 
+%				Time period                                    & 2013M6-2019M6           \\
+%				Frequency                                      & monthly                                 \\
+%				Sample size                                    & 1,300                                  \\
+%				Density variable                    &  \textcolor{blue}{1-yr-ahead earning growth   (same position/hours) }           \\
+%				Pannel structure                               & 12 months      \\
+%				Demographics                     & educ, income, age, gender, state       \\
+%				\hline 
+%			\end{tabular}
+%		}
+%	\end{table}
+%	\begin{itemize}
+%		\item density estimation following \cite{engelberg_comparing_2009}
+%		\item exclude top and bottom 1\% values of each moment
+%	\end{itemize}
+%\end{frame}
 
 
 %\begin{frame}{Definition}
@@ -550,33 +554,29 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 \begin{figure}
 	\centering
 	\label{boxplot_hhinc}
-	\includegraphics[width=0.8\textwidth]{figures/boxplot_var_HHinc}
+	\includegraphics[width=0.7\textwidth]{figures/boxplot_var_HHinc_stata}
 \end{figure}
-	\begin{itemize}
-	\item Similar to the pattern of earning growth dispersion conditional on income in \cite{bloom2018great}. 
-\end{itemize}
+	%\begin{itemize}
+	%\item Similar to the pattern of earning growth dispersion conditional on income in \cite{bloom2018great}. 
+%\end{itemize}
 \end{frame}
-
-
 
 \begin{frame}{Perceived risks by age}
 	\begin{figure}[ht]
+		%\caption{Perceived Risk} 
 		\label{ts_incvar_age_g_mean}
-		\begin{subfigure}[b]{0.46\textwidth}
-			\centering
-			\caption{risks}
-			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_rincvar_age_g_median.png}
-		\end{subfigure}
-%	\begin{subfigure}[b]{0.46\textwidth}
-%			\caption{skewness}
-%			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incskew_age_g_mean.png}
-%	\end{subfigure}
+		\centering
+		\includegraphics[width=0.7\textwidth]{figures/ts_rincvar_age_g_median.png}
+		%	\begin{subfigure}[b]{0.46\textwidth}
+		%			\caption{skewness}
+		%			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incskew_age_g_mean.png}
+		%	\end{subfigure}
 	\end{figure}
-%\begin{itemize}
-%	\item in line with existing findings, for instance  
-%	\cite{bloom2018great}. 
-%\end{itemize}
- \end{frame}
+	%\begin{itemize}
+	%	\item in line with existing findings, for instance  
+	%	\cite{bloom2018great}. 
+	%\end{itemize}
+\end{frame}
 
 %\begin{frame}{Perceived income risks by age}
 %	\begin{figure}
@@ -590,20 +590,51 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 %	\end{itemize}
 %\end{frame}
 
-
-\begin{frame}{Perceived risks by generation}
+\begin{frame}{Perceived risks and experience}
+	\begin{itemize}
+		\item Approximated experienced volatility: $s^2_{c,t}$, MSE of the income regression for the PSID sample between $c$ and $t$ 
+		\item Perceived risk: $\overline{var_{c,t}}$: average across individuals within cohort $c$ at time $t$
+	\end{itemize}
 	\begin{figure}[ht]
+		%\caption{Perceived risk and experienced volatility}
 		\label{ts_incvar_byear_g_mean}
-		\begin{subfigure}[b]{0.46\textwidth}
-			\centering
-			\caption{risks}
-			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_rincvar_byear_g_median.png}
-		\end{subfigure}
-%		\begin{subfigure}[b]{0.46\textwidth}
-%			\caption{skewness}
-%			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incskew_byear_g_median.png}
-%		\end{subfigure}
+		\centering
+		\includegraphics[width=0.6\textwidth]{figures/experience_var_var_data.png}
+		%		\begin{subfigure}[b]{0.46\textwidth}
+		%			\caption{skewness}
+		%			\includegraphics[width=\textwidth, height = 0.33\textheight]{figures/ts_incskew_byear_g_median.png}
+		%		\end{subfigure}
 	\end{figure}
+\end{frame}
+
+
+\begin{frame}{Perceived risks and experienced volatility}
+	\begin{eqnarray*}
+		\underbrace{log(\overline{\text{var}}_{i,c,t})}_{\text{log perceived risk}} = a + \textcolor{red}{\zeta} \underbrace{log(\hat s^2_{c,t})}_{\text{log experienced volatility}}+ Z\underbrace{\Gamma_{i,t}}_{\text{individual controls}} + \xi_{i,t}
+	\end{eqnarray*}
+	
+	\begin{table}
+		\centering
+		%\caption{Correlation between Perceived Income Risks and Stock Market Return}
+		\label{micr_corr_history_vol}
+		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
+			\begin{tabular}{lllllll}
+				& Perceived risk & Perceived risk & Perceived risk & Perceived iqr & Perceived iqr & Perceived iqr \\
+				\hline
+				log experienced volatility & 1.291**        & 1.265**        & 1.208**        & 0.690**       & 0.713**       & 0.650**       \\
+				& (3.08)         & (3.02)         & (2.61)         & (3.05)        & (3.16)        & (2.62)        \\
+				&                &                &                &               &               &               \\
+				\hline
+				R-squre                    & 0.0170         & 0.0222         & 0.0243         & 0.0118        & 0.0168        & 0.0269        \\
+				N                          & 40158          & 40158          & 33485          & 44454         & 44454         & 37058         \\
+				Control age                & Yes            & Yes            & Yes            & Yes           & Yes           & Yes           \\
+				Control educ               & No             & Yes            & Yes            & No            & Yes           & Yes           \\
+				Control income             & No             & No             & Yes            & No            & No            & Yes          \\
+				\hline
+			\end{tabular}
+		}
+	\end{table}
+	
 \end{frame}
 
 
@@ -718,15 +749,13 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 %\end{itemize}
 %\end{frame}
 
-
 \subsection{Coutercylical perceived risks}
 
-
-\begin{frame}{Perceived \textcolor{blue}{nominal} risks and past wage growth}
+\begin{frame}{Perceived risks and recent (past) wage growth}
 	\begin{itemize}
-		\item $\overline{\text{var}_{t}} $
-\item  $log(\text{wage}_t) - log(\text{wage}_{t-3})$
-\end{itemize}
+		\item $\overline{\text{var}_{t}} $: average perceived risk across individuals
+		\item  $log(\text{wage}_t) - log(\text{wage}_{t-3})$: quarterly growth in average hourly wage
+	\end{itemize}
 	\begin{figure}
 		\centering
 		\label{ts_var}
@@ -750,43 +779,77 @@ Var^*_{i,t}(\Delta y_{i,t+1}) & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
 
 
 \begin{frame}{Perceived risks and current labor market condition}
-		\begin{eqnarray*}
+	\begin{eqnarray*}
 		\underbrace{\overline{\text{risk}_{t}}}_{\text{average perceived risk}} = \alpha + \textcolor{red}{\beta} \underbrace{(log(\text{wage}_{t-k}) - log(\text{wage}_{t-k-3}))}  _{\text{wage growth}}  + \epsilon_{i,t}	 \\
 		\quad \forall k =1...6
 	\end{eqnarray*}
-
-\begin{table}
-	\centering
-	%\caption{Correlation between Perceived Income Risks and Stock Market Return}
-	\label{macro_corr_he}
-	\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
-		\begin{tabular}{lllllll}
+	
+	\begin{table}
+		\centering
+		%\caption{Correlation between Perceived Income Risks and Stock Market Return}
+		\label{macro_corr_he}
+		\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
+			\begin{tabular}{lllllll}
 				\hline
-			k & varMean   & iqrMean   & rvarMean   & varMed   & iqrMed   & rvarMed   \\
-			\hline
-			1               & -2.046**  & -0.801*** & -10.437*** & -0.269   & -0.191   & -5.121*** \\
-			2               & -3.823*** & -1.193*** & -12.287*** & -0.021   & 0.009    & -5.292*** \\
-			3               & -2.942*** & -0.938*** & -9.642***  & -0.147   & -0.077   & -4.445*** \\
-			4               & -3.261*** & -0.994*** & -9.021***  & -0.142   & -0.094   & -4.467*** \\
-			5               & -2.312**  & -0.892*** & -6.792**   & -0.441** & -0.252*  & -4.718*** \\
-			6               & -3.419*** & -1.207*** & -10.791*** & -0.412** & -0.274** & -5.466*** \\
+				k & varMean   & iqrMean   & rvarMean   & varMed   & iqrMed   & rvarMed   \\
 				\hline
-		\end{tabular}
-}
-\end{table}
+				1               & -2.046**  & -0.801*** & -10.437*** & -0.269   & -0.191   & -5.121*** \\
+				2               & -3.823*** & -1.193*** & -12.287*** & -0.021   & 0.009    & -5.292*** \\
+				3               & -2.942*** & -0.938*** & -9.642***  & -0.147   & -0.077   & -4.445*** \\
+				4               & -3.261*** & -0.994*** & -9.021***  & -0.142   & -0.094   & -4.467*** \\
+				5               & -2.312**  & -0.892*** & -6.792**   & -0.441** & -0.252*  & -4.718*** \\
+				6               & -3.419*** & -1.207*** & -10.791*** & -0.412** & -0.274** & -5.466*** \\
+				\hline
+			\end{tabular}
+		}
+	\end{table}
+	\end{frame}
+	
+	
+	
+	\begin{frame}{Perceived risks and current labor market condition}
+	\begin{eqnarray*}
+		\underbrace{\overline{\text{risk}_{s,t}} }_{\text{median perceived risk in state $s$}}= r + \textcolor{red}{\psi} \underbrace{LM_{s,t}}_{\text{state labor market condition}}  + \eta_{s,t}
+	\end{eqnarray*}
+		\begin{table}
+			\centering
+			%\caption{Correlation between Perceived Income Risks and Stock Market Return}
+			\label{macro_corr_he}
+			\adjustbox{max height=0.5\textheight, max width=\textwidth}{ 
+			\begin{tabular}{lllll}
+					\hline 
+				& (1)                & (2)                & (3)               & (4)               \\
+					\hline 
+				& log(var) & log(risk) & log(iqr) & log(iqr) \\
+				\hline 
+			     wage growth & -0.05***           &                    & -0.03***          &                   \\
+			     
+				& (0.01)             &                    & (0.01)            &                   \\
+				unemp rate &                    & 0.04*              &                   & 0.04***           \\
+				&                    & (0.02)             &                   & (0.01)            \\
+\hline 
+				Observations      & 3529               & 3529               & 3546              & 3546              \\
+				R-squared         & 0.023              & 0.020              & 0.025             & 0.028            \\
+				\hline 
+			\end{tabular}
+		}
+		\end{table}
+	\end{frame}
+	
 
-\end{frame}
 
 \section{Conclusion}
 
 \begin{frame}{Conclusion}
-\begin{itemize}
-	\item Imperfect understanding of both size and nature of the income shocks
-\item An extension of the experience-based learning framework to allow for implications for higher moments
-\item A model of attribution and the attribution errors
-\item Past experience of volatility $\rightarrow$ future perception of the risk 
-\item Negative outcomes inflate perceived risks, i.e. counter-cyclicality  
-\end{itemize}
+	\begin{itemize}
+		\item Experience + Learning + \textcolor{blue}{Attribution} $\rightarrow$ Perception (Expectation) 
+		\item Attribution is important if 
+		\begin{itemize}
+			\item Imperfect understanding in both the size and the \textcolor{red}{nature} 
+			\item Forming perceptions about \textcolor{red}{second moments}, i.e. income risks
+			\item Attribution errors $\rightarrow$ \textcolor{red}{aggregate patterns}, i.e. counter-cyclical subjective risk 
+		\end{itemize} 
+	\end{itemize}
 \end{frame}
 
 \bibliographystyle{apalike}

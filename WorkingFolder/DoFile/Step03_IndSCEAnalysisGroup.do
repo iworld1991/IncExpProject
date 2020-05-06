@@ -134,7 +134,7 @@ foreach var in `Moments'{
 gen age_sq = age^2
 label var age_sq "Age-squared"
 
-encode _STATE, gen(state_id)
+encode state, gen(state_id)
 label var state_id "state id"
 
 *****************************
@@ -177,6 +177,23 @@ label define better_glb 0 "worse" 1 "better"
 label value fbetter better_glb
 
 local group_vars byear_g age_g edu_g HHinc_g fbetter
+
+
+
+
+*********************************
+*** bar charts *****
+**********************************
+
+
+graph bar incvar, ///
+           over(HHinc,relabel(1 "<10k" 2 "<20k" 3 "<30k" 4 "<40k" 5 "<50k" 6 "<60k" 7 "<75k" 8 "<100k" 9 "<150k" 10 "<200k" 11 ">200k")) ///
+		   bar(1, color(navy)) ///
+		   title("Perceived Risk by household income") ///
+		   b1title("Household income") ///
+		   ytitle("Average perceived risk") 
+graph export "${sum_graph_folder}/boxplot_var_HHinc_stata.png", as(png) replace 
+
 
 **********************************
 *** tables and hists of Vars *****
@@ -544,26 +561,6 @@ twoway (bar sp500 date if `gp'== 1,yaxis(2) fcolor(gs10)) ///
  restore
 }
 }
-
-/*
-*******************
-*** Seasonal ******
-*******************
-
-
-eststo clear
-
-foreach mom in var iqr mean{
-eststo: reg Q24_`mom' i.month, robust 
-}
-foreach mom in Mean Var Skew Kurt{
-eststo: reg Inc`mom' i.month, robust 
-}
-
-esttab using "${sum_table_folder}/month_fe.csv", ///
-             se r2 drop(_cons) ///
-			 label replace
-
 
 
 ********************

@@ -60,6 +60,7 @@ label var wagegrowthl "recent wage growth in the state"
 gen unemp_rate_ch = unemp_rate -l1.unemp_rate
 label var unemp_rate_ch "chagne in uemp rate"
 
+
 /*
 ************************************
 **  scatter plots  **
@@ -86,6 +87,7 @@ graph export "${sum_graph_folder}/scatter_`mom'_wagegrowth.png",as(png) replace
 
 */
 
+
 ************************************
 **  regression results       **
 ************************************
@@ -93,12 +95,20 @@ graph export "${sum_graph_folder}/scatter_`mom'_wagegrowth.png",as(png) replace
 eststo clear
 
 foreach mom in var iqr{
-eststo: xtreg Q24_`mom' l(0/1)wagegrowth i.date,fe
-eststo: xtreg Q24_`mom' l(0/1)unemp_rate_ch i.date,fe
+gen l`mom' = log(Q24_`mom') 
+}
+label var lvar "log perceived risk"
+label var liqr "log perceived iqr"
+
+foreach mom in var iqr{ 
+eststo: areg l`mom' wagegrowth, a(date) robust
+*eststo: areg lQ24_`mom' wagegrowth, a(statecode) robust
+eststo: areg l`mom' unemp_rate, a(date) robust
+*eststo: areg lQ24_`mom' unemp_rate, a(statecode) robust
 }
 
 esttab using "${sum_table_folder}/mom_group_state.csv", ///
-             se r2 drop(_cons *.date) ///
-			 label replace
-
+             se r2 drop(_cons) ///
+			 b(2) label replace
+			 
 log close 
