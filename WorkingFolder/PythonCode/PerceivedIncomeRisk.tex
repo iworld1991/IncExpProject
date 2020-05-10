@@ -352,7 +352,7 @@
     
     \title{Perceived Income Risks}\author{Tao Wang}
 
-\date{\today \\ (Incomplete draft)}
+\date{\today \\(Incomplete Draft) }
 \maketitle\begin{abstract}Heterogenous-agent models typically assume a perfect understanding of the size and nature of income risks. This paper explores the implications of imperfect understanding. I first document the following empirical patterns of subjective income profile utilizing a density survey. First, earners who are younger, from younger generations and from low-income households have higher perceived risks. Second, perceptions of risks countercyclically react to recent realizations of labor market outcomes. Third, there is a skewed U-shaped correlation between individual risk perceptions and current income. Theoretically, these empirical patterns can be reconciled by a model of learning from past experiences of income realizations based on subjective attribution of the nature of income shocks. By introducing attribution errors due to the psychological tendency to external attribution for bad news and internal attribution for good news, the model provides a consistent explanation for the U-shaped income-profile of risk perceptions and its countercyclical dynamics.\end{abstract}
 
 
@@ -363,46 +363,87 @@
     \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-``The devil is in higher moments.'' Even if two people share identical
-expected income and homogeneous preferences, different degrees of income
-risks still lead to starkly different decisions such as
-saving/consumption and portfolio choices. This is well understood in
-models in which agents are inter-temporally risk-averse, or prudent, and
-the risks associated with future marginal utility motivate precautionary
-motives. The same logic carries through to models in which capital
-income and portfolio returns are stochastic, and the risks of returns
-naturally become the center of asset pricing. Such behavioral
-regularities equipped with market incompleteness due to reasons such as
-imperfect insurance and credit constraints have also been the
-cornerstone assumptions used in the literature on heterogeneous-agent
-macroeconomics.
+Even if with identical expected income and homogeneous risk preferences,
+different degrees of income risks still lead to starkly different
+decisions such as saving/consumption and portfolio choices. This is well
+understood in models in which agents are inter-temporally risk-averse,
+or prudent, and the risks associated with future marginal utility
+motivate precautionary motives. The same logic carries through to models
+in which capital income and portfolio returns are stochastic, and the
+risks of returns naturally become the center of asset pricing. Such
+behavioral regularities equipped with market incompleteness due to
+reasons such as imperfect insurance and credit constraints have also
+been the cornerstone assumptions used in the literature on
+heterogeneous-agent macroeconomics.
 
 Economists have long utilized cross-sectional distributions of realized
 microdata to estimate the stochastic environments relevant to the
-agents' decision, such as the income process. And then in modeling the
-estimated risk profile is taken as parametric inputs and the individual
-shocks are simply drawn from the shared distributions. (See
-\cite{blundell_consumption_2008} as an example.) But one assumption
+agents' decision, such as the income process. And then in structural
+modeling the estimated risk profile is taken as parametric inputs and
+the individual shocks are simply drawn from the shared distributions.
+(See \cite{blundell_consumption_2008} as an example.) But one assumption
 implicitly made when doing this is that the agents in the model
 perfectly understand thus agree on the income risk profile imposed on
-them. As shown by the actively developing literature on expectation
-formation, in particular, the mounting evidence on heterogeneity in
-economic expectations held by micro agents, this assumption seems to be
-too stringent. To the extent that agents make decisions based on their
+them. As shown by the actively developing literature on how people form
+expectations in ways deviating from full-information rationality, in
+particular, the mounting evidence on heterogeneity in economic
+expectations held by micro agents, this assumption seems to be too
+stringent. To the extent that agents make decisions based on their
 \emph{respective} perceptions, understanding the \emph{perceived} income
 risk profile and its correlation structure with other macro variables
 are the keys to explaining their behavior patterns.
 
-This paper's goal is to understand the question discussed above by
-directly shedding light on the subjective income profile using the
-recently available density forecasts of labor income surveyed by New
-York Fed's Survey of Consumer Expectation (SCE). What is special about
-this survey is that agents are asked to provide histogram-type forecasts
-of their earning growth over the next 12 months together with a set of
-expectational questions about the macroeconomy. It is at a monthly
-frequency and has a panel structure allowing for consecutive
-observations of the same household over a horizon of 12 months. When the
-individual density forecast is available, a parametric density
+This paper constructs a subjective model of learning that features an
+imperfect understanding of the size as well as the nature of income
+risks. In terms of the size, the imperfect understanding is modeled as a
+lack of knowledge of the true model parameter of an assumed income
+process. Agents form their best guess about the parameters by learning
+from past experiences. Such kind of experience-based learning mechanisms
+engenders the perceived risks to be dependent on age, generation, and
+macroeconomic history. At the same time, the imperfect understanding of
+the nature of income risks means that individuals do not understand if
+the income risks are commonly shared aggregate shock or idiosyncratic
+shocks. They learn about the model based on a subjective interpretation
+of nature, which is called \emph{attribution} in this paper. With
+different subjective attribution, agents arrive at different degrees of
+model parameter uncertainty, thus different perceptions about income
+risks.
+
+In a general setting within the model, I show that a higher degree of
+external attribution, i.e.~perceiving the shocks to be common ones
+instead of idiosyncratic ones, leads to higher risk perceptions. The
+intuition for this is straightforward. As any econometrician would
+perfectly understand, learning comes from variations in the sample
+either cross-sectionally or over time. As agents subjectively perceived
+correlation of her own income shocks and others' to be higher, the
+uncertainty associated with the parameter estimate is naturally higher
+simply because the variation seen cross-sectionally from the sample
+useful to learning is reduced. This effect is particularly important
+when we consider second moments or higher in that the parameter
+uncertainty does not enter the parameter estimate itself.
+
+Incorporating attribution in learning allows it possible to explore the
+implications of possible mischaracterization of experienced shocks.
+Among various possible deviations, I explore a particular kind
+attribution error which is reminiscent of the ``self-serving bias'' in
+social psychology. In particular, it assumes that people have a tendency
+to external (internal) attribution in the face of negative (positive)
+experiences. By allowing the subjective correlation to be a function of
+the recent experience such as income change, the model neatly captures
+this psychological tendency. What is interesting is that such a
+state-dependence of attribution in learning may help explain why the
+average perceived risk is lower for the high-income groups than the
+low-income ones. In the presence of aggregate risks, it also generate
+counter-cylical patterns of the average perceived risks, i.e.~bad times
+are associated with high subjective risks.
+
+Empirically, the paper shed light on the perceptions of income risks by
+utilizing the recently available density forecasts of labor income
+surveyed by New York Fed's Survey of Consumer Expectation (SCE). What is
+special about this survey is that agents are asked to provide
+histogram-type forecasts of their earning growth over the next 12 months
+together with a set of expectational questions about the macroeconomy.
+When the individual density forecast is available, a parametric density
 estimation can be made to obtain the individual-specific subjective
 distribution. And higher moments reflecting the perceived income risks
 such as variance, as well as the asymmetry of the distribution such as
@@ -411,64 +452,34 @@ without relying on external estimates from cross-sectional microdata.
 This provides the first-hand measured perceptions on income risks that
 are truly relevant to individual decisions.
 
-Empirically, I can immediately ask the following questions.
+Perceived income risks exhibits a number of important patterns that are
+consistent with the predictions of the experience-based learning with
+subjective attribution.
 
 \begin{itemize}
 \item
-  How much heterogeneity is there across workers' perceived income
-  risks? What factors, i.e.~household income, demographics, and other
-  expectations, are correlated with the subjective risks in both
-  individual and macro level?
+  Higher experienced volatility is associated with higher perceived
+  income risks. This helps explain why perceived risks differ
+  systematically across different generations, who have experienced
+  different histories of the income shocks. Besides, perceived risks
+  declines with one's age.
 \item
-  To what extent this heterogeneity in perceptions align with the true
-  income risks facing different population group, or at least partly
-  attributed to perceptive differences due to heterogeneity in
-  information and information processing, as discussed in many models of
-  expectation formation?
-
-  \begin{itemize}
-  \tightlist
-  \item
-    If we treat the income risks identified from cross-sectional
-    inequality by econometricians as a benchmark, to what extent are the
-    risks perceived by the agents?
-
-    \begin{itemize}
-    \tightlist
-    \item
-      If agents know more than econometricians about their individual
-      earnings, should the perceived risks be lower than the
-      econometrician's estimates?
-    \item
-      Or actually, do agents, due to inattention or other information
-      rigidity in learning about recently realized shocks, perceive the
-      overall risk to be higher?
-    \end{itemize}
-  \end{itemize}
+  Perceived income risks have a non-monotonic correlation with the
+  current income, which can be best described as a skewed U shape.
+  Perceived risk decreases with current income over the most range of
+  income values follwed by a uppick in perceived risks for high-income
+  group.
 \item
-  If the subjective income risk can be decomposed into components of
-  varying persistence (i.e.~permanent vs transitory) based on assumed
-  income process, it is possible to characterize potential deviations of
-  perceptive income process from some well defined rational benchmark.
-
-  \begin{itemize}
-  \tightlist
-  \item
-    For instance, if agents overestimate their permanent income risks?
-  \item
-    If agents overestimate the persistence of the income process?
-    \cite{rozsypal_overpersistence_2017}
-  \item
-    One step back, if the log-normality assumption of income progress
-    consistent with the surveyed data. Or it has non-zero skewness? This
-    can be jointly tested using higher moments of the density forecasts.
-  \end{itemize}
-\item
-  Finally, not just the process of earning itself, but also its
-  covariance with macro-environment, risky asset returns, matter a great
-  deal. For instance, if perceived income risks are counter-cyclical, it
-  has important labor supply and portfolio implications.
-  (\cite{guvenen2014nature}, \cite{catherine_countercyclical_2019})
+  Perceived income risks are counter-cylical with the labor market
+  conditions or broadly business cycles. I found that average perceived
+  income risks by U.S. earners are negatively correlated with the
+  current labor market tightness measured by wage growth and
+  unemployment rate. Besides, earners in states with higher unemployment
+  rates and low wage growth also perceive income risks to be higer. This
+  bears similarities but important difference with a few previous
+  studies that document the counter-cylicality of income risks estimated
+  by cross-sectional microdata. (\cite{guvenen2014nature},
+  \cite{catherine_countercyclical_2019})
 \end{itemize}
 
 One of the key challenges when addressing these questions is to
@@ -493,27 +504,15 @@ system. This is in a similar spirit to \cite{guvenen_inferring_2014},
 although the author does not use expectation survey but the consumption
 choice as the additional input for the joint estimation.
 
-Theoretically, once I can document robustly some patterns of the
-perceived income risks profile, it can ben incorporated into an
-otherwise standard life-cycle model involving consumption/portfolio
-decisions to explore its macro implications. Ex-ante, one may conjecture
-a few of the following scenarios.
-
-\begin{itemize}
-\item
-  If the subjective risks or skewness is found to be negatively
-  correlated with the risky market return or business cycles, this
-  exposes agents to more risks than a non-state-dependent income
-  profile.
-\item
-  If according to the subjective risk profile, the downside risks are
-  highly persistent than typically assumed, then it is in line with the
-  rare disaster idea.
-\item
-  The perceptual differences lead to differences in MPCs, which is a
-  different mechanism from credit-constraints and non-insurance of
-  risks.
-\end{itemize}
+Finally, the subjective learning model will be incorporated into an
+otherwise standard life-cycle consumption/saving model with uninsured
+idiosyncratic and aggregate risks. Experience-based learning makes
+income expectations and risks state-dependent when making dynamically
+optimal decisions at each point of the time. In particular, higher
+perceived risks will induce more precautionary saving behaviors. If this
+perceived risk is state-dependent on recent income changes, it will
+potentially shift the distribution of MPCs along income deciles,
+therefore, amplify the channels aggregate demand responses to shocks.
 
 \hypertarget{relevant-literature-and-potential-contribution}{%
 \subsection{Relevant literature and potential
@@ -814,124 +813,18 @@ market outcomes.
     \end{figure}
     
 
-    \hypertarget{correlation-with-asset-returns}{%
-\subsection{Correlation with asset
-returns}\label{correlation-with-asset-returns}}
 
-It is not only the labor income risk profile per se but also the macro
-risk profile, i.e.~how the labor income is correlated with risky asset
-return and the business cycle, that is important for household
-decisions. Since the short time period of my sample (2013M6-2018M5) has
-not seen a single one business cycle, at least as defined by the NBER
-recession committee, it poses a challenge for me to examine the
-correlation between perceived risks and macroeconomic cycles. Therefore,
-as the first stage of the analysis, I only focus on the correlation
-between perceived risks and stock market returns.
-
-Of course, there is a rationale in the first place to study stock market
-return and labor income, as it bears critical implications for household
-consumption insurance, equity premium, and participation puzzle. For
-instance, a negative correlation of income risk and risky asset return
-means households will be faced with higher risks of their total income
-by investing in the stock market. Or a negative correlation between
-skewness and stock market return, meaning a bigger income increase is
-less likely in low-return times will also deter households from
-participating in the stock market.
-
-Following the most common practice in the finance literature, I use the
-monthly return of the S\&P 500, computed from the beginning to the end
-of the month, as an approximate of the stock market return. Over the
-sample period, there are exactly two-thirds of the time marking a
-positive return.
-
-For a population summary statistic of individual moments of perceived
-income growth, I take the median and mean across all respondents in the
-survey for each point of the time. One may worry about the seasonality
-of the monthly series of this kind. For instance, it is possible that
-workers tend to learn news about their future earnings at a particular
-month of the year, i.e.~end of the fiscal year when the wage contracts
-are renegotiated and updated. Reasons of this kind may result in
-seasonal patterns of the expected earning growth, variance and other
-moments. Because my time series is too short in sample size to perform a
-trustful seasonal adjustment, I check the seasonality by inspecting the
-auto-correlation of each time series at different lags. As seen in the
-figures in the appendix, although it seems that the average or median
-earning growth per se has some seasonal patterns, there is no evidence
-for higher moments, such as variance and skewness.
-
-There are two crucial econometric considerations when we examine the
-correlation between the subjective moments of earning growth and stock
-return.
-
-The first is the time-average or time-aggregation problem documented in
-both empirical asset pricing and consumption insurance literature
-(\cite{working_note_1960}, \cite{jagannathan_lazy_2007},
-\cite{crawley_search_2019}). Variables such as consumption and earning
-are interval measures, reported as an average over a period, while the
-stock return is a spot measure computed between two points of the time.
-As a result, if the unit of the time for the underlying income process
-is at a higher frequency than the measured interval (an extreme case
-being the continuous-time), the measured variable will exhibit upward
-biased autocorrelation and correlation with other underlying random walk
-series in the same frequency. In my context, such a problem can be
-partly mitigated by the availability of monthly frequency of earning
-expectations, if we assume the unit of time of the underlying stochastic
-process is a month. Then the directly observed monthly correlation of
-the two cannot be driven by the time aggregation problem. What also
-becomes immediately clear from this consideration is that I should not
-examine the correlation of the two series in moving average terms,
-because it will cause the time aggregation problem. This point will be
-discussed in greater detail in the next section when I decompose the
-perceived income risks to different components of varying persistence.
-
-The second issue regards which of the following, lagged, contemporaneous
-or forward is the correct correlation one should look at. Considering
-what is relevant to an individual making decisions are unrealized
-stochastic shocks to both income and asset return, one should examine
-the 1-year-ahead earning growth and its risks with the realized return
-over the impeding 12 months at each point of the time.
-
-With these considerations, in the Figure \ref{fig:tssp500}, I plot the
-median perceived risk and skewness of both nominal and real earning
-along with the contemporaneous stock market returns by the end of each
-month (also true for the mean, see Figure \ref{micro_reg_exp} in
-appendix.). In order to account for the fact that the survey is
-undertaken in the middle of the month while the return is computed at
-the end of the month, I take the lag the income moments by 1 or 2 months
-when calculating the correlation coefficient. Table \ref{macro_corr}
-reports correlation coefficients of between perceived risks and the
-realized stock market return over the next 0-6 months. Although a
-Pearson test of the correlation coefficients is only significant for a
-2-month lag, overall, the income risks measured by variance and IQR for
-both nominal and real earning post a negative correlation with the
-realized stock return a few months ahead. The subjective skewness has
-also a negative associated with the realized stock return in the near
-future.
-
-More caution is needed when interpreting the observed negative
-association between perceived earning risks/skewness with stock market
-returns. First, my sample period is short and has mostly posted positive
-returns. Second, the pattern is based on a population median and mean of
-the perceived income risks, and it does not account for any
-household-specific characteristics. As we have seen in the
-cross-sectional pattern, there are substantial variations across
-individuals in their perceived income risks and skewness. Third, the
-risk profile we consider here is only relevant for marginal
-consumers/investors who at least have access to the stock market in the
-first place. Therefore, it is worth exploring the correlation above
-conditional on more individual characteristics.
+    \hypertarget{experienced-volatility-and-perceived-risks}{%
+\subsection{Experienced volatility and perceived
+risks}\label{experienced-volatility-and-perceived-risks}}
 
 
-    \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_9_0.png}\end{center}
-        \caption{Perceived Income Risks and Stock Market Return}
-        \label{fig:tssp500}
-    \end{figure*}
+    \begin{figure}[!ht]
+        \begin{center}\adjustimage{max size={0.9\linewidth}{0.4\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_10_0.png}\end{center}
+        \caption{}
+        \label{}
+    \end{figure}
     
-
-
-
-
 
     \hypertarget{role-of-individual-characteristics}{%
 \subsection{Role of individual
@@ -1059,10 +952,17 @@ environment? This will be the focus of the coming sections.
 
 
     \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_16_0.png}\end{center}
+        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_13_0.png}\end{center}
         \caption{Perceived Income by Group}
         \label{fig:boxplotbygroup}
     \end{figure*}
+    
+
+    \begin{figure}[!ht]
+        \begin{center}\adjustimage{max size={0.9\linewidth}{0.4\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_14_0.png}\end{center}
+        \caption{}
+        \label{}
+    \end{figure}
     
 
 
@@ -1185,7 +1085,7 @@ point of the time. We represent the sample estimates of \(\rho\) and
 
 \begin{eqnarray}
 \begin{split}
-\widehat Var_{i,t}(\Delta y_{i,t+1}) & = y_{i,t-1}^2 \underbrace{\widehat{Var}^{\rho}_{i,t}}_{\text{Persistence uncertainty}} + \underbrace{\hat{\sigma}^2_{i,t}}_{\text{Shock uncertainty}}
+\widehat Var_{i,t}(\Delta y_{i,t+1}) & = y_{i,t}^2 \underbrace{\widehat{Var}^{\rho}_{i,t}}_{\text{Persistence uncertainty}} + \underbrace{\hat{\sigma}^2_{i,t}}_{\text{Shock uncertainty}}
 \end{split}
 \end{eqnarray}
 
@@ -1280,16 +1180,18 @@ standard errors.
 
 \begin{eqnarray}
 \begin{split}
-\tilde {Var}^{\rho}_{i,t} & =   (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(\sum^{t-c}_{k=0}\tilde \Omega_{t-k})(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}
+\tilde {Var}^{\rho}_{i,t} & =   (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(\sum^{t-c}_{k=0}\tilde \Omega_{i,t-k})(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}
 \end{split}
 \end{eqnarray}
 
 where \(\tilde \Omega_{t-k}\) is the perceived variance-covariance of
-income and income shocks within each point of time.
+income and income shocks within each point of time. It reflect how
+individual \(i\) thinks about the correlation between her own income and
+others'.
 
 \begin{eqnarray}
 \begin{split}
-\tilde \Omega_{t} = \tilde E_{i,t}(Y_{t-1}e_{t}'e_{t}Y_{t-1})
+\tilde \Omega_{i,t} = \tilde E_{i,t}(Y_{t-1}e_{t}'e_{t}Y_{t-1})
 \end{split}
 \end{eqnarray}
 
@@ -1298,7 +1200,7 @@ homoscedasticity, i.e.~income risks \(\sigma\) do not change over time,
 given the individual ascribes a subjective correlation coefficient of
 \(\tilde \delta_{\epsilon, i,t}\) across income shocks and a correlation
 \(\tilde \delta_{y, i,t}\) across the levels of income,
-\(\tilde \Omega_{t}\) can be approximated as the following. (See the
+\(\tilde \Omega_{i,t}\) can be approximated as the following. (See the
 appendix for derivation) (This is analogous to the cluster-robust
 standard error by \cite{cameron2011robust}. But the distinction is that
 both long-run and short-run correlation are subjective now. )
@@ -1357,7 +1259,7 @@ uncertainty.
 
 
     \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_25_0.png}\end{center}
+        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_23_0.png}\end{center}
         \caption{Attribution and Parameter Uncertainty}
         \label{fig:corr_var}
     \end{figure*}
@@ -1461,7 +1363,7 @@ But the lucky group is always more confident than the unlucky group.
 
 
     \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_27_0.png}\end{center}
+        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_25_0.png}\end{center}
         \caption{Experienced Volatility and Perceived Risk}
         \label{fig:var_experience_var}
     \end{figure*}
@@ -1487,18 +1389,21 @@ purpose here.
 
 \begin{eqnarray}
 \begin{split}
-\tilde \delta(\Delta y_{i,t}) = 1- \frac{1}{(1+e^{-\theta \Delta y_{i,t}})}
+\tilde \delta(\Delta y_{i,t}) = 1- \frac{1}{(1+e^{\alpha-\theta \Delta y_{i,t}})}
 \end{split}
 \end{eqnarray}
 
 Basically, the attribution function is a variant of a logistic function
 with its function value bounded between \([0,1]\). It takes an s-shape
 and the parameter \(\theta\) governs the steepness of the s-shape around
-its input value. In the model, \(\theta\) is the parameter that governs
-the degree of the attribution errors. It takes any non-negative value.
-Although the qualitative pattern induced by the attribution errors
-stands for any positive \(\theta\), letting it be a parameter leaves
-modelers the room to recover it from subjective risks data. The
+its input value. \(\alpha\) is adjustable parameter chosen such that the
+attribution free of errors happen to be equal to the true correlation
+between individuals \(\delta\), which here takes values of zero for
+independence assumption. In the model, \(\theta\) is the parameter that
+governs the degree of the attribution errors. It takes any non-negative
+value. Although the qualitative pattern induced by the attribution
+errors stands for any positive \(\theta\), letting it be a parameter
+leaves modelers the room to recover it from subjective risks data. The
 attribution function under different \(\theta\) is shown in Figure
 \ref{fig:theta_corr}. The higher \(\theta\) is, the more sensitive the
 assigned correlation is to the size of the shock, thus inducing a higher
@@ -1507,14 +1412,14 @@ unlucky group.
 
 
     \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_29_0.png}\end{center}
+        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_27_0.png}\end{center}
         \caption{Attribution Function}
         \label{fig:theta_corr}
     \end{figure*}
     
 
     \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_30_0.png}\end{center}
+        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_28_0.png}\end{center}
         \caption{Current Income and Perceived Risk}
         \label{fig:var_recent}
     \end{figure*}
@@ -1564,7 +1469,7 @@ peceived risks due to the attribution errors.
 
 
     \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_32_0.png}\end{center}
+        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_30_0.png}\end{center}
         \caption{Simulated Income Profile of Perceived Risk}
         \label{fig:var_recent_sim}
     \end{figure*}
@@ -1575,14 +1480,14 @@ risks}\label{age-and-experience-and-perceived-risks}}
 
 
     \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_34_0.png}\end{center}
+        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_32_0.png}\end{center}
         \caption{Simulated Experience of Volatility and Perceived Risk}
         \label{fig:var_experience_var_sim}
     \end{figure*}
     
 
     \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_35_0.png}\end{center}
+        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_33_0.png}\end{center}
         \caption{Simulated Age Profile of Perceived Risk}
         \label{fig:var_age_sim}
     \end{figure*}
@@ -1651,14 +1556,14 @@ seen when the bias is absent.
 
 
     \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_37_0.png}\end{center}
+        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_35_0.png}\end{center}
         \caption{Simulatd Average Labor Market and Perceived Risk}
         \label{fig:recent_change_var_sim1}
     \end{figure*}
     
 
     \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_38_0.png}\end{center}
+        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_36_0.png}\end{center}
         \caption{Simulated Average Labor Market Outcome and Perceived Risk}
         \label{fig:recent_change_var_sim2}
     \end{figure*}
@@ -1749,6 +1654,25 @@ $t$ and the quarterly growth rate in hourly earning at $t,t-1,...,t-k$.
 \end{table}
 \begin{table}[p]
 \centering
+\begin{adjustbox}{width=\textwidth}
+\begin{threeparttable}
+\caption{Experienced Volatility and Perceived Income Risks}
+\label{micro_reg_history_vol}\begin{tabular}{lllllll}
+\toprule
+{} &  incvar I & incvar II & incvar III & rincvar I & rincvar II & rincvar III \\
+\midrule
+rmse             &   3.82*** &   3.82*** &    1.95*** &   3.10*** &    3.10*** &       0.83* \\
+                 &    (0.25) &    (0.25) &     (0.53) &    (0.23) &     (0.23) &      (0.49) \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\item This table reports regression results of perceived income risks on experienced volatility.
+\end{tablenotes}
+\end{threeparttable}
+\end{adjustbox}
+\end{table}
+\begin{table}[p]
+\centering
 \begin{adjustbox}{width={\textwidth}}
 \begin{threeparttable}
 \caption{Perceived Income Growth and Individual Characteristics}
@@ -1756,27 +1680,26 @@ $t$ and the quarterly growth rate in hourly earning at $t,t-1,...,t-k$.
 \toprule
 {} &  incexp I & incexp II & incexp III & incexp IIII & rincexp I & rincexp II & rincexp III & rincexp IIII \\
 \midrule
-HHinc\_gr=low inc &           &           &      -0.03 &             &           &            &    -0.37*** &              \\
-                 &           &           &     (0.02) &             &           &            &      (0.03) &              \\
+HHinc\_gr=low inc &           &           &      -0.03 &             &           &            &    -0.38*** &              \\
+                 &           &           &     (0.03) &             &           &            &      (0.03) &              \\
 educ\_gr=low educ &           &           &            &    -0.25*** &           &            &             &     -0.62*** \\
                  &           &           &            &      (0.02) &           &            &             &       (0.03) \\
 gender=male      &           &           &            &    -0.33*** &           &            &             &     -0.78*** \\
                  &           &           &            &      (0.02) &           &            &             &       (0.03) \\
-parttime=yes     &  -0.42*** &  -0.34*** &   -0.33*** &             &  -0.56*** &   -0.47*** &    -0.38*** &              \\
-                 &    (0.03) &    (0.03) &     (0.03) &             &    (0.04) &     (0.04) &      (0.04) &              \\
-selfemp=yes      &   0.86*** &  -0.00*** &   -0.00*** &             &   0.83*** &   -0.00*** &     0.00*** &              \\
+parttime=yes     &  -0.42*** &  -0.27*** &   -0.26*** &             &  -0.56*** &   -0.31*** &    -0.22*** &              \\
+                 &    (0.03) &    (0.03) &     (0.04) &             &    (0.04) &     (0.05) &      (0.05) &              \\
+selfemp=yes      &   0.86*** &  -0.00*** &   -0.00*** &             &   0.83*** &    0.00*** &     0.00*** &              \\
                  &    (0.04) &    (0.00) &     (0.00) &             &    (0.05) &     (0.00) &      (0.00) &              \\
-Intercept        &   2.82*** &   2.64*** &    2.65*** &     3.06*** &  -0.28*** &   -0.51*** &    -0.40*** &      0.23*** \\
-                 &    (0.01) &    (0.03) &     (0.03) &      (0.02) &    (0.02) &     (0.04) &      (0.04) &       (0.02) \\
-                 &      0.01 &      0.02 &       0.02 &        0.01 &      0.01 &       0.04 &        0.05 &         0.02 \\
 Stkprob          &           &   0.01*** &    0.01*** &             &           &    0.02*** &     0.02*** &              \\
                  &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-UEprobAgg        &           &  -0.00*** &   -0.00*** &             &           &   -0.01*** &    -0.01*** &              \\
+UEprobAgg        &           &  -0.00*** &   -0.00*** &             &           &   -0.02*** &    -0.02*** &              \\
                  &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
 UEprobInd        &           &  -0.01*** &   -0.01*** &             &           &   -0.01*** &    -0.01*** &              \\
                  &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-N                &     52102 &     47112 &      47112 &       45745 &     47728 &      43099 &       43099 &        41908 \\
-R2               &      0.01 &      0.02 &       0.02 &        0.01 &      0.01 &       0.04 &        0.05 &         0.02 \\
+rmse             &           &   7.02*** &    7.02*** &             &           &   13.77*** &    13.75*** &              \\
+                 &           &    (0.41) &     (0.41) &             &           &     (0.57) &      (0.57) &              \\
+N                &     52102 &     35391 &      35391 &       45745 &     47728 &      32319 &       32319 &        41908 \\
+R2               &      0.01 &      0.03 &       0.03 &        0.01 &      0.01 &       0.06 &        0.07 &         0.02 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
@@ -1792,29 +1715,27 @@ R2               &      0.01 &      0.02 &       0.02 &        0.01 &      0.01 
 \caption{Perceived Income Risks and Individual Characteristics}
 \label{micro_reg}\begin{tabular}{ccccccccc}
 \toprule
-{} & incvar I & incvar II & incvar III & incvar IIII & rincvar I & rincvar II & rincvar III & rincvar IIII \\
+{} &  incvar I & incvar II & incvar III & incvar IIII & rincvar I & rincvar II & rincvar III & rincvar IIII \\
 \midrule
-HHinc\_gr=low inc &          &           &    1.52*** &             &           &            &     6.97*** &              \\
-                 &          &           &     (0.10) &             &           &            &      (0.20) &              \\
-educ\_gr=low educ &          &           &            &     0.44*** &           &            &             &      4.01*** \\
-                 &          &           &            &      (0.12) &           &            &             &       (0.22) \\
-gender=male      &          &           &            &    -0.82*** &           &            &             &      2.67*** \\
-                 &          &           &            &      (0.10) &           &            &             &       (0.19) \\
-parttime=yes     &    0.25* &   0.35*** &      -0.02 &             &   1.90*** &    2.23*** &      0.56** &              \\
-                 &   (0.13) &    (0.13) &     (0.14) &             &    (0.25) &     (0.27) &      (0.27) &              \\
-selfemp=yes      &  7.58*** &     -0.00 &    -0.00** &             &   6.72*** &   -0.00*** &    -0.00*** &              \\
-                 &   (0.15) &    (0.00) &     (0.00) &             &    (0.29) &     (0.00) &      (0.00) &              \\
-Intercept        &  4.62*** &   3.76*** &    3.30*** &     5.71*** &  12.42*** &   12.26*** &    10.22*** &     11.21*** \\
-                 &   (0.05) &    (0.12) &     (0.13) &      (0.08) &    (0.10) &     (0.25) &      (0.25) &       (0.14) \\
-                 &     0.05 &      0.00 &       0.01 &        0.00 &      0.01 &       0.01 &        0.04 &         0.01 \\
-Stkprob          &          &   0.01*** &    0.01*** &             &           &   -0.06*** &    -0.05*** &              \\
-                 &          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-UEprobAgg        &          &    0.00** &       0.00 &             &           &    0.05*** &     0.04*** &              \\
-                 &          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-UEprobInd        &          &   0.03*** &    0.03*** &             &           &    0.05*** &     0.04*** &              \\
-                 &          &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
-N                &    51788 &     45903 &      45903 &       45430 &     48665 &      43077 &       43077 &        42654 \\
-R2               &     0.05 &      0.00 &       0.01 &        0.00 &      0.01 &       0.01 &        0.04 &         0.01 \\
+HHinc\_gr=low inc &           &           &    0.13*** &             &           &            &     0.43*** &              \\
+                 &           &           &     (0.02) &             &           &            &      (0.02) &              \\
+educ\_gr=low educ &           &           &            &    -0.10*** &           &            &             &      0.12*** \\
+                 &           &           &            &      (0.02) &           &            &             &       (0.02) \\
+gender=male      &           &           &            &    -0.32*** &           &            &             &      0.07*** \\
+                 &           &           &            &      (0.01) &           &            &             &       (0.01) \\
+parttime=yes     &  -0.08*** &     -0.03 &    -0.06** &             &   0.06*** &    0.10*** &       -0.00 &              \\
+                 &    (0.02) &    (0.02) &     (0.02) &             &    (0.02) &     (0.02) &      (0.02) &              \\
+selfemp=yes      &   1.15*** &  -0.00*** &    0.00*** &             &   0.60*** &   -0.00*** &    -0.00*** &              \\
+                 &    (0.02) &    (0.00) &     (0.00) &             &    (0.02) &     (0.00) &      (0.00) &              \\
+Stkprob          &           &   0.01*** &    0.01*** &             &           &   -0.00*** &     -0.00** &              \\
+                 &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+UEprobAgg        &           &   0.00*** &    0.00*** &             &           &    0.01*** &     0.01*** &              \\
+                 &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+UEprobInd        &           &   0.00*** &    0.00*** &             &           &    0.00*** &     0.00*** &              \\
+                 &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+rmse             &           &   6.30*** &    6.32*** &             &           &    4.30*** &     4.32*** &              \\
+                 &           &    (0.27) &     (0.27) &             &           &     (0.26) &      (0.26) &              \\
+N                &     51788 &     34589 &      34589 &       45430 &     48665 &      32518 &       32518 &        42654 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
@@ -1866,9 +1787,6 @@ $t$ and the monthly s\&p500 return by the end of $t+k$ for $k=0,1,..,11$.
 \toprule
 {} & spending I & spending II & spending III & spending IIII & spending IIIII & spending IIIIII & spending IIIIIII \\
 \midrule
-Intercept &    3.46*** &     4.23*** &      4.29*** &       3.73*** &        4.67*** &         3.21*** &          4.63*** \\
-          &     (0.31) &      (0.07) &       (0.22) &        (0.26) &         (0.31) &          (0.72) &           (0.20) \\
-          &       0.00 &        0.00 &         0.00 &          0.00 &           0.00 &            0.00 &             0.00 \\
 UEprobAgg &            &             &              &               &                &         0.04*** &                  \\
           &            &             &              &               &                &          (0.02) &                  \\
 UEprobInd &            &             &              &               &          -0.01 &                 &                  \\
@@ -1877,12 +1795,12 @@ incexp    &    0.39*** &             &              &               &           
           &     (0.08) &             &              &               &                &                 &                  \\
 incskew   &            &             &              &               &                &                 &             0.19 \\
           &            &             &              &               &                &                 &           (0.45) \\
-incvar    &            &             &      0.07*** &               &                &                 &                  \\
-          &            &             &       (0.02) &               &                &                 &                  \\
+incvar    &            &             &      0.58*** &               &                &                 &                  \\
+          &            &             &       (0.13) &               &                &                 &                  \\
 rincexp   &            &      -0.04* &              &               &                &                 &                  \\
           &            &      (0.02) &              &               &                &                 &                  \\
-rincvar   &            &             &              &       0.07*** &                &                 &                  \\
-          &            &             &              &        (0.01) &                &                 &                  \\
+rincvar   &            &             &              &       1.08*** &                &                 &                  \\
+          &            &             &              &        (0.15) &                &                 &                  \\
 N         &      53455 &       48983 &        53171 &         49986 &          52632 &           76531 &            52751 \\
 R2        &       0.00 &        0.00 &         0.00 &          0.00 &           0.00 &            0.00 &             0.00 \\
 \bottomrule

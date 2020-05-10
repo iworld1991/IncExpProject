@@ -19,7 +19,7 @@
 #   - individual demogrpahics, level of household income, education, etc.
 #   - job-types, part-time vs full-time, selfemployment, etc. 
 #   - other expectations: probability of unemployment, other job-related expectations 
-# - it examiens both nominal and real income growth 
+#   - **experienced volatility** estimated from PSID 
 #
 
 # ###  1. Loading and cleaning data
@@ -60,7 +60,7 @@ pd.options.display.float_format = '{:,.2f}'.format
 
 dataset = pd.read_stata('../SurveyData/SCE/IncExpSCEProbIndM.dta')   
 dataset_est = pd.read_stata('../SurveyData/SCE/IncExpSCEDstIndM.dta')
-dataset_psid = pd.read_stata('../OtherData/psid_history_vols.dta')
+dataset_psid = pd.read_excel('../OtherData/psid/psid_history_vol3.xls')
 
 # + {"code_folding": []}
 ## variable list by catogrories 
@@ -142,16 +142,20 @@ SCEM = SCEM.rename(columns = {'D6':'HHinc',
                               'Q26v2part2':'spending'})
 
 SCEM.columns
-# -
-
-SCEM['year'] = pd.DatetimeIndex(SCEM['date']).year
 
 # +
-## Merge historical volatilty 
+## index 
 
+SCEM['year'] = pd.DatetimeIndex(SCEM['date']).year
+# -
+
+## Merge with historical volatilty 
+dataset_psid['age'] = dataset_psid['year']-dataset_psid['cohort'] + 20
+SCEM['age'] = SCEM['age'].astype('int',
+                                 errors='ignore')
 SCEM = pd.merge(SCEM, 
                 dataset_psid,  
-                how='outer', 
+                how= 'outer', 
                 left_on = ['year','age'], 
                 right_on = ['year','age'])
 
@@ -174,9 +178,10 @@ len(SCEM)
 
 # ### 2. Correlation pattern 
 
-SCEM.dtypes
+# +
+## data types 
 
-# + {"code_folding": []}
+SCEM.dtypes
 for col in ['HHinc','age','educ','HHinc_gr','educ_gr']:
     SCEM[col] = SCEM[col].astype('int',
                                  errors='ignore')
@@ -348,7 +353,7 @@ for gp in ['HHinc','educ','gender']:
     
 """
 
-# + {"code_folding": []}
+# + {"code_folding": [15, 16]}
 ## variances by groups 
 
 gplist = ['HHinc','age_gr']
@@ -388,6 +393,7 @@ for i in range(len(gplist)):
 plt.savefig('../Graphs/ind/boxplot.jpg')
 
 # + {"code_folding": []}
+"""
 ## skewness and kurtosis by groups 
 
 momlist = ['incskew','inckurt']
@@ -424,11 +430,12 @@ for i in range(len(gplist)):
         bp.set_ylabel(mom,fontsize = 25)
         
 plt.savefig('../Graphs/ind/boxplot2.jpg')
+"""
 # -
 
 # ### 4. Experienced volatility and risks
 
-# + {"code_folding": []}
+# + {"code_folding": [2]}
 keeps = ['incexp','incvar','rincexp','rincvar','incskew','rmse']
 
 SCEM_cohort = pd.pivot_table(data = SCEM,
@@ -441,20 +448,133 @@ SCEM_cohort = pd.pivot_table(data = SCEM,
                                                                             'rincvar':'rvarMean',
                                                                             'incskew':'skewMean'})
 
-# + {"code_folding": [1]}
+# + {"code_folding": []}
+## scatter plot of experienced volatility and perceived risk 
+
 plt.plot(figsize =(30,30))
-plt.plot(SCEM_cohort['rmse'],
-         SCEM_cohort['varMean']/100,
-        '*',
-        lw = 5)
+plt.plot(np.log(SCEM_cohort['rmse']),
+         np.log(SCEM_cohort['varMean']),
+         '*',
+         lw = 5)
 plt.xlabel('experienced volatility')
 plt.ylabel('perceived risk')
 
-
 plt.savefig('../Graphs/ind/scatter_history_vol_var.jpg')
+
+# +
+## generate logs 
+
+vars_log = ['incvar','rincvar','rmse']
+
+for var in vars_log:
+    SCEM[var] = np.log(SCEM[var])
+
+# + {"code_folding": [9]}
+## full-table for risks  
+
+rs_list = {}  ## list to store results 
+nb_spc = 3  ## number of specifications 
+
+dep_list = ['incvar','rincvar'] 
+
+for i,mom in enumerate(dep_list):
+    ## model 1 
+    model = smf.ols(formula = str(mom)
+                    +'~ rmse+ C(HHinc_gr)+C(educ_gr)',
+                    data = SCEM)
+    rs_list[nb_spc*i] = model.fit()
+    
+    ## model 2
+    model2 = smf.ols(formula = str(mom)
+                    +'~ rmse+ C(HHinc_gr)+C(educ_gr)',
+                    data = SCEM)
+    rs_list[nb_spc*i+1] = model2.fit()
+    
+    ## model 3
+    model3 = smf.ols(formula = str(mom)
+                    +'~ rmse+ C(HHinc_gr)+C(educ_gr)+C(age_gr)',
+                    data = SCEM)
+    rs_list[nb_spc*i+2] = model3.fit()
+
+    
+rs_names = [rs_list[i] for i in range(len(rs_list))]
+
+dfoutput = summary_col(rs_names,
+                        float_format='%0.2f',
+                        stars = True,
+                        #info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
+                        #          'R2':lambda x: "{:.2f}".format(x.rsquared)}
+                      )
+
+dfoutput.title = 'Experienced Volatility and Perceived Income Risks'
+print(dfoutput)
+
+# + {"code_folding": []}
+## output tables 
+
+beginningtex = """
+\\begin{table}[p]
+\\centering
+\\begin{adjustbox}{width=\\textwidth}
+\\begin{threeparttable}
+\\caption{Experienced Volatility and Perceived Income Risks}
+\\label{micro_reg_history_vol}"""
+
+endtex = """\\begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\item This table reports regression results of perceived income risks on experienced volatility.
+\\end{tablenotes}
+\\end{threeparttable}
+\\end{adjustbox}
+\\end{table}"""
+
+## relabel rows 
+
+def CatRename(table):
+    relabels = {}
+    rows = [idx for idx in table.index if ')[T.' in idx]
+    for i in range(len(rows)):
+        string = rows[i]
+        var = string.split('C(')[1].split(')[T')[0]
+        val = string.split('[T.')[1].split(']')[0]
+        if '.0' in val:
+            val = val.split('.0')[0]
+        else:
+            val = val 
+        relabels[rows[i]] = var + '=' + str(val)
+    table = table.rename(index = relabels)
+    return table 
+
+table = CatRename(dfoutput.tables[0])
+
+## excluding rows that are not to be exported 
+
+to_drop = ['R-squared']
+
+## need to also drop rows reporting the stadard deviations as well 
+rows_below = []
+for var in to_drop:
+    row_idx = list(table.index).index(var)
+    #print(row_idx)
+    rows_below.append(row_idx) 
+    #rows_below.append(row_idx+1)
+    
+tb = table.drop(index = to_drop)
+
+## write to latex 
+f = open('../Tables/latex/micro_reg_history_vol.tex', 'w')
+f.write(beginningtex)
+tb_ltx = tb.to_latex().replace('lllllllll','ccccccccc')   # hard coded here 
+#print(tb)
+f.write(tb_ltx)
+f.write(endtex)
+f.close()
+
+## save
+
+tb.to_excel('../Tables/micro_reg_history_vol.xlsx')
 # -
 
-# ###  5. Regressions
+# ###  5. Other regressions
 
 # +
 ## preps 
@@ -465,7 +585,7 @@ indep_list_ct = ['UEprobInd','UEprobAgg','Stkprob','rmse']
 indep_list_dc = ['HHinc','selfemp','fulltime']
 
 
-# + {"code_folding": [5, 7, 36]}
+# + {"code_folding": [5]}
 ## full-table for risks  
 
 rs_list = {}  ## list to store results 
@@ -506,11 +626,12 @@ dfoutput = summary_col(rs_names,
                         float_format='%0.2f',
                         stars = True,
                         info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
-                                  'R2':lambda x: "{:.2f}".format(x.rsquared)})
+                                  #'R2':lambda x: "{:.2f}".format(x.rsquared)
+                                  })
 dfoutput.title = 'Perceived Income Risks'
 print(dfoutput)
 
-# + {"code_folding": []}
+# + {"code_folding": [19]}
 ## output tables 
 
 beginningtex = """
@@ -528,8 +649,6 @@ endtex = """\\begin{tablenotes}\item Standard errors are clustered by household.
 \\end{adjustbox}
 \\end{table}"""
 
-
-# + {"code_folding": [2]}
 ## relabel rows 
 
 def CatRename(table):
@@ -570,15 +689,13 @@ tb_ltx = tb.to_latex().replace('lllllllll','ccccccccc')   # hard coded here
 f.write(tb_ltx)
 f.write(endtex)
 f.close()
-# -
 
+## save
 
 tb.to_excel('../Tables/micro_reg.xlsx')
 
-# + {"code_folding": [7, 41, 55]}
+# + {"code_folding": [5, 53]}
 ## full-table for expected growth, appendix 
-
-## full-table for risks  
 
 rs_list = {}  ## list to store results 
 nb_spc = 4  ## number of specifications 
@@ -655,7 +772,6 @@ endtex = """\\begin{tablenotes}\item Standard errors are clustered by household.
 \\end{threeparttable}
 \\end{adjustbox}
 \\end{table}"""
-
 
 ## write to latex 
 f = open('../Tables/latex/micro_reg_exp.tex', 'w')

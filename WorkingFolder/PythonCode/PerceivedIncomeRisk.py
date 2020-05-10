@@ -17,39 +17,30 @@
 # # Introduction
 #
 #
-# "The devil is in higher moments." Even if two people share identical expected income and homogeneous preferences, different degrees of income risks still lead to starkly different decisions such as saving/consumption and portfolio choices. This is well understood in models in which agents are inter-temporally risk-averse, or prudent, and the risks associated with future marginal utility motivate precautionary motives. The same logic carries through to models in which capital income and portfolio returns are stochastic, and the risks of returns naturally become the center of asset pricing. Such behavioral regularities equipped with market incompleteness due to reasons such as imperfect insurance and credit constraints have also been the cornerstone assumptions used in the literature on heterogeneous-agent macroeconomics. 
+# Even if with identical expected income and homogeneous risk preferences, different degrees of income risks still lead to starkly different decisions such as saving/consumption and portfolio choices. This is well understood in models in which agents are inter-temporally risk-averse, or prudent, and the risks associated with future marginal utility motivate precautionary motives. The same logic carries through to models in which capital income and portfolio returns are stochastic, and the risks of returns naturally become the center of asset pricing. Such behavioral regularities equipped with market incompleteness due to reasons such as imperfect insurance and credit constraints have also been the cornerstone assumptions used in the literature on heterogeneous-agent macroeconomics. 
 #
-# Economists have long utilized cross-sectional distributions of realized microdata to estimate the stochastic environments relevant to the agents' decision, such as the income process. And then in modeling the estimated risk profile is taken as parametric inputs and the individual shocks are simply drawn from the shared distributions. (See <cite data-cite="blundell_consumption_2008">(Blundell, et al. 2013)</cite> as an example.) But one assumption implicitly made when doing this is that the agents in the model perfectly understand thus agree on the income risk profile imposed on them. As shown by the actively developing literature on expectation formation, in particular, the mounting evidence on heterogeneity in economic expectations held by micro agents, this assumption seems to be too stringent. To the extent that agents make decisions based on their *respective* perceptions, understanding the *perceived* income risk profile and its correlation structure with other macro variables are the keys to explaining their behavior patterns.
+# Economists have long utilized cross-sectional distributions of realized microdata to estimate the stochastic environments relevant to the agents' decision, such as the income process. And then in structural modeling the estimated risk profile is taken as parametric inputs and the individual shocks are simply drawn from the shared distributions. (See <cite data-cite="blundell_consumption_2008">(Blundell, et al. 2013)</cite> as an example.) But one assumption implicitly made when doing this is that the agents in the model perfectly understand thus agree on the income risk profile imposed on them. As shown by the actively developing literature on how people form expectations in ways deviating from full-information rationality, in particular, the mounting evidence on heterogeneity in economic expectations held by micro agents, this assumption seems to be too stringent. To the extent that agents make decisions based on their *respective* perceptions, understanding the *perceived* income risk profile and its correlation structure with other macro variables are the keys to explaining their behavior patterns.
 #
-# This paper's goal is to understand the question discussed above by directly shedding light on the subjective income profile using the recently available density forecasts of labor income surveyed by New York Fed's Survey of Consumer Expectation (SCE). What is special about this survey is that agents are asked to provide histogram-type forecasts of their earning growth over the next 12 months together with a set of expectational questions about the macroeconomy. It is at a monthly frequency and has a panel structure allowing for consecutive observations of the same household over a horizon of 12 months. When the individual density forecast is available, a parametric density estimation can be made to obtain the individual-specific subjective distribution. And higher moments reflecting the perceived income risks such as variance, as well as the asymmetry of the distribution such as skewness allow me to directly characterize the perceived risk profile without relying on external estimates from cross-sectional microdata. This provides the first-hand measured perceptions on income risks that are truly relevant to individual decisions.
+# This paper constructs a subjective model of learning that features an imperfect understanding of the size as well as the nature of income risks. In terms of the size, the imperfect understanding is modeled as a lack of knowledge of the true model parameter of an assumed income process. Agents form their best guess about the parameters by learning from past experiences. Such kind of experience-based learning mechanisms engenders the perceived risks to be dependent on age, generation, and macroeconomic history. At the same time, the imperfect understanding of the nature of income risks means that individuals do not understand if the income risks are commonly shared aggregate shock or idiosyncratic shocks. They learn about the model based on a subjective interpretation of nature, which is called *attribution* in this paper. With different subjective attribution, agents arrive at different degrees of model parameter uncertainty, thus different perceptions about income risks. 
 #
-# Empirically, I can immediately ask the following questions. 
+# In a general setting within the model, I show that a higher degree of external attribution, i.e. perceiving the shocks to be common ones instead of idiosyncratic ones, leads to higher risk perceptions. The intuition for this is straightforward. As any econometrician would perfectly understand, learning comes from variations in the sample either cross-sectionally or over time. As agents subjectively perceived correlation of her own income shocks and others' to be higher, the uncertainty associated with the parameter estimate is naturally higher simply because the variation seen cross-sectionally from the sample useful to learning is reduced. This effect is particularly important when we consider second moments or higher in that the parameter uncertainty does not enter the parameter estimate itself. 
 #
-# - How much heterogeneity is there across workers' perceived income risks? What factors, i.e. household income, demographics, and other expectations, are correlated with the subjective risks in both individual and macro level? 
+# Incorporating attribution in learning allows it possible to explore the implications of possible mischaracterization of experienced shocks. Among various possible deviations, I explore a particular kind attribution error which is reminiscent of the "self-serving bias" in social psychology. In particular, it assumes that people have a tendency to external (internal) attribution in the face of negative (positive) experiences. By allowing the subjective correlation to be a function of the recent experience such as income change, the model neatly captures this psychological tendency. What is interesting is that such a state-dependence of attribution in learning may help explain why the average perceived risk is lower for the high-income groups than the low-income ones. In the presence of aggregate risks, it also generate counter-cylical patterns of the average perceived risks, i.e. bad times are associated with high subjective risks. 
 #
-# - To what extent this heterogeneity in perceptions align with the true income risks facing different population group, or at least partly attributed to perceptive differences due to heterogeneity in information and information processing, as discussed in many models of expectation formation?  
-#    - If we treat the income risks identified from cross-sectional inequality by econometricians as a benchmark, to what extent are the risks perceived by the agents?
-#       - If agents know more than econometricians about their individual earnings, should the perceived risks be lower than the econometrician's estimates?
-#       - Or actually, do agents, due to inattention or other information rigidity in learning about recently realized shocks, perceive the overall risk to be higher?
+# Empirically, the paper shed light on the perceptions of income risks by utilizing the recently available density forecasts of labor income surveyed by New York Fed's Survey of Consumer Expectation (SCE). What is special about this survey is that agents are asked to provide histogram-type forecasts of their earning growth over the next 12 months together with a set of expectational questions about the macroeconomy. When the individual density forecast is available, a parametric density estimation can be made to obtain the individual-specific subjective distribution. And higher moments reflecting the perceived income risks such as variance, as well as the asymmetry of the distribution such as skewness allow me to directly characterize the perceived risk profile without relying on external estimates from cross-sectional microdata. This provides the first-hand measured perceptions on income risks that are truly relevant to individual decisions.
 #
-# - If the subjective income risk can be decomposed into components of varying persistence (i.e. permanent vs transitory) based on assumed income process, it is possible to characterize potential deviations of perceptive income process from some well defined rational benchmark.
-#      - For instance, if agents overestimate their permanent income risks? 
-#      - If agents overestimate the persistence of the income process? <cite data-cite="rozsypal_overpersistence_2017">(Rozsypal and Schlafmann, 2017)</cite>
-#      - One step back, if the log-normality assumption of income progress consistent with the surveyed data. Or it has non-zero skewness? This can be jointly tested using higher moments of the density forecasts.  
+# Perceived income risks exhibits a number of important patterns that are consistent with the predictions of the experience-based learning with subjective attribution. 
+#
+# - Higher experienced volatility is associated with higher perceived income risks. This helps explain why perceived risks differ systematically across different generations, who have experienced different histories of the income shocks. Besides, perceived risks declines with one's age.
+#
+# - Perceived income risks have a non-monotonic correlation with the current income, which can be best described as a skewed U shape. Perceived risk decreases with current income over the most range of income values follwed by a uppick in perceived risks for high-income group. 
 #  
-# - Finally, not just the process of earning itself, but also its covariance with macro-environment, risky asset returns, matter a great deal. For instance, if perceived income risks are counter-cyclical, it has important labor supply and portfolio implications. (<cite data-cite="guvenen2014nature">(Guvenen, et al. 2014)</cite>, <cite data-cite="catherine_countercyclical_2019">(Catherine, 2019)</cite>)
+# - Perceived income risks are counter-cylical with the labor market conditions or broadly business cycles. I found that average perceived income risks by U.S. earners are negatively correlated with the current labor market tightness measured by wage growth and unemployment rate. Besides, earners in states with higher unemployment rates and low wage growth also perceive income risks to be higer. This bears similarities but important difference with a few previous studies that document the counter-cylicality of income risks estimated by cross-sectional microdata. (<cite data-cite="guvenen2014nature">(Guvenen, et al. 2014)</cite>, <cite data-cite="catherine_countercyclical_2019">(Catherine, 2019)</cite>) 
 #
-#  
 # One of the key challenges when addressing these questions is to separately account for the differences in perceived risks driven by differences in underlying risk profiles, i.e. the "truth", and the rest driven by perceptive and informational heterogeneity. The most straightforward way seems to be to compare econometrician's external estimates of the income process using realized data and the perceived from the subjective survey. But this approach implicitly assumes that econometricians correctly specify the model of the income process and ignores the likely superior information problem discussed above. Therefore, in this paper, instead of simply assuming the external estimate by econometricians is the true underlying income process, I characterize the differences between perception and the true process by jointly recovering the process using realized data and expectations based on a particular well-defined theory of expectation formation. The advantage of doing this is that one does not need to make a stringent assumption about either agents' full rationality or econometricians' correctness of model specification. It allows econometricians to utilize the information from expectations to understand the true law of the system. This is in a similar spirit to <cite data-cite="guvenen_inferring_2014">(Guvenen, 2014)</cite>, although the author does not use expectation survey but the consumption choice as the additional input for the joint estimation. 
 #  
 #
-# Theoretically, once I can document robustly some patterns of the perceived income risks profile, it can ben incorporated into an otherwise standard life-cycle model involving consumption/portfolio decisions to explore its macro implications. Ex-ante, one may conjecture a few of the following scenarios. 
-#
-#   - If the subjective risks or skewness is found to be negatively correlated with the risky market return or business cycles, this exposes agents to more risks than a non-state-dependent income profile. 
-#
-#   - If according to the subjective risk profile, the downside risks are highly persistent than typically assumed, then it is in line with the rare disaster idea.  
-#
-#   - The perceptual differences lead to differences in MPCs, which is a different mechanism from credit-constraints and non-insurance of risks. 
+# Finally, the subjective learning model will be incorporated into an otherwise standard life-cycle consumption/saving model with uninsured idiosyncratic and aggregate risks. Experience-based learning makes income expectations and risks state-dependent when making dynamically optimal decisions at each point of the time. In particular, higher perceived risks will induce more precautionary saving behaviors. If this perceived risk is state-dependent on recent income changes, it will potentially shift the distribution of MPCs along income deciles, therefore, amplify the channels aggregate demand responses to shocks. 
 #
 #      
 # ##  Relevant literature and potential contribution 
@@ -184,8 +175,7 @@ for i in range(nb_fig):
 graph_path = os.path.join(path,'../Graphs/pop/')
 
 fig_list = ['tsMeanexp_he.jpg',
-            'tsMeanvar_he.jpg',
-            'tsMeanskew_he.jpg']
+            'tsMeanvar_he.jpg']
             
 nb_fig = len(fig_list)
 
@@ -207,36 +197,21 @@ plt.tight_layout(pad =0, w_pad=0, h_pad=0)
 macro_corr  = pd.read_excel('../Tables/macro_corr_he.xlsx',index_col=0)
 print('Correlation of perceived risks and past labor market conditions')
 macro_corr
+
+# + {"hide_input": true, "hide_output": true}
+mom_group_state  = pd.read_excel('../Tables/mom_group_state.xls',index_col = 0)
+print('Perceived income risk and state labor market condition')
+mom_group_state = mom_group_state.replace(np.nan, '', regex=True)
+mom_group_state
 # -
 
-# ##  Correlation with asset returns
-#
-# It is not only the labor income risk profile per se but also the macro risk profile, i.e. how the labor income is correlated with risky asset return and the business cycle, that is important for household decisions. Since the short time period of my sample (2013M6-2018M5) has not seen a single one business cycle, at least as defined by the NBER recession committee, it poses a challenge for me to examine the correlation between perceived risks and macroeconomic cycles. Therefore, as the first stage of the analysis, I only focus on the correlation between perceived risks and stock market returns. 
-#
-# Of course, there is a rationale in the first place to study stock market return and labor income, as it bears critical implications for household consumption insurance, equity premium, and participation puzzle. For instance, a negative correlation of income risk and risky asset return means households will be faced with higher risks of their total income by investing in the stock market. Or a negative correlation between skewness and stock market return, meaning a bigger income increase is less likely in low-return times will also deter households from participating in the stock market. 
-#
-# Following the most common practice in the finance literature, I use the monthly return of the S&P 500, computed from the beginning to the end of the month, as an approximate of the stock market return. Over the sample period, there are exactly two-thirds of the time marking a positive return. 
-#
-# For a population summary statistic of individual moments of perceived income growth, I take the median and mean across all respondents in the survey for each point of the time. One may worry about the seasonality of the monthly series of this kind. For instance, it is possible that workers tend to learn news about their future earnings at a particular month of the year, i.e. end of the fiscal year when the wage contracts are renegotiated and updated. Reasons of this kind may result in seasonal patterns of the expected earning growth, variance and other moments. Because my time series is too short in sample size to perform a trustful seasonal adjustment, I check the seasonality by inspecting the auto-correlation of each time series at different lags. As seen in the figures in the appendix, although it seems that the average or median earning growth per se has some seasonal patterns, there is no evidence for higher moments, such as variance and skewness. 
-#
-# There are two crucial econometric considerations when we examine the correlation between the subjective moments of earning growth and stock return.
-#
-# The first is the time-average or time-aggregation problem documented in both empirical asset pricing and consumption insurance literature (<cite data-cite="working_note_1960">(Working, 1960)</cite>, <cite data-cite="jagannathan_lazy_2007">(Jagannathan and Wang, 2007)</cite>, <cite data-cite="crawley_search_2019">(Crawley, 2019)</cite>).  Variables such as consumption and earning are interval measures, reported as an average over a period, while the stock return is a spot measure computed between two points of the time. As a result, if the unit of the time for the underlying income process is at a higher frequency than the measured interval (an extreme case being the continuous-time), the measured variable will exhibit upward biased autocorrelation and correlation with other underlying random walk series in the same frequency. In my context, such a problem can be partly mitigated by the availability of monthly frequency of earning expectations, if we assume the unit of time of the underlying stochastic process is a month. Then the directly observed monthly correlation of the two cannot be driven by the time aggregation problem. What also becomes immediately clear from this consideration is that I should not examine the correlation of the two series in moving average terms, because it will cause the time aggregation problem. This point will be discussed in greater detail in the next section when I decompose the perceived income risks to different components of varying persistence. 
-#
-# The second issue regards which of the following, lagged, contemporaneous or forward is the correct correlation one should look at. Considering what is relevant to an individual making decisions are unrealized stochastic shocks to both income and asset return, one should examine the 1-year-ahead earning growth and its risks with the realized return over the impeding 12 months at each point of the time. 
-#
-# With these considerations, in the Figure \ref{fig:tssp500}, I plot the median perceived risk and skewness of both nominal and real earning along with the contemporaneous stock market returns by the end of each month (also true for the mean, see Figure \ref{micro_reg_exp} in appendix.). In order to account for the fact that the survey is undertaken in the middle of the month while the return is computed at the end of the month, I take the lag the income moments by 1 or 2 months when calculating the correlation coefficient. Table \ref{macro_corr} reports correlation coefficients of between perceived risks and the realized stock market return over the next 0-6 months. Although a Pearson test of the correlation coefficients is only significant for a 2-month lag, overall, the income risks measured by variance and IQR for both nominal and real earning post a negative correlation with the realized stock return a few months ahead. The subjective skewness has also a negative associated with the realized stock return in the near future. 
-#
-# More caution is needed when interpreting the observed negative association between perceived earning risks/skewness with stock market returns. First, my sample period is short and has mostly posted positive returns. Second, the pattern is based on a population median and mean of the perceived income risks, and it does not account for any household-specific characteristics. As we have seen in the cross-sectional pattern, there are substantial variations across individuals in their perceived income risks and skewness. Third, the risk profile we consider here is only relevant for marginal consumers/investors who at least have access to the stock market in the first place. Therefore, it is worth exploring the correlation above conditional on more individual characteristics. 
-#  
+# ## Experienced volatility and perceived risks 
 
-# + {"caption": "Perceived Income Risks and Stock Market Return", "code_folding": [], "label": "fig:tssp500", "widefigure": true}
+# +
 ## insert figures 
-graph_path = os.path.join(path,'../Graphs/pop/')
+graph_path = os.path.join(path,'../Graphs/ind/')
 
-fig_list = ['tsMedmean.jpg',
-            'tsMedvar.jpg',
-            'tsMeanskew.jpg']
+fig_list = ['experience_var_var_data.png']
             
 nb_fig = len(fig_list)
 
@@ -245,39 +220,17 @@ file_list = [graph_path+fig for fig in fig_list]
 
 
 ## show figures 
-
-fig, ax = plt.subplots(figsize =(90,30),
-                       nrows = nb_fig,
-                       ncols = 1)
+plt.figure(figsize =(20,20))
 for i in range(nb_fig):
-    ax[i].imshow(mpimg.imread(file_list[i]))
-    ax[i].axis("off") 
+    plt.imshow(mpimg.imread(file_list[i]))
+    plt.axis("off") 
 plt.tight_layout(pad =0, w_pad=0, h_pad=0)
 
 # + {"hide_input": true, "hide_output": true}
-macro_corr  = pd.read_excel('../Tables/macro_corr.xlsx',index_col=0)
-print('Correlation of perceived risks and stock return of x months ahead')
-macro_corr
-
-# + {"hide_input": true, "hide_output": true}
-macro_corr_HHinc  = pd.read_excel('../Tables/macro_corr_HHinc_gr.xlsx',index_col=0)
-print('Correlation of perceived risks and stock return of x months ahead (by income)')
-macro_corr_HHinc
-
-# + {"hide_input": true, "hide_output": true}
-macro_corr_educ  = pd.read_excel('../Tables/macro_corr_educ_gr.xlsx',index_col=0)
-print('Correlation of perceived risks and stock return of x months ahead (by education)')
-macro_corr_educ
-
-# + {"hide_input": true, "hide_output": true}
-macro_corr_age = pd.read_excel('../Tables/macro_corr_age_gr.xlsx',index_col=0)
-print('Correlation of perceived risks and stock return of x months ahead (by age)')
-macro_corr_age
-
-# + {"hide_input": true, "hide_output": true}
-macro_corr_byear = pd.read_excel('../Tables/macro_corr_byear_gr.xlsx',index_col=0)
-print('Correlation of perceived risks and stock return of x months ahead (by generation)')
-macro_corr_byear
+micro_reg_history_vol  = pd.read_excel('../Tables/micro_reg_history_vol.xls',index_col = 0)
+print('Experienced volatility and perceived income risk')
+micro_reg_history_vol = micro_reg_history_vol.replace(np.nan, '', regex=True)
+micro_reg_history_vol
 # -
 
 #
@@ -321,13 +274,29 @@ macro_corr_byear
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/ind/')
 
-fig_list = ['boxplot.jpg']
+fig_list = ['boxplot_var_stata.png']
             
 nb_fig = len(fig_list)
 file_list = [graph_path+fig for fig in fig_list]
 
 ## show figures 
-plt.figure(figsize=(50,50))
+plt.figure(figsize=(30,30))
+for i in range(nb_fig):
+    plt.subplot(nb_fig,1,i+1)
+    plt.imshow(mpimg.imread(file_list[i]))
+    plt.axis("off")
+
+# +
+## insert figures 
+graph_path = os.path.join(path,'../Graphs/ind/ts/')
+
+fig_list = ['ts_incvar_age_g_mean.png']
+            
+nb_fig = len(fig_list)
+file_list = [graph_path+fig for fig in fig_list]
+
+## show figures 
+plt.figure(figsize=(20,20))
 for i in range(nb_fig):
     plt.subplot(nb_fig,1,i+1)
     plt.imshow(mpimg.imread(file_list[i]))
@@ -340,7 +309,7 @@ reg_tb = pd.read_excel('../Tables/micro_reg.xlsx').replace(np.nan,'')
 reg_tb
 # -
 
-# ##  Perceived income risks and decisions (in progress)
+# ##  Perceived income risks and decisions (in progress) 
 #
 # This section investigates how individual-specific perceived risks are correlated with household economic decisions such as consumption and labor supply. I should note that the purpose of this exercise is not primarily for causal inference at the current stage. Instead, it is meant to check if the surveyed households demonstrate a certain degree of in-survey consistency in terms of their perceptions and decision inclinations. 
 #
@@ -397,7 +366,7 @@ spending_reg_tb
 #
 # \begin{eqnarray}
 # \begin{split}
-# \widehat Var_{i,t}(\Delta y_{i,t+1}) & = y_{i,t-1}^2 \underbrace{\widehat{Var}^{\rho}_{i,t}}_{\text{Persistence uncertainty}} + \underbrace{\hat{\sigma}^2_{i,t}}_{\text{Shock uncertainty}}
+# \widehat Var_{i,t}(\Delta y_{i,t+1}) & = y_{i,t}^2 \underbrace{\widehat{Var}^{\rho}_{i,t}}_{\text{Persistence uncertainty}} + \underbrace{\hat{\sigma}^2_{i,t}}_{\text{Shock uncertainty}}
 # \end{split}
 # \end{eqnarray}
 #
@@ -715,7 +684,7 @@ nb_fig = len(fig_list)
 file_list = [graph_path+fig for fig in fig_list]
 
 ## show figures 
-plt.figure(figsize=(50,25))
+plt.figure(figsize=(70,45))
 for i in range(nb_fig):
     plt.subplot(nb_fig,1,i+1)
     plt.imshow(mpimg.imread(file_list[i]))
@@ -731,7 +700,7 @@ nb_fig = len(fig_list)
 file_list = [graph_path+fig for fig in fig_list]
 
 ## show figures 
-plt.figure(figsize=(50,25))
+plt.figure(figsize=(70,45))
 for i in range(nb_fig):
     plt.subplot(nb_fig,1,i+1)
     plt.imshow(mpimg.imread(file_list[i]))

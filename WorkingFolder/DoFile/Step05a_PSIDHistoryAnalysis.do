@@ -1,6 +1,7 @@
 clear
 global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
 global folder "${mainfolder}/SurveyData/"
+global other "${mainfolder}/OtherData/"
 global sum_graph_folder "${mainfolder}/Graphs/ind"
 global sum_table_folder "${mainfolder}/Tables/"
 
@@ -9,7 +10,7 @@ pwd
 set more off 
 capture log close
 
-import excel "${sum_table_folder}psid/psid_history_vol3.xls", sheet("Sheet1") firstrow
+import excel "${other}PSID/psid_history_vol3.xls", sheet("Sheet1") firstrow
 destring year cohort rmse, force replace
 
 gen rmseqrt = sqrt(rmse)
@@ -100,7 +101,6 @@ egen age_gp = cut(age), at(20 35 55,70)
 label var age_gp "age group"
 
 
-
 *********************************************
 ** generate variables 
 *******************************************
@@ -143,7 +143,7 @@ twoway (scatter lQ24_var lrmse, color(ltblue)) ///
 graph export "${sum_graph_folder}/experience_var_var_data.png", as(png) replace 
 restore
 
-
+/*
 preserve
 
 bysort year age: gen ct = _N
@@ -213,12 +213,8 @@ estadd local hasinc "Yes",replace
 }
 
 label var lrmse "log experienced volatility"
-esttab using "${sum_table_folder}/micro_reg_history_vol.csv", ///
+esttab using "${sum_table_folder}/micro_reg_history_vol_state.csv", ///
          keep(lrmse *lrmse) st(r2 N hasage haseduc hasinc,label("R-squre" "N" "Control age" "Control educ" "Control income")) ///
 		 label ///
 		 replace 
-
-
-save "${mainfolder}/OtherData/SCEM_PSID.dta", replace 
-
 
