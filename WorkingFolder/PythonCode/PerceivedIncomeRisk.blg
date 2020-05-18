@@ -6,45 +6,45 @@ Database file #1: PerceivedIncomeRisk.bib
 Warning--there's a number but no volume in armantier_overview_2017
 Warning--empty journal in fuhrer2018intrinsic
 Warning--empty journal in rozsypal_overpersistence_2017
-You've used 23 entries,
+You've used 22 entries,
             1935 wiz_defined-function locations,
-            609 strings with 7358 characters,
-and the built_in function-call counts, 8744 in all, are:
-= -- 882
-> -- 307
-< -- 20
-+ -- 104
-- -- 98
-* -- 755
-:= -- 1527
-add.period$ -- 68
-call.type$ -- 23
-change.case$ -- 164
-chr.to.int$ -- 23
-cite$ -- 26
-duplicate$ -- 321
-empty$ -- 625
-format.name$ -- 139
-if$ -- 1689
+            603 strings with 7217 characters,
+and the built_in function-call counts, 8322 in all, are:
+= -- 838
+> -- 294
+< -- 19
++ -- 100
+- -- 94
+* -- 716
+:= -- 1457
+add.period$ -- 65
+call.type$ -- 22
+change.case$ -- 157
+chr.to.int$ -- 22
+cite$ -- 25
+duplicate$ -- 307
+empty$ -- 593
+format.name$ -- 132
+if$ -- 1606
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 20
-newline$ -- 116
-num.names$ -- 69
-pop$ -- 121
+missing$ -- 19
+newline$ -- 111
+num.names$ -- 66
+pop$ -- 117
 preamble$ -- 1
-purify$ -- 164
+purify$ -- 157
 quote$ -- 0
-skip$ -- 248
+skip$ -- 237
 stack$ -- 0
-substring$ -- 686
-swap$ -- 29
+substring$ -- 643
+swap$ -- 28
 text.length$ -- 4
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 136
+type$ -- 130
 warning$ -- 3
-while$ -- 79
+while$ -- 75
 width$ -- 0
-write$ -- 296
+write$ -- 283
 (There were 3 warnings)
