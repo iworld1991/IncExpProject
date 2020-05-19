@@ -31,11 +31,21 @@ def insertbefore(oldtex, key, tex_to_add):
     return oldtex[:i] + '   '  + tex_to_add +'       ' + oldtex[i:]
 
 
+def replaceafter(oldtex, key, tex_to_add):
+    """
+    Inserts 'tex_to_add' into 'oldtex' right after 'key'.
+    """
+    i = oldtex.find(key)
+    howlong = len(key)
+    return '   ' + oldtex[:i+howlong] + '   '  + tex_to_add
+
 # +
 ## look over files first
 
 cwd = os.getcwd()
 ltxtb_where = os.path.join(cwd,'../Tables/latex/')
+tb_ltx_name = 'latex/table_figures.tex'
+tb_ltx_file = os.path.join(cwd,tb_ltx_name)
 ltx_name = 'latex/PerceivedIncomeRisk.tex'
 ltx_file = os.path.join(cwd,ltx_name)
 
@@ -51,19 +61,38 @@ for file in os.listdir(ltxtb_where):
         #print(len(ltxtb))
         ltxtbs = ltxtbs + ltxtb
 
+key1 = '% tables'
+
+with open(tb_ltx_file,'r') as f:
+    old_tb_tex = str(f.read())
+    #print(old_tex)
+    f.close()
+
+
+new_tex = replaceafter(old_tb_tex,
+                      key1,
+                      ltxtbs)
+# -
+
+with open(tb_ltx_file,'w') as f:
+    f.write(new_tex)
+    f.close()
+
 # +
 ## write it in the master latex file
 
-key = '% Add a bibliography block'
+key2 = '% Add a bibliography block'
 
 with open(ltx_file,'r') as f:
     old_tex = str(f.read())
     #print(old_tex)
     f.close()
 
+tb_lines = '\input{./table_figures.tex}'
+
 new_tex = insertbefore(old_tex,
-                       key,
-                       ltxtbs)
+                       key2,
+                       tb_lines)
 # -
 
 with open(ltx_file,'w') as f:

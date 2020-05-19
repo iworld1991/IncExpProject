@@ -138,7 +138,7 @@ else:
 #
 # Second, as the primary focus of this paper, perceived income risks also have a notable cross-sectional dispersion. In terms of both nominal and real terms, the distribution is right-skewed with a long tail. Specifically, most of the workers have perceived a variance of nominal earning growth ranging from zero to $20$ (a standard-deviation equivalence of $4-4.5\%$ income growth a year). But in the tail, some of the workers perceive risks to be as high as $7-8\%$ standard deviation a year. To have a better sense of how large the risk is, consider a median individual in our sample, who has an expected earning growth of $2.4\%$, and a perceived risk of $1\%$ standard deviation. This implies by no means negligible earning risk. Lastly, in the figures not presented here, it is found about half of the sample exhibits non-zero skewness in their subjective distribution, an indicator of symmetry of the perceived density or upper/lower tail risk. 
 #
-# <center>[FIGURE \ref{fig:histmoms} HERE\]</center>
+# <center>[FIGURE \ref{fig:histmoms} HERE]</center>
 
 # + {"caption": "Distribution of Individual Moments", "code_folding": [], "label": "fig:histmoms", "note": "this figure plots histograms of the individual income moments. inc for nominal and rinc for real."}
 ## insert figures
@@ -728,6 +728,3 @@ for i in range(nb_fig):
 #
 #
 # As a next step, the project will build the experience-based-learning based on subjective attribution model into an otherwise life cycle model of consumption/saving. 
-
-# + {"hide_cell": true, "cell_type": "markdown"}
-# # Appendix 
