@@ -1,0 +1,210 @@
+\section*{Tables}
+       
+\begin{table}[ht]
+\centering
+\begin{adjustbox}{width={\textwidth}}
+\begin{threeparttable}
+\caption{Current Labor Market Conditions and Perceived Income Risks}
+\label{macro_corr_he}
+\begin{tabular}{cccccclll}
+\toprule
+{} & median:var & median:iqr & median:rvar & median:skew &  mean:var &  mean:iqr & mean:rvar & mean:skew \\
+\midrule
+0 &      -0.15 &      -0.15 &    -0.53*** &         nan &   -0.24** &  -0.36*** &  -0.47*** &      0.06 \\
+1 &      -0.01 &       0.01 &    -0.55*** &         nan &  -0.44*** &  -0.53*** &  -0.56*** &      0.18 \\
+2 &      -0.09 &      -0.07 &    -0.45*** &         nan &  -0.37*** &  -0.42*** &  -0.43*** &      0.01 \\
+3 &      -0.09 &      -0.09 &    -0.46*** &         nan &   -0.4*** &  -0.43*** &  -0.41*** &     -0.13 \\
+4 &    -0.27** &     -0.24* &    -0.49*** &         nan &   -0.28** &  -0.38*** &   -0.31** &     -0.18 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item *** p$<$0.001, ** p$<$0.01 and * p$<$0.05.
+\item This table reports correlation coefficients between different perceived income moments(inc for nominal
+and rinc for real) at time
+$t$ and the quarterly growth rate in hourly earning at $t,t-1,...,t-k$.
+\end{tablenotes}
+\end{threeparttable}
+\end{adjustbox}
+\end{table}
+\begin{table}[p]
+\centering
+\begin{adjustbox}{width=\textwidth}
+\begin{threeparttable}
+\caption{Experienced Volatility and Perceived Income Risks}
+\label{micro_reg_history_vol}\begin{tabular}{lllllll}
+\toprule
+{} &  incvar I & incvar II & incvar III & rincvar I & rincvar II & rincvar III \\
+\midrule
+HHinc\_gr=low inc &   0.17*** &   0.17*** &    0.15*** &   0.42*** &    0.42*** &     0.40*** \\
+                 &    (0.02) &    (0.02) &     (0.02) &    (0.01) &     (0.01) &      (0.01) \\
+age\_gr=30-39     &           &           &   -0.32*** &           &            &    -0.26*** \\
+                 &           &           &     (0.03) &           &            &      (0.02) \\
+age\_gr=40-48     &           &           &   -0.48*** &           &            &    -0.41*** \\
+                 &           &           &     (0.03) &           &            &      (0.02) \\
+age\_gr=49-57     &           &           &   -0.58*** &           &            &    -0.47*** \\
+                 &           &           &     (0.03) &           &            &      (0.03) \\
+age\_gr=>57       &           &           &   -0.45*** &           &            &    -0.46*** \\
+                 &           &           &     (0.04) &           &            &      (0.04) \\
+educ\_gr=low educ &  -0.16*** &  -0.16*** &   -0.12*** &     0.03* &      0.03* &     0.07*** \\
+                 &    (0.02) &    (0.02) &     (0.02) &    (0.02) &     (0.02) &      (0.02) \\
+Intercept        &   2.14*** &   2.14*** &    1.69*** &   2.95*** &    2.95*** &     2.26*** \\
+                 &    (0.11) &    (0.11) &     (0.23) &    (0.11) &     (0.11) &      (0.22) \\
+                 &      0.01 &      0.01 &       0.02 &      0.03 &       0.03 &        0.04 \\
+rmse             &   3.82*** &   3.82*** &    1.95*** &   3.10*** &    3.10*** &       0.83* \\
+                 &    (0.25) &    (0.25) &     (0.53) &    (0.23) &     (0.23) &      (0.49) \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\item This table reports regression results of perceived income risks on experienced volatility.
+\end{tablenotes}
+\end{threeparttable}
+\end{adjustbox}
+\end{table}
+	
+	\begin{table}[ht]
+		\centering
+		\begin{adjustbox}{width=0.5\textwidth}
+			\begin{threeparttable}
+			\caption{Average Perceived Risks and State Labor Market}
+			\label{macro_corr_he_state}
+			\begin{tabular}{lllll}
+				\hline 
+				& (1)                & (2)                & (3)               & (4)               \\
+				\hline 
+				& log(var) & log(risk) & log(iqr) & log(iqr) \\
+				\hline 
+				wage growth & -0.05***           &                    & -0.03***          &                   \\
+				
+				& (0.01)             &                    & (0.01)            &                   \\
+				unemp rate &                    & 0.04*              &                   & 0.04***           \\
+				&                    & (0.02)             &                   & (0.01)            \\
+				\hline 
+				Observations      & 3529               & 3529               & 3546              & 3546              \\
+				R-squared         & 0.023              & 0.020              & 0.025             & 0.028            \\
+				\hline 
+			\end{tabular}
+			
+				\begin{tablenotes}
+					\item *** p$<$0.001, ** p$<$0.01 and * p$<$0.05.
+					\item This table reports regression coefficient of the average perceived income risk of each state in different times on current labor market indicators, i.e. wage growth and unemployment rate. 
+				\end{tablenotes}
+			\end{threeparttable}
+		\end{adjustbox}
+	\end{table}
+\begin{table}[p]
+\centering
+\begin{adjustbox}{width={\textwidth}}
+\begin{threeparttable}
+\caption{Perceived Income Growth and Individual Characteristics}
+\label{micro_reg_exp}\begin{tabular}{ccccccccc}
+\toprule
+{} &  incexp I & incexp II & incexp III & incexp IIII & rincexp I & rincexp II & rincexp III & rincexp IIII \\
+\midrule
+HHinc\_gr=low inc &           &           &      -0.03 &             &           &            &    -0.38*** &              \\
+                 &           &           &     (0.03) &             &           &            &      (0.03) &              \\
+educ\_gr=low educ &           &           &            &    -0.25*** &           &            &             &     -0.62*** \\
+                 &           &           &            &      (0.02) &           &            &             &       (0.03) \\
+gender=male      &           &           &            &    -0.33*** &           &            &             &     -0.78*** \\
+                 &           &           &            &      (0.02) &           &            &             &       (0.03) \\
+parttime=yes     &  -0.42*** &  -0.27*** &   -0.26*** &             &  -0.56*** &   -0.31*** &    -0.22*** &              \\
+                 &    (0.03) &    (0.03) &     (0.04) &             &    (0.04) &     (0.05) &      (0.05) &              \\
+selfemp=yes      &   0.86*** &  -0.00*** &   -0.00*** &             &   0.83*** &    0.00*** &     0.00*** &              \\
+                 &    (0.04) &    (0.00) &     (0.00) &             &    (0.05) &     (0.00) &      (0.00) &              \\
+Intercept        &   2.82*** &   5.83*** &    5.84*** &     3.06*** &  -0.28*** &    5.74*** &     5.85*** &      0.23*** \\
+                 &    (0.01) &    (0.19) &     (0.19) &      (0.02) &    (0.02) &     (0.26) &      (0.26) &       (0.02) \\
+                 &      0.01 &      0.03 &       0.03 &        0.01 &      0.01 &       0.06 &        0.07 &         0.02 \\
+Stkprob          &           &   0.01*** &    0.01*** &             &           &    0.02*** &     0.02*** &              \\
+                 &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+UEprobAgg        &           &  -0.00*** &   -0.00*** &             &           &   -0.02*** &    -0.02*** &              \\
+                 &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+UEprobInd        &           &  -0.01*** &   -0.01*** &             &           &   -0.01*** &    -0.01*** &              \\
+                 &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+rmse             &           &   7.02*** &    7.02*** &             &           &   13.77*** &    13.75*** &              \\
+                 &           &    (0.41) &     (0.41) &             &           &     (0.57) &      (0.57) &              \\
+N                &     52102 &     35391 &      35391 &       45745 &     47728 &      32319 &       32319 &        41908 \\
+R2               &      0.01 &      0.03 &       0.03 &        0.01 &      0.01 &       0.06 &        0.07 &         0.02 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\item This table reports regression results of perceived labor income(incexp for nominal, rincexp for real) growth on household specific variables. HHinc: household income group ranges from lowests (=1, less than \$10k/year) to the heightst (=11, greater than \$200k/year). Education, educ ranges from the lowest (=1, less than high school) to the highest (=9).
+\end{tablenotes}
+\end{threeparttable}
+\end{adjustbox}
+\end{table}
+\begin{table}[p]
+\centering
+\begin{adjustbox}{width=\textwidth}
+\begin{threeparttable}
+\caption{Perceived Income Risks and Individual Characteristics}
+\label{micro_reg}\begin{tabular}{ccccccccc}
+\toprule
+{} &  incvar I & incvar II & incvar III & incvar IIII & rincvar I & rincvar II & rincvar III & rincvar IIII \\
+\midrule
+HHinc\_gr=low inc &           &           &    0.13*** &             &           &            &     0.43*** &              \\
+                 &           &           &     (0.02) &             &           &            &      (0.02) &              \\
+educ\_gr=low educ &           &           &            &    -0.10*** &           &            &             &      0.12*** \\
+                 &           &           &            &      (0.02) &           &            &             &       (0.02) \\
+gender=male      &           &           &            &    -0.32*** &           &            &             &      0.07*** \\
+                 &           &           &            &      (0.01) &           &            &             &       (0.01) \\
+parttime=yes     &  -0.08*** &     -0.03 &    -0.06** &             &   0.06*** &    0.10*** &       -0.00 &              \\
+                 &    (0.02) &    (0.02) &     (0.02) &             &    (0.02) &     (0.02) &      (0.02) &              \\
+selfemp=yes      &   1.15*** &  -0.00*** &    0.00*** &             &   0.60*** &   -0.00*** &    -0.00*** &              \\
+                 &    (0.02) &    (0.00) &     (0.00) &             &    (0.02) &     (0.00) &      (0.00) &              \\
+Intercept        &   0.30*** &   2.84*** &    2.81*** &     0.58*** &   1.61*** &    3.36*** &     3.24*** &      1.63*** \\
+                 &    (0.01) &    (0.12) &     (0.12) &      (0.01) &    (0.01) &     (0.12) &      (0.12) &       (0.01) \\
+                 &      0.06 &      0.03 &       0.03 &        0.01 &      0.02 &       0.02 &        0.04 &         0.00 \\
+Stkprob          &           &   0.01*** &    0.01*** &             &           &   -0.00*** &     -0.00** &              \\
+                 &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+UEprobAgg        &           &   0.00*** &    0.00*** &             &           &    0.01*** &     0.01*** &              \\
+                 &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+UEprobInd        &           &   0.00*** &    0.00*** &             &           &    0.00*** &     0.00*** &              \\
+                 &           &    (0.00) &     (0.00) &             &           &     (0.00) &      (0.00) &              \\
+rmse             &           &   6.30*** &    6.32*** &             &           &    4.30*** &     4.32*** &              \\
+                 &           &    (0.27) &     (0.27) &             &           &     (0.26) &      (0.26) &              \\
+N                &     51788 &     34589 &      34589 &       45430 &     48665 &      32518 &       32518 &        42654 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\item This table reports regression results of perceived income risks (incvar for nominal, rincvar for real) on household specific variables. HHinc: household income group ranges from lowests (=1, less than \$10k/year) to the heightst (=11, greater than \$200k/year). Education, educ ranges from the lowest (=1, less than high school) to the highest (=9).
+\end{tablenotes}
+\end{threeparttable}
+\end{adjustbox}
+\end{table}
+\begin{table}[p]
+\centering
+\begin{adjustbox}{width={0.9\textwidth}}
+\begin{threeparttable}
+\caption{Perceived Income Risks and Household Spending}
+\label{spending_reg}\begin{tabular}{ccccccll}
+\toprule
+{} & spending I & spending II & spending III & spending IIII & spending IIIII & spending IIIIII & spending IIIIIII \\
+\midrule
+Intercept &    3.46*** &     4.23*** &      4.44*** &       2.81*** &        4.67*** &         3.21*** &          4.63*** \\
+          &     (0.31) &      (0.07) &       (0.21) &        (0.34) &         (0.31) &          (0.72) &           (0.20) \\
+          &       0.00 &        0.00 &         0.00 &          0.00 &           0.00 &            0.00 &             0.00 \\
+UEprobAgg &            &             &              &               &                &         0.04*** &                  \\
+          &            &             &              &               &                &          (0.02) &                  \\
+UEprobInd &            &             &              &               &          -0.01 &                 &                  \\
+          &            &             &              &               &         (0.01) &                 &                  \\
+incexp    &    0.39*** &             &              &               &                &                 &                  \\
+          &     (0.08) &             &              &               &                &                 &                  \\
+incskew   &            &             &              &               &                &                 &             0.19 \\
+          &            &             &              &               &                &                 &           (0.45) \\
+incvar    &            &             &      0.58*** &               &                &                 &                  \\
+          &            &             &       (0.13) &               &                &                 &                  \\
+rincexp   &            &      -0.04* &              &               &                &                 &                  \\
+          &            &      (0.02) &              &               &                &                 &                  \\
+rincvar   &            &             &              &       1.08*** &                &                 &                  \\
+          &            &             &              &        (0.15) &                &                 &                  \\
+N         &      53455 &       48983 &        53171 &         49986 &          52632 &           76531 &            52751 \\
+R2        &       0.00 &        0.00 &         0.00 &          0.00 &           0.00 &            0.00 &             0.00 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
+\item This table reports regression results of expected spending growth on perceived income risks (incvar for nominal, rincvar for real).
+\end{tablenotes}
+\end{threeparttable}
+\end{adjustbox}
+\end{table}       % Add a bibliography block to the postdoc
+    
+    

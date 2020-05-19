@@ -21,11 +21,11 @@ import os
 
 
 # + {"code_folding": []}
-## a function that is used to insert latex codes to the latex file 
+## a function that is used to insert latex codes to the latex file
 
 def insertbefore(oldtex, key, tex_to_add):
-    """ 
-    Inserts 'tex_to_add' into 'oldtex' right before 'key'. 
+    """
+    Inserts 'tex_to_add' into 'oldtex' right before 'key'.
     """
     i = oldtex.find(key)
     return oldtex[:i] + '   '  + tex_to_add +'       ' + oldtex[i:]
@@ -36,12 +36,12 @@ def insertbefore(oldtex, key, tex_to_add):
 
 cwd = os.getcwd()
 ltxtb_where = os.path.join(cwd,'../Tables/latex/')
-ltx_name = 'PerceivedIncomeRisk.tex'
+ltx_name = 'latex/PerceivedIncomeRisk.tex'
 ltx_file = os.path.join(cwd,ltx_name)
 
 # +
-## get all latex codes for tables 
-ltxtbs = ''   # strings 
+## get all latex codes for tables
+ltxtbs = ''   # strings
 
 for file in os.listdir(ltxtb_where):
     if file.endswith(".tex"):
@@ -52,7 +52,7 @@ for file in os.listdir(ltxtb_where):
         ltxtbs = ltxtbs + ltxtb
 
 # +
-## write it in the master latex file 
+## write it in the master latex file
 
 key = '% Add a bibliography block'
 
@@ -60,7 +60,7 @@ with open(ltx_file,'r') as f:
     old_tex = str(f.read())
     #print(old_tex)
     f.close()
-    
+
 new_tex = insertbefore(old_tex,
                        key,
                        ltxtbs)

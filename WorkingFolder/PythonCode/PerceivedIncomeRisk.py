@@ -54,7 +54,7 @@
 # Lastly, the paper is indirectly related to the research that advocated for eliciting probabilistic questions measuring subjective uncertainty in economic surveys (<cite data-cite="manski_measuring_2004">(Manski, 2004)</cite>, <cite data-cite="delavande2011measuring">(Delavande et al. 2011)</cite>, <cite data-cite="manski_survey_2018">(Manski, 2018)</cite>). Although the initial suspicion concerning to people’s ability in understanding, using and answering probabilistic questions is understandable, <cite data-cite="bertrand_people_2001">(Bertrand and Mullainathan,2001)</cite> and other works have shown respondents have the consistent ability and willingness to assign a probability (or “percent chance”) to future events. <cite data-cite="armantier_overview_2017">(Armantier et al. 2017)</cite>  have a thorough discussion on designing, experimenting and implementing the consumer expectation surveys to ensure the quality of the responses. Broadly speaking, the advocates have argued that going beyond the revealed preference approach, availability to survey data provides economists with direct information on agents’ expectations and helps avoids imposing arbitrary assumptions. This insight holds for not only point forecast but also and even more importantly, for uncertainty, because for any economic decision made by a risk-averse agent, not only the expectation but also the perceived risks matter a great deal.
 #
 
-# + {"code_folding": [12], "hide_output": true}
+# + {"code_folding": [0], "hide_output": true}
 ## import libraries for inserting figures 
 
 import matplotlib.pyplot as plt
@@ -92,37 +92,37 @@ else:
 # # Data, variables and density estimation
 #
 # ## Data
-# The data used for this paper is from the core module of Survey of Consumer Expectation(SCE) conducted by the New York Fed, a monthly online survey for a rotating panel of around 1,300 household heads. The sample period in my paper spans from June 2013 to June 2018, in total of 60 months. This makes about 79000 household-year observations, among which around 53,000 observations provide non-empty answers to the density question on earning growth. 
 #
-# Particular relevant for my purpose, the questionnaire asks each respondent to fill perceived probabilities of their same-job-hour earning growth to pre-defined non-overlapping bins. The question is framed as "suppose that 12 months from now, you are working in the exact same [“main” if Q11>1] job at the same place you currently work and working the exact same number of hours. In your view, what would you say is the percent chance that 12 months from now: increased by x% or more?".
+# The data used for this paper is from the core module of Survey of Consumer Expectation(SCE) conducted by the New York Fed, a monthly online survey for a rotating panel of around 1,300 household heads. The sample period in my paper spans from June 2013 to June 2019, in a total of 72 months. This makes about 85852 household-year observations, among which around 55,481 observations provide non-empty answers to the density question on earning growth. 
 #
-# As a special feature of the online questionnaire, the survey only moves on to the next question if the probabilities filled in all bins add up to one. This ensures the basic probabilistic consistency of the answers crucial for any further analysis. Besides, the earning growth expectation regarding exactly the same position, same hours and same location has two important implications for my analysis. First, the requirements help make sure the comparability of the answers across time and also excludes the potential changes in earnings driven by endogenous labor supply decisions, i.e. working for longer hours. Second, the earning expectations, risks and tail risks measured here are only conditional. It excludes either unemployment, i.e. likely a zero earning, or an upward movement in the job ladder, i.e. a different earning growth rate. Therefore, it does not fully reflect the labor income risk profile relevant to each individual. 
+# Particularly relevant for my purpose, the questionnaire asks each respondent to fill perceived probabilities of their same-job-hour earning growth to pre-defined non-overlapping bins. The question is framed as "suppose that 12 months from now, you are working in the exact same [“main” if Q11>1] job at the same place you currently work and working the exact same number of hours. In your view, what would you say is the percentage chance that 12 months from now: increased by x% or more?".
 #
-# In so far as we want to tease out the earning changes from voluntary decisions, moving to a different job position should actually not be included in earning expectations. Therefore only the exclusion of an unemployment scenario is relevant for my purpose in characterizing the labor income risks. But what is assuring me is that the bias due to omission of unemployment risk is unambiguous. We could interpret the moments of same-job-hour earning growth as an upper bound for the level of growth rate and a lower bound for the income risk. To put it in another way, the expected earning growth conditional on employment is higher than the unconditional one, and the conditional earning risk is lower than the unconditional one. At the same time, since SCE separately elicits the perceived probability of losing the current job for each respondent, I could adjust the measured labor income moments taking into account the unemployment risk. 
+# As a special feature of the online questionnaire, the survey only moves on to the next question if the probabilities filled in all bins add up to one. This ensures the basic probabilistic consistency of the answers crucial for any further analysis. Besides, the earning growth expectation regarding exactly the same position, same hours, and the same location has two important implications for my analysis. First, these requirements help make sure the comparability of the answers across time and also excludes the potential changes in earnings driven by endogenous labor supply decisions, i.e. working for longer hours. Second, the earning expectations and risks measured here are only conditional on non-separation from the current job. It excludes either unemployment, i.e. likely a zero earning, or an upward movement in the job ladder, i.e. a different earning growth rate. Therefore, this does fully reflect the entire income risk profile relevant to each individual. 
+#
+# Unemployment and other involuntary job separations are undoubtedly important sources of income risks, but I choose to focus on the same-job/hour earning with the recognition that individuals' income expectations, if any, may be easier to be formed for the current job/hour than when taking into account unemployment risks. Given the focus of this paper being subjective perceptions, this serves as a  useful benchmark.  What is more assuring is that the bias due to omission of unemployment risk is unambiguous. We could interpret the moments of same-job-hour earning growth as an upper bound for the level of growth rate and a lower bound for the income risk. To put it in another way, the expected earning growth conditional on current employment is higher than the unconditional one, and the conditional earning risk is lower than the unconditional one. At the same time, since SCE separately elicits the perceived probability of losing the current job for each respondent, I could adjust the measured labor income moments taking into account the unemployment risk. 
 #
 # ## Density estimation and variables 
 #
-# With the histogram answers for each individual in hand, I follow <cite data-cite="engelberg_comparing_2009">(Engelberg, Manskiw and Williams, 2009)</cite> to fit each of them with a parametric distribution accordingly for three following cases. In the first case when there are three or more intervals filled with positive probabilities, it will be fitted with a generalized beta distribution. In particular, if there is no open-ended bin on the left or right, then 2-parameter beta distribution is sufficient. If there is either open-ended bin with positive probability, since the lower bound or upper bound of the support needs to be determined, a 4-parameter beta distribution is estimated. In the second case, in which there are exactly 2 adjacent intervals with positive probabilities, it is fitted with an isosceles triangular distribution. In the third case, if there is only one positive-probability of interval only, i.e. equal to one, it is fitted with a uniform distribution. 
+# With the histogram answers for each individual in hand, I follow <cite data-cite="engelberg_comparing_2009">(Engelberg, Manskiw and Williams, 2009)</cite> to fit each of them with a parametric distribution accordingly for three following cases. In the first case when there are three or more intervals filled with positive probabilities, it will be fitted with a generalized beta distribution. In particular, if there is no open-ended bin on the left or right, then two-parameter beta distribution is sufficient. If there is either open-ended bin with positive probability, since the lower bound or upper bound of the support needs to be determined, a four-parameter beta distribution is estimated. In the second case, in which there are exactly two adjacent intervals with positive probabilities, it is fitted with an isosceles triangular distribution. In the third case, if there is only one positive-probability of interval only, i.e. equal to one, it is fitted with a uniform distribution. 
 #
-# I have a reason to discuss at length the exact procedures for density distribution. It is important for this paper's purpose because I need to make sure the estimation assumptions of the density distribution do not mechanically distort my cross-sectional patterns of the estimated moments. This is the most obviously seen in the tail risk measure, skewness. The assumption of log normality of income process, common in the literature (See again <cite data-cite="blundell_consumption_2008">(Blundell et al. 2008)</cite>), implicitly assume zero skewness, i.e. that the income increase and decrease are equally likely. This may not be the case in our surveyed density for many individuals. In order to account for this possibility, the assumed density distribution should be flexible enough to allow for different shapes of subjective distribution. Beta distribution fits this purpose well. Of course, in the case of uniform and isosceles triangular distribution, the skewness is zero by default. 
+# Since subjective moments such as variance is calculated based on the estimated distribution, it is important to make sure the estimation assumptions of the density distribution do not mechanically distort my cross-sectional patterns of the estimated moments. This is the most obviously seen in the tail risk measure, skewness. The assumption of log normality of income process, common in the literature (See again <cite data-cite="blundell_consumption_2008">(Blundell et al. 2008)</cite>), implicitly assume zero skewness, i.e. that the income increase and decrease from its mean are equally likely. This may not be the case in our surveyed density for many individuals. In order to account for this possibility, the assumed density distribution should be flexible enough to allow for different shapes of subjective distribution. Beta distribution fits this purpose well. Of course, in the case of uniform and isosceles triangular distribution, the skewness is zero by default. 
 #
 # Since the microdata provided in the SCE website already includes the estimated mean, variance and IQR by the staff economists following the exact same approach, I directly use their estimates for these moments. At the same time, for the measure of tail-risk, i.e. skewness, as not provided, I use my own estimates. I also confirm that my estimates and theirs for the first two moments are correlated with a coefficient of 0.9. 
 #
-# For all the moment's estimates, there are inevitably extreme values. This could be due to the idiosyncratic answers provided by the original respondent, or some non-convergence of the numeric estimation program. Therefore, for each moment of the analysis, I exclude top and bottom $5\%$ observations, leading to a sample size of around 45,000. 
+# For all the moment's estimates, there are inevitably extreme values. This could be due to the idiosyncratic answers provided by the original respondent, or some non-convergence of the numeric estimation program. Therefore, for each moment of the analysis, I exclude top and bottom $3\%$ observations, leading to a sample size of around 48,000. 
 #
-# I also recognize what is really relevant to many economic decisions such as consumption is real income instead of nominal income. Thanks to the availability of inflation expectation and inflation uncertainty (also estimated from density question) can be used to convert nominal earning growth moments to real terms. In particular, the real earning growth rate is expected nominal growth minus inflation expectation. 
+# I also recognize what is really relevant to many economic decisions such as consumption is real income instead of nominal income. I, therefore, use the inflation expectation and inflation uncertainty (also estimated from density question) to convert nominal earning growth moments to real terms for some robustness checks in this paper. In particular, the real earning growth rate is expected nominal growth minus inflation expectation. 
 #
 #
 # \begin{eqnarray}
 # \overline {\Delta y^{r}}_{i,t} = \overline\Delta y_{i,t} - \overline \pi_{i,t}
 # \end{eqnarray}
 #
-# The variance associated with real earning growth, if we treat inflation and nominal earning growth as two independent stochastic variables, is equal to the summed variance of the two. 
+# The variance associated with real earning growth, if we treat inflation and nominal earning growth as two independent stochastic variables, is equal to the summed variance of the two. The independence assumption is admittedly an imperfect assumption because of the correlation of wage growth and inflation at the macro level. So it is should be interpreted with caution. 
 #
 # \begin{eqnarray}
 # \overline{var^{r}}_{i,t} = \overline{var}_{i,t} + \overline{var}_{i,t}(\pi_{t})
 # \end{eqnarray}
-#
 #
 # Not enough information is available for the same kind of transformation of IQR and skewness from nominal to real, so I only use nominal variables. Besides, as there are extreme values on inflation expectations and uncertainty, I also exclude top and bottom $5\%$ of the observations. This further shrinks the sample, when using real moments, to 36,000. 
 #
@@ -132,15 +132,13 @@ else:
 #
 # ##  Cross-sectional heterogeneity
 #
-# This section inspects some basic cross-sectional patterns of the subject moments of labor income. In the Figure \ref{fig:histmoms} below, I plot the histograms of $\overline\Delta y_{i,t}$, $\overline{var}_{i,t}$, $\overline {skw}_{i,t}$, $\overline {\Delta y^{r}}_{i,t}$, $\overline{var^{r}}_{i,t}$. 
+# This section inspects some basic cross-sectional patterns of the subject moments of labor income. In the Figure \ref{fig:histmoms} below, I plot the cross-sectional distribution of $\overline\Delta y_{i,t}$, $\overline{var}_{i,t}$, $\overline {\Delta y^{r}}_{i,t}$, $\overline{var^{r}}_{i,t}$. 
 #
 # First, expected income growth across the population exhibits a dispersion ranging from a decrease of $2-3\%$ to around an increase of $10\%$ in nominal terms. Given the well-known downward wage rigidity, it is not surprising that most of the people expect a positive earning growth. At the same time, the distribution of expected income growth is right-skewed, meaning that more workers expect a smaller than larger wage growth. What is interesting is that this cross-sectional right-skewness in nominal earning disappears in expected real terms. Expected earnings growth adjusted by individual inflation expectation becomes symmetric around zero, ranging from a decrease of $10\%$ to an increase of $10\%$. Real labor income increase and decrease are approximately equally likely.  
 #
-# Second, as the primary focus of this paper, perceived income risks also have a notable cross-sectional dispersion. For both measures of risks variance and iqr, and in terms of both nominal and real terms, the distribution is right-skewed with a long tail. Specifically, most of the workers have perceived a variance of nominal earning growth ranging from zero to $20$ (a standard-deviation equivalence of $4-4.5\%$ income growth a year). But in the tail, some of the workers perceive risks to be as high as $7-8\%$ standard deviation a year. To have a better sense of how large the risk is, consider a median individual in our sample, who has an expected earning growth of $2.4\%$, and a perceived risk of $1\%$ standard deviation. This implies by no means negligible earning risk. 
+# Second, as the primary focus of this paper, perceived income risks also have a notable cross-sectional dispersion. In terms of both nominal and real terms, the distribution is right-skewed with a long tail. Specifically, most of the workers have perceived a variance of nominal earning growth ranging from zero to $20$ (a standard-deviation equivalence of $4-4.5\%$ income growth a year). But in the tail, some of the workers perceive risks to be as high as $7-8\%$ standard deviation a year. To have a better sense of how large the risk is, consider a median individual in our sample, who has an expected earning growth of $2.4\%$, and a perceived risk of $1\%$ standard deviation. This implies by no means negligible earning risk. Lastly, in the figures not presented here, it is found about half of the sample exhibits non-zero skewness in their subjective distribution, an indicator of symmetry of the perceived density or upper/lower tail risk. 
 #
-# Third, the subjective skewness, an indicator of symmetry of the perceived density or upper/lower tail risk, are distributed across populations symmetrically around zero. It ranges from a left-skewness or negative skewness of 0.6 to the same size of positive skewness or right-skewness. Although one may think, based on the general knowledge of the cross-sectional distribution of the earnings growth,  a right-skewness is more common, it turns out that approximately equal proportion of the sample has left and right tails of their individual earning growth expectation. It is important to note here that this pattern is not particularly due to our density estimation assumptions. Both uniform and isosceles triangular distribution deliver a skewness of zero. (This is also why we can observe a clear cluster of the skewness at zero.) Therefore, the non-zero skewness estimates in our sample are both from the beta distribution cases, which is flexible enough to allow both. 
-#
-#
+# <center>[FIGURE \ref{fig:histmoms} HERE\]</center>
 
 # + {"caption": "Distribution of Individual Moments", "code_folding": [], "label": "fig:histmoms", "note": "this figure plots histograms of the individual income moments. inc for nominal and rinc for real."}
 ## insert figures
@@ -150,25 +148,31 @@ graph_path = os.path.join(path,'../Graphs/ind/')
 fig_list = ['hist_incexp.jpg',
             'hist_rincexp.jpg',
             'hist_incvar.jpg',
-            'hist_rincvar.jpg',
-            'hist_inciqr.jpg',
-            'histIncSkew.jpg']
+            'hist_rincvar.jpg']
             
 nb_fig = len(fig_list)
     
 file_list = [graph_path+ fig for fig in fig_list]
 
 ## show figures 
-plt.figure(figsize=(10,15))
+plt.figure(figsize=(18,10))
 for i in range(nb_fig):
     plt.subplot(int(nb_fig/2),2,i+1)
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
 # -
 
-# ##  Correlation with past labor market outcome
+# ##  Counter-cylicality with labor market outcomes
 #
 # This section shows that the perceived income risks are countercylical, i.e. perceived risks are negatively correlated with the recent labor market outcomes. 
+#
+#
+# <center>[FIGURE \ref{fig:tshe} HERE]</center>
+#
+#
+# <center>[TABLE \ref{macro_corr_he} HERE]</center>
+#
+# <center>[TABLE \ref{macro_corr_he_state} HERE]</center>
 
 # + {"caption": "Recent Labor Market Outcome and Perceived Risks", "code_folding": [], "label": "fig:tshe", "note": "Recent labor market outcome is measured by hourly earning growth (YoY)."}
 ## insert figures 
@@ -180,7 +184,6 @@ fig_list = ['tsMeanexp_he.jpg',
 nb_fig = len(fig_list)
 
 file_list = [graph_path+fig for fig in fig_list]
-
 
 
 ## show figures 
@@ -206,8 +209,12 @@ mom_group_state
 # -
 
 # ## Experienced volatility and perceived risks 
+#
+# This section shows that experienced volatility shapes perceived income risks. 
+#
+# <center>[FIGURE \ref{fig:var_experience_var_data} HERE]</center>
 
-# +
+# + {"caption": "Experienced Volatility and Perceived Income Risk", "code_folding": [], "label": "fig:var_experience_var_data", "note": "Experienced volatility is the mean squred error(MSE) of income regression based on a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year."}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/ind/')
 
@@ -268,9 +275,13 @@ micro_reg_history_vol
 # To summarize, a few questions arise from the patterns discussed above. First, what drives the differences in subjective earning risks across different workers? To what extent these perceptive differences reflect the true heterogeneity of the income risks facing by these individuals? Or they can be attributed to perceptive heterogeneity independent from the true risk profile. Second, how are individual earning risk is correlated with asset return expectations and broadly the macroeconomic environment? This will be the focus of the coming sections. 
 #      
 #     
-#      
+#  <center>[FIGURE \ref{fig:barplot_byinc} HERE]</center>
+#  
+#  <center>[FIGURE \ref{fig:ts_incvar_age} HERE]</center>
+#  
+#
 
-# + {"caption": "Perceived Income by Group", "code_folding": [], "label": "fig:boxplotbygroup", "note": "this figure is the boxplot of perceived income risk(inc for nominal and rinc for real) by different household income (HHinc), education (educ) and gender.", "widefigure": true}
+# + {"caption": "Perceived Income by Income", "code_folding": [], "label": "fig:barplot_byinc", "note": "this figure plots average perceived income risks by the range of household income.", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/ind/')
 
@@ -280,13 +291,13 @@ nb_fig = len(fig_list)
 file_list = [graph_path+fig for fig in fig_list]
 
 ## show figures 
-plt.figure(figsize=(30,30))
+plt.figure(figsize=(20,20))
 for i in range(nb_fig):
     plt.subplot(nb_fig,1,i+1)
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
 
-# +
+# + {"caption": "Perceived Income by Age", "code_folding": [], "label": "fig:ts_incvar_age", "note": "this figure plots average perceived income risks of different age groups over time.", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/ind/ts/')
 
@@ -296,7 +307,7 @@ nb_fig = len(fig_list)
 file_list = [graph_path+fig for fig in fig_list]
 
 ## show figures 
-plt.figure(figsize=(20,20))
+plt.figure(figsize=(15,15))
 for i in range(nb_fig):
     plt.subplot(nb_fig,1,i+1)
     plt.imshow(mpimg.imread(file_list[i]))
@@ -309,7 +320,7 @@ reg_tb = pd.read_excel('../Tables/micro_reg.xlsx').replace(np.nan,'')
 reg_tb
 # -
 
-# ##  Perceived income risks and decisions (in progress) 
+# ##  Perceived income risks and decisions
 #
 # This section investigates how individual-specific perceived risks are correlated with household economic decisions such as consumption and labor supply. I should note that the purpose of this exercise is not primarily for causal inference at the current stage. Instead, it is meant to check if the surveyed households demonstrate a certain degree of in-survey consistency in terms of their perceptions and decision inclinations. 
 #
@@ -317,7 +328,8 @@ reg_tb
 #
 # There is one important econometric concern when I run regressions of the decision variable on perceived risks due to the measurement error in the regressor used here. In a typical OLS regression in which the regressor has i.i.d. measurement errors, the coefficient estimate for the imperfectly measured regressor will have a bias toward zero. For this reason, if I find that willingness to consume is indeed negatively correlated with perceived risks, taking into account the bias, it implies that the correlation of the two is greater in the magnitude. 
 #
-# The empirical results will be reported in the next version of the draft.
+#
+# [TABLE \ref{spending_reg} HERE]
 
 spending_reg_tb = pd.read_excel('../Tables/spending_reg.xlsx').replace(np.nan,'')
 
