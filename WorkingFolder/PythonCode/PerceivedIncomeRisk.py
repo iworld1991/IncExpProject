@@ -132,13 +132,26 @@ else:
 #
 # ##  Cross-sectional heterogeneity
 #
-# This section inspects some basic cross-sectional patterns of the subject moments of labor income. In the Figure \ref{fig:histmoms} below, I plot the cross-sectional distribution of $\overline\Delta y_{i,t}$, $\overline{var}_{i,t}$, $\overline {\Delta y^{r}}_{i,t}$, $\overline{var^{r}}_{i,t}$. 
+# This section inspects some basic cross-sectional patterns of the subject moments of labor income. In the Figure \ref{fig:histmoms}, I plot the cross-sectional distribution of $\overline\Delta y_{i,t}$, $\overline{var}_{i,t}$, $\overline {\Delta y^{r}}_{i,t}$, $\overline{var^{r}}_{i,t}$. 
 #
 # First, expected income growth across the population exhibits a dispersion ranging from a decrease of $2-3\%$ to around an increase of $10\%$ in nominal terms. Given the well-known downward wage rigidity, it is not surprising that most of the people expect a positive earning growth. At the same time, the distribution of expected income growth is right-skewed, meaning that more workers expect a smaller than larger wage growth. What is interesting is that this cross-sectional right-skewness in nominal earning disappears in expected real terms. Expected earnings growth adjusted by individual inflation expectation becomes symmetric around zero, ranging from a decrease of $10\%$ to an increase of $10\%$. Real labor income increase and decrease are approximately equally likely.  
 #
 # Second, as the primary focus of this paper, perceived income risks also have a notable cross-sectional dispersion. In terms of both nominal and real terms, the distribution is right-skewed with a long tail. Specifically, most of the workers have perceived a variance of nominal earning growth ranging from zero to $20$ (a standard-deviation equivalence of $4-4.5\%$ income growth a year). But in the tail, some of the workers perceive risks to be as high as $7-8\%$ standard deviation a year. To have a better sense of how large the risk is, consider a median individual in our sample, who has an expected earning growth of $2.4\%$, and a perceived risk of $1\%$ standard deviation. This implies by no means negligible earning risk. Lastly, in the figures not presented here, it is found about half of the sample exhibits non-zero skewness in their subjective distribution, an indicator of symmetry of the perceived density or upper/lower tail risk. 
 #
 # <center>[FIGURE \ref{fig:histmoms} HERE]</center>
+#
+#
+# Perceived income risks also differ across different age group and by household income. 
+#
+#  
+#  <center>[FIGURE \ref{fig:ts_incvar_age} HERE]</center>
+#  
+#  <center>[FIGURE \ref{fig:barplot_byinc} HERE]</center>
+#
+#
+#
+#
+#
 
 # + {"caption": "Distribution of Individual Moments", "code_folding": [], "label": "fig:histmoms", "note": "this figure plots histograms of the individual income moments. inc for nominal and rinc for real.", "hide_input": true, "hide_output": true}
 ## insert figures
@@ -160,9 +173,41 @@ for i in range(nb_fig):
     plt.subplot(int(nb_fig/2),2,i+1)
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
+
+# + {"caption": "Perceived Income by Income", "code_folding": [], "label": "fig:barplot_byinc", "note": "this figure plots average perceived income risks by the range of household income.", "widefigure": true, "hide_input": true, "hide_output": true}
+## insert figures 
+graph_path = os.path.join(path,'../Graphs/ind/')
+
+fig_list = ['boxplot_var_stata.png']
+            
+nb_fig = len(fig_list)
+file_list = [graph_path+fig for fig in fig_list]
+
+## show figures 
+plt.figure(figsize=(20,20))
+for i in range(nb_fig):
+    plt.subplot(nb_fig,1,i+1)
+    plt.imshow(mpimg.imread(file_list[i]))
+    plt.axis("off")
+
+# + {"caption": "Perceived Income by Age", "code_folding": [], "label": "fig:ts_incvar_age", "note": "this figure plots average perceived income risks of different age groups over time.", "widefigure": true, "hide_input": true, "hide_output": true}
+## insert figures 
+graph_path = os.path.join(path,'../Graphs/ind/ts/')
+
+fig_list = ['ts_incvar_age_g_mean.png']
+            
+nb_fig = len(fig_list)
+file_list = [graph_path+fig for fig in fig_list]
+
+## show figures 
+plt.figure(figsize=(15,15))
+for i in range(nb_fig):
+    plt.subplot(nb_fig,1,i+1)
+    plt.imshow(mpimg.imread(file_list[i]))
+    plt.axis("off")
 # -
 
-# ##  Counter-cylicality 
+# ## Counter-cyclicality of perceived risk
 #
 # This section shows that the perceived income risks are countercylical, i.e. perceived risks are negatively correlated with the recent labor market outcomes. 
 #
@@ -244,7 +289,7 @@ micro_reg_history_vol
 #
 # ##  Role of individual characteristics
 #   
-#    What factors are associated with subjective riskiness of labor income? This section inspects the question by regressing the perceived income risks at individual level on three major blocks of variables: job-specific characteristics, household demographics and other macroeconomic expectations held by the respondent. 
+# What other factors are associated with subjective riskiness of labor income? This section inspects the question by regressing the perceived income risks at individual level on three major blocks of variables: job-specific characteristics, household demographics and other macroeconomic expectations held by the respondent. 
 #
 # In a general form, the regression is specified as followed, where the dependent variable is one of the individual subjective moments that represent perceived income risks for either nominal or real earning. 
 #
@@ -274,45 +319,7 @@ micro_reg_history_vol
 #
 # To summarize, a few questions arise from the patterns discussed above. First, what drives the differences in subjective earning risks across different workers? To what extent these perceptive differences reflect the true heterogeneity of the income risks facing by these individuals? Or they can be attributed to perceptive heterogeneity independent from the true risk profile. Second, how are individual earning risk is correlated with asset return expectations and broadly the macroeconomic environment? This will be the focus of the coming sections. 
 #      
-#     
-#  <center>[FIGURE \ref{fig:barplot_byinc} HERE]</center>
-#  
-#  <center>[FIGURE \ref{fig:ts_incvar_age} HERE]</center>
-#  
-#
-
-# + {"caption": "Perceived Income by Income", "code_folding": [], "label": "fig:barplot_byinc", "note": "this figure plots average perceived income risks by the range of household income.", "widefigure": true, "hide_input": true, "hide_output": true}
-## insert figures 
-graph_path = os.path.join(path,'../Graphs/ind/')
-
-fig_list = ['boxplot_var_stata.png']
-            
-nb_fig = len(fig_list)
-file_list = [graph_path+fig for fig in fig_list]
-
-## show figures 
-plt.figure(figsize=(20,20))
-for i in range(nb_fig):
-    plt.subplot(nb_fig,1,i+1)
-    plt.imshow(mpimg.imread(file_list[i]))
-    plt.axis("off")
-
-# + {"caption": "Perceived Income by Age", "code_folding": [], "label": "fig:ts_incvar_age", "note": "this figure plots average perceived income risks of different age groups over time.", "widefigure": true, "hide_input": true, "hide_output": true}
-## insert figures 
-graph_path = os.path.join(path,'../Graphs/ind/ts/')
-
-fig_list = ['ts_incvar_age_g_mean.png']
-            
-nb_fig = len(fig_list)
-file_list = [graph_path+fig for fig in fig_list]
-
-## show figures 
-plt.figure(figsize=(15,15))
-for i in range(nb_fig):
-    plt.subplot(nb_fig,1,i+1)
-    plt.imshow(mpimg.imread(file_list[i]))
-    plt.axis("off")
-# -
+#    
 
 reg_tb = pd.read_excel('../Tables/micro_reg.xlsx').replace(np.nan,'')
 
