@@ -162,7 +162,7 @@ for i in range(nb_fig):
     plt.axis("off")
 # -
 
-# ##  Counter-cylicality with labor market outcomes
+# ##  Counter-cylicality 
 #
 # This section shows that the perceived income risks are countercylical, i.e. perceived risks are negatively correlated with the recent labor market outcomes. 
 #
