@@ -64,7 +64,7 @@
 \usepackage{rotating}
 \usepackage{threeparttable}
 \usepackage{subcaption}
-
+\usepackage[capposition=top]{floatrow}
 ((* endblock packages *))
 
 %===============================================================================

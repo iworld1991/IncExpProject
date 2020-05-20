@@ -140,7 +140,7 @@ else:
 #
 # <center>[FIGURE \ref{fig:histmoms} HERE]</center>
 
-# + {"caption": "Distribution of Individual Moments", "code_folding": [], "label": "fig:histmoms", "note": "this figure plots histograms of the individual income moments. inc for nominal and rinc for real."}
+# + {"caption": "Distribution of Individual Moments", "code_folding": [], "label": "fig:histmoms", "note": "this figure plots histograms of the individual income moments. inc for nominal and rinc for real.", "hide_input": true, "hide_output": true}
 ## insert figures
 
 graph_path = os.path.join(path,'../Graphs/ind/')
@@ -174,7 +174,7 @@ for i in range(nb_fig):
 #
 # <center>[TABLE \ref{macro_corr_he_state} HERE]</center>
 
-# + {"caption": "Recent Labor Market Outcome and Perceived Risks", "code_folding": [], "label": "fig:tshe", "note": "Recent labor market outcome is measured by hourly earning growth (YoY)."}
+# + {"caption": "Recent Labor Market Outcome and Perceived Risks", "code_folding": [], "label": "fig:tshe", "note": "Recent labor market outcome is measured by hourly earning growth (YoY).", "hide_input": true, "hide_output": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/pop/')
 
@@ -214,7 +214,7 @@ mom_group_state
 #
 # <center>[FIGURE \ref{fig:var_experience_var_data} HERE]</center>
 
-# + {"caption": "Experienced Volatility and Perceived Income Risk", "code_folding": [], "label": "fig:var_experience_var_data", "note": "Experienced volatility is the mean squred error(MSE) of income regression based on a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year."}
+# + {"caption": "Experienced Volatility and Perceived Income Risk", "code_folding": [], "label": "fig:var_experience_var_data", "note": "Experienced volatility is the mean squred error(MSE) of income regression based on a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year.", "hide_input": true, "hide_output": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/ind/')
 
@@ -281,7 +281,7 @@ micro_reg_history_vol
 #  
 #
 
-# + {"caption": "Perceived Income by Income", "code_folding": [], "label": "fig:barplot_byinc", "note": "this figure plots average perceived income risks by the range of household income.", "widefigure": true}
+# + {"caption": "Perceived Income by Income", "code_folding": [], "label": "fig:barplot_byinc", "note": "this figure plots average perceived income risks by the range of household income.", "widefigure": true, "hide_input": true, "hide_output": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/ind/')
 
@@ -297,7 +297,7 @@ for i in range(nb_fig):
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
 
-# + {"caption": "Perceived Income by Age", "code_folding": [], "label": "fig:ts_incvar_age", "note": "this figure plots average perceived income risks of different age groups over time.", "widefigure": true}
+# + {"caption": "Perceived Income by Age", "code_folding": [], "label": "fig:ts_incvar_age", "note": "this figure plots average perceived income risks of different age groups over time.", "widefigure": true, "hide_input": true, "hide_output": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/ind/ts/')
 
@@ -468,7 +468,7 @@ spending_reg_tb
 # Another important aspect regarding attribution is that it changes perceived risk only through its effect on parameter uncertainty but not on shock uncertainty. Attributing the individual outcome either to idiosyncrasy or common factors do not change how agents think of the variance of the shock, but changes the uncertainty about how persistent the effect of the shock will be. Therefore, for the attribution to play a meaningful role in perceived risk, the size of the income shock shall not be excessively so big that it overshadows the role of persistence uncertainty. 
 #
 
-# + {"caption": "Attribution and Parameter Uncertainty", "code_folding": [], "label": "fig:corr_var", "widefigure": true}
+# + {"caption": "Attribution and Parameter Uncertainty", "code_folding": [], "label": "fig:corr_var", "widefigure": true, "hide_input": true, "hide_output": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -536,7 +536,7 @@ for i in range(nb_fig):
 #
 # It is important to note that this difference still arises even if one assumes the underlying shocks are indeed non-independent. Although different types of income shocks have different implications as to which group correctly or mis-specifies the model, it does not alter the distinction between the lucky and unlucky group. To put it bluntly,  the underlying process determines who is over-confident or under-confident. But the lucky group is always more confident than the unlucky group. 
 
-# + {"caption": "Experienced Volatility and Perceived Risk", "code_folding": [], "label": "fig:var_experience_var", "widefigure": true}
+# + {"caption": "Experienced Volatility and Perceived Risk", "code_folding": [], "label": "fig:var_experience_var", "widefigure": true, "hide_input": true, "hide_output": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -569,7 +569,7 @@ for i in range(nb_fig):
 #
 # Basically, the attribution function is a variant of a logistic function with its function value bounded between $[0,1]$. It takes an s-shape and the parameter $\theta$ governs the steepness of the s-shape around its input value. $\alpha$ is adjustable parameter chosen such that the attribution free of errors happen to be equal to the true correlation between individuals $\delta$, which here takes values of zero for independence assumption. In the model, $\theta$ is the parameter that governs the degree of the attribution errors. It takes any non-negative value. Although the qualitative pattern induced by the attribution errors stands for any positive $\theta$, letting it be a parameter leaves modelers the room to recover it from subjective risks data. The attribution function under different $\theta$ is shown in Figure \ref{fig:theta_corr}. The higher $\theta$ is, the more sensitive the assigned correlation is to the size of the shock, thus inducing a higher dispersion of the perceived correlation between the lucky group and the unlucky group. 
 
-# + {"caption": "Attribution Function", "code_folding": [], "label": "fig:theta_corr", "widefigure": true}
+# + {"caption": "Attribution Function", "code_folding": [], "label": "fig:theta_corr", "widefigure": true, "hide_input": true, "hide_output": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -585,7 +585,7 @@ for i in range(nb_fig):
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
 
-# + {"caption": "Current Income and Perceived Risk", "code_folding": [], "label": "fig:var_recent", "widefigure": true}
+# + {"caption": "Current Income and Perceived Risk", "code_folding": [], "label": "fig:var_recent", "widefigure": true, "hide_input": true, "hide_output": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -612,7 +612,7 @@ for i in range(nb_fig):
 #
 # A subtle but interesting point is that the U-shape is skewed toward left, meaning perceived risks decrease with the income over the most part of the income distribution before the pattern reverses. More intuitively, it means that although low and high income perceived risks to be higher because of its deviation from the its long-run mean. This force is muted for the high income group because they have a lower peceived risks due to the attribution errors. 
 
-# + {"caption": "Simulated Income Profile of Perceived Risk", "code_folding": [], "label": "fig:var_recent_sim", "widefigure": true}
+# + {"caption": "Simulated Income Profile of Perceived Risk", "code_folding": [], "label": "fig:var_recent_sim", "widefigure": true, "hide_input": true, "hide_output": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -631,7 +631,7 @@ for i in range(nb_fig):
 
 # ### Age and experience and perceived risks 
 
-# + {"caption": "Simulated Experience of Volatility and Perceived Risk", "code_folding": [], "label": "fig:var_experience_var_sim", "widefigure": true}
+# + {"caption": "Simulated Experience of Volatility and Perceived Risk", "code_folding": [], "label": "fig:var_experience_var_sim", "widefigure": true, "hide_input": true, "hide_output": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -647,7 +647,7 @@ for i in range(nb_fig):
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
 
-# + {"caption": "Simulated Age Profile of Perceived Risk", "code_folding": [], "label": "fig:var_age_sim", "widefigure": true}
+# + {"caption": "Simulated Age Profile of Perceived Risk", "code_folding": [], "label": "fig:var_age_sim", "widefigure": true, "hide_input": true, "hide_output": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -686,7 +686,7 @@ for i in range(nb_fig):
 #
 # Figure \ref{fig:recent_change_var_sim1} illustrates the first point. The scatter plots showcase the correlation between average income changes across population and average perceive risks under purely idiosyncratic risks and aggregate risks. The negative correlation with aggregate risks illustrate the counter-cylical perceived risks. There is no such a correlation under purely idiosyncratic risks. Figure \ref{fig:recent_change_var_sim2} testifies the second point. It plots the same correlation with and without attribution errors when the aggregate risk exists. Attribution errors brings about the asymmetry not seen when the bias is absent. 
 
-# + {"caption": "Simulatd Average Labor Market and Perceived Risk", "code_folding": [], "label": "fig:recent_change_var_sim1", "widefigure": true}
+# + {"caption": "Simulatd Average Labor Market and Perceived Risk", "code_folding": [], "label": "fig:recent_change_var_sim1", "widefigure": true, "hide_input": true, "hide_output": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -702,7 +702,7 @@ for i in range(nb_fig):
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
 
-# + {"caption": "Simulated Average Labor Market Outcome and Perceived Risk", "code_folding": [], "label": "fig:recent_change_var_sim2", "widefigure": true}
+# + {"caption": "Simulated Average Labor Market Outcome and Perceived Risk", "code_folding": [], "label": "fig:recent_change_var_sim2", "widefigure": true, "hide_input": true, "hide_output": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 

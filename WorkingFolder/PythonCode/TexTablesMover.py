@@ -59,7 +59,7 @@ for file in os.listdir(ltxtb_where):
         f = open(file_path, 'r')
         ltxtb = f.read()
         #print(len(ltxtb))
-        ltxtbs = ltxtbs + ltxtb
+        ltxtbs = ltxtbs +ltxtb
 
 key1 = '% tables'
 

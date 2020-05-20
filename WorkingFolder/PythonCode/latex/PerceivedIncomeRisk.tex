@@ -50,7 +50,7 @@
 \usepackage{rotating}
 \usepackage{threeparttable}
 \usepackage{subcaption}
-
+\usepackage[capposition=top]{floatrow}
 
 
     
@@ -783,12 +783,6 @@ symmetry of the perceived density or upper/lower tail risk.
 {[}FIGURE \ref{fig:histmoms} HERE{]}
 
 
-    \begin{figure}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.4\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_4_0.png}\end{center}
-        \caption{Distribution of Individual Moments}
-        \label{fig:histmoms}
-    \end{figure}
-    
     \hypertarget{counter-cylicality-with-labor-market-outcomes}{%
 \subsection{Counter-cylicality with labor market
 outcomes}\label{counter-cylicality-with-labor-market-outcomes}}
@@ -804,12 +798,6 @@ market outcomes.
 {[}TABLE \ref{macro_corr_he_state} HERE{]}
 
 
-    \begin{figure}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.4\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_6_0.png}\end{center}
-        \caption{Recent Labor Market Outcome and Perceived Risks}
-        \label{fig:tshe}
-    \end{figure}
-    
 
 
     \hypertarget{experienced-volatility-and-perceived-risks}{%
@@ -822,12 +810,6 @@ risks.
 {[}FIGURE \ref{fig:var_experience_var_data} HERE{]}
 
 
-    \begin{figure}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.4\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_10_0.png}\end{center}
-        \caption{Experienced Volatility and Perceived Income Risk}
-        \label{fig:var_experience_var_data}
-    \end{figure}
-    
 
     \hypertarget{role-of-individual-characteristics}{%
 \subsection{Role of individual
@@ -958,19 +940,7 @@ environment? This will be the focus of the coming sections.
 {[}FIGURE \ref{fig:ts_incvar_age} HERE{]}
 
 
-    \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_13_0.png}\end{center}
-        \caption{Perceived Income by Income}
-        \label{fig:barplot_byinc}
-    \end{figure*}
-    
 
-    \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_14_0.png}\end{center}
-        \caption{Perceived Income by Age}
-        \label{fig:ts_incvar_age}
-    \end{figure*}
-    
 
 
     \hypertarget{perceived-income-risks-and-decisions}{%
@@ -1265,12 +1235,6 @@ not be excessively so big that it overshadows the role of persistence
 uncertainty.
 
 
-    \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_23_0.png}\end{center}
-        \caption{Attribution and Parameter Uncertainty}
-        \label{fig:corr_var}
-    \end{figure*}
-    
     \hypertarget{attribution-errors}{%
 \subsubsection{Attribution errors}\label{attribution-errors}}
 
@@ -1369,12 +1333,6 @@ underlying process determines who is over-confident or under-confident.
 But the lucky group is always more confident than the unlucky group.
 
 
-    \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_25_0.png}\end{center}
-        \caption{Experienced Volatility and Perceived Risk}
-        \label{fig:var_experience_var}
-    \end{figure*}
-    
     \hypertarget{extrapolative-attribution}{%
 \subsubsection{Extrapolative
 attribution}\label{extrapolative-attribution}}
@@ -1418,19 +1376,7 @@ dispersion of the perceived correlation between the lucky group and the
 unlucky group.
 
 
-    \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_27_0.png}\end{center}
-        \caption{Attribution Function}
-        \label{fig:theta_corr}
-    \end{figure*}
-    
 
-    \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_28_0.png}\end{center}
-        \caption{Current Income and Perceived Risk}
-        \label{fig:var_recent}
-    \end{figure*}
-    
     \hypertarget{simulation}{%
 \subsection{Simulation}\label{simulation}}
 
@@ -1475,30 +1421,12 @@ force is muted for the high income group because they have a lower
 peceived risks due to the attribution errors.
 
 
-    \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_30_0.png}\end{center}
-        \caption{Simulated Income Profile of Perceived Risk}
-        \label{fig:var_recent_sim}
-    \end{figure*}
-    
     \hypertarget{age-and-experience-and-perceived-risks}{%
 \subsubsection{Age and experience and perceived
 risks}\label{age-and-experience-and-perceived-risks}}
 
 
-    \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_32_0.png}\end{center}
-        \caption{Simulated Experience of Volatility and Perceived Risk}
-        \label{fig:var_experience_var_sim}
-    \end{figure*}
-    
 
-    \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_33_0.png}\end{center}
-        \caption{Simulated Age Profile of Perceived Risk}
-        \label{fig:var_age_sim}
-    \end{figure*}
-    
     \hypertarget{aggregate-risk}{%
 \subsubsection{Aggregate risk}\label{aggregate-risk}}
 
@@ -1562,19 +1490,7 @@ aggregate risk exists. Attribution errors brings about the asymmetry not
 seen when the bias is absent.
 
 
-    \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_35_0.png}\end{center}
-        \caption{Simulatd Average Labor Market and Perceived Risk}
-        \label{fig:recent_change_var_sim1}
-    \end{figure*}
-    
 
-    \begin{figure*}[!ht]
-        \begin{center}\adjustimage{max size={0.9\linewidth}{0.8\paperheight}}{PerceivedIncomeRisk_files/PerceivedIncomeRisk_36_0.png}\end{center}
-        \caption{Simulated Average Labor Market Outcome and Perceived Risk}
-        \label{fig:recent_change_var_sim2}
-    \end{figure*}
-    
     \hypertarget{coclusion}{%
 \section{Coclusion}\label{coclusion}}
 
