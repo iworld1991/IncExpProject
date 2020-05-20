@@ -140,7 +140,7 @@ IncSCEIndMoms = SCEIndM[sub_var+dem_var+sub_var2]
 IncSCEIndMoms = IncSCEIndMoms.dropna(how='any')
 #IncSCEIndMomsEst = IncSCEIndMomsEst.dropna(how='any')
 
-# + {"code_folding": [2]}
+# + {"code_folding": []}
 ## rename
 
 IncSCEIndMoms = IncSCEIndMoms.rename(columns={'Q24_mean': 'incexp',
@@ -191,8 +191,8 @@ vars_cat = ['HHinc','gender','age_gr','byear_gr','HHinc_gr','educ_gr']
 for var in vars_cat:
     IncSCEIndMoms[var] = pd.Categorical(IncSCEIndMoms[var],ordered = False)
 
-# + {"code_folding": [4, 14]}
-moms = ['incexp','incvar','rincexp','rincvar']
+# + {"code_folding": [14]}
+moms = ['incexp','incvar','inciqr','rincexp','rincvar']
 #moms_est = ['IncSkew','IncKurt']
 
 ## compute population summary stats for these ind moms
@@ -382,8 +382,19 @@ def corrprint(corr,
 corr_list = []
 col_list = []
 
-#print('median')
-for moms in ['var','iqr','rvar','skew']:
+
+## mean
+for moms in ['var','iqr','rvar']:
+    col_list.append('mean:'+str(moms))
+    for lag in range(lag_loop):
+        corr = st.pearsonr(np.array(dt_combM['he'][:-(lag+1)]),
+                           np.array(dt_combM[str(moms)+'Mean'])[(lag+1):]
+                          )
+        corr_str = corrtostr(corr)
+        corr_list.append(corr_str)
+        #corrprint(corr,moms)
+## median
+for moms in ['var','iqr','rvar']:
     col_list.append('median:'+str(moms))
     for lag in range(lag_loop):
         corr = st.pearsonr(np.array(dt_combM['he'][:-(lag+1)]),
@@ -393,15 +404,6 @@ for moms in ['var','iqr','rvar','skew']:
         corr_list.append(corr_str)
         #corrprint(corr, moms)
 
-for moms in ['var','iqr','rvar','skew']:
-    col_list.append('mean:'+str(moms))
-    for lag in range(lag_loop):
-        corr = st.pearsonr(np.array(dt_combM['he'][:-(lag+1)]),
-                           np.array(dt_combM[str(moms)+'Mean'])[(lag+1):]
-                          )
-        corr_str = corrtostr(corr)
-        corr_list.append(corr_str)
-        #corrprint(corr,moms)
 
 
 corr_array = np.array(corr_list).reshape([int(len(corr_list)/lag_loop),

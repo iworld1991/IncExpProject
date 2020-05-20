@@ -67,7 +67,7 @@ dataset_psid = pd.read_excel('../OtherData/psid/psid_history_vol3.xls')
 
 vars_id = ['userid','date']
 
-moms_nom = ['Q24_mean','Q24_var']
+moms_nom = ['Q24_mean','Q24_iqr','Q24_var']
 
 moms_real = ['Q24_rmean','Q24_rvar']
 
@@ -435,8 +435,8 @@ plt.savefig('../Graphs/ind/boxplot2.jpg')
 
 # ### 4. Experienced volatility and risks
 
-# + {"code_folding": [2]}
-keeps = ['incexp','incvar','rincexp','rincvar','incskew','rmse']
+# + {"code_folding": []}
+keeps = ['incexp','incvar','inciqr','rincexp','rincvar','incskew','rmse']
 
 SCEM_cohort = pd.pivot_table(data = SCEM,
                              index=['year','age'],
@@ -464,7 +464,7 @@ plt.savefig('../Graphs/ind/scatter_history_vol_var.jpg')
 # +
 ## generate logs 
 
-vars_log = ['incvar','rincvar','rmse']
+vars_log = ['incvar','rincvar','inciqr','rmse']
 
 for var in vars_log:
     SCEM[var] = np.log(SCEM[var])
@@ -475,12 +475,12 @@ for var in vars_log:
 rs_list = {}  ## list to store results 
 nb_spc = 3  ## number of specifications 
 
-dep_list = ['incvar','rincvar'] 
+dep_list = ['incvar','inciqr'] 
 
 for i,mom in enumerate(dep_list):
     ## model 1 
     model = smf.ols(formula = str(mom)
-                    +'~ rmse+ C(HHinc_gr)+C(educ_gr)',
+                    +'~ rmse+ C(HHinc_gr)',
                     data = SCEM)
     rs_list[nb_spc*i] = model.fit()
     
@@ -502,7 +502,10 @@ rs_names = [rs_list[i] for i in range(len(rs_list))]
 dfoutput = summary_col(rs_names,
                         float_format='%0.2f',
                         stars = True,
-                        regressor_order = ['rmse','C(age_gr)','C(HHinc_gr)','C(educ_gr)'],
+                        regressor_order = ['rmse',
+                                           'C(HHinc_gr)[T.low inc]',
+                                           'C(educ_gr)[T.low educ]',
+                                           'C(age_gr)'],
                         info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
                                   'R2':lambda x: "{:.2f}".format(x.rsquared)}
                       )
@@ -590,7 +593,7 @@ tb.to_excel('../Tables/micro_reg_history_vol.xlsx')
 # +
 ## preps 
 
-dep_list =  ['incvar','rincvar'] 
+dep_list =  ['incvar','inciqr'] 
 dep_list2 =['incexp','rincexp']
 indep_list_ct = ['UEprobInd','UEprobAgg']
 indep_list_dc = ['HHinc','selfemp','fulltime']
@@ -813,7 +816,7 @@ f.close()
 rs_list = {}  ## list to store results 
 nb_spc = 1  ## number of specifications 
 
-dep_list3 = ['incexp','incvar','rincvar','incskew','UEprobInd','UEprobAgg']
+dep_list3 = ['incexp','incvar','rincvar','incskew','UEprobAgg']
 
 
 for i,mom in enumerate(dep_list3):
@@ -832,7 +835,6 @@ dfoutput = summary_col(rs_names,
                                            'incvar',
                                            'rincvar',
                                            'incskew',
-                                           'UEprobInd',
                                           'UEprobAgg'],
                         info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
                                   'R2':lambda x: "{:.2f}".format(x.rsquared)})
