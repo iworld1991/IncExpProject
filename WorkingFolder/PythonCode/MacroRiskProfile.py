@@ -192,7 +192,7 @@ for var in vars_cat:
     IncSCEIndMoms[var] = pd.Categorical(IncSCEIndMoms[var],ordered = False)
 
 # + {"code_folding": [4, 14]}
-moms = ['incexp','incvar','inciqr','rincexp','rincvar','incskew']
+moms = ['incexp','incvar','rincexp','rincvar']
 #moms_est = ['IncSkew','IncKurt']
 
 ## compute population summary stats for these ind moms
@@ -783,7 +783,7 @@ for gr in gr_vars:
 ## save 
 corr_df.T.to_excel('../Tables/macro_corr_age_gr.xlsx')
 
-# + {"code_folding": []}
+# + {"code_folding": [12, 23]}
 ## correlation coefficients by sub group HHinc
 
 ### subgroup population summary statistics

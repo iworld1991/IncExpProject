@@ -469,7 +469,7 @@ vars_log = ['incvar','rincvar','rmse']
 for var in vars_log:
     SCEM[var] = np.log(SCEM[var])
 
-# + {"code_folding": [9]}
+# + {"code_folding": []}
 ## full-table for risks  
 
 rs_list = {}  ## list to store results 
@@ -502,14 +502,15 @@ rs_names = [rs_list[i] for i in range(len(rs_list))]
 dfoutput = summary_col(rs_names,
                         float_format='%0.2f',
                         stars = True,
-                        #info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
-                        #          'R2':lambda x: "{:.2f}".format(x.rsquared)}
+                        regressor_order = ['rmse','C(age_gr)','C(HHinc_gr)','C(educ_gr)'],
+                        info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
+                                  'R2':lambda x: "{:.2f}".format(x.rsquared)}
                       )
 
 dfoutput.title = 'Experienced Volatility and Perceived Income Risks'
 print(dfoutput)
 
-# + {"code_folding": []}
+# + {"code_folding": [19, 40]}
 ## output tables 
 
 beginningtex = """
@@ -548,17 +549,27 @@ table = CatRename(dfoutput.tables[0])
 
 ## excluding rows that are not to be exported 
 
-to_drop = ['R-squared']
+## drop the columns not wanted as well as rows below it 
 
-## need to also drop rows reporting the stadard deviations as well 
-rows_below = []
-for var in to_drop:
-    row_idx = list(table.index).index(var)
-    #print(row_idx)
-    rows_below.append(row_idx) 
-    #rows_below.append(row_idx+1)
-    
-tb = table.drop(index = to_drop)
+def droptables(table,
+              to_drop):
+    table = table.reset_index()
+    to_drop_ids = []
+
+    for var in to_drop:
+        to_drop_idx = table[table['index']==var].index[0]
+        to_drop_ids.append(to_drop_idx)
+        to_drop_ids.append(to_drop_idx+1)
+
+    table = table.drop(index = to_drop_ids)
+    table = table.set_index('index')
+    table.index.name = ''
+    return table
+
+to_drop = ['Intercept','R-squared']
+ 
+tb = droptables(table,
+                to_drop)
 
 ## write to latex 
 f = open('../Tables/latex/micro_reg_history_vol.tex', 'w')
@@ -581,11 +592,11 @@ tb.to_excel('../Tables/micro_reg_history_vol.xlsx')
 
 dep_list =  ['incvar','rincvar'] 
 dep_list2 =['incexp','rincexp']
-indep_list_ct = ['UEprobInd','UEprobAgg','Stkprob','rmse']
+indep_list_ct = ['UEprobInd','UEprobAgg']
 indep_list_dc = ['HHinc','selfemp','fulltime']
 
 
-# + {"code_folding": [5]}
+# + {"code_folding": []}
 ## full-table for risks  
 
 rs_list = {}  ## list to store results 
@@ -608,14 +619,15 @@ for i,mom in enumerate(dep_list):
     
     ## model 3 
     model3 = smf.ols(formula = str(mom)
-                    +'~ C(parttime) + C(selfemp) + C(HHinc_gr) +'
+                    +'~ C(parttime) + C(selfemp) + C(HHinc_gr) + C(educ_gr) +'
                      + ct_str,
                     data = SCEM)
     rs_list[nb_spc*i+2] = model3.fit()
     
     ## model 4 
     model4 = smf.ols(formula = str(mom)
-                    +'~ C(gender)+ C(educ_gr)',
+                    +'~ C(parttime) + C(selfemp) + C(gender)+ C(educ_gr) + + C(HHinc_gr) +'
+                     + ct_str,
                     data = SCEM)
     rs_list[nb_spc*i+3] = model4.fit()
     
@@ -625,8 +637,15 @@ rs_names = [rs_list[i] for i in range(len(rs_list))]
 dfoutput = summary_col(rs_names,
                         float_format='%0.2f',
                         stars = True,
+                        regressor_order = ['C(parttime)[T.yes]',
+                                           'C(selfemp)[T.yes]',
+                                           'UEprobAgg','UEprobInd',
+                                           'C(HHinc_gr)[T.low inc]',
+                                           'C(educ_gr)[T.low educ]',
+                                           'C(gender)[T.male]'
+                                           ],
                         info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
-                                  #'R2':lambda x: "{:.2f}".format(x.rsquared)
+                                  'R2':lambda x: "{:.2f}".format(x.rsquared)
                                   })
 dfoutput.title = 'Perceived Income Risks'
 print(dfoutput)
@@ -669,17 +688,10 @@ table = CatRename(dfoutput.tables[0])
 
 ## excluding rows that are not to be exported 
 
-to_drop = ['R-squared']
-
-## need to also drop rows reporting the stadard deviations as well 
-rows_below = []
-for var in to_drop:
-    row_idx = list(table.index).index(var)
-    #print(row_idx)
-    rows_below.append(row_idx) 
-    #rows_below.append(row_idx+1)
-    
-tb = table.drop(index = to_drop)
+to_drop = ['Intercept','R-squared']
+ 
+tb = droptables(table,
+                to_drop)
 
 ## write to latex 
 f = open('../Tables/latex/micro_reg.tex', 'w')
@@ -693,8 +705,11 @@ f.close()
 ## save
 
 tb.to_excel('../Tables/micro_reg.xlsx')
+# -
 
-# + {"code_folding": [5, 53]}
+tb
+
+# + {"code_folding": [5, 7]}
 ## full-table for expected growth, appendix 
 
 rs_list = {}  ## list to store results 
@@ -717,46 +732,49 @@ for i,mom in enumerate(dep_list2):
     
     ## model 3 
     model3 = smf.ols(formula = str(mom)
-                    +'~ C(parttime) + C(selfemp) + C(HHinc_gr) +'
+                    +'~ C(parttime) + C(selfemp) + C(HHinc_gr) + C(educ_gr) +'
                      + ct_str,
                     data = SCEM)
     rs_list[nb_spc*i+2] = model3.fit()
     
     ## model 4 
     model4 = smf.ols(formula = str(mom)
-                    +'~ C(gender)+ C(educ_gr)',
+                    +'~ C(parttime) + C(selfemp) + C(gender)+ C(educ_gr) + + C(HHinc_gr) +'
+                     + ct_str,
                     data = SCEM)
     rs_list[nb_spc*i+3] = model4.fit()
     
     
-rs_names2 = [rs_list[i] for i in range(len(rs_list))]
+rs_names = [rs_list[i] for i in range(len(rs_list))]
 
-dfoutput2 = summary_col(rs_names2,
+dfoutput2 = summary_col(rs_names,
                         float_format='%0.2f',
                         stars = True,
+                        regressor_order = ['C(parttime)[T.yes]',
+                                           'C(selfemp)[T.yes]',
+                                           'UEprobAgg','UEprobInd',
+                                           'C(HHinc_gr)[T.low inc]',
+                                           'C(educ_gr)[T.low educ]',
+                                           'C(gender)[T.male]'
+                                           ],
                         info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
-                                  'R2':lambda x: "{:.2f}".format(x.rsquared)})
+                                  'R2':lambda x: "{:.2f}".format(x.rsquared)
+                                  })
+
 dfoutput2.title = 'Perceived Income Growth'
 print(dfoutput2)
 
 ## relabel 
 table = CatRename(dfoutput2.tables[0])
 
+## excluding rows that are not to be exported 
 
-## drop 
-to_drop = ['R-squared']
-
-## need to also drop rows reporting the stadard deviations as well 
-rows_below = []
-for var in to_drop:
-    row_idx = list(table.index).index(var)
-    #print(row_idx)
-    rows_below.append(row_idx) 
-    
-tb = table.drop(index = to_drop)
+to_drop = ['Intercept','R-squared']
+ 
+tb = droptables(table,
+                to_drop)
 
 ## latex setting 
-
 
 beginningtex = """
 \\begin{table}[p]
@@ -773,6 +791,7 @@ endtex = """\\begin{tablenotes}\item Standard errors are clustered by household.
 \\end{adjustbox}
 \\end{table}"""
 
+"""
 ## write to latex 
 f = open('../Tables/latex/micro_reg_exp.tex', 'w')
 f.write(beginningtex)
@@ -781,6 +800,7 @@ tb_ltx = tb.to_latex().replace('lllllllll','ccccccccc')   # hard coded here
 f.write(tb_ltx)
 f.write(endtex)
 f.close()
+"""
 # -
 
 # ## 5. Perceived risks and decisions
@@ -793,7 +813,7 @@ f.close()
 rs_list = {}  ## list to store results 
 nb_spc = 1  ## number of specifications 
 
-dep_list3 = ['incexp','rincexp','incvar','rincvar','UEprobInd','UEprobAgg','incskew']
+dep_list3 = ['incexp','incvar','rincvar','incskew','UEprobInd','UEprobAgg']
 
 
 for i,mom in enumerate(dep_list3):
@@ -808,6 +828,12 @@ rs_names = [rs_list[i] for i in range(len(rs_list))]
 dfoutput = summary_col(rs_names,
                         float_format='%0.2f',
                         stars = True,
+                        regressor_order = ['incexp',
+                                           'incvar',
+                                           'rincvar',
+                                           'incskew',
+                                           'UEprobInd',
+                                          'UEprobAgg'],
                         info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
                                   'R2':lambda x: "{:.2f}".format(x.rsquared)})
 dfoutput.title = 'Perceived Income Risks and Household Spending'
@@ -851,16 +877,10 @@ table = CatRename(dfoutput.tables[0])
 
 ## excluding rows that are not to be exported 
 
-to_drop = ['R-squared']
-
-## need to also drop rows reporting the stadard deviations as well 
-rows_below = []
-for var in to_drop:
-    row_idx = list(table.index).index(var)
-    #print(row_idx)
-    rows_below.append(row_idx) 
-    
-tb = table.drop(index = to_drop)
+to_drop = ['Intercept','R-squared']
+ 
+tb = droptables(table,
+                to_drop)
 
 ## excel version 
 tb.to_excel('../Tables/spending_reg.xlsx')
@@ -876,6 +896,4 @@ f.close()
 
 
 # -
-
-
 
