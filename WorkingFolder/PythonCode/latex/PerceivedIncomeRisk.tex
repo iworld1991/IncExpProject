@@ -782,10 +782,33 @@ symmetry of the perceived density or upper/lower tail risk.
 
 {[}FIGURE \ref{fig:histmoms} HERE{]}
 
-Perceived income risks also differ across different age group and by
-household income.
+How are perceived income risks different across a variety of demographic
+factors? Empirical estimates of income risks of different demographic
+groups from microdata have been
+rare\footnote{For instance, \cite{meghir2004income} estimated that high-education group is faced with higher income risks than the low-education group.  \cite{bloom2018great} documented that income risks decreases with age and varies with current income level in a U-shaped.},
+not mentioning in subjective risk perceptions. Figure
+\ref{fig:ts_invar_age} plots the average perceived risks of young,
+middle-aged, and old workers over the sample period. It is clear that
+for most of the months, perceived risks decrease with age.
+Hypothetically, this may be either because of more stable earning
+dynamics as one is older in the market in reality, or a better grasp of
+the true income process and higher subjective certainty. The model I
+will build allows both to play a role.
 
 {[}FIGURE \ref{fig:ts_incvar_age} HERE{]}
+
+Another important question is how income risk perceptions depend on the
+realized income. This is unclear ex-ante because it depends on the true
+income process as well as the perception formation. SCE does not
+directly report the current earning by the individual who reports
+earning forecasts. Instead, I use what's available in the survey, the
+total pretax household income in the past year as a proxy to the past
+realizations of labor income. As Figure \ref{fig:barplot_byinc} shows,
+perceived risks gradually declines as one's household income increases
+for most range of income. But the pattern reverses for the top income
+group. Such a non-monotonic relationship between risk perceptions and
+past realizations, as I will show later in the theoretical section, will
+be reconciled by people's state-dependent attribution and learning.
 
 {[}FIGURE \ref{fig:barplot_byinc} HERE{]}
 
@@ -796,15 +819,43 @@ household income.
 \subsection{Counter-cyclicality of perceived
 risk}\label{counter-cyclicality-of-perceived-risk}}
 
-This section shows that the perceived income risks are countercylical,
-i.e.~perceived risks are negatively correlated with the recent labor
-market outcomes.
+Some studies have documented that income risks are counter-cyclical
+based on cross-sectional data.
+\footnote{But they differ in exactly which moments of the income are counter-cyclical. For instance, \cite{storesletten2004cyclical} found that variances of income shocks are counter-cyclical, while \cite{guvenen2014nature} and \cite{catherine_countercyclical_2019}, in contrast, found it to be the left skewness.}
+It is worth inspecting if the subjective income risk profile has a
+similar pattern. Figure \ref{fig:tshe} plots the average perceived
+income risks from SCE against the YoY growth rate of average hourly wage
+throughout the United States, which shows a clear negative correlation.
+Table \ref{macro_corr_he} further confirms such a counter-cyclicality by
+reporting the regression coefficients of different measures of average
+risks on the wage rate of different lags. All coefficients are
+significantly negative.
 
 {[}FIGURE \ref{fig:tshe} HERE{]}
 
 {[}TABLE \ref{macro_corr_he} HERE{]}
 
+The pattern can be also seen at the state level. Table
+\ref{macro_corr_he_state} reports the regression coefficients of the
+monthly average perceived risk within each state on the state labor
+market conditions, measured by either wage growth or the state-level
+unemployment rate, respectively. It shows that a tighter labor market
+(higher wage growth or a lower unemployment rate) is associated with
+lower perceived income risks. Note that our sample stops in June 2019
+thus not covering the outbreak of the pandemic in early 2020. The
+counter-cyclicality will be very likely more salient if it includes the
+current period, which was marked by catastrophic labor market
+deterioration and increase market risks.
+
 {[}TABLE \ref{macro_corr_he_state} HERE{]}
+
+The counter-cyclicality in subjective risk perceptions seen in the
+survey may suggest the standard assumption of state-independent symmetry
+in income shocks is questionable. But it may well be, alternatively,
+because people's subjective reaction to the positive and negative shocks
+are asymmetric even if the underlying process being symmetric. The model
+to be constructed in the theoretical section explores the possible role
+of both.
 
 
 
