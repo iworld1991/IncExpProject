@@ -164,7 +164,7 @@ SCEM = pd.merge(SCEM,
                 left_on = ['year','age'], 
                 right_on = ['year','age'])
 
-SCEM = SCEM.rename(columns={'rmse':'exp_vol'})
+SCEM = SCEM.rename(columns={'rmse':'expvol'})
 
 # +
 ## creat some less fine groups 
@@ -182,6 +182,8 @@ SCEM = SCEM[(SCEM.age < 66) & (SCEM.age > 20)]
 # -
 
 len(SCEM)
+
+SCEM.columns
 
 # ### 2. Correlation pattern 
 
@@ -361,7 +363,7 @@ plt.savefig('../Graphs/ind/boxplot.jpg')
 # ### 4. Experienced volatility and risks
 
 # + {"code_folding": []}
-keeps = ['incexp','incvar','inciqr','rincexp','rincvar','incskew','exp_vol']
+keeps = ['incexp','incvar','inciqr','rincexp','rincvar','incskew','expvol']
 
 SCEM_cohort = pd.pivot_table(data = SCEM,
                              index=['year','age'],
@@ -377,7 +379,7 @@ SCEM_cohort = pd.pivot_table(data = SCEM,
 ## scatter plot of experienced volatility and perceived risk 
 
 plt.plot(figsize =(30,30))
-plt.plot(np.log(SCEM_cohort['exp_vol']),
+plt.plot(np.log(SCEM_cohort['expvol']),
          np.log(SCEM_cohort['varMean']),
          '*',
          lw = 5)
@@ -405,19 +407,19 @@ dep_list = ['incvar','inciqr']
 for i,mom in enumerate(dep_list):
     ## model 1 
     model = smf.ols(formula = str(mom)
-                    +'~ exp_vol+ C(age_gr)',
+                    +'~ expvol+ C(age_gr)',
                     data = SCEM)
     rs_list[nb_spc*i] = model.fit()
     
     ## model 2
     model2 = smf.ols(formula = str(mom)
-                    +'~ exp_vol+ C(age_gr)+C(educ_gr)',
+                    +'~ expvol+ C(age_gr)+C(educ_gr)',
                     data = SCEM)
     rs_list[nb_spc*i+1] = model2.fit()
     
     ## model 3
     model3 = smf.ols(formula = str(mom)
-                    +'~ exp_vol+ C(age_gr) + C(HHinc_gr)+C(educ_gr)',
+                    +'~ expvol+ C(age_gr) + C(HHinc_gr)+C(educ_gr)',
                     data = SCEM)
     rs_list[nb_spc*i+2] = model3.fit()
 
@@ -432,7 +434,7 @@ dfoutput = summary_col(rs_names,
                                            'C(age_gr)[T.40-48]',
                                            'C(age_gr)[T.49-57]',
                                            'C(age_gr)[T.>57]',
-                                            'C(educ_gr)[T.low educ]',
+                                           'C(educ_gr)[T.low educ]',
                                            'C(HHinc_gr)[T.low inc]'
                                           ],
                         info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
@@ -537,35 +539,35 @@ nb_spc = 6  ## number of specifications
 for i,mom in enumerate(dep_list):
     ## model 1 only with experienced volatility 
     model = smf.ols(formula = str(mom)
-                    +'~ exp_vol',
+                    +'~ expvol',
                     data = SCEM)
     rs_list[nb_spc*i] = model.fit()
     
     ## model 2 experienced vol and age 
     
     model2 = smf.ols(formula = str(mom)
-                    +'~ exp_vol + C(age_gr)',
+                    +'~ expvol + C(age_gr)',
                     data = SCEM)
     rs_list[nb_spc*i+1] = model2.fit()
     
     ## model 3 experienced vol, age, income, education 
     
     model3 = smf.ols(formula = str(mom)
-                    +'~ exp_vol + C(age_gr) + C(HHinc_gr) + C(educ_gr) + C(gender)',
+                    +'~ expvol + C(age_gr) + C(HHinc_gr) + C(educ_gr) + C(gender)',
                     data = SCEM)
     rs_list[nb_spc*i+2] = model3.fit()
     
     ## model 4 + job characteristics 
     
     model4 = smf.ols(formula = str(mom)
-                    +'~ exp_vol + C(gender)+ C(educ_gr) + C(HHinc_gr) + C(age_gr)',
+                    +'~ expvol + C(gender)+ C(educ_gr) + C(HHinc_gr) + C(age_gr)',
                     data = SCEM)
     rs_list[nb_spc*i+3] = model4.fit()
     
     
     ## model 5 + job characteristics 
     model5 = smf.ols(formula = str(mom)
-                    +'~ exp_vol + C(parttime) + C(selfemp) + C(gender)+ C(educ_gr) + C(HHinc_gr) + C(age_gr)',
+                    +'~ expvol + C(parttime) + C(selfemp) + C(gender)+ C(educ_gr) + C(HHinc_gr) + C(age_gr)',
                     data = SCEM)
     rs_list[nb_spc*i+4] = model5.fit()
     
@@ -573,7 +575,7 @@ for i,mom in enumerate(dep_list):
     ## model 6 + job characteristics 
     ct_str = '+'.join([var for var in indep_list_ct])
     model6 = smf.ols(formula = str(mom)
-                    +'~ exp_vol + C(parttime) + C(selfemp) + C(gender)+ C(educ_gr) + C(HHinc_gr) + C(age_gr) + '
+                    +'~ expvol + C(parttime) + C(selfemp) + C(gender)+ C(educ_gr) + C(HHinc_gr) + C(age_gr) + '
                      + ct_str,
                     data = SCEM)
     rs_list[nb_spc*i+4] = model6.fit()
@@ -584,7 +586,7 @@ rs_names = [rs_list[i] for i in range(len(rs_list))]
 dfoutput = summary_col(rs_names,
                         float_format='%0.2f',
                         stars = True,
-                        regressor_order = ['exp_vol',
+                        regressor_order = ['expvol',
                                            'C(age_gr)[T.30-39]',
                                            'C(age_gr)[T.40-48]',
                                            'C(age_gr)[T.49-57]',
@@ -614,7 +616,7 @@ beginningtex = """
 \\label{micro_reg}"""
 
 endtex = """\\begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
-\item This table reports results associated a regression of perceived income risks (incvar) on experienced volatility ($\text{exp}_\text{vol}$) and a list of household specific variables such as age, income, education, gender, job type and unemployment expectations.
+\item This table reports results associated a regression of looged perceived income risks (incvar) on logged experienced volatility ($\\text{expvol}$) and a list of household specific variables such as age, income, education, gender, job type and unemployment expectations.
 \\end{tablenotes}
 \\end{threeparttable}
 \\end{adjustbox}

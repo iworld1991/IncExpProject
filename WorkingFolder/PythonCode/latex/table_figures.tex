@@ -1,4 +1,4 @@
-                                                                                                                                                   \newpage 
+                                                                                                                                                                        \newpage 
    
   \section*{Tables and Figures} 
     
@@ -183,36 +183,36 @@ $t$ and the quarterly growth rate in hourly earning at $t,t-1,...,t-k$.
 {} & incvar I & incvar II & incvar III & incvar IIII & incvar IIIII \\
                  &          &           &            &             &              \\
 \midrule
-exp\_vol          &  3.95*** &   1.81*** &    2.20*** &     2.20*** &      3.79*** \\
-                 &   (0.25) &    (0.53) &     (0.58) &      (0.58) &       (0.58) \\
-age\_gr=30-39     &          &  -0.33*** &   -0.34*** &    -0.34*** &     -0.37*** \\
+expvol           &  6.31*** &   2.92*** &    3.56*** &     3.56*** &      6.15*** \\
+                 &   (0.40) &    (0.83) &     (0.91) &      (0.91) &       (0.92) \\
+age\_gr=30-39     &          &  -0.33*** &   -0.34*** &    -0.34*** &     -0.38*** \\
                  &          &    (0.03) &     (0.03) &      (0.03) &       (0.03) \\
-age\_gr=40-48     &          &  -0.50*** &   -0.53*** &    -0.53*** &     -0.59*** \\
+age\_gr=40-48     &          &  -0.51*** &   -0.53*** &    -0.53*** &     -0.61*** \\
                  &          &    (0.03) &     (0.03) &      (0.03) &       (0.03) \\
-age\_gr=49-57     &          &  -0.61*** &   -0.59*** &    -0.59*** &     -0.64*** \\
+age\_gr=49-57     &          &  -0.61*** &   -0.59*** &    -0.59*** &     -0.65*** \\
                  &          &    (0.03) &     (0.03) &      (0.03) &       (0.03) \\
-age\_gr=>57       &          &  -0.48*** &   -0.49*** &    -0.49*** &     -0.55*** \\
+age\_gr=>57       &          &  -0.48*** &   -0.48*** &    -0.48*** &     -0.58*** \\
                  &          &    (0.04) &     (0.05) &      (0.05) &       (0.05) \\
-HHinc\_gr=low inc &          &           &    0.20*** &     0.20*** &      0.16*** \\
+HHinc\_gr=low inc &          &           &    0.20*** &     0.20*** &      0.15*** \\
                  &          &           &     (0.02) &      (0.02) &       (0.02) \\
-educ\_gr=low educ &          &           &   -0.11*** &    -0.11*** &     -0.06*** \\
+educ\_gr=low educ &          &           &   -0.11*** &    -0.11*** &     -0.08*** \\
                  &          &           &     (0.02) &      (0.02) &       (0.02) \\
-gender=male      &          &           &   -0.38*** &    -0.38*** &     -0.29*** \\
+gender=male      &          &           &   -0.38*** &    -0.38*** &     -0.31*** \\
                  &          &           &     (0.02) &      (0.02) &       (0.02) \\
 parttime=yes     &          &           &            &             &        -0.03 \\
                  &          &           &            &             &       (0.02) \\
 selfemp=yes      &          &           &            &             &      0.00*** \\
                  &          &           &            &             &       (0.00) \\
-UEprobAgg        &          &           &            &             &      0.04*** \\
-                 &          &           &            &             &       (0.01) \\
-UEprobInd        &          &           &            &             &      0.04*** \\
+UEprobAgg        &          &           &            &             &      0.00*** \\
+                 &          &           &            &             &       (0.00) \\
+UEprobInd        &          &           &            &             &      0.00*** \\
                  &          &           &            &             &       (0.00) \\
 N                &    40529 &     40529 &      34101 &       34101 &        28898 \\
-R2               &     0.01 &      0.02 &       0.04 &        0.04 &         0.06 \\
+R2               &     0.01 &      0.02 &       0.04 &        0.04 &         0.05 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
-\item This table reports results associated a regression of perceived income risks (incvar) on experienced volatility ($	ext{exp}_	ext{vol}$) and a list of household specific variables such as age, income, education, gender, job type and unemployment expectations.
+\item This table reports results associated a regression of looged perceived income risks (incvar) on logged experienced volatility ($\text{expvol}$) and a list of household specific variables such as age, income, education, gender, job type and unemployment expectations.
 \end{tablenotes}
 \end{threeparttable}
 \end{adjustbox}
@@ -235,8 +235,8 @@ rincvar   &            &             &      1.08*** &               &           
           &            &             &       (0.15) &               &                \\
 incskew   &            &             &              &          0.19 &                \\
           &            &             &              &        (0.45) &                \\
-UEprobAgg &            &             &              &               &        0.04*** \\
-          &            &             &              &               &         (0.02) \\
+UEprobAgg &            &             &              &               &          0.44* \\
+          &            &             &              &               &         (0.25) \\
 N         &      53455 &       53171 &        49986 &         52751 &          76531 \\
 R2        &       0.00 &        0.00 &         0.00 &          0.00 &           0.00 \\
 \bottomrule
