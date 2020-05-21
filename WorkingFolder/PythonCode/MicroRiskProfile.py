@@ -108,7 +108,12 @@ SCEM_base = dataset[vars_all_reg_long]
 SCEM_est = dataset_est[vars_est_all]
 
 
-SCEM = pd.merge(SCEM_base, SCEM_est,  how='left', left_on = vars_id, right_on = vars_id)
+## merge 
+SCEM = pd.merge(SCEM_base, 
+                SCEM_est,  
+                how='left', 
+                left_on = vars_id, 
+                right_on = vars_id)
 
 # +
 ## describe data 
@@ -158,6 +163,8 @@ SCEM = pd.merge(SCEM,
                 how= 'outer', 
                 left_on = ['year','age'], 
                 right_on = ['year','age'])
+
+SCEM = SCEM.rename(columns={'rmse':'exp_vol'})
 
 # +
 ## creat some less fine groups 
@@ -311,48 +318,6 @@ for mom in ['incvar','rincvar']:
         
 """
 
-# + {"code_folding": [0, 7]}
-## old box charts
-"""
-fontsize = 80
-figsize = (100,40)
-plt.style.use('ggplot')
-
-
-for gp in ['HHinc','educ','gender']:
-    bp = SCEM.boxplot(column=['incvar','rincvar'],
-                      figsize = figsize,
-                      by = gp,
-                      patch_artist = True,
-                      fontsize = fontsize,
-                      layout=(1, 2),
-                      rot =45,
-                      return_type='dict')
-    
-    #plt.title(mom, fontsize= fontsize)
-    ## adjust width of lines
-    [[item.set_linewidth(4) for item in bp[key]['boxes']] for key in bp.keys()]
-    [[item.set_linewidth(40) for item in bp[key]['fliers']] for key in bp.keys()]
-    [[item.set_linewidth(40) for item in bp[key]['medians']] for key in bp.keys()]
-    [[item.set_linewidth(40) for item in bp[key]['means']] for key in bp.keys()]
-    #[[item.set_linewidth(40) for item in bp[key]['whiskers']] for key in bp.keys()]
-    [[item.set_linewidth(40) for item in bp[key]['caps']] for key in bp.keys()]
-    
-    ## adjust color 
-    #[[item.set_markerfacecolor('r') for item in bp[key]['means']] for key in bp.keys()]
-    #[[item.set_color('k') for item in bp[key]['whiskers']] for key in bp.keys()]
-    
-    
-    plt.xlabel(gp,fontsize = fontsize)
-    plt.ylabel('var', fontsize = fontsize)
-    plt.ylim(0,50)
-    plt.suptitle('')
-    ## save figure 
-    plt.savefig('../Graphs/ind/boxplot'+'_'+str(gp)+'.jpg')
-    
-    
-"""
-
 # + {"code_folding": [15, 16]}
 ## variances by groups 
 
@@ -391,52 +356,12 @@ for i in range(len(gplist)):
         bp.set_ylabel(mom,fontsize = 25)
         
 plt.savefig('../Graphs/ind/boxplot.jpg')
-
-# + {"code_folding": []}
-"""
-## skewness and kurtosis by groups 
-
-momlist = ['incskew','inckurt']
-incg_lb = list(inc_grp.values())
-
-
-## plot 
-
-fig,axes = plt.subplots(len(gplist),2,figsize =(25,25))
-
-for i in range(len(gplist)):
-    for j in range(2):
-        gp = gplist[i]
-        mom = momlist[j]
-        if gplist[i] =='HHinc':
-            bp = sns.boxplot(x = gp,
-                             y = mom,
-                             data = SCEM, 
-                            color = 'skyblue',
-                            ax = axes[i,j],
-                            whis = True,
-                            showfliers = False)
-        else:
-            bp = sns.boxplot(x = gp,
-                             y = mom,
-                             data = SCEM,
-                             color = 'skyblue',
-                             ax = axes[i,j],
-                             showfliers = False)
-            
-        # settings 
-        bp.set_xlabel(gp,fontsize = 25)
-        bp.tick_params(labelsize=25)
-        bp.set_ylabel(mom,fontsize = 25)
-        
-plt.savefig('../Graphs/ind/boxplot2.jpg')
-"""
 # -
 
 # ### 4. Experienced volatility and risks
 
 # + {"code_folding": []}
-keeps = ['incexp','incvar','inciqr','rincexp','rincvar','incskew','rmse']
+keeps = ['incexp','incvar','inciqr','rincexp','rincvar','incskew','exp_vol']
 
 SCEM_cohort = pd.pivot_table(data = SCEM,
                              index=['year','age'],
@@ -452,22 +377,22 @@ SCEM_cohort = pd.pivot_table(data = SCEM,
 ## scatter plot of experienced volatility and perceived risk 
 
 plt.plot(figsize =(30,30))
-plt.plot(np.log(SCEM_cohort['rmse']),
+plt.plot(np.log(SCEM_cohort['exp_vol']),
          np.log(SCEM_cohort['varMean']),
          '*',
          lw = 5)
-plt.xlabel('experienced volatility')
-plt.ylabel('perceived risk')
+plt.xlabel('logged experienced volatility')
+plt.ylabel('logged perceived risk')
 
 plt.savefig('../Graphs/ind/scatter_history_vol_var.jpg')
 
 # +
 ## generate logs 
 
-vars_log = ['incvar','rincvar','inciqr','rmse']
+vars_log = ['incvar','rincvar','inciqr','exp_vol','UEprobAgg','UEprobInd']
 
 for var in vars_log:
-    SCEM[var] = np.log(SCEM[var])
+    SCEM[var] = np.log(SCEM[var]+0.001)
 
 # + {"code_folding": []}
 ## full-table for risks  
@@ -480,19 +405,19 @@ dep_list = ['incvar','inciqr']
 for i,mom in enumerate(dep_list):
     ## model 1 
     model = smf.ols(formula = str(mom)
-                    +'~ rmse+ C(HHinc_gr)',
+                    +'~ exp_vol+ C(age_gr)',
                     data = SCEM)
     rs_list[nb_spc*i] = model.fit()
     
     ## model 2
     model2 = smf.ols(formula = str(mom)
-                    +'~ rmse+ C(HHinc_gr)+C(educ_gr)',
+                    +'~ exp_vol+ C(age_gr)+C(educ_gr)',
                     data = SCEM)
     rs_list[nb_spc*i+1] = model2.fit()
     
     ## model 3
     model3 = smf.ols(formula = str(mom)
-                    +'~ rmse+ C(HHinc_gr)+C(educ_gr)+C(age_gr)',
+                    +'~ exp_vol+ C(age_gr) + C(HHinc_gr)+C(educ_gr)',
                     data = SCEM)
     rs_list[nb_spc*i+2] = model3.fit()
 
@@ -502,10 +427,14 @@ rs_names = [rs_list[i] for i in range(len(rs_list))]
 dfoutput = summary_col(rs_names,
                         float_format='%0.2f',
                         stars = True,
-                        regressor_order = ['rmse',
-                                           'C(HHinc_gr)[T.low inc]',
-                                           'C(educ_gr)[T.low educ]',
-                                           'C(age_gr)'],
+                        regressor_order = ['exp_vol',
+                                           'C(age_gr)[T.30-39]',
+                                           'C(age_gr)[T.40-48]',
+                                           'C(age_gr)[T.49-57]',
+                                           'C(age_gr)[T.>57]',
+                                            'C(educ_gr)[T.low educ]',
+                                           'C(HHinc_gr)[T.low inc]'
+                                          ],
                         info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
                                   'R2':lambda x: "{:.2f}".format(x.rsquared)}
                       )
@@ -573,7 +502,7 @@ to_drop = ['Intercept','R-squared']
  
 tb = droptables(table,
                 to_drop)
-
+"""
 ## write to latex 
 f = open('../Tables/latex/micro_reg_history_vol.tex', 'w')
 f.write(beginningtex)
@@ -582,18 +511,18 @@ tb_ltx = tb.to_latex().replace('lllllllll','ccccccccc')   # hard coded here
 f.write(tb_ltx)
 f.write(endtex)
 f.close()
-
+"""
 ## save
 
 tb.to_excel('../Tables/micro_reg_history_vol.xlsx')
 # -
 
-# ###  5. Other regressions
+# ###  5. Main regression
 
 # +
 ## preps 
 
-dep_list =  ['incvar','inciqr'] 
+dep_list =  ['incvar'] 
 dep_list2 =['incexp','rincexp']
 indep_list_ct = ['UEprobInd','UEprobAgg']
 indep_list_dc = ['HHinc','selfemp','fulltime']
@@ -603,36 +532,51 @@ indep_list_dc = ['HHinc','selfemp','fulltime']
 ## full-table for risks  
 
 rs_list = {}  ## list to store results 
-nb_spc = 4  ## number of specifications 
+nb_spc = 6  ## number of specifications 
 
 for i,mom in enumerate(dep_list):
-    ## model 1 
+    ## model 1 only with experienced volatility 
     model = smf.ols(formula = str(mom)
-                    +'~ C(parttime)+C(selfemp)',
+                    +'~ exp_vol',
                     data = SCEM)
     rs_list[nb_spc*i] = model.fit()
     
-    ## model 2
-    ct_str = '+'.join([var for var in indep_list_ct])
+    ## model 2 experienced vol and age 
+    
     model2 = smf.ols(formula = str(mom)
-                    +'~ C(parttime)+C(selfemp) + '
-                     + ct_str,
+                    +'~ exp_vol + C(age_gr)',
                     data = SCEM)
     rs_list[nb_spc*i+1] = model2.fit()
     
-    ## model 3 
+    ## model 3 experienced vol, age, income, education 
+    
     model3 = smf.ols(formula = str(mom)
-                    +'~ C(parttime) + C(selfemp) + C(HHinc_gr) + C(educ_gr) +'
-                     + ct_str,
+                    +'~ exp_vol + C(age_gr) + C(HHinc_gr) + C(educ_gr) + C(gender)',
                     data = SCEM)
     rs_list[nb_spc*i+2] = model3.fit()
     
-    ## model 4 
+    ## model 4 + job characteristics 
+    
     model4 = smf.ols(formula = str(mom)
-                    +'~ C(parttime) + C(selfemp) + C(gender)+ C(educ_gr) + + C(HHinc_gr) +'
-                     + ct_str,
+                    +'~ exp_vol + C(gender)+ C(educ_gr) + C(HHinc_gr) + C(age_gr)',
                     data = SCEM)
     rs_list[nb_spc*i+3] = model4.fit()
+    
+    
+    ## model 5 + job characteristics 
+    model5 = smf.ols(formula = str(mom)
+                    +'~ exp_vol + C(parttime) + C(selfemp) + C(gender)+ C(educ_gr) + C(HHinc_gr) + C(age_gr)',
+                    data = SCEM)
+    rs_list[nb_spc*i+4] = model5.fit()
+    
+    
+    ## model 6 + job characteristics 
+    ct_str = '+'.join([var for var in indep_list_ct])
+    model6 = smf.ols(formula = str(mom)
+                    +'~ exp_vol + C(parttime) + C(selfemp) + C(gender)+ C(educ_gr) + C(HHinc_gr) + C(age_gr) + '
+                     + ct_str,
+                    data = SCEM)
+    rs_list[nb_spc*i+4] = model6.fit()
     
     
 rs_names = [rs_list[i] for i in range(len(rs_list))]
@@ -640,13 +584,18 @@ rs_names = [rs_list[i] for i in range(len(rs_list))]
 dfoutput = summary_col(rs_names,
                         float_format='%0.2f',
                         stars = True,
-                        regressor_order = ['C(parttime)[T.yes]',
-                                           'C(selfemp)[T.yes]',
-                                           'UEprobAgg','UEprobInd',
+                        regressor_order = ['exp_vol',
+                                           'C(age_gr)[T.30-39]',
+                                           'C(age_gr)[T.40-48]',
+                                           'C(age_gr)[T.49-57]',
+                                           'C(age_gr)[T.>57]',
                                            'C(HHinc_gr)[T.low inc]',
                                            'C(educ_gr)[T.low educ]',
-                                           'C(gender)[T.male]'
-                                           ],
+                                           'C(gender)[T.male]',
+                                           'C(parttime)[T.yes]',
+                                           'C(selfemp)[T.yes]',
+                                           'UEprobAgg',
+                                           'UEprobInd'],
                         info_dict={'N':lambda x: "{0:d}".format(int(x.nobs)),
                                   'R2':lambda x: "{:.2f}".format(x.rsquared)
                                   })
@@ -661,11 +610,11 @@ beginningtex = """
 \\centering
 \\begin{adjustbox}{width=\\textwidth}
 \\begin{threeparttable}
-\\caption{Perceived Income Risks and Individual Characteristics}
+\\caption{Perceived Income Risks, Experienced Volatility and Individual Characteristics}
 \\label{micro_reg}"""
 
 endtex = """\\begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
-\item This table reports regression results of perceived income risks (incvar for nominal, rincvar for real) on household specific variables. HHinc: household income group ranges from lowests (=1, less than \$10k/year) to the heightst (=11, greater than \$200k/year). Education, educ ranges from the lowest (=1, less than high school) to the highest (=9).
+\item This table reports results associated a regression of perceived income risks (incvar) on experienced volatility ($\text{exp}_\text{vol}$) and a list of household specific variables such as age, income, education, gender, job type and unemployment expectations.
 \\end{tablenotes}
 \\end{threeparttable}
 \\end{adjustbox}

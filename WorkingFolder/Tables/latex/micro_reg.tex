@@ -3,32 +3,42 @@
 \centering
 \begin{adjustbox}{width=\textwidth}
 \begin{threeparttable}
-\caption{Perceived Income Risks and Individual Characteristics}
-\label{micro_reg}\begin{tabular}{ccccccccc}
+\caption{Perceived Income Risks, Experienced Volatility and Individual Characteristics}
+\label{micro_reg}\begin{tabular}{llllll}
 \toprule
-{} &  incvar I & incvar II & incvar III & incvar IIII & inciqr I & inciqr II & inciqr III & inciqr IIII \\
-                 &           &           &            &             &          &           &            &             \\
+{} & incvar I & incvar II & incvar III & incvar IIII & incvar IIIII \\
+                 &          &           &            &             &              \\
 \midrule
-parttime=yes     &  -0.08*** &  -0.07*** &   -0.10*** &     -0.05** &  0.03*** &   0.04*** &      -0.01 &        0.02 \\
-                 &    (0.02) &    (0.02) &     (0.02) &      (0.02) &   (0.01) &    (0.01) &     (0.01) &      (0.01) \\
-selfemp=yes      &   1.15*** &  -0.00*** &    0.00*** &     0.00*** &  0.67*** &  -0.00*** &    0.00*** &    -0.00*** \\
-                 &    (0.02) &    (0.00) &     (0.00) &      (0.00) &   (0.01) &    (0.00) &     (0.00) &      (0.00) \\
-UEprobAgg        &           &   0.00*** &    0.00*** &     0.00*** &          &   0.00*** &    0.00*** &     0.00*** \\
-                 &           &    (0.00) &     (0.00) &      (0.00) &          &    (0.00) &     (0.00) &      (0.00) \\
-UEprobInd        &           &   0.00*** &    0.00*** &     0.00*** &          &   0.00*** &    0.00*** &     0.00*** \\
-                 &           &    (0.00) &     (0.00) &      (0.00) &          &    (0.00) &     (0.00) &      (0.00) \\
-HHinc\_gr=low inc &           &           &    0.15*** &     0.18*** &          &           &    0.18*** &     0.18*** \\
-                 &           &           &     (0.01) &      (0.02) &          &           &     (0.01) &      (0.01) \\
-educ\_gr=low educ &           &           &   -0.16*** &    -0.14*** &          &           &    0.04*** &     0.04*** \\
-                 &           &           &     (0.02) &      (0.02) &          &           &     (0.01) &      (0.01) \\
-gender=male      &           &           &            &    -0.29*** &          &           &            &    -0.08*** \\
-                 &           &           &            &      (0.01) &          &           &            &      (0.01) \\
-N                &     51788 &     45911 &      45911 &       39008 &    57428 &     50772 &      50772 &       43094 \\
-R2               &      0.06 &      0.00 &       0.01 &        0.02 &     0.06 &      0.01 &       0.02 &        0.02 \\
+exp\_vol          &  3.95*** &   1.81*** &    2.20*** &     2.20*** &      3.79*** \\
+                 &   (0.25) &    (0.53) &     (0.58) &      (0.58) &       (0.58) \\
+age\_gr=30-39     &          &  -0.33*** &   -0.34*** &    -0.34*** &     -0.37*** \\
+                 &          &    (0.03) &     (0.03) &      (0.03) &       (0.03) \\
+age\_gr=40-48     &          &  -0.50*** &   -0.53*** &    -0.53*** &     -0.59*** \\
+                 &          &    (0.03) &     (0.03) &      (0.03) &       (0.03) \\
+age\_gr=49-57     &          &  -0.61*** &   -0.59*** &    -0.59*** &     -0.64*** \\
+                 &          &    (0.03) &     (0.03) &      (0.03) &       (0.03) \\
+age\_gr=>57       &          &  -0.48*** &   -0.49*** &    -0.49*** &     -0.55*** \\
+                 &          &    (0.04) &     (0.05) &      (0.05) &       (0.05) \\
+HHinc\_gr=low inc &          &           &    0.20*** &     0.20*** &      0.16*** \\
+                 &          &           &     (0.02) &      (0.02) &       (0.02) \\
+educ\_gr=low educ &          &           &   -0.11*** &    -0.11*** &     -0.06*** \\
+                 &          &           &     (0.02) &      (0.02) &       (0.02) \\
+gender=male      &          &           &   -0.38*** &    -0.38*** &     -0.29*** \\
+                 &          &           &     (0.02) &      (0.02) &       (0.02) \\
+parttime=yes     &          &           &            &             &        -0.03 \\
+                 &          &           &            &             &       (0.02) \\
+selfemp=yes      &          &           &            &             &      0.00*** \\
+                 &          &           &            &             &       (0.00) \\
+UEprobAgg        &          &           &            &             &      0.04*** \\
+                 &          &           &            &             &       (0.01) \\
+UEprobInd        &          &           &            &             &      0.04*** \\
+                 &          &           &            &             &       (0.00) \\
+N                &    40529 &     40529 &      34101 &       34101 &        28898 \\
+R2               &     0.01 &      0.02 &       0.04 &        0.04 &         0.06 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
-\item This table reports regression results of perceived income risks (incvar for nominal, rincvar for real) on household specific variables. HHinc: household income group ranges from lowests (=1, less than \$10k/year) to the heightst (=11, greater than \$200k/year). Education, educ ranges from the lowest (=1, less than high school) to the highest (=9).
+\item This table reports results associated a regression of perceived income risks (incvar) on experienced volatility ($	ext{exp}_	ext{vol}$) and a list of household specific variables such as age, income, education, gender, job type and unemployment expectations.
 \end{tablenotes}
 \end{threeparttable}
 \end{adjustbox}

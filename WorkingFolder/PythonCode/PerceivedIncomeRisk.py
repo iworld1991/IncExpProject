@@ -181,7 +181,7 @@ nb_fig = len(fig_list)
 file_list = [graph_path+fig for fig in fig_list]
 
 ## show figures 
-plt.figure(figsize=(20,20))
+plt.figure(figsize=(8,8))
 for i in range(nb_fig):
     plt.subplot(nb_fig,1,i+1)
     plt.imshow(mpimg.imread(file_list[i]))
@@ -197,7 +197,7 @@ nb_fig = len(fig_list)
 file_list = [graph_path+fig for fig in fig_list]
 
 ## show figures 
-plt.figure(figsize=(15,15))
+plt.figure(figsize=(8,8))
 for i in range(nb_fig):
     plt.subplot(nb_fig,1,i+1)
     plt.imshow(mpimg.imread(file_list[i]))
@@ -232,7 +232,7 @@ file_list = [graph_path+fig for fig in fig_list]
 
 ## show figures 
 
-fig, ax = plt.subplots(figsize =(90,30),
+fig, ax = plt.subplots(figsize =(30,10),
                        nrows = nb_fig,
                        ncols = 1)
 for i in range(nb_fig):
@@ -261,11 +261,11 @@ mom_group_state
 #
 # There are two issues associated with such an approximation of individual experienced volatility. First, I, as an economist with PSID data in my hand, am obviously equipped with a much larger sample than the sample size facing an individual that may have entered her experience. Since larger sample also results in a smaller RMSE, my approximation might be smaller than the real experienced volatility. Second, however, the counteracting effect comes from the superior information problem, i.e. the information set held by earners in the sample contains what is not available to econometricians. Therefore, not all known factors predictable by the individual are used as a regressor. This will bias upward the estimated experienced volatility. Despite these concerns, my method serves as a feasible approximation sufficient for my purpose here. 
 #
-# Figure \ref{var_experience_var_data} plots the logged average perceived risk from each cohort $c$ at year $t$ against logged experienced volatility estimated from above. It shows a clear positive correlation between the two, which suggests that cohorts who have experienced higher income volatility also perceived future income to be riskier. The results are reconfirmed in Table \ref{micro_reg_history_vol}, for which I run a regression of logged perceived risks of each individual in SCE on the logged experienced volatility specific to her while controlling individuals age, income, educations, etc. Each percentage increase in experienced volatility is associated with 1.29 percentage point increase in perceived income risk. 
+# Figure \ref{fig:var_experience_var_data} plots the logged average perceived risk from each cohort $c$ at year $t$ against logged experienced volatility estimated from above. It shows a clear positive correlation between the two, which suggests that cohorts who have experienced higher income volatility also perceived future income to be riskier. The results are reconfirmed in Table \ref{micro_reg}, for which I run a regression of logged perceived risks of each individual in SCE on the logged experienced volatility specific to her cohort while controlling individuals age, income, educations, etc. For instance, each 1 percentage increase in experienced volatility is associated with 1.81 to 4 percentage point increase in perceived income risks, depending on the controls included in the regression.  
 #
 # <center>[FIGURE \ref{fig:var_experience_var_data} HERE]</center>
 #
-# <center>[TABLE \ref{micro_reg_history_vol} HERE]</center>
+#
 
 # + {"caption": "Experienced Volatility and Perceived Income Risk", "code_folding": [], "label": "fig:var_experience_var_data", "note": "Experienced volatility is the mean squred error(MSE) of income regression based on a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year.", "hide_input": true, "hide_output": true}
 ## insert figures 
@@ -280,54 +280,45 @@ file_list = [graph_path+fig for fig in fig_list]
 
 
 ## show figures 
-plt.figure(figsize =(20,20))
+plt.figure(figsize =(7,7))
 for i in range(nb_fig):
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off") 
 plt.tight_layout(pad =0, w_pad=0, h_pad=0)
 
 # + {"hide_input": true, "hide_output": true}
-micro_reg_history_vol  = pd.read_excel('../Tables/micro_reg_history_vol.xls',index_col = 0)
+micro_reg_history_vol  = pd.read_excel('../Tables/micro_reg_history_vol.xlsx',index_col = 0)
 print('Experienced volatility and perceived income risk')
 micro_reg_history_vol = micro_reg_history_vol.replace(np.nan, '', regex=True)
 micro_reg_history_vol
 # -
 
 #
-#
-# ##  Role of individual characteristics
+# ##  Other individual characteristics
 #   
-# What other factors are associated with subjective riskiness of labor income? This section inspects the question by regressing the perceived income risks at individual level on three major blocks of variables: job-specific characteristics, household demographics and other macroeconomic expectations held by the respondent. 
+# What other factors are associated with risk perceptions? This section inspects the question by regressing the perceived income risks at individual level on three major blocks of variables: job-specific characteristics, demographics and other macroeconomic expectations held by the respondent. 
 #
 # In a general form, the regression is specified as followed, where the dependent variable is one of the individual subjective moments that represent perceived income risks for either nominal or real earning. 
 #
 # \begin{eqnarray}
-# \{\overline{var}_{i,t}, \overline{var}^r_{i,t}, \overline{iqr}_{i,t}\} = \alpha + \beta_0 \textrm{HH}_{i,t} + \beta_1 \textrm{JobType}_{i,t} + \beta_2 \textrm{Exp}_{i,t} + \beta_3 \textrm{Month}_t + \epsilon_{i,t}
+# \overline{risk}_{i,t} = \alpha + \beta_0 \textrm{HH}_{i,t} + \beta_1 \textrm{JobType}_{i,t} + \beta_2 \textrm{Exp}_{i,t} + \beta_3 \textrm{Month}_t + \epsilon_{i,t}
 # \end{eqnarray}
 #
 # The first block of factors, as called $\textit{Jobtype}_{i,t}$ includes dummy variables indicating if the job is part-time or if the work is for others or self-employed. Since the earning growth is specifically asked regarding the current job of the individual, I can directly test if a part-time job and the self-employed job is associated with higher perceived risks. 
 #
 # The second type of factors denoted $\textit{HH}_{i,t}$ represents household-specific demographics such as the household income level, education, and gender of the respondent. 
 #
-# Third, $\textit{Exp}_{i,t}$ represents other subjective expectations held by the same individual. As far as this paper is concerned, I include the perceived probability of unemployment herself, the probability of stock market rise over the next year and the probability of a higher nationwide unemployment rate. 
+# Third, $\textit{Exp}_{i,t}$ represents other subjective expectations held by the same individual. As far as this paper is concerned, I include the perceived probability of unemployment herself and the probability of a higher nationwide unemployment rate. 
 #
 # $\textit{Month}_t$ is meant to control possible seasonal or month-of-the-year fixed effects. It may well be the case that at a certain point of the time of the year, workers are more likely to learn about news to their future earnings. But as I have shown in the previous section, such evidence is limited particularly for the higher moments of earnings growth expectations. 
 #
 # Besides, since many of the regressors are time-invariant household characteristics, I choose not to control household fixed effects in these regressions ($\omega_i$). Throughout all specifications, I cluster standard errors at the household level because of the concern of unobservable household heterogeneity. The regression results are presented in Table \ref{micro_reg} below for three measures of perceived income risks, nominal growth variance, nominal growth IQR, and real growth variance. 
 #
-# The regression results are rather intuitive. It confirms that self-employed jobs, workers from low-income households and lower education have higher perceived income risks. In our sample, there are around $15\%$ (6000) of the individuals who report themselves to be self-employed instead of working for others. In the Table \ref{micro_reg_mean} shown in the appendix, this group of people also has higher expected earnings growth. The effects are statistically and economically significant. Whether a part-time job is associated with higher perceived risk is ambiguous depending on if we control household demographics. At first sight, part-time jobs may be thought of as more unstable. But the exact nature of part-time job varies across different types and populations. It is possible, for instance, that the part-time jobs available to high-income and educated workers bear lower risks than those by the low-income and low-education groups. 
+# The regression results are rather intuitive. It first confirms that self-employed jobs, workers from low-income households,  females, and lower education have higher perceived income risks. In our sample, there are around $15\%$ (6000) of the individuals who report themselves to be self-employed instead of working for others. The effects are statistically and economically significant. Whether a part-time job is associated with higher perceived risk is ambiguous depending on if we control household demographics. At first sight, part-time jobs may be thought of as more unstable. But the exact nature of part-time job varies across different types and populations. It is possible, for instance, that the part-time jobs available to high-income and educated workers bear lower risks than those by the low-income and low-education groups. 
 #
-# The negative correlation between perceived risks and household income is significant and robust throughout all specifications. In contrast, there is no such correlation between expected earning growth per se and household income. Although SCE asks the respondent to report an income range instead of the accurate monetary value, the 11-group breakdown is sufficiently granular to examine if the high-income/low risks association is monotonic. As implied by the size of the coefficient of each income group dummy in the Table \ref{micro_reg}, this pattern is monotonically negative until the top income group ($200k or above). I also plot the mean and median of income risks by income group in the Figure \ref{fig:boxplotbygroup}.  
+# Higher perceived the probability of losing the current job, which I call individual unemployment risk, $\textit{UEprobInd}$ is associated with higher earning risks of the current job. The perceived chance that the nationwide unemployment rate going up next year, which I call aggregate unemployment risk, $\textit{UEprobAgg}$ has a similar correlation with perceived earning risks. Such a positive correlation is important because this implies that a more comprehensively measured income risk facing the individual that incorporates not only the current job's earning risks but also the risk of unemployment is actually higher. Moreover, the perceived risk is higher for those whose perceptions of the earning risk and unemployment risk are more correlated than those less correlated. 
 #
-# Besides household income, there is also a statistical correlation between perceived risks and other demographic variables. In particular, higher education, being a male versus female, being a middle-aged worker compared to a young, are all associated with lower perceived income risks. To keep a sufficiently large sample size, I run regressions of this set of variables without controlling the rest regressors.  Although the sample size shrinks substantially by including these demographics, the relationships are statistically significant and consistent across all measures of earning risks. 
-#
-# Higher perceived the probability of losing the current job, which I call individual unemployment risk, $\textit{IndUE}$ is associated with higher earning risks of the current job. The perceived chance that the nationwide unemployment rate going up next year, which I call aggregate unemployment risk, $\textit{AggUE}$ has a similar correlation with perceived earning risks. Such a positive correlation is important because this implies that a more comprehensively measured income risk facing the individual that incorporates not only the current job's earning risks but also the risk of unemployment is actually higher. Moreover, the perceived risk is higher for those whose perceptions of the earning risk and unemployment risk are more correlated than those less correlated. 
-#
-# Lastly, what is ambiguous from the regression is the correlation between stock market expectations and perceived income risks. Although a more positive stock market expectation is associated with higher expected earnings growth in both real and nominal terms, it is positively correlated with nominal earning risks but negatively correlated with real earning risks. As the real earning risk is the summation of the perceived risk of nominal earning and inflation uncertainty, the sign difference has to be driven by a negative correlation of expectation stock market and inflation uncertainty.  In order to reach more conclusive statements, I will examine how perceived labor income risks correlate with the realized stock market returns and indicators of business cycles depending upon individual factors in the next step of the analysis. 
-#
-# To summarize, a few questions arise from the patterns discussed above. First, what drives the differences in subjective earning risks across different workers? To what extent these perceptive differences reflect the true heterogeneity of the income risks facing by these individuals? Or they can be attributed to perceptive heterogeneity independent from the true risk profile. Second, how are individual earning risk is correlated with asset return expectations and broadly the macroeconomic environment? This will be the focus of the coming sections. 
-#      
-#    
+#  <center>[TABLE \ref{micro_reg} HERE]</center>
 
 reg_tb = pd.read_excel('../Tables/micro_reg.xlsx').replace(np.nan,'')
 
