@@ -251,11 +251,20 @@ mom_group_state = mom_group_state.replace(np.nan, '', regex=True)
 mom_group_state
 # -
 
-# ## Experienced volatility and perceived risks 
+# ## Experiences and perceived risk 
 #
-# This section shows that experienced volatility shapes perceived income risks. 
+# Different generations also have different perceived income risks. Let us explore to what extent the cohort-specific risk perceptions are influenced by the income volatility experienced by that particular cohort. Different cohorts usually have experienced distinct macroeconomic histories. On one hand, these non-identical experiences could lead to long-lasting differences in realized life-long outcomes. An example is that college graduates graduating during recessions have lower life-long income than others. (<cite data-cite="oreopoulos2012short">Oreopoulos et al. 2012</cite>). On the other hand, experiences may have also shaped people's expectations directly, leading to behavioral heterogeneity across cohorts (<cite data-cite="malmendier2015learning">Malmendier and Nagel (2015)</cite>). Benefiting from having direct access to the subjective income risk perceptions, I could directly examine the relationship between experiences and perceptions. 
+#
+# The experienced volatility specific to a certain cohort $c$ at a given time $t$ can be approximated as the average squared residuals from an income regression based on the corresponding panel sample of labor income obtained from PSID. \footnote{I obtain the labor income records of all household heads between 1970-2017. Farm workers, youth and olds and observations with empty entries of major demographic variables are dropped.} In particular, I first undertake a Miner-style regression using major demographic variables as regressors. I also include the previous-year income to account for persistence in the process. Then, for each cohort-time sample, the regression mean-squared error (RMSE) is used as the approximate to the cohort-time specific income volatility. 
+#
+#
+# There are two issues associated with such an approximation of individual experienced volatility. First, I, as an economist with PSID data in my hand, am obviously equipped with a much larger sample than the sample size facing an individual that may have entered her experience. Since larger sample also results in a smaller RMSE, my approximation might be smaller than the real experienced volatility. Second, however, the counteracting effect comes from the superior information problem, i.e. the information set held by earners in the sample contains what is not available to econometricians. Therefore, not all known factors predictable by the individual are used as a regressor. This will bias upward the estimated experienced volatility. Despite these concerns, my method serves as a feasible approximation sufficient for my purpose here. 
+#
+# Figure \ref{var_experience_var_data} plots the logged average perceived risk from each cohort $c$ at year $t$ against logged experienced volatility estimated from above. It shows a clear positive correlation between the two, which suggests that cohorts who have experienced higher income volatility also perceived future income to be riskier. The results are reconfirmed in Table \ref{micro_reg_history_vol}, for which I run a regression of logged perceived risks of each individual in SCE on the logged experienced volatility specific to her while controlling individuals age, income, educations, etc. Each percentage increase in experienced volatility is associated with 1.29 percentage point increase in perceived income risk. 
 #
 # <center>[FIGURE \ref{fig:var_experience_var_data} HERE]</center>
+#
+# <center>[TABLE \ref{micro_reg_history_vol} HERE]</center>
 
 # + {"caption": "Experienced Volatility and Perceived Income Risk", "code_folding": [], "label": "fig:var_experience_var_data", "note": "Experienced volatility is the mean squred error(MSE) of income regression based on a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year.", "hide_input": true, "hide_output": true}
 ## insert figures 
