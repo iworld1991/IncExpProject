@@ -375,8 +375,10 @@ idiosyncratic income risks are at most partially insured
 (\cite{blundell_consumption_2008}) or because of borrowing constraints,
 such behavioral regularities equipped with market incompleteness leads
 to ex-post unequal wealth distribution and different degrees of marginal
-propensity to consume (MPC). This has important implications for the
-transmission of macroeconomic policies.
+propensity to consume (MPC) (\cite{aiyagari1994uninsured}). This has
+important implications for the transmission of macroeconomic policies
+(\cite{krueger2016macroeconomics}, \cite{kaplan2018monetary},
+\cite{auclert2019monetary}, \cite{bayer2019precautionary}).
 
 One important assumption prevailing in macroeconomic models with
 uninsured risks is that agents have a perfect understanding of the
@@ -479,8 +481,8 @@ attribution.
   rates and low wage growth also perceive income risks to be higher.
   This bears similarities to but important difference with a few
   previous studies that document the counter-cyclicality of income risks
-  estimated by cross-sectional microdata. (\cite{guvenen2014nature},
-  \cite{catherine_countercyclical_2019})
+  estimated by cross-sectional microdata (\cite{guvenen2014nature},
+  \cite{catherine_countercyclical_2019}).
 \end{itemize}
 
 These patterns suggest that individuals have a roughly good yet
@@ -491,7 +493,7 @@ agents learn from past experiences, roughly as econometricians do. In
 contrast, subjective perceptions are imperfect in that bounded
 rationality prevents people from knowing about the true income process
 perfectly, which even hardworking economists equipped with different
-advanced econometrical techniques and larger sample of income data
+advanced econometrical techniques and a larger sample of income data
 cannot easily claim to have.
 
 As illustrated by many empirical work of testing the rationality in
@@ -523,14 +525,15 @@ From both theoretical and empirical points of view, this paper is an
 extension of experience-based learning that is developed to account for
 how experiences shape people's economic expectations and subsequent
 behaviors. This paper extends the framework in two directions. First,
-building on the work that shows that experiences affect average
-expectations, such as inflation (\cite{malmendier2015learning}) or risky
-asset return (\cite{malmendier2019investor}), I show in the same
-framework that perceptions of second moments such as income risks can
-ben influenced by experience in volatility. This is confirmed by the
-empirical evidence. Second, I introduce the subjective attribution into
-the framework to allow for the possibility of an imperfect understanding
-of the nature of the shocks.
+building on the work that shows that experiences affect
+expectations\footnote{A very close line of literature focuses on the impacts of experience on preferences, such as risk-taking (\cite{malmendier2011depression}.},
+such as inflation (\cite{malmendier2015learning}) or risky asset return
+(\cite{malmendier2019investor}), I show in the same framework that
+perceptions of second moments such as income risks can ben influenced by
+experienced volatility. This is confirmed by the empirical evidence
+using the recently available density survey. Second, I introduce the
+subjective attribution into the framework to allow for the possibility
+of an imperfect understanding of the nature of the shocks.
 
 Besides, this paper is relevant to four lines of literature. First, it
 is related to an old but recently reviving interest in studying
@@ -551,9 +554,9 @@ income and higher MPCs out of wealth than current income and so forth.
 My paper has a similar flavor to all of these works by exploring the
 behavioral implications of households' perceptual imperfection. The
 novelty of my paper lies in the primary focus on higher moments such as
-risks. Various theories of expectation formation have different
-predictions about the cross-sectional and dynamic patterns of perceived
-risks. I examine these predictions in this paper.
+risks. Also, although this work either considers inattention of shocks
+or bias introduced by the model parameter, none of these explores the
+possible misperception of the nature of income shocks.
 
 Second, empirically, this paper also contributes to the literature
 studying expectation formation using subjective surveys. There has been
@@ -614,8 +617,7 @@ skewness by utilizing the recently available density forecasts of labor
 income. Previous work only focuses on the sizes of the realized shocks
 and estimates the variance of the shocks using cross-sectional
 distribution, while my paper directly studies the individual specific
-variance of these shocks perceived by different individuals. This will
-become clear in Section \ref{perceived-income-process-in-progress}.
+variance of these shocks perceived by different individuals.
 
 
     \hypertarget{data-variables-and-density-estimation}{%
@@ -1136,11 +1138,12 @@ shock, she can only infer that from the past volatility.
 
 We assume agents learn about the parameters using a least-square rule
 widely used in the learning literature (For instance,
-\cite{evans2012learning}, \cite{malmendier2015learning}) The bounded
-rationality prevents her from adopting any more sophisticated rule that
-econometricians may consider to be superior to the OLS in this context.
-(For instance, OLS applied in autocorrelated models induce bias in
-estimate.) Under OLS learning, the parameter estimate is the following.
+\cite{marcet1989convergence}, \cite{evans2012learning},
+\cite{malmendier2015learning}) The bounded rationality prevents her from
+adopting any more sophisticated rule that econometricians may consider
+to be superior to the OLS in this context. (For instance, OLS applied in
+autocorrelated models induce bias in estimate.) Under OLS learning, the
+parameter estimate is the following.
 
 \begin{eqnarray}
 \hat \rho_{i,t} = (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y_{j,t-k-1}y_{j,t-k})
@@ -1330,10 +1333,12 @@ attribution is not in line with the true nature of income shocks. This
 section explores one plausible possibility. In particular, we
 incorporate the psychological tendency of ascribing bad experiences to
 external causes and good experience to internal ones, which is known as
-self-serving bias. The manifesto of the attribution error is that people
-asymmetrically assign the subjective correlation \(\tilde \delta_{i,t}\)
-depending on the recent income change (or the realized shocks) being
-positive or negative.
+self-serving bias.
+\footnote{See \cite{al1993attributional}, \cite{campbell1999self}, \cite{seidel2010blame}.}
+The manifesto of the attribution error is that people asymmetrically
+assign the subjective correlation \(\tilde \delta_{i,t}\) depending on
+the recent income change (or the realized shocks) being positive or
+negative.
 
 More formally, define an attribution function that maps the recent
 income change \(\Delta y_{i,t}\) into the subjective attribution
