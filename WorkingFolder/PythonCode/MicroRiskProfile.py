@@ -120,7 +120,7 @@ SCEM = pd.merge(SCEM_base,
 
 #SCEM.describe(include = all)
 
-# + {"code_folding": []}
+# + {"code_folding": [2, 12]}
 ## renaming 
 
 SCEM = SCEM.rename(columns={'Q24_mean': 'incexp',
@@ -254,45 +254,85 @@ sns.heatmap(SCEM.corr(), annot = True)
 # ###  3. Histograms
 
 # + {"code_folding": []}
-## by age 
+moms = ['incexp','rincexp','incvar','rincvar']
 
-for mom in ['rincvar']:
-    plt.style.use('ggplot')
-    SCEM.groupby('age_gr')[mom].mean().plot.bar(title = mom)
-    plt.title('')
-    plt.xlabel('group by the year of birth \n (from young to old)',
+
+## by age 
+fig,axes = plt.subplots(len(moms),figsize=(4,14))
+
+for i,mom in enumerate(moms):
+    #plt.style.use('ggplot')
+    SCEM.groupby('age_gr')[mom].mean().plot(kind='bar', ax=axes[i],title=mom)
+    #axes[i].set_ylabel(mom,size = 15)
+    
+    if i == len(moms)-1:
+        axes[i].set_xlabel('group by the year of birth \n (from young to old)',
               size = 15)
-    plt.ylabel('',size = 15)
+plt.savefig('../Graphs/ind/bar_by_age')
 
 # + {"code_folding": []}
 ## by cohort 
 
-for mom in ['incvar']:
-    plt.style.use('ggplot')
-    SCEM.groupby('byear_gr')[mom].mean().plot.bar(title = mom)
-    plt.xlabel('group by the year of birth \n (from older generation to the young)')
+fig,axes = plt.subplots(len(moms),figsize=(4,14))
+
+for i,mom in enumerate(moms):
+    #plt.style.use('ggplot')
+    SCEM.groupby('byear_gr')[mom].mean().plot(kind='bar', ax=axes[i],title=mom)
+    #axes[i].set_ylabel(mom,size = 15)
+    
+    if i == len(moms)-1:
+        axes[i].set_xlabel('group by the year of birth \n (from older generation to the young)',
+              size = 15)
+plt.savefig('../Graphs/ind/bar_by_cohort')
+
 
 # +
 ## by hh income 
 
-for mom in ['incvar']:
-    SCEM.groupby('HHinc_gr')[mom].mean().plot.bar(title = mom)
-    plt.xlabel('group by household income (from low to high)')
+fig,axes = plt.subplots(len(moms),figsize=(4,14))
+
+for i,mom in enumerate(moms):
+    #plt.style.use('ggplot')
+    SCEM.groupby('HHinc_gr')[mom].mean().plot(kind='bar', ax=axes[i],title=mom)
+    #axes[i].set_ylabel(mom,size = 15)
+    
+    if i == len(moms)-1:
+        axes[i].set_xlabel('group by household income (from low to high)',
+              size = 15)
+plt.savefig('../Graphs/ind/bar_by_inc')
+
 
 # + {"code_folding": []}
 ## by education
 
+fig,axes = plt.subplots(len(moms),figsize=(4,14))
 
-for mom in ['rincvar']:
-    SCEM.groupby('educ_gr')[mom].mean().plot.bar(title = mom)
-    plt.xlabel('group by education (from low to high)')
+for i,mom in enumerate(moms):
+    #plt.style.use('ggplot')
+    SCEM.groupby('educ_gr')[mom].mean().plot(kind='bar', ax=axes[i],title=mom)
+    #axes[i].set_ylabel(mom,size = 15)
+    
+    if i == len(moms)-1:
+        axes[i].set_xlabel('group by education (from low to high)',
+              size = 15)
+plt.savefig('../Graphs/ind/bar_by_educ')
+
 
 # + {"code_folding": []}
 ## by gender 
 
-for mom in ['rincvar']:
-    SCEM.groupby('gender')[mom].mean().plot.bar(title = mom)
-    plt.xlabel('group by gender')
+fig,axes = plt.subplots(len(moms),figsize=(4,14))
+
+for i,mom in enumerate(moms):
+    #plt.style.use('ggplot')
+    SCEM.groupby('gender')[mom].mean().plot(kind='bar', ax=axes[i],title=mom)
+    #axes[i].set_ylabel(mom,size = 15)
+    
+    if i == len(moms)-1:
+        axes[i].set_xlabel('group by gender',
+              size = 15)
+plt.savefig('../Graphs/ind/bar_by_gender')
+
 
 # + {"code_folding": []}
 ## by income group 
@@ -320,7 +360,7 @@ for mom in ['incvar','rincvar']:
         
 """
 
-# + {"code_folding": [15, 16]}
+# + {"code_folding": [16]}
 ## variances by groups 
 
 gplist = ['HHinc','age_gr']
