@@ -1,12 +1,13 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,py:light
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.3
+#       format_version: '1.5'
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -21,9 +22,10 @@
 #  - It will allow for estimation jointly using data and expectation survey with alternative assumptions about expectations, ranging from rational expectation to alternative assumptions. 
 
 import numpy as np
+import numpy.ma as ma
 import matplotlib.pyplot as plt
 #from scipy.optimize import minimize
-#from scipy.optimize import root
+import pandas as pd
 import copy as cp
 
 from IncomeProcess import IMAProcess as ima
@@ -31,7 +33,7 @@ from IncomeProcess import IMAProcess as ima
 # + {"code_folding": []}
 ## debugging test of the data 
 
-t = 66
+t = 100
 ma_nosa = np.array([1])
 p_sigmas = np.arange(t)  # sizes of the time-varying permanent volatility 
 p_sigmas_rw = np.ones(t) # a special case of time-invariant permanent volatility, random walk 
@@ -65,7 +67,7 @@ cov_var = sim_moms['Var']
 var = dt.Autocovar(step = 0)   #= np.diagonal(cov_var)
 autovarb1 = dt.Autocovar(step = -1) #np.array([cov_var[i,i+1] for i in range(len(cov_var)-1)]) 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## plot simulated moments of first diff 
 
 plt.figure(figsize=((20,4)))
@@ -105,7 +107,7 @@ plt.legend(loc=1)
 
 # ### Time Aggregation
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## time aggregation 
 
 sim_data = dt.SimulateSeries(n_sim = 1000)
@@ -117,8 +119,9 @@ agg_series_moms = dt.SimulateMomentsAgg()
 ## difference times degree of time aggregation leads to different autocorrelation
 for ns in np.array([2,8]):
     an_instance = cp.deepcopy(dt)
+    an_instance.n_agg = ns
     series = an_instance.SimulateSeries(n_sim =500)
-    agg_series = an_instance.TimeAggregate(n_periods = ns)
+    agg_series = an_instance.TimeAggregate()
     agg_series_moms = an_instance.SimulateMomentsAgg()
     var_sim = an_instance.AutocovarAgg(step=0)
     var_b1 = an_instance.AutocovarAgg(step=-1)
@@ -144,13 +147,13 @@ sigmas = np.array([p_sigmas_draw,
                    t_sigmas_draw])
 
 dt_fake = ima(t = t,
-              ma_coeffs = ma_nosa,
-              sigmas = sigmas)
+              ma_coeffs = ma_nosa)
+dt_fake.sigmas = sigmas
 data_fake = dt_fake.SimulateSeries(n_sim = 5000)
 moms_fake = dt_fake.SimulatedMoments()
 # -
 
-# ### Estimation using computed moments 
+# ### Estimation using fake data
 
 # + {"code_folding": []}
 ## estimation of income risks 
@@ -161,11 +164,11 @@ dt_est.GetDataMoments(moms_fake)
 para_guess_this = np.ones(2*t  + dt_est.ma_q)  # make sure the length of the parameters are right 
 
 # + {"code_folding": []}
-para_est = dt_est.EstimatePara(method='CG',
+para_est = dt_est.EstimatePara(method='BFGS',
                                para_guess = para_guess_this)
 
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## check the estimation and true parameters 
 
 fig = plt.figure(figsize=([10,4]))
@@ -175,28 +178,6 @@ plt.title('Permanent Risk')
 plt.plot(dt_est.para_est[1][0][1:].T**2,'r-',label='Estimation')
 plt.plot(dt_fake.sigmas[0][1:]**2,'-*',label='Truth')
 
-
-plt.subplot(1,2,2)
-plt.title('Transitory Risk')
-plt.plot(dt_est.para_est[1][1][1:].T**2,'r-',label='Estimation')
-plt.plot(dt_fake.sigmas[1][1:]**2,'-*',label='Truth')
-plt.legend(loc=0)
-
-# + {"code_folding": [0]}
-### Estimation using computed moments using root finding 
-
-#para_root = dt_est.EstimateParaRoot(para_guess_this)
-
-# +
-
-fig = plt.figure(figsize=([10,4]))
-
-plt.subplot(1,2,1)
-plt.title('Permanent Risk')
-plt.plot(dt_est.para_est[1][0][1:].T**2,'r-',label='Estimation')
-plt.plot(dt_fake.sigmas[0][1:]**2,'-*',label='Truth')
-
-
 plt.subplot(1,2,2)
 plt.title('Transitory Risk')
 plt.plot(dt_est.para_est[1][1][1:].T**2,'r-',label='Estimation')
@@ -204,24 +185,79 @@ plt.plot(dt_fake.sigmas[1][1:]**2,'-*',label='Truth')
 plt.legend(loc=0)
 # -
 
-# ### Estimation using time aggregated data and computed moments
+# ### Estimation using PSID data
+#
+#
 
-dt_est.ComputeMomentsAgg(n_agg=2)
+PSID = pd.read_stata('../../../PSID/J276289/psid_matrix.dta')   
+PSID.index = PSID['uniqueid']
+PSID = PSID.drop(['uniqueid'], axis=1)
+PSID = PSID.dropna(axis=0,how='all')
 
-# + {"code_folding": [], "cell_type": "markdown"}
+data = np.array(PSID)
+
+data.shape
+
+data_mean = np.nanmean(data,axis=0)
+data_var = ma.cov(ma.masked_invalid(data), rowvar=False)
+moms_data = {'Mean':data_mean,
+            'Var':data_var}
+
+## check the shape of the cov matrix 
+data_var.shape
+
+## initialize 
+dt_data_est = cp.deepcopy(dt)
+t_data = len(data_var)+1
+dt_data_est.t = t_data
+dt_data_est.GetDataMoments(moms_data)
+para_guess_this = np.ones(2*t_data + dt_data_est.ma_q)
+
+## estimation
+data_para_est = dt_data_est.EstimatePara(method='BFGS',
+                               para_guess = para_guess_this)
+
+# + {"code_folding": [0]}
+## time stamp 
+t0 = 1971
+years = t0+np.arange(t_data-1)
+
+# + {"code_folding": [0]}
+## check the estimation and true parameters 
+
+fig = plt.figure(figsize=([12,4]))
+
+plt.subplot(1,2,1)
+plt.title('Permanent Risk')
+plt.plot(years,
+         dt_data_est.para_est[1][0][1:].T**2,
+         'r-',label='Estimation')
+
+plt.subplot(1,2,2)
+plt.title('Transitory Risk')
+plt.plot(years,
+         dt_data_est.para_est[1][1][1:].T**2,
+         'r-',label='Estimation')
+plt.legend(loc=0)
+
+# + [markdown] {"code_folding": []}
 # ### Estimation using simulated moments 
 
 # + {"code_folding": []}
+"""
 para_guess_this2 = para_guess_this*0.3
 
 bounds_this = ((0,1),) + ((0,0.5),)*(2*t)
 
-para_est_sim = dt_est.EstimateParabySim(method='CG',
+para_est_sim = dt_est.EstimateParabySim(method='TNC',
                                         para_guess = para_guess_this2,
                                         options={'disp':True}
                                        )
+                                       
+"""
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
+"""
 ## check the estimation and true parameters
 
 fig = plt.figure(figsize=([10,4]))
@@ -238,9 +274,12 @@ plt.plot(dt_est.para_est_sim[1][1][1:].T**2,'r-',label='Estimation(sim)')
 plt.plot(dt_fake.sigmas[1][1:]**2,'-*',label='Truth')
 plt.legend(loc=0)
 
+"""
+
 # + {"code_folding": []}
 ### reapeating the estimation for many times
 
+"""
 n_loop = 5
 
 para_est_sum_sim = (np.array([0]),np.zeros([2,50]))
@@ -249,13 +288,17 @@ for i in range(n_loop):
                                                   para_guess = para_guess_this2,
                                                   options = {'disp': True})
     para_est_sum_sim  = para_est_sum_sim + para_est_this_time
-# -
+    
+    
+"""
 
-para_est_av = sum([abs(para_est_sum_sim[2*i+1]) for i in range(1,n_loop+1)] )/n_loop
+# +
+#para_est_av = sum([abs(para_est_sum_sim[2*i+1]) for i in range(1,n_loop+1)] )/n_loop
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## check the estimation and true parameters
 
+"""
 fig = plt.figure(figsize=([14,4]))
 
 plt.subplot(1,2,1)
@@ -269,17 +312,22 @@ plt.title('Transitory Risk')
 plt.plot(para_est_av[1][1:].T**2,'r-',label='Estimation(sim)')
 plt.plot(dt_fake.sigmas[1][1:]**2,'-*',label='Truth')
 plt.legend(loc=0)
+
+"""
 # -
 
 # #### Estimation using time aggregated data
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## get some fake aggregated data moments
+"""
 moms_agg_fake = dt_fake.TimeAggregate()
 moms_agg_dct_fake = dt_fake.SimulateMomentsAgg()
+"""
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## estimation 
+"""
 para_guess_this3 = para_guess_this*0.5
 dt_est.GetDataMomentsAgg(moms_agg_dct_fake)
 dt_est.n_periods = 12
@@ -288,10 +336,13 @@ para_est_agg = dt_est.EstimateParaAgg(method ='Powell',
                                       options={'disp':True,
                                               'ftol': 0.000000001}
                                      )
+                                     
+"""
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## check the estimation and true parameters
 
+"""
 fig = plt.figure(figsize=([10,4]))
 
 plt.subplot(1,2,1)
@@ -305,9 +356,12 @@ plt.plot(dt_est.para_est_agg[1][1][11:-1].T**2,'r-',label='Estimation(agg)')
 plt.plot(dt_fake.sigmas[1][11:-1]**2,'-*',label='Truth')
 plt.legend(loc=0)
 
+"""
+
 # + {"code_folding": []}
 ### reapeating the estimation for many times
 
+"""
 n_loop = 5
 
 para_est_sum_agg = (np.array([0]),np.zeros([2,50]))
@@ -317,13 +371,17 @@ for i in range(n_loop):
                                       options={'disp':True,
                                               'ftol': 0.000000001})
     para_est_sum_agg = para_est_sum_agg + para_est_this_time
+    
+"""
 # -
 
 para_est_av_agg = sum([abs(para_est_sum_agg[2*i+1]) for i in range(1,n_loop+1)] )/n_loop
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## check the estimation and true parameters
 
+
+"""
 fig = plt.figure(figsize=([14,4]))
 
 
@@ -337,3 +395,8 @@ plt.title('Transitory Risk')
 plt.plot(para_est_av_agg[1][11:].T**2,'r-',label='Estimation(agg)')
 plt.plot(dt_fake.sigmas[1][11:]**2,'-*',label='Truth')
 plt.legend(loc=0)
+
+"""
+# -
+
+

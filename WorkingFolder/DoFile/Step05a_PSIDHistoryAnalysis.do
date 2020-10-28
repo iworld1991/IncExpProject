@@ -205,7 +205,7 @@ label var lQ24_iqr "log perceived iqr"
 eststo clear
 foreach var in lQ24_var lQ24_iqr{
 
-eststo: reg `var' c.lmse##wagegrowth i.age_gp i.Q36 i.inc_gp
+eststo: reg `var' c.lrmse##c.wagegrowth i.age_gp i.Q36 i.inc_gp
 estadd local hasage "Yes",replace
 estadd local haseduc "Yes",replace
 estadd local hasinc "Yes",replace

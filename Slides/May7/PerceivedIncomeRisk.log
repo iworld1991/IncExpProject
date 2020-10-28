@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  7 MAY 2020 15:34
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  7 OCT 2020 09:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1206,12 +1206,7 @@ Overfull \hbox (43.64578pt too wide) has occurred while \output is active
 
 [25
 
-]pdfTeX warning (ext4): destination with the same identifier (name{macro_corr_h
-e}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.837 	\end{frame}
-                  
+]
 Overfull \hbox (43.64578pt too wide) has occurred while \output is active
  [][][][][][]  
  []
@@ -1270,10 +1265,10 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 20219 strings out of 492616
- 383593 string characters out of 6129482
+ 20221 strings out of 492616
+ 383641 string characters out of 6129482
  462804 words of memory out of 5000000
- 23571 multiletter control sequences out of 15000+600000
+ 23572 multiletter control sequences out of 15000+600000
  13691 words of font info for 53 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,22n,96p,806b,714s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1292,10 +1287,10 @@ ve/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/
 019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/201
 9/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2019/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on PerceivedIncomeRisk.pdf (30 pages, 2222312 bytes).
+Output written on PerceivedIncomeRisk.pdf (30 pages, 2222597 bytes).
 PDF statistics:
- 1240 PDF objects out of 1440 (max. 8388607)
- 1077 compressed objects within 11 object streams
- 95 named destinations out of 1000 (max. 500000)
+ 1241 PDF objects out of 1440 (max. 8388607)
+ 1078 compressed objects within 11 object streams
+ 96 named destinations out of 1000 (max. 500000)
  670 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,12 +1,13 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,py:light
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.3
+#       format_version: '1.5'
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -36,7 +37,7 @@ def toPara(vec,
     return vec[:ma_q-1], vec[ma_q:].reshape(2,t)
 
 
-# + {"code_folding": [16, 38, 42, 53, 66, 74, 89, 97, 115, 140, 149, 177, 181, 186, 202, 222, 236, 253, 273, 279, 301, 324, 352, 370, 380, 390, 410, 438, 461, 505, 522]}
+# + {"code_folding": [38, 42, 53, 66, 74, 89, 97, 115, 140, 149, 177, 181, 186, 202, 222, 236, 253, 273, 279, 301, 324, 352, 370, 380, 390, 410, 438, 461, 479, 508]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''
@@ -63,7 +64,7 @@ class IMAProcess:
         self.ma_coeffs = ma_coeffs
         self.ma_q = self.ma_coeffs.shape[0]
         self.t = t
-        self.sigmas =  np.ones([2,100])
+        self.sigmas =  np.ones([2,t])
         self.n_agg = 12
         self.init_sigmas = np.array([0.1,0.1])
         self.init_sv = np.array([0.1,0.1])
