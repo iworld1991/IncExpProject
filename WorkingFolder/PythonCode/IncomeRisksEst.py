@@ -18,8 +18,8 @@
 #
 # This noteobok contains the following
 #
-#  - Estimation functions of time-varying income risks for an integrated moving average process of income/earnings
-#  - It will allow for estimation jointly using data and expectation survey with alternative assumptions about expectations, ranging from rational expectation to alternative assumptions. 
+#  - Estimation functions of time-varying income risks for an integrated moving average(IMA) process of income/earnings
+#  - It uses the function to estimate the realized risks using PSID data 
 
 import numpy as np
 import numpy.ma as ma
@@ -30,11 +30,11 @@ import copy as cp
 
 from IncomeProcess import IMAProcess as ima
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## debugging test of the data 
 
 t = 100
-ma_nosa = np.array([1])
+ma_nosa = np.array([1])  ## ma coefficient without serial correlation
 p_sigmas = np.arange(t)  # sizes of the time-varying permanent volatility 
 p_sigmas_rw = np.ones(t) # a special case of time-invariant permanent volatility, random walk 
 p_sigmas_draw = np.random.uniform(0,1,t) ## allowing for time-variant shocks 
@@ -47,10 +47,10 @@ sigmas = np.array([p_sigmas_draw,
 dt = ima(t = t,
          ma_coeffs = ma_nosa)
 dt.sigmas = sigmas
-sim_data = dt.SimulateSeries(n_sim = 8000)
+sim_data = dt.SimulateSeries(n_sim = 2000)
 sim_moms = dt.SimulatedMoments()
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## get the computed moments 
 
 comp_moms = dt.ComputeGenMoments()
@@ -60,14 +60,14 @@ cov_var_comp = comp_moms['Var']
 var_comp = dt.AutocovarComp(step=0) #np.diagonal(cov_var_comp)
 autovarb1_comp = dt.AutocovarComp(step=-1)  #np.array([cov_var_comp[i,i+1] for i in range(len(cov_var_comp)-1)]) 
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## get the simulated moments 
 av = sim_moms['Mean']
 cov_var = sim_moms['Var']
 var = dt.Autocovar(step = 0)   #= np.diagonal(cov_var)
 autovarb1 = dt.Autocovar(step = -1) #np.array([cov_var[i,i+1] for i in range(len(cov_var)-1)]) 
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## plot simulated moments of first diff 
 
 plt.figure(figsize=((20,4)))
@@ -96,7 +96,7 @@ plt.plot(autovarb1,label='simulated')
 plt.plot(autovarb1_comp,label='computed')
 plt.legend(loc = 0)
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## robustness check if the transitory risks is approximately equal to the assigned level
 
 sigma_t_est = np.array(np.sqrt(abs(autovarb1)))
@@ -105,34 +105,9 @@ plt.plot(t_sigmas[1:-1],'b-.',label=r'$\sigma_{\theta,t}$')  # the head and tail
 plt.legend(loc=1)
 # -
 
-# ### Time Aggregation
-
-# + {"code_folding": [0]}
-## time aggregation 
-
-sim_data = dt.SimulateSeries(n_sim = 1000)
-dt.n_agg = 3
-agg_series = dt.TimeAggregate()
-agg_series_moms = dt.SimulateMomentsAgg()
-
-# + {"code_folding": [1]}
-## difference times degree of time aggregation leads to different autocorrelation
-for ns in np.array([2,8]):
-    an_instance = cp.deepcopy(dt)
-    an_instance.n_agg = ns
-    series = an_instance.SimulateSeries(n_sim =500)
-    agg_series = an_instance.TimeAggregate()
-    agg_series_moms = an_instance.SimulateMomentsAgg()
-    var_sim = an_instance.AutocovarAgg(step=0)
-    var_b1 = an_instance.AutocovarAgg(step=-1)
-    plt.plot(var_b1,label=r'={}'.format(ns))
-plt.legend(loc=1)
-plt.title('1-degree autocovariance of different \n level of time aggregation')
-# -
-
 # ### Estimation
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## some fake data moments with alternative parameters
 
 ## fix ratio of p and t risks
@@ -155,7 +130,7 @@ moms_fake = dt_fake.SimulatedMoments()
 
 # ### Estimation using fake data
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## estimation of income risks 
 
 dt_est = cp.deepcopy(dt)
@@ -163,7 +138,7 @@ dt_est.GetDataMoments(moms_fake)
 
 para_guess_this = np.ones(2*t  + dt_est.ma_q)  # make sure the length of the parameters are right 
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 para_est = dt_est.EstimatePara(method='BFGS',
                                para_guess = para_guess_this)
 
@@ -189,56 +164,87 @@ plt.legend(loc=0)
 #
 #
 
+# + {"code_folding": [0]}
+## PSID data 
 PSID = pd.read_stata('../../../PSID/J276289/psid_matrix.dta')   
 PSID.index = PSID['uniqueid']
 PSID = PSID.drop(['uniqueid'], axis=1)
 PSID = PSID.dropna(axis=0,how='all')
+PSID = PSID.dropna(axis=1,how='all')
 
-data = np.array(PSID)
+# + {"code_folding": [0]}
+## different samples 
 
-data.shape
+education_groups = ['HS dropout',
+                   'HS graduate',
+                   'college graduates/above']
 
-data_mean = np.nanmean(data,axis=0)
-data_var = ma.cov(ma.masked_invalid(data), rowvar=False)
-moms_data = {'Mean':data_mean,
-            'Var':data_var}
+samples = []
+para_est_list = []
 
-## check the shape of the cov matrix 
-data_var.shape
+## full sample 
+sample =  PSID.drop(['edu_i_g'],axis=1)
+samples.append(sample)
 
-## initialize 
-dt_data_est = cp.deepcopy(dt)
-t_data = len(data_var)+1
-dt_data_est.t = t_data
-dt_data_est.GetDataMoments(moms_data)
-para_guess_this = np.ones(2*t_data + dt_data_est.ma_q)
+## sub education sample 
+for edu in education_groups:
+    sample = PSID.loc[PSID['edu_i_g']==edu].drop(['edu_i_g'],axis=1)
+    samples.append(sample)
 
+# + {"code_folding": [0]}
 ## estimation
-data_para_est = dt_data_est.EstimatePara(method='BFGS',
+for sample in samples:
+    data = np.array(sample)
+    data_mean = np.nanmean(data,axis=0)
+    data_var = ma.cov(ma.masked_invalid(data), rowvar=False)
+    moms_data = {'Mean':data_mean,
+                 'Var':data_var}
+    ## initialize 
+    dt_data_est = cp.deepcopy(dt)
+    t_data = len(data_var)+1
+    dt_data_est.t = t_data
+    dt_data_est.GetDataMoments(moms_data)
+    para_guess_this = np.ones(2*t_data + dt_data_est.ma_q)
+    
+    ## estimate
+    ## estimation
+    data_para_est = dt_data_est.EstimatePara(method='CG',
                                para_guess = para_guess_this)
+    para_est_list.append(data_para_est)
 
 # + {"code_folding": [0]}
 ## time stamp 
 t0 = 1971
 years = t0+np.arange(t_data-1)
 
-# + {"code_folding": [0]}
+# + {"code_folding": [3]}
 ## check the estimation and true parameters 
 
-fig = plt.figure(figsize=([12,4]))
+lw = 3
+for i,paras_est in enumerate(para_est_list):
+    fig = plt.figure(figsize=([12,4]))
+    
+    this_est = paras_est
+    
+    plt.subplot(1,2,1)
+    plt.title('Permanent Risk')
+    plt.plot(years,
+             this_est[1][0][1:].T**2,
+             'r-o',
+             lw=lw,
+             label='Estimation')
+    plt.grid(True)
 
-plt.subplot(1,2,1)
-plt.title('Permanent Risk')
-plt.plot(years,
-         dt_data_est.para_est[1][0][1:].T**2,
-         'r-',label='Estimation')
+    plt.subplot(1,2,2)
+    plt.title('Transitory Risk')
+    plt.plot(years,
+             this_est[1][1][1:].T**2,
+             'r-o',
+             lw=lw,
+             label='Estimation')
+    plt.legend(loc=0)
+    plt.grid(True)
 
-plt.subplot(1,2,2)
-plt.title('Transitory Risk')
-plt.plot(years,
-         dt_data_est.para_est[1][1][1:].T**2,
-         'r-',label='Estimation')
-plt.legend(loc=0)
 
 # + [markdown] {"code_folding": []}
 # ### Estimation using simulated moments 
@@ -314,6 +320,33 @@ plt.plot(dt_fake.sigmas[1][1:]**2,'-*',label='Truth')
 plt.legend(loc=0)
 
 """
+# -
+
+# ### Time Aggregation
+
+# +
+## time aggregation 
+
+sim_data = dt.SimulateSeries(n_sim = 1000)
+dt.n_agg = 3
+agg_series = dt.TimeAggregate()
+agg_series_moms = dt.SimulateMomentsAgg()
+
+# + {"code_folding": [0, 2]}
+## difference times degree of time aggregation leads to different autocorrelation
+
+for ns in np.array([2,8]):
+    an_instance = cp.deepcopy(dt)
+    an_instance.n_agg = ns
+    series = an_instance.SimulateSeries(n_sim =500)
+    agg_series = an_instance.TimeAggregate()
+    agg_series_moms = an_instance.SimulateMomentsAgg()
+    var_sim = an_instance.AutocovarAgg(step=0)
+    var_b1 = an_instance.AutocovarAgg(step=-1)
+    plt.plot(var_b1,label=r'={}'.format(ns))
+plt.legend(loc=1)
+plt.title('1-degree autocovariance of different \n level of time aggregation')
+
 # -
 
 # #### Estimation using time aggregated data
