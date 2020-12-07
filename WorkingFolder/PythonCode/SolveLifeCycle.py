@@ -75,7 +75,7 @@ lc_data = [
 ]
 
 
-# + code_folding=[7, 52]
+# + code_folding=[]
 @jitclass(lc_data)
 class LifeCycle:
     """
@@ -147,7 +147,7 @@ class LifeCycle:
         return np.exp(n_shk)
 
 
-# + code_folding=[1, 4, 33, 34, 37]
+# + code_folding=[1, 4]
 @njit
 def K(a_in, σ_in, lc):
     """
@@ -209,7 +209,7 @@ def K(a_in, σ_in, lc):
     return a_out, σ_out
 
 
-# + code_folding=[0, 22]
+# + code_folding=[0]
 def solve_model_backward_iter(model,        # Class with model information
                               a_vec,        # Initial condition for assets
                               σ_vec,        # Initial condition for consumption
@@ -256,7 +256,7 @@ def solve_model_backward_iter(model,        # Class with model information
     return as_new, σs_new
 
 
-# + code_folding=[]
+# + code_folding=[0]
 def policyfunc(lc,
                a_star,
                σ_star,
@@ -284,7 +284,7 @@ def policyfunc(lc,
 
 # ## Solve the model for some made-up consumption policy at retirement 
 
-# + code_folding=[2]
+# + code_folding=[]
 ## this is the retirement consumption policy 
 
 def policyPF(β,

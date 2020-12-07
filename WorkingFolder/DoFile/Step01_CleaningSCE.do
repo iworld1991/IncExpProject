@@ -179,12 +179,12 @@ label var C4_4 "increase of college education from y to y+1(%)"
 label var C4_5 "increase of price of renting a typical house/apt from y to y+1(%)"
 label var C4_6  "increase of gold price from y to y+1(%)"
 label var QNUM1 "num q 1: (correct if ==150)"
-label var QNUM2 ""
-label var QNUM3 ""
-label var QNUM5 ""
-label var QNUM6 ""
-label var QNUM8 ""
-label var QNUM9 ""
+label var QNUM2 "num q 2: (correct if ==242)"
+label var QNUM3 "num q 3: (correct if ==10)"
+label var QNUM5 "num q 5: (correct if ==100)"
+label var QNUM6 "num q 6: (correct if ==5)"
+label var QNUM8 "num q 8: (correct if ==3)"
+label var QNUM9 "num q 9: (correct if ==2)"
 label var Q32 "age(in years)"
 label var Q33 "gender"
 label var Q34 "hispanic/latino/spanish(1/0)"
@@ -257,7 +257,7 @@ global keeplist date year month userid tenure weight ///
 	   Q1 Q2 Q3 Q4new Q5new Q6new Q9_mean Q9_var ///
 	   Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 Q12new Q13new Q14new ///
 	   Q25v2 Q25v2part2 Q31v2 Q31v2part2 C1_mean C1_var ///
-	   Q26v2 Q26v2part2
+	   Q26v2 Q26v2part2 QNUM1 QNUM2 QNUM3 QNUM5 QNUM6 QNUM8 QNUM9 
  
 keep ${keeplist}
 
@@ -325,6 +325,27 @@ gen Q24_rdisg = Q24_rsd^2
 label var Q24_rdisg "Disagreements of 1-yr-ahead real expted income growth"
 
 
+** calculate financial/numeric literacy score
+
+gen QNUM1_ = 0 if QNUM1!=.
+gen QNUM2_ = 0 if QNUM2!=.
+gen QNUM3_ = 0 if QNUM3!=.
+gen QNUM5_ = 0 if QNUM5!=.
+gen QNUM6_ = 0 if QNUM6!=.
+gen QNUM8_ = 0 if QNUM8!=.
+gen QNUM9_ = 0 if QNUM9!=.
+
+replace QNUM1_ = 1 if QNUM1==150
+replace QNUM2_ = 1 if QNUM2<=244 & QNUM2>=240
+replace QNUM3_ = 1 if QNUM3==10
+replace QNUM5_ = 1 if QNUM5==100
+replace QNUM6_ = 1 if QNUM6==5
+replace QNUM8_ = 1 if QNUM8==3
+replace QNUM9_ = 1 if QNUM9==2
+
+gen nlit = QNUM1_+QNUM2_+QNUM3_+QNUM5_+QNUM6_+QNUM8_+QNUM9_
+label var nlit "numeracy literacy score: (0-7)"
+
 ***************************************************
 **** Fill the age/education for the same household
 *************************************************
@@ -332,6 +353,7 @@ label var Q24_rdisg "Disagreements of 1-yr-ahead real expted income growth"
 
 sort userid date 
 
+replace nlit = nlit[_n-1] if nlit==. & userid == userid[_n-1] 
 replace Q32 = Q32[_n-1] if Q32==. & userid == userid[_n-1] 
 replace Q36 = Q36[_n-1] if Q36==. & userid == userid[_n-1]
 replace Q33 = Q33[_n-1] if Q33==. & userid == userid[_n-1] & D1==1

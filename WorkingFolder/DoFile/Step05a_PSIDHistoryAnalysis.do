@@ -10,7 +10,7 @@ pwd
 set more off 
 capture log close
 
-import excel "${other}PSID/psid_history_vol3.xls", sheet("Sheet1") firstrow
+import excel "${other}PSID/psid_history_vol_test.xls", sheet("Sheet1") firstrow
 destring year cohort rmse, force replace
 
 gen rmseqrt = sqrt(rmse)
@@ -18,7 +18,7 @@ gen rmseqrt = sqrt(rmse)
 
 ***********************
 ** generate variables 
-**************************
+************************
 
 gen age = year-cohort + 21
 label var age "age"
@@ -109,6 +109,10 @@ foreach var in Q24_var Q24_iqr rmse{
 gen l`var' = log(`var')
 }
 
+
+gen lprobUE= log(Q4new)
+label var lprobUE "log probability of UE higher next year"
+
 *****************
 ** chart 
 *****************
@@ -161,16 +165,18 @@ twoway (scatter lQ24_var lrmse , color(ltblue)) ///
 graph export "${sum_graph_folder}/experience_var_var_by_income_data.png", as(png) replace 
 restore
 
-*/
+
 
 *********************************************
 ** experienced volatility and perceived risk regression
 *******************************************
+
 label var lQ24_var "log perceived risk"
 label var lQ24_iqr "log perceived iqr"
+label var lprobUE "log prob of higher UE"
 
 eststo clear
-foreach var in lQ24_var lQ24_iqr{
+foreach var in lQ24_var lQ24_iqr lprobUE{
 eststo: reg `var' lrmse i.age_gp
 estadd local hasage "Yes",replace
 estadd local haseduc "No",replace
@@ -194,7 +200,8 @@ esttab using "${sum_table_folder}/micro_reg_history_vol.csv", ///
          keep(lrmse) st(r2 N hasage haseduc hasinc,label("R-squre" "N" "Control age" "Control educ" "Control income")) ///
 		 label ///
 		 replace 
-
+		 
+		 
 ************************************************
 **  experienced volatility and state wage growth
 ***********************************************
@@ -218,3 +225,27 @@ esttab using "${sum_table_folder}/micro_reg_history_vol_state.csv", ///
 		 label ///
 		 replace 
 
+	*/
+************************************************
+**  experienced volatility and numeracy
+***********************************************
+
+
+label var lQ24_var "log perceived risk"
+label var lQ24_iqr "log perceived iqr"
+
+eststo clear
+foreach var in lQ24_var lQ24_iqr{
+
+eststo: reg `var' c.lrmse##c.nlit i.age_gp i.Q36 i.inc_gp
+estadd local hasage "Yes",replace
+estadd local haseduc "Yes",replace
+estadd local hasinc "Yes",replace
+
+}
+
+label var lrmse "log experienced volatility"
+esttab using "${sum_table_folder}/micro_reg_history_vol_nlit.csv", ///
+         keep(lrmse *lrmse) st(r2 N hasage haseduc hasinc,label("R-squre" "N" "Control age" "Control educ" "Control income")) ///
+		 label ///
+		 replace 

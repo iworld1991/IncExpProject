@@ -1,12 +1,13 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,py:light
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.3
+#       format_version: '1.5'
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -80,7 +81,8 @@ vars_job = ['Q10_1',  # full-time
 vars_demog_sub = ['Q32',  ## age 
                   'Q33',  ## gender 
                   'Q36',  ## education (1-8 low to high, 9 other)
-                  'byear'] ## year of birth
+                  'byear',
+                 'nlit'] ## year of birth
 
 vars_decision = ['Q26v2',  ## spending growth or decrease next year 
                  'Q26v2part2']  # household spending growth 
@@ -120,7 +122,7 @@ SCEM = pd.merge(SCEM_base,
 
 #SCEM.describe(include = all)
 
-# + {"code_folding": [2, 12]}
+# + {"code_folding": []}
 ## renaming 
 
 SCEM = SCEM.rename(columns={'Q24_mean': 'incexp',
@@ -171,6 +173,7 @@ SCEM = SCEM.rename(columns={'rmse':'expvol'})
 
 SCEM['HHinc_gr'] = SCEM['HHinc']>= 6
 SCEM['educ_gr'] = SCEM['educ'] >= 4 
+SCEM['nlit_gr'] = SCEM['nlit']>= 4
 # -
 
 len(SCEM)
@@ -191,7 +194,7 @@ SCEM.columns
 ## data types 
 
 SCEM.dtypes
-for col in ['HHinc','age','educ','HHinc_gr','educ_gr']:
+for col in ['HHinc','age','educ','HHinc_gr','educ_gr','nlit_gr']:
     SCEM[col] = SCEM[col].astype('int',
                                  errors='ignore')
 
@@ -213,7 +216,8 @@ cleanup_nums = {'parttime': {0: 'no', 1: 'yes'},
                 'selfemp':{1: 'no', 2: 'yes'},
                 'gender':{1:'male',2:'female'},
                'HHinc_gr':{0:'low inc',1:'high inc'},
-               'educ_gr':{0:'low educ',1:'high educ'},}
+               'educ_gr':{0:'low educ',1:'high educ'},
+               'nlit_gr':{0:'low nlit',1:'high nlit'}}
 SCEM.replace(cleanup_nums,
              inplace = True)
 
@@ -237,7 +241,7 @@ SCEM['byear_gr'] = pd.cut(SCEM['byear'],
 # + {"code_folding": []}
 ## categorical variables 
 
-vars_cat = ['HHinc','fulltime','parttime','selfemp','gender','educ','userid','date','byear','HHinc_gr','educ_gr']
+vars_cat = ['HHinc','fulltime','parttime','selfemp','gender','educ','userid','date','byear','HHinc_gr','educ_gr','nlit_gr']
 
 for var in vars_cat:
     SCEM[var] = pd.Categorical(SCEM[var],ordered = False)
@@ -333,6 +337,21 @@ for i,mom in enumerate(moms):
               size = 15)
 plt.savefig('../Graphs/ind/bar_by_gender')
 
+
+# +
+## by numeracy literacy  
+
+fig,axes = plt.subplots(len(moms),figsize=(4,14))
+
+for i,mom in enumerate(moms):
+    #plt.style.use('ggplot')
+    SCEM.groupby('nlit_gr')[mom].mean().plot(kind='bar', ax=axes[i],title=mom)
+    #axes[i].set_ylabel(mom,size = 15)
+    
+    if i == len(moms)-1:
+        axes[i].set_xlabel('group by numeracy',
+              size = 15)
+plt.savefig('../Graphs/ind/bar_by_nlit')
 
 # + {"code_folding": []}
 ## by income group 
@@ -431,7 +450,7 @@ plt.savefig('../Graphs/ind/scatter_history_vol_var.jpg')
 # +
 ## generate logs 
 
-vars_log = ['incvar','rincvar','inciqr','exp_vol','UEprobAgg','UEprobInd']
+vars_log = ['incvar','rincvar','inciqr','expvol','UEprobAgg','UEprobInd']
 
 for var in vars_log:
     SCEM[var] = np.log(SCEM[var]+0.001)
@@ -567,7 +586,7 @@ tb.to_excel('../Tables/micro_reg_history_vol.xlsx')
 dep_list =  ['incvar'] 
 dep_list2 =['incexp','rincexp']
 indep_list_ct = ['UEprobInd','UEprobAgg']
-indep_list_dc = ['HHinc','selfemp','fulltime']
+indep_list_dc = ['HHinc','selfemp','fulltime','nlit_gr']
 
 
 # + {"code_folding": []}
@@ -593,21 +612,21 @@ for i,mom in enumerate(dep_list):
     ## model 3 experienced vol, age, income, education 
     
     model3 = smf.ols(formula = str(mom)
-                    +'~ expvol + C(age_gr) + C(HHinc_gr) + C(educ_gr) + C(gender)',
+                    +'~ expvol + C(age_gr) + C(HHinc_gr) + C(educ_gr) + C(gender)+ C(nlit_gr)',
                     data = SCEM)
     rs_list[nb_spc*i+2] = model3.fit()
     
     ## model 4 + job characteristics 
     
     model4 = smf.ols(formula = str(mom)
-                    +'~ expvol + C(gender)+ C(educ_gr) + C(HHinc_gr) + C(age_gr)',
+                    +'~ expvol + C(gender)+ C(educ_gr) + C(HHinc_gr) + C(age_gr)+ C(nlit_gr)',
                     data = SCEM)
     rs_list[nb_spc*i+3] = model4.fit()
     
     
     ## model 5 + job characteristics 
     model5 = smf.ols(formula = str(mom)
-                    +'~ expvol + C(parttime) + C(selfemp) + C(gender)+ C(educ_gr) + C(HHinc_gr) + C(age_gr)',
+                    +'~ expvol + C(parttime) + C(selfemp) + C(gender)+ C(educ_gr) + C(HHinc_gr) + C(age_gr)+ C(nlit_gr)',
                     data = SCEM)
     rs_list[nb_spc*i+4] = model5.fit()
     
@@ -615,7 +634,7 @@ for i,mom in enumerate(dep_list):
     ## model 6 + job characteristics 
     ct_str = '+'.join([var for var in indep_list_ct])
     model6 = smf.ols(formula = str(mom)
-                    +'~ expvol + C(parttime) + C(selfemp) + C(gender)+ C(educ_gr) + C(HHinc_gr) + C(age_gr) + '
+                    +'~ expvol + C(parttime) + C(selfemp) + C(gender)+ C(educ_gr) + C(HHinc_gr) + C(age_gr) + C(nlit_gr) + '
                      + ct_str,
                     data = SCEM)
     rs_list[nb_spc*i+4] = model6.fit()
@@ -634,6 +653,7 @@ dfoutput = summary_col(rs_names,
                                            'C(HHinc_gr)[T.low inc]',
                                            'C(educ_gr)[T.low educ]',
                                            'C(gender)[T.male]',
+                                           'C(nlit_gr)[T.low nlit]',
                                            'C(parttime)[T.yes]',
                                            'C(selfemp)[T.yes]',
                                            'UEprobAgg',

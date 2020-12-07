@@ -176,8 +176,13 @@ label var fbetter "finance better"
 label define better_glb 0 "worse" 1 "better"
 label value fbetter better_glb
 
-local group_vars byear_g age_g edu_g HHinc_g fbetter
+gen nlit_g = cond(nlit>=3,1,0) 
+replace nlit_g = . if nlit ==.
+label var nlit_g "numeracy literacy score group"
+label define nlilb 0 "low" 1 "high" 
+label value nlit_g nlitlb
 
+local group_vars byear_g age_g edu_g HHinc_g fbetter nlit_g
 
 
 
@@ -412,7 +417,32 @@ twoway (bar sp500 date if `gp'== 3,yaxis(2) fcolor(gs10)) ///
   restore
 }
 }
-*/
+
+
+** 2 groups fo numeracy literacy 
+
+foreach agg in mean median{
+  foreach gp in nlit_g{
+   preserve 
+   
+   collapse (`agg') `Moments' sp500, by(date `gp')
+   xtset `gp' date 
+   
+foreach mom in `Moments'{
+keep if `mom'!=.
+twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
+       (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)), ///
+       xtitle("date") ///
+	   ytitle("") ///
+	   title("`mom' by numeracy literacy") ///
+	   legend(label(1 "low") label(2 "high") col(2))
+ graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
+      
+}
+ restore
+}
+}
+
 
 ** 3 groups fo HH income 
 foreach agg in mean median{
@@ -517,7 +547,7 @@ twoway (bar sp500 date if `gp'== 2,yaxis(2) fcolor(gs10)) ///
 
 
 
-** 2 groups 
+** 2 groups of education 
 foreach agg in mean median{
   foreach gp in edu_g{
    preserve 
@@ -561,35 +591,30 @@ twoway (bar sp500 date if `gp'== 1,yaxis(2) fcolor(gs10)) ///
  restore
 }
 }
-
+*/
 
 ********************
 ** Regression ******
 ********************
 
-global other_control i.Q33 i.Q34 Q35_1 Q35_2 Q35_3 Q35_4 Q35_5 Q35_6 
-global macro_ex_var Q4new Q6new Q9_mean Q13new
+
+global other_control i.gender i.Q34 Q35_1 Q35_2 Q35_3 Q35_4 Q35_5 Q35_6 
+global macro_ex_var UEprobAgg Stkprob Q9_mean UEprobInd
 
 eststo clear
 
 foreach mom in var iqr mean{
-eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id, robust 
-eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${other_control}, robust 
-eststo: reg Q24_`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${other_control} ${macro_ex_var}, robust 
-}
-foreach mom in Mean Var Skew Kurt{
-eststo: reg Inc`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id, robust 
-eststo: reg Inc`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${other_control}, robust 
-eststo: reg Inc`mom' i.age_g i.edu_g i.inc_g i.cohort_g i.year i.state_id ${other_control} ${macro_ex_var}, robust 
-
+eststo: reg inc`mom' i.age_g i.edu_g i.HHinc_g i.byear_g i.year i.state_id, robust 
+eststo: reg inc`mom' i.age_g i.edu_g i.HHinc_g i.byear_g i.year i.state_id ${other_control}, robust 
+eststo: reg inc`mom' i.age_g i.edu_g i.HHinc_g i.byear_g i.year i.state_id ${other_control} ${macro_ex_var}, robust 
 }
 
 esttab using "${sum_table_folder}/mom_group.csv", ///
-             se r2 drop(0.age_g 0.edu_g 0.inc_g 0.cohort_g  *.year *state_id 1.Q33 1.Q34 _cons) ///
+             se r2 drop(0.age_g 0.edu_g 0.HHinc_g 0.byear_g  *.year *state_id 1.gender 1.Q34 _cons) ///
 			 label replace
 
 *****************************
-** Regression Full-table ******
+** Regression Full-table (OLD)******
 *******************************
 			 
 eststo clear
@@ -600,10 +625,10 @@ label var Q10_2 "part-time"
 label var Q36 "education"
 	
 foreach mom in mean var iqr rmean rvar{
-eststo: reg Q24_`mom' i.Q10_2 i.Q12new i.month, vce(cl ID)
-eststo: reg Q24_`mom' i.Q10_2 i.Q12new i.D6 i.month,vce(cl ID)
-eststo: reg Q24_`mom' i.Q10_2 i.Q12new i.D6 Q4new Q13new Q6new i.month,vce(cl ID)
-eststo: reg Q24_`mom' i.Q36 i.age_g i.month,vce(cl ID)
+eststo: reg inc`mom' i.Q10_2 i.Q12new i.month, vce(cl ID)
+eststo: reg inc`mom' i.Q10_2 i.Q12new i.D6 i.month,vce(cl ID)
+eststo: reg inc`mom' i.Q10_2 i.Q12new i.D6 Q4new Q13new Q6new i.month,vce(cl ID)
+eststo: reg inc`mom' i.Q36 i.age_g i.month,vce(cl ID)
 }
 
 /*
