@@ -894,14 +894,14 @@ relationship between experiences and perceptions.
 
 The experienced volatility specific to a certain cohort \(c\) at a given
 time \(t\) can be approximated as the average squared residuals from an
-income regression based on the corresponding panel sample of labor
-income obtained from PSID.
+income regression based on the historical sample only available to the
+cohort's life time. This is approximately the unexpected income changes
+of each person in the sample. I use income panel from PSID.
 \footnote{I obtain the labor income records of all household heads between 1970-2017. Farm workers, youth and olds and observations with empty entries of major demographic variables are dropped.}
-In particular, I first undertake a Miner-style regression using major
-demographic variables as regressors. I also include the previous-year
-income to account for persistence in the process. Then, for each
-cohort-time sample, the regression mean-squared error (RMSE) is used as
-the approximate to the cohort-time specific income volatility.
+In particular, I first undertake a Mincer-style regression using major
+demographic variables as regressors. Then, for each cohort-time sample,
+the regression mean-squared error (RMSE) is used as the approximate to
+the cohort/time-specific income volatility.
 
 There are two issues associated with such an approximation of individual
 experienced volatility. First, I, as an economist with PSID data in my
@@ -933,10 +933,61 @@ coefficient of \(expvol\) declines from 6.31 to 2.92 when controlling
 the age effect because that variations in experienced volatility are
 indeed partly from age differences. While controlling more individual
 factors, the effect of the experienced volatility becomes even stronger.
-This implies potential heterogeneity as to how experience is translated
+This implies potential heterogeneity as to how experience was translated
 into perceived risks.
 
 {[}FIGURE \ref{fig:var_experience_var_data} HERE{]}
+
+What is more interesting and important from a theoretical perspective is
+that how the risk perceptions are influenced by past experiences of
+shocks of different nature. In particular, do experiences of volatility
+from permanent and transitory shocks affect risk perceptions
+differently? In order to examine this question, what we can do is to
+decompose the experienced income volatility of different cohorts into
+components of different degree of persistences and see how the they are
+loaded into the future perceptions, separately. In particular, I follow
+the tradition of a long list of labor/macro literature by assuming the
+unexplained earning to consist of a permanent and a transitory component
+which have time-varying volatilities
+\footnote{\cite{gottschalk1994growth}, \cite{carroll1997nature}, \cite{meghir2004income}, etc.}.
+Then relying upon the cross-sectional moment restrictions of income
+changes, one could estimate the size of the permanent and transitory
+income risks based on realized income data. Experienced permanent and
+transitory volatility is approximated as the the average of estimated
+risks of respective component from the year of birth of the cohort till
+the year for which the income risk perceptions is formed.
+
+In theory, both permanent and transitory risks increase the volatility
+in income changes in the same way. But the results here suggest the
+pattern only holds for transitory income risks, as shown in Figure
+\ref{fig:experience_var_transitory_var_data}. In contrast, higher
+experienced permanent volatility is associated with lower perceived
+risk, as shown in Figure \ref{fig:experience_var_permanent_var_data}. I
+also confirm that the pattern is not sensitive to the particular
+definition of the cohort here by alterantively letting people's income
+risks be specific to education level. To understand which compoennt
+overweights the other in determining overal risk perception given their
+opposite signs, I also examine how the relative size of permanent and
+transitory volatility affect income risk perceptions. The ratio
+essentially reflect the degree of persistency of income changes,
+i.e.~higher permanent/transitory risk ratio leads to a higher serial
+correlation of unexpected income changes. Figure
+\ref{fig:experience_var_ratio_var_data} suggest that higher
+permanent/transitory ratio is actually associated with lower perceived
+income risks. The fact that income risk perceptions differ depending
+upon the nature of experienced volatility suggests that income risk
+perceptions are formed in a way that is not consistent with the
+underlying income process. This will be a crutial input to the modeling
+of perception formation in the next section.
+
+{[}FIGURE \ref{fig:experience_var_permanent_var_data} HERE{]}
+
+{[}FIGURE \ref{fig:experience_var_transitory_var_data} HERE{]}
+
+{[}FIGURE \ref{fig:experience_var_ratio_var_data} HERE{]}
+
+
+
 
 
 

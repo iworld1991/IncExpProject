@@ -261,14 +261,22 @@ mom_group_state
 #
 # Different generations also have different perceived income risks. Let us explore to what extent the cohort-specific risk perceptions are influenced by the income volatility experienced by that particular cohort. Different cohorts usually have experienced distinct macroeconomic histories. On one hand, these non-identical experiences could lead to long-lasting differences in realized life-long outcomes. An example is that college graduates graduating during recessions have lower life-long income than others. (<cite data-cite="kahn2010long">Kahn 2010</cite>, <cite data-cite="oreopoulos2012short">Oreopoulos et al. 2012</cite>, <cite data-cite="schwandt2019unlucky">Schwandt and Von Wachter(2019)</cite>). On the other hand, experiences may have also shaped people's expectations directly, leading to behavioral heterogeneity across cohorts (<cite data-cite="malmendier2015learning">Malmendier and Nagel (2015)</cite>). Benefiting from having direct access to the subjective income risk perceptions, I could directly examine the relationship between experiences and perceptions. 
 #
-# The experienced volatility specific to a certain cohort $c$ at a given time $t$ can be approximated as the average squared residuals from an income regression based on the corresponding panel sample of labor income obtained from PSID. \footnote{I obtain the labor income records of all household heads between 1970-2017. Farm workers, youth and olds and observations with empty entries of major demographic variables are dropped.} In particular, I first undertake a Miner-style regression using major demographic variables as regressors. I also include the previous-year income to account for persistence in the process. Then, for each cohort-time sample, the regression mean-squared error (RMSE) is used as the approximate to the cohort-time specific income volatility. 
-#
+# The experienced volatility specific to a certain cohort $c$ at a given time $t$ can be approximated as the average squared residuals from an income regression based on the historical sample only available to the cohort's life time. This is approximately the unexpected income changes of each person in the sample. I use income panel from PSID. \footnote{I obtain the labor income records of all household heads between 1970-2017. Farm workers, youth and olds and observations with empty entries of major demographic variables are dropped.} In particular, I first undertake a Mincer-style regression using major demographic variables as regressors. Then, for each cohort-time sample, the regression mean-squared error (RMSE) is used as the approximate to the cohort/time-specific income volatility. 
 #
 # There are two issues associated with such an approximation of individual experienced volatility. First, I, as an economist with PSID data in my hand, am obviously equipped with a much larger sample than the sample size facing an individual that may have entered her experience. Since larger sample also results in a smaller RMSE, my approximation might be smaller than the real experienced volatility. Second, however, the counteracting effect comes from the superior information problem, i.e. the information set held by earners in the sample contains what is not available to econometricians. Therefore, not all known factors predictable by the individual are used as a regressor. This will bias upward the estimated experienced volatility. Despite these concerns, my method serves as a feasible approximation sufficient for my purpose here. 
 #
-# Figure \ref{fig:var_experience_var_data} plots the logged average perceived risk from each cohort $c$ at year $t$ against logged experienced volatility estimated from above. It shows a clear positive correlation between the two, which suggests that cohorts who have experienced higher income volatility also perceived future income to be riskier. The results are reconfirmed in Table \ref{micro_reg}, for which I run a regression of logged perceived risks of each individual in SCE on the logged experienced volatility specific to her cohort while controlling individuals age, income, educations, etc. For instance, each 1 percentage increase in experienced volatility is associated with a 3 to 6 percentage point increase in perceived income risks, depending on the controls included in the regression. What is interesting is that the coefficient of $expvol$ declines from 6.31 to 2.92 when controlling the age effect because that variations in experienced volatility are indeed partly from age differences. While controlling more individual factors, the effect of the experienced volatility becomes even stronger. This implies potential heterogeneity as to how experience is translated into perceived risks.     
+# Figure \ref{fig:var_experience_var_data} plots the logged average perceived risk from each cohort $c$ at year $t$ against logged experienced volatility estimated from above. It shows a clear positive correlation between the two, which suggests that cohorts who have experienced higher income volatility also perceived future income to be riskier. The results are reconfirmed in Table \ref{micro_reg}, for which I run a regression of logged perceived risks of each individual in SCE on the logged experienced volatility specific to her cohort while controlling individuals age, income, educations, etc. For instance, each 1 percentage increase in experienced volatility is associated with a 3 to 6 percentage point increase in perceived income risks, depending on the controls included in the regression. What is interesting is that the coefficient of $expvol$ declines from 6.31 to 2.92 when controlling the age effect because that variations in experienced volatility are indeed partly from age differences. While controlling more individual factors, the effect of the experienced volatility becomes even stronger. This implies potential heterogeneity as to how experience was translated into perceived risks.     
 #
 # <center>[FIGURE \ref{fig:var_experience_var_data} HERE]</center>
+#
+# What is more interesting and important from a theoretical perspective is that how the risk perceptions are influenced by past experiences of shocks of different nature. In particular, do experiences of volatility from permanent and transitory shocks affect risk perceptions differently? In order to examine this question, what we can do is to decompose the experienced income volatility of different cohorts into components of different degree of persistences and see how the they are loaded into the future perceptions, separately. In particular, I follow the tradition of a long list of labor/macro literature by assuming the unexplained earning to consist of a permanent and a transitory component which have time-varying volatilities \footnote{<cite data-cite="gottschalk1994growth">Gottschalk et al. 1994</cite>, <cite data-cite="carroll1997nature">Carroll and Samwick, 1997</cite>, <cite data-cite="meghir2004income">Meghir and Pistaferri, 2004</cite>, etc.}. Then relying upon the cross-sectional moment restrictions of income changes, one could estimate the size of the permanent and transitory income risks based on realized income data. Experienced permanent and transitory volatility is approximated as the the average of estimated risks of respective component from the year of birth of the cohort till the year for which the income risk perceptions is formed.
+#
+# In theory, both permanent and transitory risks increase the volatility in income changes in the same way. But the results here suggest the pattern only holds for transitory income risks, as shown in Figure \ref{fig:experience_var_transitory_var_data}. In contrast, higher experienced permanent volatility is associated with lower perceived risk, as shown in Figure \ref{fig:experience_var_permanent_var_data}. I also confirm that the pattern is not sensitive to the particular definition of the cohort here by alterantively letting people's income risks be specific to education level. To understand which compoennt overweights the other in determining overal risk perception given their opposite signs, I also examine how the relative size of permanent and transitory volatility affect income risk perceptions. The ratio essentially reflect the degree of persistency of income changes, i.e. higher permanent/transitory risk ratio leads to a higher serial correlation of unexpected income changes. Figure \ref{fig:experience_var_ratio_var_data} suggest that higher permanent/transitory ratio is actually associated with lower perceived income risks. The fact that income risk perceptions differ depending upon the nature of experienced volatility suggests that income risk perceptions are formed in a way that is not consistent with the underlying income process. This will be a crutial input to the modeling of perception formation in the next section.
+#
+# <center>[FIGURE \ref{fig:experience_var_permanent_var_data} HERE]</center>
+# <center>[FIGURE \ref{fig:experience_var_transitory_var_data} HERE]</center>
+# <center>[FIGURE \ref{fig:experience_var_ratio_var_data} HERE]</center>
+#
 
 # + {"caption": "Experienced Volatility and Perceived Income Risk", "code_folding": [], "label": "fig:var_experience_var_data", "note": "Experienced volatility is the mean squred error(MSE) of income regression based on a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year.", "hide_input": true, "hide_output": true}
 ## insert figures 
@@ -280,6 +288,59 @@ nb_fig = len(fig_list)
 
 file_list = [graph_path+fig for fig in fig_list]
 
+
+## show figures 
+plt.figure(figsize =(7,7))
+for i in range(nb_fig):
+    plt.imshow(mpimg.imread(file_list[i]))
+    plt.axis("off") 
+plt.tight_layout(pad =0, w_pad=0, h_pad=0)
+
+# + {"caption": "Experienced Permanent Volatility and Perceived Income Risk", "code_folding": [], "label": "fig:experience_var_permanent_var_data", "note": "Experienced permanent volatility is average of the estimated risks of the permanent income component of a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year.", "hide_input": true, "hide_output": true}
+## insert figures 
+graph_path = os.path.join(path,'../Graphs/ind/')
+
+fig_list = ['experience_var_permanent_var_data.png']
+            
+nb_fig = len(fig_list)
+
+file_list = [graph_path+fig for fig in fig_list]
+
+
+## show figures 
+plt.figure(figsize =(7,7))
+for i in range(nb_fig):
+    plt.imshow(mpimg.imread(file_list[i]))
+    plt.axis("off") 
+plt.tight_layout(pad =0, w_pad=0, h_pad=0)
+
+# + {"caption": "Experienced Transitory Volatility and Perceived Income Risk", "code_folding": [], "label": "fig:experience_var_transitory_var_data", "note": "Experienced transitory volatility is average of the estimated risks of the transitory component of a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year.", "hide_input": true, "hide_output": true}
+## insert figures 
+graph_path = os.path.join(path,'../Graphs/ind/')
+
+fig_list = ['experience_var_transitory_var_data.png']
+            
+nb_fig = len(fig_list)
+
+file_list = [graph_path+fig for fig in fig_list]
+
+
+## show figures 
+plt.figure(figsize =(7,7))
+for i in range(nb_fig):
+    plt.imshow(mpimg.imread(file_list[i]))
+    plt.axis("off") 
+plt.tight_layout(pad =0, w_pad=0, h_pad=0)
+
+# + {"caption": "Experienced Permanent/Transitory Ratio and Perceived Income Risk", "code_folding": [], "label": "fig:experience_var_ratio_var_data", "note": "Experienced permanent/transitory ratio is ratio of the estimated risks of the permanent to transitory component of a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year.", "hide_input": true, "hide_output": true}
+## insert figures 
+graph_path = os.path.join(path,'../Graphs/ind/')
+
+fig_list = ['experience_var_ratio_var_data.png']
+            
+nb_fig = len(fig_list)
+
+file_list = [graph_path+fig for fig in fig_list]
 
 
 ## show figures 

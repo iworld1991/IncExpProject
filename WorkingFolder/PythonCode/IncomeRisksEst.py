@@ -164,15 +164,18 @@ plt.legend(loc=0)
 #
 #
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## PSID data 
 PSID = pd.read_stata('../../../PSID/J276289/psid_matrix.dta')   
 PSID.index = PSID['uniqueid']
 PSID = PSID.drop(['uniqueid'], axis=1)
 PSID = PSID.dropna(axis=0,how='all')
 PSID = PSID.dropna(axis=1,how='all')
+# -
 
-# + {"code_folding": [0]}
+PSID.shape
+
+# + {"code_folding": []}
 ## different samples 
 
 education_groups = ['HS dropout',
@@ -191,7 +194,7 @@ for edu in education_groups:
     sample = PSID.loc[PSID['edu_i_g']==edu].drop(['edu_i_g'],axis=1)
     samples.append(sample)
 
-# + {"code_folding": [0]}
+# + {"code_folding": [1]}
 ## estimation
 for sample in samples:
     data = np.array(sample)
@@ -206,16 +209,25 @@ for sample in samples:
     dt_data_est.GetDataMoments(moms_data)
     para_guess_this = np.ones(2*t_data + dt_data_est.ma_q)
     
-    ## estimate
     ## estimation
     data_para_est = dt_data_est.EstimatePara(method='CG',
                                para_guess = para_guess_this)
     para_est_list.append(data_para_est)
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## time stamp 
 t0 = 1971
-years = t0+np.arange(t_data-1)
+tT = 2016
+t_break = 1998 #the year when no annual data was released i.e. no 1998 data 
+years = np.arange(t0+1,tT+2)
+years=years.astype(int)
+
+years_sub = np.concatenate((np.arange(t0+1,t_break),np.arange(t_break+1,tT+2,2)))
+# -
+
+years_sub
+
+years
 
 # + {"code_folding": [3]}
 ## check the estimation and true parameters 
@@ -228,7 +240,7 @@ for i,paras_est in enumerate(para_est_list):
     
     plt.subplot(1,2,1)
     plt.title('Permanent Risk')
-    plt.plot(years,
+    plt.plot(years_sub,
              this_est[1][0][1:].T**2,
              'r-o',
              lw=lw,
@@ -237,14 +249,63 @@ for i,paras_est in enumerate(para_est_list):
 
     plt.subplot(1,2,2)
     plt.title('Transitory Risk')
-    plt.plot(years,
+    plt.plot(years_sub,
              this_est[1][1][1:].T**2,
              'r-o',
              lw=lw,
              label='Estimation')
     plt.legend(loc=0)
     plt.grid(True)
+# -
 
+
+# ### Experienced volatility specific to cohort 
+
+# + {"code_folding": []}
+history_vols_whole = pd.DataFrame([list(years_sub),para_est_list[3][1][0],para_est_list[3][1][1]]).transpose()
+history_vols_hsd = pd.DataFrame([list(years_sub),para_est_list[0][1][0],para_est_list[0][1][1]]).transpose()
+history_vols_hsg = pd.DataFrame([list(years_sub),para_est_list[1][1][0],para_est_list[1][1][1]]).transpose()
+history_vols_cg = pd.DataFrame([list(years_sub),para_est_list[2][1][0],para_est_list[2][1][1]]).transpose()
+
+for dt in [history_vols_whole,
+          history_vols_hsd,
+          history_vols_hsg,
+          history_vols_cg]:
+    dt.columns = ['year','permanent','transitory']
+# -
+
+dataset_psid = pd.read_excel('../OtherData/psid/psid_history_vol_test.xls')
+
+# + {"code_folding": []}
+## for different groups
+names = ['whole','hsd','hsg','cg'] ## whole sample/ high school dropout / high school graduate / college graduate above
+for sample_id,sample in enumerate([history_vols_whole,
+                                  history_vols_hsd,
+                                  history_vols_hsg,
+                                  history_vols_cg]):
+    # prepare data 
+    history_vols = dataset_psid
+    history_vols['permanent'] = np.nan
+    history_vols['transitory'] = np.nan
+    
+    
+    for i in history_vols.index:
+        #print(i)
+        year = history_vols['year'].iloc[i]
+        #print(year)
+        born = history_vols['cohort'].iloc[i]-20
+        #print(born)
+        av_per_vol = np.mean(sample['permanent'].loc[(sample['year']>born) & 
+                                                                (sample['year']<=year)])
+        #print(av_per_vol)
+        av_tran_vol = np.mean(sample['transitory'].loc[(sample['year']>born) & 
+                                                                (sample['year']<=year)])
+        #print(av_tran_vol)
+        history_vols['permanent'].iloc[i] = av_per_vol
+        history_vols['transitory'].iloc[i] = av_tran_vol
+        
+    ## save to excel for further analysis 
+    history_vols.to_excel('../OtherData/psid/psid_history_vol_test_decomposed_'+str(names[sample_id])+'.xlsx')
 
 # + [markdown] {"code_folding": []}
 # ### Estimation using simulated moments 
@@ -282,7 +343,7 @@ plt.legend(loc=0)
 
 """
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ### reapeating the estimation for many times
 
 """
@@ -301,7 +362,7 @@ for i in range(n_loop):
 # +
 #para_est_av = sum([abs(para_est_sum_sim[2*i+1]) for i in range(1,n_loop+1)] )/n_loop
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## check the estimation and true parameters
 
 """
