@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/popSCE_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res} 6 May 2020, 15:11:13
+ {txt}opened on:  {res}14 Dec 2020, 10:57:30
 {txt}
 {com}. 
 . 
@@ -21,7 +21,7 @@
 {txt}{hline 10}{c TT}{hline 27}
    copies {c |} observations       surplus
 {hline 10}{c +}{hline 27}
-        1 {c |}        {res}85852             0
+        1 {c |}        {res}95113             0
 {txt}{hline 10}{c BT}{hline 27}
 
 {com}. 
@@ -31,16 +31,11 @@
 . *****************************
 . 
 . merge 1:1 year month userid using "${c -(}folder{c )-}/SCE/IncExpSCEProbIndM",keep(master match) 
-{res}{txt}{p 0 7 2}
-(note: variable
-month was 
-byte, now float to accommodate using data's values)
-{p_end}
-
-{col 5}Result{col 38}# of obs.
+{res}
+{txt}{col 5}Result{col 38}# of obs.
 {col 5}{hline 41}
 {col 5}not matched{col 30}{res}               0
-{txt}{col 5}matched{col 30}{res}          85,852{txt}  (_merge==3)
+{txt}{col 5}matched{col 30}{res}          95,113{txt}  (_merge==3)
 {col 5}{hline 41}
 
 {com}. rename _merge hh_info_merge
@@ -74,8 +69,8 @@ byte, now float to accommodate using data's values)
        {txt}47 {c |}           {res}47            46
        {txt}49 {c |}           {res}98            96
        {txt}50 {c |}          {res}750           735
-       {txt}51 {c |}         {res}1836          1800
-       {txt}52 {c |}          {res}884           867
+       {txt}51 {c |}         {res}2091          2050
+       {txt}52 {c |}         {res}1040          1020
 {txt}{hline 10}{c BT}{hline 27}
 
 {com}. 
@@ -89,28 +84,26 @@ byte, now float to accommodate using data's values)
 {txt}
 {com}. xtset statecode date 
 {res}{txt}{col 8}panel variable:  {res}statecode (unbalanced)
-{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2019m5, but with gaps
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m1, but with gaps
 {txt}{col 17}delta:  {res}1 month
 {txt}
 {com}. 
-. 
 . ************************************
 . **  generate lag variables **
 . ************************************
 . 
 . gen wagegrowthl1 = l2.wagegrowth
-{txt}(188 missing values generated)
+{txt}(450 missing values generated)
 
 {com}. label var wagegrowthl "recent wage growth in the state"
 {txt}
 {com}. 
 . gen unemp_rate_ch = unemp_rate -l1.unemp_rate
-{txt}(133 missing values generated)
+{txt}(494 missing values generated)
 
 {com}. label var unemp_rate_ch "chagne in uemp rate"
 {txt}
 {com}. 
-. 
 . /*
 > ************************************
 > **  scatter plots  **
@@ -148,7 +141,7 @@ byte, now float to accommodate using data's values)
 . foreach mom in var iqr{c -(}
 {txt}  2{com}. gen l`mom' = log(Q24_`mom') 
 {txt}  3{com}. {c )-}
-{txt}(73 missing values generated)
+{txt}(63 missing values generated)
 (55 missing values generated)
 
 {com}. label var lvar "log perceived risk"
@@ -163,78 +156,78 @@ byte, now float to accommodate using data's values)
 {txt}  4{com}. *eststo: areg lQ24_`mom' unemp_rate, a(statecode) robust
 . {c )-}
 
-{txt}Linear regression, absorbing indicators{col 51}Number of obs{col 67}= {res}      3529
-{txt}{col 51}F({res}   1{txt},{res}   3456{txt}){col 67}= {res}     14.71
-{txt}{col 51}Prob > F{col 67}= {res}    0.0001
-{txt}{col 51}R-squared{col 67}= {res}    0.0226
-{txt}{col 51}Adj R-squared{col 67}= {res}    0.0022
-{txt}{col 51}Root MSE{col 67}= {res}    0.8542
+{txt}Linear regression, absorbing indicators{col 51}Number of obs{col 67}= {res}      3589
+{txt}{col 51}F({res}   1{txt},{res}   3515{txt}){col 67}= {res}     14.02
+{txt}{col 51}Prob > F{col 67}= {res}    0.0002
+{txt}{col 51}R-squared{col 67}= {res}    0.0208
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.0005
+{txt}{col 51}Root MSE{col 67}= {res}    0.8522
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {col 14}{c |}{col 26}    Robust
 {col 1}        lvar{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 2}wagegrowth {c |}{col 14}{res}{space 2}-.0513041{col 26}{space 2} .0133754{col 37}{space 1}   -3.84{col 46}{space 3}0.000{col 54}{space 4}-.0775285{col 67}{space 3}-.0250797
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .2540041{col 26}{space 2} .0381456{col 37}{space 1}    6.66{col 46}{space 3}0.000{col 54}{space 4} .1792139{col 67}{space 3} .3287942
+{space 2}wagegrowth {c |}{col 14}{res}{space 2} -.050311{col 26}{space 2} .0134348{col 37}{space 1}   -3.74{col 46}{space 3}0.000{col 54}{space 4}-.0766518{col 67}{space 3}-.0239701
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-9.026443{col 26}{space 2}  .038419{col 37}{space 1} -234.95{col 46}{space 3}0.000{col 54}{space 4}-9.101769{col 67}{space 3}-8.951117
 {txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-        date {c |}   absorbed                                      (72 categories)
+        date {c |}   absorbed                                      (73 categories)
 ({res}est1{txt} stored)
 
-Linear regression, absorbing indicators{col 51}Number of obs{col 67}= {res}      3529
-{txt}{col 51}F({res}   1{txt},{res}   3456{txt}){col 67}= {res}      5.61
-{txt}{col 51}Prob > F{col 67}= {res}    0.0179
-{txt}{col 51}R-squared{col 67}= {res}    0.0201
-{txt}{col 51}Adj R-squared{col 67}= {res}   -0.0003
-{txt}{col 51}Root MSE{col 67}= {res}    0.8553
+Linear regression, absorbing indicators{col 51}Number of obs{col 67}= {res}      3589
+{txt}{col 51}F({res}   1{txt},{res}   3515{txt}){col 67}= {res}      6.44
+{txt}{col 51}Prob > F{col 67}= {res}    0.0112
+{txt}{col 51}R-squared{col 67}= {res}    0.0189
+{txt}{col 51}Adj R-squared{col 67}= {res}   -0.0015
+{txt}{col 51}Root MSE{col 67}= {res}    0.8531
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {col 14}{c |}{col 26}    Robust
 {col 1}        lvar{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 2}unemp_rate {c |}{col 14}{res}{space 2} .0383741{col 26}{space 2}  .016202{col 37}{space 1}    2.37{col 46}{space 3}0.018{col 54}{space 4} .0066076{col 67}{space 3} .0701407
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-.0589449{col 26}{space 2} .0800444{col 37}{space 1}   -0.74{col 46}{space 3}0.462{col 54}{space 4} -.215884{col 67}{space 3} .0979942
+{space 2}unemp_rate {c |}{col 14}{res}{space 2} .0412077{col 26}{space 2} .0162348{col 37}{space 1}    2.54{col 46}{space 3}0.011{col 54}{space 4} .0093772{col 67}{space 3} .0730382
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-9.350563{col 26}{space 2} .0797914{col 37}{space 1} -117.19{col 46}{space 3}0.000{col 54}{space 4}-9.507005{col 67}{space 3}-9.194121
 {txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-        date {c |}   absorbed                                      (72 categories)
+        date {c |}   absorbed                                      (73 categories)
 ({res}est2{txt} stored)
 
-Linear regression, absorbing indicators{col 51}Number of obs{col 67}= {res}      3546
-{txt}{col 51}F({res}   1{txt},{res}   3473{txt}){col 67}= {res}     16.18
-{txt}{col 51}Prob > F{col 67}= {res}    0.0001
-{txt}{col 51}R-squared{col 67}= {res}    0.0248
-{txt}{col 51}Adj R-squared{col 67}= {res}    0.0045
-{txt}{col 51}Root MSE{col 67}= {res}    0.4575
+Linear regression, absorbing indicators{col 51}Number of obs{col 67}= {res}      3596
+{txt}{col 51}F({res}   1{txt},{res}   3522{txt}){col 67}= {res}     16.94
+{txt}{col 51}Prob > F{col 67}= {res}    0.0000
+{txt}{col 51}R-squared{col 67}= {res}    0.0246
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.0044
+{txt}{col 51}Root MSE{col 67}= {res}    0.4586
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {col 14}{c |}{col 26}    Robust
 {col 1}        liqr{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 2}wagegrowth {c |}{col 14}{res}{space 2}-.0338998{col 26}{space 2} .0084277{col 37}{space 1}   -4.02{col 46}{space 3}0.000{col 54}{space 4}-.0504237{col 67}{space 3} -.017376
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .5464076{col 26}{space 2} .0233577{col 37}{space 1}   23.39{col 46}{space 3}0.000{col 54}{space 4} .5006114{col 67}{space 3} .5922038
+{space 2}wagegrowth {c |}{col 14}{res}{space 2}-.0344863{col 26}{space 2} .0083784{col 37}{space 1}   -4.12{col 46}{space 3}0.000{col 54}{space 4}-.0509134{col 67}{space 3}-.0180592
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-4.056772{col 26}{space 2} .0233291{col 37}{space 1} -173.89{col 46}{space 3}0.000{col 54}{space 4}-4.102512{col 67}{space 3}-4.011032
 {txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-        date {c |}   absorbed                                      (72 categories)
+        date {c |}   absorbed                                      (73 categories)
 ({res}est3{txt} stored)
 
-Linear regression, absorbing indicators{col 51}Number of obs{col 67}= {res}      3546
-{txt}{col 51}F({res}   1{txt},{res}   3473{txt}){col 67}= {res}     22.32
+Linear regression, absorbing indicators{col 51}Number of obs{col 67}= {res}      3596
+{txt}{col 51}F({res}   1{txt},{res}   3522{txt}){col 67}= {res}     22.70
 {txt}{col 51}Prob > F{col 67}= {res}    0.0000
-{txt}{col 51}R-squared{col 67}= {res}    0.0275
-{txt}{col 51}Adj R-squared{col 67}= {res}    0.0073
-{txt}{col 51}Root MSE{col 67}= {res}    0.4568
+{txt}{col 51}R-squared{col 67}= {res}    0.0272
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.0071
+{txt}{col 51}Root MSE{col 67}= {res}    0.4580
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {col 14}{c |}{col 26}    Robust
 {col 1}        liqr{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 2}unemp_rate {c |}{col 14}{res}{space 2} .0436549{col 26}{space 2} .0092403{col 37}{space 1}    4.72{col 46}{space 3}0.000{col 54}{space 4}  .025538{col 67}{space 3} .0617719
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .2516223{col 26}{space 2} .0446855{col 37}{space 1}    5.63{col 46}{space 3}0.000{col 54}{space 4} .1640098{col 67}{space 3} .3392348
+{space 2}unemp_rate {c |}{col 14}{res}{space 2} .0439771{col 26}{space 2}   .00923{col 37}{space 1}    4.76{col 46}{space 3}0.000{col 54}{space 4} .0258805{col 67}{space 3} .0620738
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-4.354372{col 26}{space 2}  .044441{col 37}{space 1}  -97.98{col 46}{space 3}0.000{col 54}{space 4}-4.441504{col 67}{space 3}-4.267239
 {txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-        date {c |}   absorbed                                      (72 categories)
+        date {c |}   absorbed                                      (73 categories)
 ({res}est4{txt} stored)
 
 {com}. 
 . esttab using "${c -(}sum_table_folder{c )-}/mom_group_state.csv", ///
 >              se r2 drop(_cons) ///
->                          label replace
+>                          b(2) label replace
 {res}{txt}(output written to {browse  `"/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/mom_group_state.csv"'})
 
 {com}.                          
@@ -242,7 +235,7 @@ Linear regression, absorbing indicators{col 51}Number of obs{col 67}= {res}     
       {txt}name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/popSCE_log.smcl
   {txt}log type:  {res}smcl
- {txt}closed on:  {res} 6 May 2020, 15:11:21
+ {txt}closed on:  {res}14 Dec 2020, 10:57:37
 {txt}{.-}
 {smcl}
 {txt}{sf}{ul off}

@@ -2,11 +2,11 @@
 ="",="(1)",="(2)"
 ="",="log perceived risk",="log perceived iqr"
 
-="log experienced volatility",="-7.133",="24.23"
-="",="(-0.08)",="(0.43)"
+="log experienced volatility",="1.707",="-3.920"
+="",="(0.34)",="(-1.54)"
 
-="R-squre",="0.171",="0.136"
-="N",="102",="118"
+="R-squre",="0.0239",="0.0367"
+="N",="18509",="19860"
 ="Control age",="Yes",="Yes"
 ="Control educ",="Yes",="Yes"
 ="Control income",="Yes",="Yes"

@@ -33,7 +33,7 @@ tsset date
 ************************
 
 
-local Moments varMean iqrMean rvarMean skewMean varMed iqrMed rvarMed skewMed
+local Moments varMean iqrMean rvarMean varMed iqrMed rvarMed 
 
 foreach mom in `Moments'{
 gen `mom'_ch = `mom' - l1.`mom'

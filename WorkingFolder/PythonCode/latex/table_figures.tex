@@ -1,4 +1,4 @@
-                                                                                                                                                                                                                                                                  \newpage 
+                                                                                                                                                                                                                                                                                                                           \newpage 
    
   \section*{Tables and Figures} 
     
@@ -13,7 +13,7 @@
     		\adjustimage{max size={0.4\linewidth}{0.3\paperheight}}{../../Graphs/ind/hist_incvar.jpg}
     		\adjustimage{max size={0.4\linewidth}{0.3\paperheight}}{../../Graphs/ind/hist_rincvar.jpg}    
 \end{center}
-    	\floatfoot{Note: this figure plots the perceived risks of nominal and real income.}
+    	\floatfoot{Note: this figure plots the perceived risks of nominal and real income, measured by the subjective variance of log income changes one year from the time of the survey. Real risk is the sum of the perceived risk of nominal income and inflation uncertainty.}
     \end{figure}
     
     
@@ -23,12 +23,20 @@
     	\begin{center}\adjustimage{max size={0.7\linewidth}}{../../Graphs/ind/ts/ts_incvar_age_g_mean.png}\end{center}
     	\floatfoot{Note: this figure plots average perceived income risks of different age groups over time.}
     \end{figure}
+
+
+\begin{figure}[!ht]
+	\caption{Realized and Perceived Age Profile of Income Risks}
+	\label{fig:log_wage_shk_gr_by_age_compare}
+	\begin{center}\adjustimage{max size={0.7\linewidth}}{../../Graphs/psid/log_wage_shk_gr_by_age_compare.png}\end{center}
+	\floatfoot{Note: this figure plots average realized and perceived income risks of different ages. Realized income risks is defined as the age-specific income volatility estimated as the standard-deviation of change in unexplained income residuals from PSID income panel. Perceived income risk is obtained from SCE.}
+\end{figure}
     
     
     \begin{figure}[!ht]
     	\caption{Perceived Income by Income}
     	\label{fig:barplot_byinc}
-    	\begin{center}\adjustimage{max size={0.7\linewidth}}{../../Graphs/ind/boxplot_var_stata.png}\end{center}
+    	\begin{center}\adjustimage{max size={0.7\linewidth}}{../../Graphs/ind/boxplot_var_HHinc_stata.png}\end{center}
     	\floatfoot{Note: this figure plots average perceived income risks by the range of household income.}
     \end{figure}
     
@@ -36,8 +44,8 @@
     \begin{figure}[!ht]
       \caption{Recent Labor Market Outcome and Perceived Risks}
     \label{fig:tshe}
-    	\begin{center}\adjustimage{max size={\linewidth}}{../../Graphs/pop/tsMeanvar_he.jpg}\end{center}
-    	\floatfoot{Note: recent labor market outcome is measured by hourly wage growth (YoY).}
+    	\begin{center}\adjustimage{max size={\linewidth}}{../../Graphs/pop/tsMean3mvvar_he.jpg}\end{center}
+    	\floatfoot{Note: recent labor market outcome is measured by hourly wage growth (YoY). The 3-month moving average is plotted for both series.}
     \end{figure}
 
  
@@ -146,11 +154,11 @@
 \toprule
 {} &  mean:var &  mean:iqr & mean:rvar & median:var & median:iqr & median:rvar \\
 \midrule
-0 &   -0.24** &  -0.36*** &  -0.47*** &      -0.15 &      -0.15 &    -0.53*** \\
-1 &  -0.44*** &  -0.53*** &  -0.56*** &      -0.01 &       0.01 &    -0.55*** \\
-2 &  -0.37*** &  -0.42*** &  -0.43*** &      -0.09 &      -0.07 &    -0.45*** \\
-3 &   -0.4*** &  -0.43*** &  -0.41*** &      -0.09 &      -0.09 &    -0.46*** \\
-4 &   -0.28** &  -0.38*** &   -0.31** &    -0.27** &     -0.24* &    -0.49*** \\
+0 &   -0.28** &  -0.42*** &  -0.48*** &      -0.16 &      -0.16 &    -0.53*** \\
+1 &  -0.44*** &  -0.54*** &  -0.51*** &      -0.02 &      -0.02 &    -0.53*** \\
+2 &  -0.39*** &  -0.44*** &  -0.43*** &      -0.05 &        0.0 &    -0.45*** \\
+3 &  -0.44*** &  -0.47*** &  -0.41*** &      -0.09 &      -0.06 &     -0.5*** \\
+4 &   -0.29** &  -0.38*** &  -0.32*** &      -0.19 &      -0.14 &     -0.5*** \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
@@ -165,25 +173,25 @@ $t$ and the quarterly growth rate in hourly earning at $t,t-1,...,t-k$.
 	
 	\begin{table}[ht]
 		\centering
-		\begin{adjustbox}{width=0.5\textwidth}
+		\begin{adjustbox}{width=0.9\textwidth}
 			\begin{threeparttable}
 			\caption{Average Perceived Risks and State Labor Market}
 			\label{macro_corr_he_state}
 			\begin{tabular}{lllll}
-				\hline 
+					\hline 
 				& (1)                & (2)                & (3)               & (4)               \\
+				& log perceived risk & log perceived risk & log perceived iqr & log perceived iqr \\
 				\hline 
-				& log(var) & log(risk) & log(iqr) & log(iqr) \\
-				\hline 
-				wage growth & -0.05***           &                    & -0.03***          &                   \\
-				
+				Wage Growth (Median) & -0.05***           &                    & -0.03***          &                   \\
 				& (0.01)             &                    & (0.01)            &                   \\
-				unemp rate &                    & 0.04*              &                   & 0.04***           \\
+				&                    &                    &                   &                   \\
+				UE (Median)          &                    & 0.04*              &                   & 0.04***           \\
 				&                    & (0.02)             &                   & (0.01)            \\
-				\hline 
-				Observations      & 3529               & 3529               & 3546              & 3546              \\
-				R-squared         & 0.023              & 0.020              & 0.025             & 0.028            \\
-				\hline 
+				&                    &                    &                   &                   \\
+					\hline 
+				Observations         & 3589               & 3589               & 3596              & 3596              \\
+				R-squared            & 0.021              & 0.019              & 0.025             & 0.027             \\
+				\hline      
 			\end{tabular}
 			
 				\begin{tablenotes}
@@ -203,34 +211,34 @@ $t$ and the quarterly growth rate in hourly earning at $t,t-1,...,t-k$.
 {} & incvar I & incvar II & incvar III & incvar IIII & incvar IIIII \\
                  &          &           &            &             &              \\
 \midrule
-expvol           &  1.19*** &   1.46*** &    1.53*** &     1.53*** &      2.47*** \\
-                 &   (0.24) &    (0.49) &     (0.54) &      (0.54) &       (0.60) \\
-age\_gr=30-39     &          &  -0.12*** &   -0.13*** &    -0.13*** &     -0.15*** \\
-                 &          &    (0.02) &     (0.02) &      (0.02) &       (0.03) \\
-age\_gr=40-48     &          &  -0.15*** &   -0.15*** &    -0.15*** &     -0.20*** \\
-                 &          &    (0.02) &     (0.03) &      (0.03) &       (0.03) \\
-age\_gr=49-57     &          &  -0.16*** &   -0.17*** &    -0.17*** &     -0.21*** \\
-                 &          &    (0.03) &     (0.03) &      (0.03) &       (0.03) \\
-age\_gr=>57       &          &     -0.06 &    -0.09** &     -0.09** &     -0.13*** \\
-                 &          &    (0.04) &     (0.05) &      (0.05) &       (0.05) \\
-HHinc\_gr=low inc &          &           &    0.17*** &     0.17*** &      0.16*** \\
-                 &          &           &     (0.02) &      (0.02) &       (0.02) \\
-educ\_gr=low educ &          &           &       0.01 &        0.01 &         0.03 \\
-                 &          &           &     (0.02) &      (0.02) &       (0.02) \\
-gender=male      &          &           &   -0.09*** &    -0.09*** &     -0.06*** \\
-                 &          &           &     (0.02) &      (0.02) &       (0.02) \\
-nlit\_gr=low nlit &          &           &    0.06*** &     0.06*** &      0.06*** \\
-                 &          &           &     (0.02) &      (0.02) &       (0.02) \\
-parttime=yes     &          &           &            &             &      0.07*** \\
-                 &          &           &            &             &       (0.03) \\
-selfemp=yes      &          &           &            &             &     -0.00*** \\
-                 &          &           &            &             &       (0.00) \\
-UEprobAgg        &          &           &            &             &         0.01 \\
+expvol           &  0.73*** &   0.41*** &     0.40** &      0.40** &      0.87*** \\
+                 &   (0.07) &    (0.16) &     (0.17) &      (0.17) &       (0.17) \\
+age\_gr=30-39     &          &  -0.07*** &   -0.07*** &    -0.07*** &     -0.08*** \\
+                 &          &    (0.01) &     (0.01) &      (0.01) &       (0.01) \\
+age\_gr=40-48     &          &  -0.10*** &   -0.10*** &    -0.10*** &     -0.11*** \\
+                 &          &    (0.01) &     (0.01) &      (0.01) &       (0.01) \\
+age\_gr=49-57     &          &  -0.13*** &   -0.13*** &    -0.13*** &     -0.13*** \\
+                 &          &    (0.01) &     (0.01) &      (0.01) &       (0.01) \\
+age\_gr=>57       &          &  -0.08*** &   -0.09*** &    -0.09*** &     -0.11*** \\
+                 &          &    (0.01) &     (0.01) &      (0.01) &       (0.01) \\
+HHinc\_gr=low inc &          &           &    0.07*** &     0.07*** &      0.06*** \\
+                 &          &           &     (0.00) &      (0.00) &       (0.01) \\
+educ\_gr=low educ &          &           &     -0.01* &      -0.01* &         0.00 \\
+                 &          &           &     (0.01) &      (0.01) &       (0.01) \\
+gender=male      &          &           &   -0.07*** &    -0.07*** &     -0.06*** \\
+                 &          &           &     (0.00) &      (0.00) &       (0.00) \\
+nlit\_gr=low nlit &          &           &    0.03*** &     0.03*** &      0.03*** \\
+                 &          &           &     (0.00) &      (0.00) &       (0.00) \\
+parttime=yes     &          &           &            &             &         0.01 \\
                  &          &           &            &             &       (0.01) \\
-UEprobInd        &          &           &            &             &      0.02*** \\
+selfemp=yes      &          &           &            &             &      0.00*** \\
                  &          &           &            &             &       (0.00) \\
-N                &    20602 &     20602 &      17456 &       17456 &        13880 \\
-R2               &     0.00 &      0.00 &       0.01 &        0.01 &         0.02 \\
+UEprobAgg        &          &           &            &             &       0.00** \\
+                 &          &           &            &             &       (0.00) \\
+UEprobInd        &          &           &            &             &      0.01*** \\
+                 &          &           &            &             &       (0.00) \\
+N                &    40529 &     40529 &      34101 &       34101 &        28898 \\
+R2               &     0.00 &      0.01 &       0.02 &        0.02 &         0.03 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}\item Standard errors are clustered by household. *** p$<$0.001, ** p$<$0.01 and * p$<$0.05. 
@@ -249,12 +257,12 @@ R2               &     0.00 &      0.00 &       0.01 &        0.01 &         0.0
 {} & spending I & spending II & spending III & spending IIII & spending IIIII \\
           &            &             &              &               &                \\
 \midrule
-incexp    &    0.39*** &             &              &               &                \\
-          &     (0.08) &             &              &               &                \\
-incvar    &            &     0.58*** &              &               &                \\
-          &            &      (0.13) &              &               &                \\
-rincvar   &            &             &      1.08*** &               &                \\
-          &            &             &       (0.15) &               &                \\
+incexp    &   39.11*** &             &              &               &                \\
+          &     (8.47) &             &              &               &                \\
+incvar    &            &     1.86*** &              &               &                \\
+          &            &      (0.46) &              &               &                \\
+rincvar   &            &             &      2.49*** &               &                \\
+          &            &             &       (0.35) &               &                \\
 incskew   &            &             &              &          0.19 &                \\
           &            &             &              &        (0.45) &                \\
 UEprobAgg &            &             &              &               &          0.44* \\

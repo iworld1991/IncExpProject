@@ -49,7 +49,6 @@ gen date= monthly(date_str,"YM")
 format date %tm
 xtset statecode date 
 
-
 ************************************
 **  generate lag variables **
 ************************************
@@ -59,7 +58,6 @@ label var wagegrowthl "recent wage growth in the state"
 
 gen unemp_rate_ch = unemp_rate -l1.unemp_rate
 label var unemp_rate_ch "chagne in uemp rate"
-
 
 /*
 ************************************

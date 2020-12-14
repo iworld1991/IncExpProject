@@ -5,8 +5,8 @@
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.3
+#       format_version: '1.5'
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -21,7 +21,7 @@
 #    - case 2. exactly 2 adjacent intervals with positive probabilities, to be fitted with a triangle distribution 
 #    - case 3. one interval only, to be fitted with a uniform distribution
 
-# + {"code_folding": []}
+# + code_folding=[]
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -29,9 +29,9 @@ import pandas as pd
 
 from DensityEst import SynDensityStat 
 
-# + {"code_folding": []}
+# + code_folding=[]
 ### loading probabilistic data on monthly income growth  
-IndSCE=pd.read_stata('../SurveyData/SCE/IncExpSCEProbIndM.dta')   
+IndSCE = pd.read_stata('../SurveyData/SCE/IncExpSCEProbIndM.dta')   
 
 
 # +
@@ -49,13 +49,13 @@ len(IndSCE_sub)
 # +
 #IndSCE_sub[bin_name_list].head()
 
-# + {"code_folding": []}
+# + code_folding=[]
 ## survey-specific parameters 
 nobs = len(IndSCE)
 SCE_bins = np.array([-20,-12,-8,-4,-2,0,2,4,8,12,20])
 print("There are "+str(len(SCE_bins)-1)+" bins in SCE")
 
-# + {"code_folding": [0]}
+# + code_folding=[]
 ##############################################
 ### attention: the estimation happens here!!!!!
 ###################################################
@@ -73,50 +73,50 @@ for i in range(nobs):
     ## take the probabilities (flip to the right order, normalized to 0-1)
     Inc = np.flip(np.array([IndSCE.iloc[i,:]['Q24_bin'+str(n)]/100 for n in range(1,11)]))
     print(Inc)
-    if not np.isnan(Inc).any():
-        try:
-            stats_est = SynDensityStat(SCE_bins,Inc)     
-            if len(stats_est)>0:
-                ct = ct+1
-                IndSCE_moment_est['IncMean'][i] = stats_est['mean']
-                print(stats_est['mean'])
-                IndSCE_moment_est['IncVar'][i] = stats_est['variance']
-                print(stats_est['variance'])
-                IndSCE_moment_est['IncSkew'][i] = stats_est['skewness']
-                print(stats_est['skewness'])
-                IndSCE_moment_est['IncKurt'][i] = stats_est['kurtosis']
-                print(stats_est['kurtosis'])
-        except:
-            pass
+    try:
+    #if not np.isnan(Inc).any():
+        stats_est = SynDensityStat(SCE_bins,Inc)     
+        if not np.isnan(stats_est['mean']).any():
+            ct = ct+1
+            IndSCE_moment_est['IncMean'][i] = stats_est['mean']
+            print(stats_est['mean'])
+            IndSCE_moment_est['IncVar'][i] = stats_est['variance']
+            print(stats_est['variance'])
+            IndSCE_moment_est['IncSkew'][i] = stats_est['skewness']
+            print(stats_est['skewness'])
+            IndSCE_moment_est['IncKurt'][i] = stats_est['kurtosis']
+            print(stats_est['kurtosis'])
+    except:
+        pass
 # -
 
 print(str(ct) + ' observations are estimated.')
 
-# + {"code_folding": [0, 5, 23]}
+# + code_folding=[]
 ## redo the estimation for those failed the first time 
 
 ct_nan = 0
 for i in range(nobs):
     #Inc = np.flip(np.array([IndSCE.iloc[i,:]['Q24_bin'+str(n)]/100 for n in range(1,11)]))
-    if IndSCE_moment_est['IncMean'][i]== None and np.isnan(IndSCE.iloc[i,:]['Q24_bin1']) == False:
-        ct_nan = ct_nan+1
-        print(i)
-        print(Inc)
-        print(IndSCE_moment_est['IncMean'][i])
-        try:
-            stats_est = SynDensityStat(SCE_bins,Inc)
-            if len(stats_est)>0:
-                IndSCE_moment_est['IncMean'][i] = stats_est['mean']
-                print(stats_est['mean'])
-                IndSCE_moment_est['IncVar'][i] = stats_est['variance']
-                print(stats_est['variance'])
-                IndSCE_moment_est['IncSkew'][i] = stats_est['skewness']
-                print(stats_est['skewness'])
-                IndSCE_moment_est['IncKurt'][i] = stats_est['kurtosis']
-                print(stats_est['kurtosis'])
-        except:
-            pass
-    elif IndSCE_moment_est['IncMean'][i]!= None and np.isnan(IndSCE_moment_est['IncMean'][i]) and np.isnan(IndSCE.iloc[i,:]['Q24_bin1']) == False:
+    #if IndSCE_moment_est['IncMean'][i]== None and np.isnan(IndSCE.iloc[i,:]['Q24_bin1']) == False:
+    #    ct_nan = ct_nan+1
+    #    print(i)
+    #    print(Inc)
+    #    print(IndSCE_moment_est['IncMean'][i])
+    #    try:
+    #        stats_est = SynDensityStat(SCE_bins,Inc)
+    #        if len(stats_est)>0:
+    #            IndSCE_moment_est['IncMean'][i] = stats_est['mean']
+    #            print(stats_est['mean'])
+    #            IndSCE_moment_est['IncVar'][i] = stats_est['variance']
+    #            print(stats_est['variance'])
+    #            IndSCE_moment_est['IncSkew'][i] = stats_est['skewness']
+    #            print(stats_est['skewness'])
+    #            IndSCE_moment_est['IncKurt'][i] = stats_est['kurtosis']
+    #            print(stats_est['kurtosis'])
+    #    except:
+    #        pass
+    if IndSCE_moment_est['IncMean'][i]!= None and np.isnan(IndSCE_moment_est['IncMean'][i]) and np.isnan(IndSCE.iloc[i,:]['Q24_bin1']) == False:
         ct_nan = ct_nan+1
         print(i)
         print(Inc)
@@ -146,7 +146,7 @@ IndSCE_pk = pd.read_pickle('./IndSCEDstIndM.pkl')
 columns_keep = ['date','year','month','userid','tenure','IncMean','IncVar','IncSkew','IncKurt']
 IndSCE_pk_new = IndSCE_pk[columns_keep]
 
-IndSCE_pk_new.head()
+IndSCE_pk_new.tail()
 
 IndSCE_pk_new =IndSCE_pk_new.astype({'IncMean': 'float',
                                      'IncVar': 'float',
@@ -156,7 +156,7 @@ IndSCE_pk_new =IndSCE_pk_new.astype({'IncMean': 'float',
 ## export to stata
 IndSCE_pk_new.to_stata('../SurveyData/SCE/IncExpSCEDstIndM.dta')
 
-# + {"code_folding": []}
+# + code_folding=[]
 ### Robustness checks: focus on big negative mean estimates 
 sim_bins_data = SCE_bins
 print(str(sum(IndSCE_pk['IncMean']<-6))+' abnormals')

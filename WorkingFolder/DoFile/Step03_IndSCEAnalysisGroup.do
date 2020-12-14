@@ -43,8 +43,9 @@ duplicates report year month userid
 *** Merge with demographics and other moments **
 ************************************************
 
-merge 1:1 year month userid using "${folder}/SCE/IncExpSCEProbIndM",keep(master match) 
+merge 1:1 year month userid using "${folder}/SCE/IncExpSCEProbIndM",keep(master match using) 
 rename _merge hh_info_merge
+
 
 ** format the date 
 drop date 
@@ -153,10 +154,14 @@ label var age_g "age group"
 label define agelb 0 "young" 1 "middle-age" 2 "old"
 label value age_g agelb
 
-egen edu_g = cut(educ), group(2) 
+gen edu_g = . 
+replace edu_g = 1 if educ==1
+replace edu_g = 2 if educ==2 | educ ==3 | educ == 4
+replace edu_g = 3 if educ <=9 & educ>4
+
 label var edu_g "education group"
-label define edulb 0 "low educ" 1 "high educ" 
-label value edu_g edulb
+label define edu_glb 1 "HS dropout" 2 "HS graduate" 3 "College/above"
+label value edu_g edu_glb
 
 label define gdlb 0 "Male" 1 "Female" 
 label value gender gdlb
@@ -185,7 +190,6 @@ label value nlit_g nlitlb
 local group_vars byear_g age_g edu_g HHinc_g fbetter nlit_g
 
 
-
 *********************************
 *** bar charts *****
 **********************************
@@ -194,10 +198,29 @@ local group_vars byear_g age_g edu_g HHinc_g fbetter nlit_g
 graph bar incvar, ///
            over(HHinc,relabel(1 "<10k" 2 "<20k" 3 "<30k" 4 "<40k" 5 "<50k" 6 "<60k" 7 "<75k" 8 "<100k" 9 "<150k" 10 "<200k" 11 ">200k")) ///
 		   bar(1, color(navy)) ///
-		   title("Perceived Risk by household income") ///
+		   title("Perceived Risk by Household Income") ///
 		   b1title("Household income") ///
 		   ytitle("Average perceived risk") 
 graph export "${sum_graph_folder}/boxplot_var_HHinc_stata.png", as(png) replace 
+
+
+*********************************
+*** generate group summary data file *****
+**********************************
+
+* by age 
+
+
+preserve 
+collapse incvar, by(age) 
+save "${folder}/SCE/incvar_by_age.dta",replace
+restore 
+
+* by age x education 
+preserve
+collapse incvar, by(age edu_g) 
+save "${folder}/SCE/incvar_by_age_edu.dta",replace 
+restore 
 
 
 **********************************
@@ -282,7 +305,7 @@ graph export "${sum_graph_folder}/hist/hist_`mom'_`gp'.png",as(png) replace
 
 */
 
-/*
+
 **********************************
 *** time series pltos by group *****
 **********************************
@@ -495,7 +518,7 @@ twoway (bar sp500 date if `gp'== 1,yaxis(2) fcolor(gs10)) ///
 }
 
 
-** 3 groups fo age
+** 3 groups for age
 foreach agg in mean median{
   foreach gp in age_g{
    preserve 
@@ -506,9 +529,9 @@ foreach agg in mean median{
  ** moments only 
 foreach mom in `Moments'{
 keep if `mom'!=.
-twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
-       (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)) ///
-	   (tsline `mom' if `gp'== 2,lp(shortdash) lwidth(thick)), ///
+twoway (tsline `mom' if `gp'== 0,lp(solid) lcolor(red) lwidth(thick)) ///
+       (tsline `mom' if `gp'== 1,lp(dash) lcolor(blue) lwidth(thick)) ///
+	   (tsline `mom' if `gp'== 2,lp(shortdash) lcolor(black) lwidth(thick)), ///
        xtitle("date") ///
 	   ytitle("") ///
 	   title("`mom' by age") ///
@@ -545,9 +568,7 @@ twoway (bar sp500 date if `gp'== 2,yaxis(2) fcolor(gs10)) ///
 }
 
 
-
-
-** 2 groups of education 
+** 3 groups of education 
 foreach agg in mean median{
   foreach gp in edu_g{
    preserve 
@@ -557,27 +578,30 @@ foreach agg in mean median{
    
 foreach mom in `Moments'{
 keep if `mom'!=.
-twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
-       (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)), ///
+twoway (tsline `mom' if `gp'== 1,lp(solid) lwidth(thick)) ///
+       (tsline `mom' if `gp'== 2,lp(dash) lwidth(thick)) ///
+       (tsline `mom' if `gp'== 3,lp(shortdash) lwidth(thick)), ///
        xtitle("date") ///
 	   ytitle("") ///
 	   title("`mom' by education") ///
-	   legend(label(1 "low") label(2 "high") col(2))
+	   legend(label(1 "HS dropout") label(2 "HS graduate") label(3 "College/above") col(2))
  graph export "${sum_graph_folder}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
       
-
  
 ** compute correlation coefficients 
-pwcorr `mom' f2.sp500 if `gp'==0, star(0.05)
-local rho_l: display %4.2f r(rho) 
 pwcorr `mom' f2.sp500 if `gp'==1, star(0.05)
+local rho_l: display %4.2f r(rho) 
+pwcorr `mom' f2.sp500 if `gp'==2, star(0.05)
+local rho_m: display %4.2f r(rho) 
+pwcorr `mom' f2.sp500 if `gp'==3, star(0.05)
 local rho_h: display %4.2f r(rho) 
+
 
 ** moments and sp500 
 *** correlation with stock market by group *****
 
-twoway (bar sp500 date if `gp'== 1,yaxis(2) fcolor(gs10)) ///
-	   (tsline `mom' if `gp'== 1,lp(shortdash) lwidth(thick)), ///
+twoway (bar sp500 date if `gp'== 3,yaxis(2) fcolor(gs10)) ///
+	   (tsline `mom' if `gp'== 3,lp(shortdash) lwidth(thick)), ///
        xtitle("date") ///
 	   ytitle("") ///
 	   ytitle("sp500 return (%)",axis(2)) ///
@@ -610,37 +634,8 @@ eststo: reg inc`mom' i.age_g i.edu_g i.HHinc_g i.byear_g i.year i.state_id ${oth
 }
 
 esttab using "${sum_table_folder}/mom_group.csv", ///
-             se r2 drop(0.age_g 0.edu_g 0.HHinc_g 0.byear_g  *.year *state_id 1.gender 1.Q34 _cons) ///
+             se r2 drop(0.age_g 1.edu_g 0.HHinc_g 0.byear_g  *.year *state_id 1.gender 1.Q34 _cons) ///
 			 label replace
 
-*****************************
-** Regression Full-table (OLD)******
-*******************************
-			 
-eststo clear
-
-label var D6 "HH income group"
-label var Q10_1 "full-time"
-label var Q10_2 "part-time"
-label var Q36 "education"
-	
-foreach mom in mean var iqr rmean rvar{
-eststo: reg inc`mom' i.Q10_2 i.Q12new i.month, vce(cl ID)
-eststo: reg inc`mom' i.Q10_2 i.Q12new i.D6 i.month,vce(cl ID)
-eststo: reg inc`mom' i.Q10_2 i.Q12new i.D6 Q4new Q13new Q6new i.month,vce(cl ID)
-eststo: reg inc`mom' i.Q36 i.age_g i.month,vce(cl ID)
-}
-
-/*
-foreach mom in Mean Var Skew Kurt{
-eststo: xtreg Inc`mom' i.Q10_1 i.Q10_2 i.Q12new, fe robust 
-eststo: xtreg Inc`mom' i.Q10_1 i.Q10_2 i.Q12new i.Q47, fe robust 
-eststo: xtreg Inc`mom' i.Q10_1 i.Q10_2 i.Q12new i.Q47 Q4new Q13new Q6new, fe robust 
-}
-*/
-
-esttab using "${sum_table_folder}/mom_ind_reg.csv", ///
-             se r2 drop(0.age_g 1.Q36 0.Q10_2 1.Q12new 1.D6 *.month _cons) ///
-			 label replace
 */	
 log close 

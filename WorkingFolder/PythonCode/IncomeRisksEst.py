@@ -229,7 +229,7 @@ years_sub
 
 years
 
-# + {"code_folding": [3]}
+# + {"code_folding": [0]}
 ## check the estimation and true parameters 
 
 lw = 3
@@ -261,7 +261,7 @@ for i,paras_est in enumerate(para_est_list):
 
 # ### Experienced volatility specific to cohort 
 
-# + {"code_folding": []}
+# + {"code_folding": [5]}
 history_vols_whole = pd.DataFrame([list(years_sub),para_est_list[3][1][0],para_est_list[3][1][1]]).transpose()
 history_vols_hsd = pd.DataFrame([list(years_sub),para_est_list[0][1][0],para_est_list[0][1][1]]).transpose()
 history_vols_hsg = pd.DataFrame([list(years_sub),para_est_list[1][1][0],para_est_list[1][1][1]]).transpose()
@@ -276,7 +276,7 @@ for dt in [history_vols_whole,
 
 dataset_psid = pd.read_excel('../OtherData/psid/psid_history_vol_test.xls')
 
-# + {"code_folding": []}
+# + {"code_folding": [2]}
 ## for different groups
 names = ['whole','hsd','hsg','cg'] ## whole sample/ high school dropout / high school graduate / college graduate above
 for sample_id,sample in enumerate([history_vols_whole,

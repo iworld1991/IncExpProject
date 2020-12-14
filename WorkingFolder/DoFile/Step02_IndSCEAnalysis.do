@@ -24,6 +24,7 @@ duplicates report year month userid
 **  merge with estimated moments **
 ***********************************
 
+* IncExpSCEDstIndM is the output from ../Pythoncode/DoDensityEst.ipynb
 merge 1:1 userid date using "${folder}/SCE/IncExpSCEDstIndM.dta", keep(master using) 
 rename _merge IndEst_merge
 
@@ -105,7 +106,6 @@ eststo clear
 ** pesistence of the individual perceived risks **
 ************************************************
 
-
 eststo clear
 
 foreach mom in mean var{
@@ -127,44 +127,5 @@ esttab using "${sum_table_folder}/ind/autoregIndM.csv", mtitles se  r2 replace
 eststo clear
 
 
-
-/*
-*******************************************************
-***  Weak test on changes of forecst and uncertainty **
-*******************************************************
-
-** Generate central tendency measures
-
-foreach var in SCE{
-foreach mom in Mean{
-   egen `var'_`mom'_ct50 = pctile(`var'_`mom'),p(50) by(date)
-   label var `var'_`mom'_ct50 "Median 1-year-ahead income growth"
-}
-}
-
-eststo clear
-
-foreach var in SCE{
-  foreach mom in Mean{
-     replace IncExp_`mom'_ch =  `var'_`mom' - l1.`var'_`mom'
-	 eststo `var'`mom'diff0: reg IncExp_`mom'_ch, vce(cluster date)
-     eststo `var'`mom'diff1: reg IncExp_`mom'_ch l1.IncExp_`mom'_ch, vce(cluster date)
-	 capture eststo `var'`mom'diff2: reg  IncExp_`mom'_ch l(1/3).IncExp_`mom'_ch, vce(cluster date)
-	 capture eststo `var'`mom'diff3: reg  IncExp_`mom'_ch l(1/6).IncExp_`mom'_ch, vce(cluster date)
- }
-}
-
-foreach var in SCE{
-  foreach mom in Var{
-     replace IncExp_`mom'_ch =  `var'_`mom' - l1.`var'_`mom'
-	 eststo `var'`mom'diff0: reg IncExp_`mom'_ch, vce(cluster date) 
-     eststo `var'`mom'diff1: reg IncExp_`mom'_ch l1.IncExp_`mom'_ch, vce(cluster date) 
-	 eststo `var'`mom'diff2: reg  IncExp_`mom'_ch l(1/3).IncExp_`mom'_ch, vce(cluster date) 
-	 capture eststo `var'`mom'diff3: reg  IncExp_`mom'_ch l(1/6).IncExp_`mom'_ch, vce(cluster date)
- }
-}
-
-esttab using "${sum_table_folder}/ind/ChEfficiencySCEIndQ.csv", mtitles b(%8.3f) se(%8.3f) scalars(N r2) sfmt(%8.3f %8.3f %8.3f) replace
-*/
 
 log close 

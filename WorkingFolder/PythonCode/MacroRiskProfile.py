@@ -1,12 +1,13 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,py:light
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.3
+#       format_version: '1.5'
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -62,7 +63,7 @@ pd.options.display.float_format = '{:,.2f}'.format
 ## s&p 500 series
 
 start = datetime.datetime(2000, 1, 30)
-end = datetime.datetime(2020, 3, 30)
+end = datetime.datetime(2020, 1, 30)
 
 # + {"code_folding": []}
 ## downloading the data from Fred
@@ -245,7 +246,7 @@ for mom in moms:
                  bins = 20)
     plt.xlabel(mom, fontsize = 13)
     plt.ylabel("Frequency",fontsize = 13)
-    plt.savefig('../Graphs/ind/hist'+str(mom)+'.jpg')
+    plt.savefig('../Graphs/ind/hist_'+str(mom)+'.jpg')
 # -
 
 # ### 4. Combinine the two series
@@ -462,7 +463,7 @@ figsize = (80,40)
 lw = 20
 fontsize = 80
 
-for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
+for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
     ax.plot(dt_combM['he'],
@@ -497,7 +498,7 @@ dt_combM3mv = dt_combM.rolling(3).mean()
 # +
 ## plots of correlation for 3-month moving mean average
 
-for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
+for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
     ax.plot(dt_combM3mv['he'],
@@ -538,7 +539,7 @@ for i,moms in enumerate( ['incexp','incvar','inciqr','rincvar','incskew']):
 
 # ### 7. Correlation with stock market returns and times series patterns
 
-# + {"code_folding": [4, 18, 42]}
+# + {"code_folding": [4, 18]}
 ## try different lags or leads
 
 lead_loop = 13
@@ -913,7 +914,7 @@ figsize = (80,40)
 lw = 20
 fontsize = 80
 
-for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
+for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
     ax.bar(dt_combM.index[:-forward], 
@@ -950,7 +951,7 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
 # + {"code_folding": []}
 ## plots of correlation for Mean population stats
 
-for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
+for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
     ax.bar(dt_combM.index[:-forward],
@@ -989,7 +990,7 @@ crr3mv_table
 # + {"code_folding": []}
 ## plots of correlation for 3-month moving MEDIAN average
 
-for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
+for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
     ax.bar(dt_combM3mv.index[:-forward],
@@ -1023,7 +1024,7 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
 # + {"code_folding": []}
 ## plots of correlation for 3-month moving mean average
 
-for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
+for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
     ax.bar(dt_combM3mv.index[:-forward],

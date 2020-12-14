@@ -23,7 +23,6 @@ use "${folder}/SCE/NYFED_SCE_2013.dta",clear
 append using "${folder}/SCE/NYFED_SCE_2014_2016.dta",force
 append using  "${folder}/SCE/NYFED_SCE_post2016new.dta",force
 
-
 sort date
 unique userid
 
@@ -309,6 +308,20 @@ label var Q24_rmean "mean of real earning growth of same job/time/place from y t
 
 gen Q24_rvar = Q24_var + Q9_var 
 label var Q24_rvar "variance of real earning growth of same job/time/place from y to y+1(%) "
+
+****************************************
+*** Persontage point to log change *****
+* for example: 10% is 0.1 in log change 
+****************************************
+
+foreach pc_var in Q24_mean Q24_rmean Q9_mean Q24_iqr{
+replace `pc_var' = `pc_var'/100
+}
+
+foreach pc_var in Q24_var Q24_rvar Q9_var{
+replace `pc_var' = `pc_var'/10000
+}
+
 
 *************************
 *** Other Measures *****

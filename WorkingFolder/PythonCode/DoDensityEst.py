@@ -5,8 +5,8 @@
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.3
+#       format_version: '1.5'
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -17,11 +17,11 @@
 #
 # - Following Manski et al. (2009)
 # - Three cases 
-#    - case 1. 3+ intervales with positive probabilities, to be fitted with a generalized beta distribution
+#    - case 1. 3+ intervals with positive probabilities, to be fitted with a generalized beta distribution
 #    - case 2. exactly 2 adjacent intervals with positive probabilities, to be fitted with a triangle distribution 
 #    - case 3. one interval only, to be fitted with a uniform distribution
 
-# + {"code_folding": []}
+# + code_folding=[]
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -29,7 +29,7 @@ import pandas as pd
 
 from DensityEst import SynDensityStat 
 
-# + {"code_folding": []}
+# + code_folding=[]
 ### loading probabilistic data on monthly income growth  
 IndSCE = pd.read_stata('../SurveyData/SCE/IncExpSCEProbIndM.dta')   
 
@@ -49,13 +49,13 @@ len(IndSCE_sub)
 # +
 #IndSCE_sub[bin_name_list].head()
 
-# + {"code_folding": []}
+# + code_folding=[]
 ## survey-specific parameters 
 nobs = len(IndSCE)
 SCE_bins = np.array([-20,-12,-8,-4,-2,0,2,4,8,12,20])
 print("There are "+str(len(SCE_bins)-1)+" bins in SCE")
 
-# + {"code_folding": []}
+# + code_folding=[]
 ##############################################
 ### attention: the estimation happens here!!!!!
 ###################################################
@@ -92,7 +92,7 @@ for i in range(nobs):
 
 print(str(ct) + ' observations are estimated.')
 
-# + {"code_folding": []}
+# + code_folding=[]
 ## redo the estimation for those failed the first time 
 
 ct_nan = 0
@@ -156,7 +156,7 @@ IndSCE_pk_new =IndSCE_pk_new.astype({'IncMean': 'float',
 ## export to stata
 IndSCE_pk_new.to_stata('../SurveyData/SCE/IncExpSCEDstIndM.dta')
 
-# + {"code_folding": []}
+# + code_folding=[]
 ### Robustness checks: focus on big negative mean estimates 
 sim_bins_data = SCE_bins
 print(str(sum(IndSCE_pk['IncMean']<-6))+' abnormals')
