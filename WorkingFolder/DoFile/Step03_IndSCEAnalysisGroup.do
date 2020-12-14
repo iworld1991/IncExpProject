@@ -163,7 +163,7 @@ label var edu_g "education group"
 label define edu_glb 1 "HS dropout" 2 "HS graduate" 3 "College/above"
 label value edu_g edu_glb
 
-label define gdlb 0 "Male" 1 "Female" 
+label define gdlb 1 "Male" 2 "Female" 
 label value gender gdlb
 
 egen HHinc_g = cut(HHinc), group(2)
@@ -222,6 +222,12 @@ collapse incvar, by(age edu_g)
 save "${folder}/SCE/incvar_by_age_edu.dta",replace 
 restore 
 
+
+* by age x gender 
+preserve
+collapse incvar, by(age gender) 
+save "${folder}/SCE/incvar_by_age_gender.dta",replace 
+restore 
 
 **********************************
 *** tables and hists of Vars *****

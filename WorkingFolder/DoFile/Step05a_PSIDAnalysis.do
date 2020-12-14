@@ -351,8 +351,8 @@ gen lincvar = sqrt(incvar)
 * standard deviation log wage and risk perception 
 twoway (scatter lwage_shk_gr_sd_age_edu age_h if edu_g==2, color(ltblue)) ///
        (lfit lwage_shk_gr_sd_age_edu age_h if edu_g==2, lcolor(red)) ///
-       (scatter lincvar age_h, color(gray) yaxis(2)) ///
-	   (lfit lincvar age_h,lcolor(black) yaxis(2)), ///
+       (scatter lincvar age_h if edu_g==2, color(gray) yaxis(2)) ///
+	   (lfit lincvar age_h if edu_g==2,lcolor(black) yaxis(2)), ///
        title("Realized and Perceived Age Profile of Income Risks")  ///
 	   xtitle("age")  ///
 	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
@@ -363,6 +363,31 @@ restore
 
 
 ** gender profile 
+
+** scatter 
+preserve 
+collapse (mean) lwage_shk_gr_av_age_sex = lwage_shk_gr (sd) lwage_shk_gr_sd_age_sex = lwage_shk_gr, by(age_h sex_h) 
+gen age = age_h
+
+gen gender = sex_h
+
+merge 1:1 age gender using "${scefolder}incvar_by_age_gender.dta",keep(master match) 
+gen lincvar = sqrt(incvar)
+
+* standard deviation log wage and risk perception 
+twoway (scatter lwage_shk_gr_sd_age_sex age_h if gender==2, color(ltblue)) ///
+       (lfit lwage_shk_gr_sd_age_sex age_h if gender==2, lcolor(red)) ///
+       (scatter lincvar age_h if gender==2, color(gray) yaxis(2)) ///
+	   (lfit lincvar age_h  if gender==2,lcolor(black) yaxis(2)), ///
+       title("Realized and Perceived Age Profile of Income Risks")  ///
+	   xtitle("age")  ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+graph export "${graph_folder}/log_wage_shk_gr_by_age_gender_compare.png", as(png) replace 
+
+restore
+
+** time series 
 
 preserve 
 collapse (mean) lwage_shk_gr_av_sex=lwage_shk_gr (sd) lwage_shk_gr_sd_sex = lwage_shk_gr, by(year sex_h) 
@@ -376,16 +401,16 @@ graph export "${graph_folder}/log_wage_shk_gr_by_sex.png", as(png) replace
 
 * standard deviation log wage
 
-
 twoway  (connected lwage_shk_gr_sd_sex year if lwage_shk_gr_sd_sex!=. & sex_h==1) ///
         (connected lwage_shk_gr_sd_sex year if lwage_shk_gr_sd_sex!=. & sex_h==2), ///
         title("The standard deviation of log real wage shocks") ///
 		legend(label(1 "male") label(2 "female") col(1)) 
-graph export "${graph_folder}/log_wage_shk_gr_sd_by_sex.png", as(png) replace 
+graph export "${graph_folder}/log_wage_shk_gr_sd_by_sex.png", as(png) replace
 
 restore 
 
 */
+ddd
 
 
 ********************************************
