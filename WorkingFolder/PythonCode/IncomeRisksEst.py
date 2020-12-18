@@ -276,7 +276,7 @@ for dt in [history_vols_whole,
 
 dataset_psid = pd.read_excel('../OtherData/psid/psid_history_vol_test.xls')
 
-# + {"code_folding": [2]}
+# + {"code_folding": [0]}
 ## for different groups
 names = ['whole','hsd','hsg','cg'] ## whole sample/ high school dropout / high school graduate / college graduate above
 for sample_id,sample in enumerate([history_vols_whole,

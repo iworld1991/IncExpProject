@@ -11,33 +11,29 @@ set more off
 capture log close
 
 import excel "${other}PSID/psid_history_vol_test_decomposed_whole.xlsx", sheet("Sheet1") firstrow
-destring year cohort rmse, force replace
 
-gen rmseqrt = sqrt(rmse)
-*hist rmseqrt
+destring year cohort av_gr var_shk av_id_gr var_id_shk av_ag_gr var_ag_shk permanent transitory N, force replace
 
 ***********************
 ** generate variables 
 ************************
 
-gen age = year-cohort + 21
+gen age = year-cohort + 20
 label var age "age"
-
 
 ***********************
 ** relabel ************
 **********************
 
 label var N "history sample size"
-label var rmse "experienced volatility"
-label var rmseqrt "experienced volatility std."
+label var av_gr "experienced log unexplained income growth"
+label var var_shk "experienced volatility"
+label var av_id_gr "experienced log unexplained income growth (idiosyncratic)"
+label var var_id_shk "experienced volatility (idiosyncratic)"
+label var av_ag_gr "experienced log unexplained income growth (aggregate)"
+label var var_ag_shk "experienced volatility (aggregate)"
 label var permanent "experienced permanent volatility std"
 label var transitory "experienced transitory volatility std"
-
-***********************
-** relabel ************
-**********************
-
 
 ***********************************
 ** extend psid history data to 2019 
@@ -90,7 +86,7 @@ label value educ_gr educ_grlb
 ** filters
 **********************
 
-keep if age > 20 & age < 65
+keep if age > 20 & age <= 55
  
 *********************************************
 ** generate new group variables 
@@ -118,13 +114,13 @@ label var age_gp "age group"
 ** generate variables 
 *******************************************
 
-foreach var in Q24_var Q24_iqr rmse permanent transitory{
+foreach var in Q24_var Q24_iqr var_shk var_id_shk var_ag_shk permanent transitory{
 gen l`var' = log(`var')
 }
 
-
 gen lprobUE= log(Q4new)
 label var lprobUE "log probability of UE higher next year"
+
 
 *****************
 ** chart 
@@ -149,24 +145,78 @@ graph export "${sum_graph_folder}/experience_var_bycohort.png", as(png) replace
 preserve
 bysort year age: gen ct = _N
 
-collapse lQ24_var lrmse lpermanent ltransitory, by(year age) 
+collapse lQ24_var av_gr av_id_gr av_ag_gr lvar_shk lvar_id_shk lvar_ag_shk lpermanent ltransitory, by(year age) 
 
-gen pt_ratio = lpermanent-ltransitory 
+gen pt_ratio = lpermanent-ltransitory
 label var pt_ratio "permanent/transitory risk ratio"
 
 label var lQ24_var "Perceived risk"
-label var lrmse "Experienced volatility"
+label var av_gr "Experienced log income change"
+label var lvar_shk "Experienced volatility"
+label var av_id_gr "Experienced log idiosyncratic change"
+label var lvar_id_shk "Experienced idiosyncratic volatility"
+label var av_ag_gr "Experienced log aggregate change"
+label var lvar_ag_shk "Experienced aggregate volatility"
+
 label var lpermanent "Experienced permanent volatility"
 label var ltransitory "Experienced transitory volatility"
 
-twoway (scatter lQ24_var lrmse, color(ltblue)) ///
-       (lfit lQ24_var lrmse, lcolor(red) lw(thick) lpattern(dash)) if lrmse!=., ///
+* growth 
+twoway (scatter lQ24_var av_gr, color(ltblue)) ///
+       (lfit lQ24_var av_gr, lcolor(red) lw(thick) lpattern(dash)) if av_gr!=., ///
+	   title("Experienced income growth and perceived income risks") ///
+	   xtitle("experienced income growth") ///
+	   ytitle("log perceived income risks") ///
+	   legend(off)
+graph export "${sum_graph_folder}/experience_gr_var_data.png", as(png) replace 
+
+* risk 
+twoway (scatter lQ24_var lvar_shk, color(ltblue)) ///
+       (lfit lQ24_var lvar_shk, lcolor(red) lw(thick) lpattern(dash)) if lvar_shk!=., ///
 	   title("Experienced volatility and perceived income risks") ///
 	   xtitle("log experienced volatility") ///
 	   ytitle("log perceived income risks") ///
 	   legend(off)
 graph export "${sum_graph_folder}/experience_var_var_data.png", as(png) replace 
 
+* id growth
+twoway (scatter lQ24_var av_id_gr, color(ltblue)) ///
+       (lfit lQ24_var av_id_gr, lcolor(red) lw(thick) lpattern(dash)) if av_gr!=., ///
+	   title("Experienced income growth and perceived income risks") ///
+	   xtitle("experienced idiosyncratic growth") ///
+	   ytitle("log perceived income risks") ///
+	   legend(off)
+graph export "${sum_graph_folder}/experience_id_gr_var_data.png", as(png) replace 
+
+* id risk 
+twoway (scatter lQ24_var lvar_id_shk, color(ltblue)) ///
+       (lfit lQ24_var lvar_id_shk, lcolor(red) lw(thick) lpattern(dash)) if lvar_id_shk!=., ///
+	   title("Experienced volatility and perceived income risks") ///
+	   xtitle("log experienced idiosyncratic volatility") ///
+	   ytitle("log perceived income risks") ///
+	   legend(off)
+graph export "${sum_graph_folder}/experience_var_id_var_data.png", as(png) replace 
+
+
+* ag growth
+twoway (scatter lQ24_var av_ag_gr, color(ltblue)) ///
+       (lfit lQ24_var av_ag_gr, lcolor(red) lw(thick) lpattern(dash)) if av_gr!=., ///
+	   title("Experienced income growth and perceived income risks") ///
+	   xtitle("experienced aggregate growth") ///
+	   ytitle("log perceived income risks") ///
+	   legend(off)
+graph export "${sum_graph_folder}/experience_ag_gr_var_data.png", as(png) replace 
+
+* ag risk 
+twoway (scatter lQ24_var lvar_ag_shk, color(ltblue)) ///
+       (lfit lQ24_var lvar_ag_shk, lcolor(red) lw(thick) lpattern(dash)) if lvar_ag_shk!=., ///
+	   title("Experienced volatility and perceived income risks") ///
+	   xtitle("log experienced aggregate volatility") ///
+	   ytitle("log perceived income risks") ///
+	   legend(off)
+graph export "${sum_graph_folder}/experience_var_ag_var_data.png", as(png) replace 
+
+* permanent risk
 twoway (scatter lQ24_var lpermanent, color(ltblue)) ///
        (lfit lQ24_var lpermanent, lcolor(red) lw(thick) lpattern(dash)) if lpermanent!=., ///
 	   title("Experienced permanent volatility and perceived income risks") ///
@@ -175,7 +225,7 @@ twoway (scatter lQ24_var lpermanent, color(ltblue)) ///
 	   legend(off)
 graph export "${sum_graph_folder}/experience_var_permanent_var_data.png", as(png) replace 
 
-
+* transitory risk
 twoway (scatter lQ24_var ltransitory, color(ltblue)) ///
        (lfit lQ24_var ltransitory, lcolor(red) lw(thick) lpattern(dash)) if ltransitory!=., ///
 	   title("Experienced transitory volatility and perceived income risks") ///
@@ -184,6 +234,7 @@ twoway (scatter lQ24_var ltransitory, color(ltblue)) ///
 	   legend(off)
 graph export "${sum_graph_folder}/experience_var_transitory_var_data.png", as(png) replace 
 
+* permanent/transitory ratio
 
 twoway (scatter lQ24_var pt_ratio, color(ltblue)) ///
        (lfit lQ24_var pt_ratio, lcolor(red) lw(thick) lpattern(dash)) if pt_ratio!=., ///
@@ -195,17 +246,22 @@ graph export "${sum_graph_folder}/experience_var_ratio_var_data.png", as(png) re
 restore
 
 *** by age only 
-
 preserve
 bysort age: gen ct = _N
 
-collapse lQ24_var lrmse lpermanent ltransitory, by(age) 
+collapse lQ24_var av_gr av_id_gr av_ag_gr lvar_shk lvar_id_shk lvar_ag_shk lpermanent ltransitory, by(year age) 
 
-gen pt_ratio = lpermanent-ltransitory 
+gen pt_ratio = lpermanent-ltransitory
 label var pt_ratio "permanent/transitory risk ratio"
 
 label var lQ24_var "Perceived risk"
-label var lrmse "Experienced volatility"
+label var av_gr "Experienced log income change"
+label var lvar_shk "Experienced volatility"
+label var av_id_gr "Experienced log idiosyncratic change"
+label var lvar_id_shk "Experienced idiosyncratic volatility"
+label var av_ag_gr "Experienced log aggregate change"
+label var lvar_ag_shk "Experienced aggregate volatility"
+
 label var lpermanent "Experienced permanent volatility"
 label var ltransitory "Experienced transitory volatility"
 
@@ -252,7 +308,6 @@ twoway (scatter lQ24_var lrmse , color(ltblue)) ///
 	   
 graph export "${sum_graph_folder}/experience_var_var_by_income_data.png", as(png) replace 
 restore
-
 
 
 *********************************************

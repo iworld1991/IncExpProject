@@ -21,6 +21,7 @@
 #   - job-types, part-time vs full-time, selfemployment, etc. 
 #   - other expectations: probability of unemployment, other job-related expectations 
 #   - **experienced volatility** estimated from PSID 
+#   - numeracy from SCE 
 #
 
 # ###  1. Loading and cleaning data
@@ -61,7 +62,7 @@ pd.options.display.float_format = '{:,.2f}'.format
 
 dataset = pd.read_stata('../SurveyData/SCE/IncExpSCEProbIndM.dta')   
 dataset_est = pd.read_stata('../SurveyData/SCE/IncExpSCEDstIndM.dta')
-dataset_psid = pd.read_excel('../OtherData/psid/psid_history_vol3.xls')
+dataset_psid = pd.read_excel('../OtherData/psid/psid_history_vol_test.xls')
 
 # + {"code_folding": []}
 ## variable list by catogrories 
@@ -109,7 +110,6 @@ vars_est_all= vars_id + ['IncMean','IncVar','IncSkew','IncKurt']
 SCEM_base = dataset[vars_all_reg_long]
 SCEM_est = dataset_est[vars_est_all]
 
-
 ## merge 
 SCEM = pd.merge(SCEM_base, 
                 SCEM_est,  
@@ -122,7 +122,7 @@ SCEM = pd.merge(SCEM_base,
 
 #SCEM.describe(include = all)
 
-# + {"code_folding": []}
+# + {"code_folding": [2, 12]}
 ## renaming 
 
 SCEM = SCEM.rename(columns={'Q24_mean': 'incexp',

@@ -144,16 +144,21 @@ else:
 #
 # There is a sizable dispersion in perceived income risks. In both nominal and real terms, the distribution is right-skewed with a long tail. Specifically, most of the workers have perceived a variance of nominal earning growth ranging from zero to $20$ (a standard-deviation equivalence of $4-4.5\%$ income growth a year). But in the tail, some of the workers perceive risks to be as high as $7-8\%$ standard deviation a year. To have a better sense of how large the risk is, consider a median individual in our sample, who has an expected earnings growth of $2.4\%$, and a perceived risk of $1\%$ standard deviation. This implies by no means negligible earning risk. \footnote{In the appendix, I also include histograms of expected income growth and subjective skewness, which show intuitive patterns such as nominal rigidity. Besides, about half of the sample exhibits non-zero skewness in their subjective distribution, indicating asymmetric upper/lower tail risks.}  
 #
-# <center>[FIGURE \ref{fig:histmoms} HERE]</center>
-#
+# \begin{center}
+# [FIGURE \ref{fig:histmoms} HERE]
+# \end{center}
 # How are perceived income risks different across a variety of demographic factors? Empirical estimates of income risks of different demographic groups from microdata have been rare\footnote{For instance, <cite data-cite="meghir2004income">(Meghir and Pistaferri (2004))</cite> estimated that high-education group is faced with higher income risks than the low-education group.  <cite data-cite="bloom2018great">(Bloom et al.(2018))</cite> documented that income risks decreases with age and varies with current income level in a U-shaped.}, not mentioning in subjective risk perceptions. Figure \ref{fig:ts_incvar_age} plots the average perceived risks of young, middle-aged, and old workers over the sample period. It is clear that for most of the months, perceived risks decrease with age. Hypothetically, this may be either because of more stable earning dynamics as one is older in the market in reality, or a better grasp of the true income process and higher subjective certainty. The model I will build allows both to play a role.  
 #
-#  <center>[FIGURE \ref{fig:ts_incvar_age} HERE]</center>
-#  
+# \begin{center}
+#  [FIGURE \ref{fig:ts_incvar_age} HERE]
+#  \end{center}
 #
 # Another important question is how income risk perceptions depend on the realized income. This is unclear ex-ante because it depends on the true income process as well as the perception formation. SCE does not directly report the current earning by the individual who reports earning forecasts. Instead, I use what's available in the survey, the total pretax household income in the past year as a proxy to the past realizations of labor income. As Figure \ref{fig:barplot_byinc} shows, perceived risks gradually declines as one's household income increases for most range of income. But the pattern reverses for the top income group. Such a non-monotonic relationship between risk perceptions and past realizations, as I will show later in the theoretical section, will be reconciled by people's state-dependent attribution and learning. 
 #
-#  <center>[FIGURE \ref{fig:barplot_byinc} HERE]</center>
+# \begin{center}
+#  [FIGURE \ref{fig:barplot_byinc} HERE]
+# \end{center}
+#
 
 # + {"caption": "Distribution of Individual Moments", "code_folding": [], "label": "fig:histmoms", "note": "this figure plots histograms of the individual income moments. inc for nominal and rinc for real.", "hide_input": true, "hide_output": true}
 ## insert figures
@@ -213,13 +218,20 @@ for i in range(nb_fig):
 #
 # Some studies have documented that income risks are counter-cyclical based on cross-sectional income data. \footnote{But they differ in exactly which moments of the income are counter-cyclical. For instance, <cite data-cite="storesletten2004cyclical">Storesletten et al.(2004)</cite> found that variances of income shocks are counter-cyclical, while <cite data-cite="guvenen2014nature"> Guvenen et al.(2014)</cite> and <cite data-cite="catherine_countercyclical_2019">Catherine (2019)</cite>, in contrast, found it to be the left skewness.}  It is worth inspecting if the subjective income risk profile has a similar pattern. Figure \ref{fig:tshe} plots the average perceived income risks from SCE against the YoY growth of the average hourly wage across the United States, which shows a clear negative correlation. Table \ref{macro_corr_he} further confirms such a counter-cyclicality by reporting the regression coefficients of different measures of average risks on the wage rate of different lags. All coefficients are significantly negative. 
 #
-# <center>[FIGURE \ref{fig:tshe} HERE]</center>
+# \begin{center}
+# [FIGURE \ref{fig:tshe} HERE]
+# \end{center}
 #
-# <center>[TABLE \ref{macro_corr_he} HERE]</center>
+#
+# \begin{center}
+# [TABLE \ref{macro_corr_he} HERE]
+# \end{center}
 #
 # The pattern can be also seen at the state level. Table \ref{macro_corr_he_state} reports the regression coefficients of the monthly average perceived risk within each state on the state labor market conditions, measured by either wage growth or the state-level unemployment rate, respectively. It shows that a tighter labor market (higher wage growth or a lower unemployment rate) is associated with lower perceived income risks. Note that our sample stops in June 2019 thus not covering the outbreak of the pandemic in early 2020. The counter-cyclicality will be very likely more salient if it includes the current period, which was marked by catastrophic labor market deterioration and increase market risks.   
 #
-# <center>[TABLE \ref{macro_corr_he_state} HERE]</center>
+# \begin{center}
+# [TABLE \ref{macro_corr_he_state} HERE]
+# \end{center}
 #
 # The counter-cyclicality in subjective risk perceptions seen in the survey may suggest the standard assumption of state-independent symmetry in income shocks is questionable. But it may well be, alternatively, because people's subjective reaction to the positive and negative shocks are asymmetric even if the underlying process being symmetric. The model to be constructed in the theoretical section explores the possible role of both. 
 
@@ -267,15 +279,18 @@ mom_group_state
 #
 # Figure \ref{fig:var_experience_var_data} plots the logged average perceived risk from each cohort $c$ at year $t$ against logged experienced volatility estimated from above. It shows a clear positive correlation between the two, which suggests that cohorts who have experienced higher income volatility also perceived future income to be riskier. The results are reconfirmed in Table \ref{micro_reg}, for which I run a regression of logged perceived risks of each individual in SCE on the logged experienced volatility specific to her cohort while controlling individuals age, income, educations, etc. For instance, each 1 percentage increase in experienced volatility is associated with a 3 to 6 percentage point increase in perceived income risks, depending on the controls included in the regression. What is interesting is that the coefficient of $expvol$ declines from 6.31 to 2.92 when controlling the age effect because that variations in experienced volatility are indeed partly from age differences. While controlling more individual factors, the effect of the experienced volatility becomes even stronger. This implies potential heterogeneity as to how experience was translated into perceived risks.     
 #
-# <center>[FIGURE \ref{fig:var_experience_var_data} HERE]</center>
+#
+# \begin{center}
+# [FIGURE \ref{fig:var_experience_var_data} HERE]
+# \end{center}
 #
 # What is more interesting and important from a theoretical perspective is that how the risk perceptions are influenced by past experiences of shocks of different nature. In particular, do experiences of volatility from permanent and transitory shocks affect risk perceptions differently? In order to examine this question, what we can do is to decompose the experienced income volatility of different cohorts into components of different degree of persistences and see how the they are loaded into the future perceptions, separately. In particular, I follow the tradition of a long list of labor/macro literature by assuming the unexplained earning to consist of a permanent and a transitory component which have time-varying volatilities \footnote{<cite data-cite="gottschalk1994growth">Gottschalk et al. 1994</cite>, <cite data-cite="carroll1997nature">Carroll and Samwick, 1997</cite>, <cite data-cite="meghir2004income">Meghir and Pistaferri, 2004</cite>, etc.}. Then relying upon the cross-sectional moment restrictions of income changes, one could estimate the size of the permanent and transitory income risks based on realized income data. Experienced permanent and transitory volatility is approximated as the the average of estimated risks of respective component from the year of birth of the cohort till the year for which the income risk perceptions is formed.
 #
 # In theory, both permanent and transitory risks increase the volatility in income changes in the same way. But the results here suggest the pattern only holds for transitory income risks, as shown in Figure \ref{fig:experience_var_transitory_var_data}. In contrast, higher experienced permanent volatility is associated with lower perceived risk, as shown in Figure \ref{fig:experience_var_permanent_var_data}. I also confirm that the pattern is not sensitive to the particular definition of the cohort here by alterantively letting people's income risks be specific to education level. To understand which compoennt overweights the other in determining overal risk perception given their opposite signs, I also examine how the relative size of permanent and transitory volatility affect income risk perceptions. The ratio essentially reflect the degree of persistency of income changes, i.e. higher permanent/transitory risk ratio leads to a higher serial correlation of unexpected income changes. Figure \ref{fig:experience_var_ratio_var_data} suggest that higher permanent/transitory ratio is actually associated with lower perceived income risks. The fact that income risk perceptions differ depending upon the nature of experienced volatility suggests that income risk perceptions are formed in a way that is not consistent with the underlying income process. This will be a crutial input to the modeling of perception formation in the next section.
 #
-# <center>[FIGURE \ref{fig:experience_var_permanent_var_data} HERE]</center>
-# <center>[FIGURE \ref{fig:experience_var_transitory_var_data} HERE]</center>
-# <center>[FIGURE \ref{fig:experience_var_ratio_var_data} HERE]</center>
+# \begin{center}
+# [FIGURE \ref{fig:experience_var_permanent_var_data}, \ref{fig:experience_var_transitory_var_data}, \ref{fig:experience_var_ratio_var_data} HERE]
+# \end{center} 
 #
 
 # + {"caption": "Experienced Volatility and Perceived Income Risk", "code_folding": [], "label": "fig:var_experience_var_data", "note": "Experienced volatility is the mean squred error(MSE) of income regression based on a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year.", "hide_input": true, "hide_output": true}
@@ -377,7 +392,10 @@ micro_reg_history_vol
 #
 # In addition, higher perceived the probability of losing the current job, which I call individual unemployment risk, $\textit{UEprobInd}$ is associated with higher earning risks of the current job. The perceived chance that the nationwide unemployment rate going up next year, which I call aggregate unemployment risk, $\textit{UEprobAgg}$ has a similar correlation with perceived earning risks. Such a positive correlation is important because this implies that a more comprehensively measured income risk facing the individual that incorporates not only the current job's earning risks but also the risk of unemployment is actually higher. Moreover, the perceived risk is higher for those whose perceptions of the earning risk and unemployment risk are more correlated than those less correlated. 
 #
-#  <center>[TABLE \ref{micro_reg} HERE]</center>
+#
+#  \begin{center}
+#  [TABLE \ref{micro_reg} HERE]
+#  \end{center}
 
 reg_tb = pd.read_excel('../Tables/micro_reg.xlsx').replace(np.nan,'')
 
@@ -392,7 +410,9 @@ reg_tb
 # Table \ref{spending_reg} reports the regression results of planned spending growth over the next year on the expected earning's growth (the first column) as well as a number of perceived income risk measures. \footnote{There is one important econometric concern when I run regressions of the decision variable on perceived risks due to the measurement error in the regressor used here. In a typical OLS regression in which the regressor has i.i.d. measurement errors, the coefficient estimate for the imperfectly measured regressor will have a bias toward zero. For this reason, if I find that willingness to consume is indeed negatively correlated with perceived risks, taking into account the bias, it implies that the correlation of the two is greater in the magnitude.}  Each percentage point increase in expected income growth is associated with a 0.39 percentage point increase in spending growth. At the same time, one percentage point higher in the perceived risk increases the planned spending growth by 0.58 percentage. This effect is even stronger for real income risks. As a double-check, the individual's perceived probability of a higher unemployment rate next year also has a similar effect. These results suggest that individuals do exhibit precautionary saving motives according to their own perceived risks.  
 #
 #
+# \begin{center}
 # [TABLE \ref{spending_reg} HERE]
+# \end{center}
 
 spending_reg_tb = pd.read_excel('../Tables/spending_reg.xlsx').replace(np.nan,'')
 

@@ -15,7 +15,6 @@ capture log close
 clear all
 set more off
 
-
 ***************
 ** CPI data
 ***************
@@ -39,7 +38,6 @@ drop _merge
 rename cpiaucsl CPI
 
 ** Set the panel 
-
 xtset uniqueid year 
 
 *************************
@@ -75,14 +73,14 @@ replace edu_i = l1.edu_i if year==1974 & sex_h ==l1.sex_h & ///
 drop if edu_i ==99 | edu_i==98 | edu_i ==0
 
 drop if year<=1970  
+
 ** wage is a category variable before 1970
 
-*************************
+***********************
 ** drop observations 
 ***********************
 
 * farm workers 
-
 drop if occupation_h>=600 & occupation<=613
 drop if occupation_h >=800 & occupation_h <=802
 
@@ -115,7 +113,7 @@ label values edu_i_g edu_i_g_lb
 ** other filters ******
 ***********************
 
-by uniqueid: gen tenure = _N if laborinc_h!=.
+by uniqueid: gen tenure = _N if wage_h!=.
 
 *drop latino family after 1990
 drop if race_h ==5 | race_h ==6
@@ -127,8 +125,8 @@ keep if (rtoh ==1 & year<=1982) | (rtoh ==10 & year>1982)
 * age 
 drop if age_h <22 | age_h > 55 
 
-* stay in sample for at least 4 years
-*keep if ct >=4
+* stay in sample for at least 9 years
+*keep if tenure >=9
 
 *******************
 ** new variables
@@ -155,60 +153,59 @@ label var age_h2 "age squared"
 egen lwage_h_av = mean(lwage_h), by(year) 
 egen lwage_h_sd = sd(lwage_h), by(year)
 
-egen laborinc_h_av = mean(llbinc_h), by(year) 
-egen laborinc_h_sd = sd(llbinc_h), by(year)
+*egen laborinc_h_av = mean(llbinc_h), by(year) 
+*egen laborinc_h_sd = sd(llbinc_h), by(year)
 
 ** mincer regressions 
+reghdfe lwage_h age_h age_h2, a(i.edu_i_g i.sex_h i.occupation_h) resid
+predict lwage_shk, residuals 
+* including aggregate shock
 
-reghdfe lwage_h edu_i age_h age_h2, a(year sex_h occupation_h) resid
-predict resd, residuals
+reghdfe lwage_h age_h age_h2, a(i.year##i.edu_i_g i.sex_h i.occupation_h) resid
+predict lwage_id_shk, residuals
 
-*reghdfe llbinc_h edu_i age_h age_h2, a(year sex_h occupation_h) resid
-*predict resd_lb, residuals
+gen lwage_ag_shk = lwage_shk- lwage_id_shk
+
+label var lwage_shk "log wage shock"
+label var lwage_id_shk "log wage idiosyncratic shock"
+label var lwage_ag_shk "log wage aggregate shock"
 
 ** first difference
 
-gen lwage_shk_gr = resd- l1.resd if uniqueid==l1.uniqueid ///
+foreach var in lwage_shk lwage_id_shk lwage_ag_shk{
+gen `var'_gr = `var'- l1.`var' if uniqueid==l1.uniqueid ///
                                    & sex_h ==l1.sex_h & ///
 								   age_h ==l1.age_h+1 & year==l.year+1
-replace lwage_shk_gr = (resd-l2.resd)/2 if year>=1999 ///
-                                   & lwage_shk_gr ==. ///
+replace `var'_gr = (`var'-l2.`var')/2 if year>=1999 ///
+                                   & `var'_gr ==. ///
                                    & uniqueid==l2.uniqueid ///
                                    & sex_h ==l2.sex_h & ///
 								   age_h ==l2.age_h+2 & year==l2.year+2
-
-
-label var lwage_shk_gr "log wage shock growth"
-
-*gen laborinc_shk_gr = resd_lb - l1.resd_lb if uniqueid==l1.uniqueid ///
-*                                              & sex_h ==l1.sex_h & ///
-*								   age_h ==l1.age_h+1 & year==l.year+1
-								   
-*label var laborinc_shk_gr "log labor income shock growth"
-
+}
+label var lwage_shk_gr "log growth of unexplained wage"
+label var lwage_id_shk_gr "log growth of idiosyncratic unexplained wage"
+label var lwage_ag_shk_gr "log growth of aggregate unexplained wage"
 
 ** gross volatility 
 
 egen lwage_shk_gr_sd = sd(lwage_shk_gr), by(year)
 label var lwage_shk_gr_sd "standard deviation of log shocks"
 
-
 *egen laborinc_shk_gr_sd = sd(laborinc_shk_gr), by(year)
 *label var laborinc_shk_gr_sd "standard deviation of log labor income shocks"
 
 
-/*
-************************************************
+***********************************************
 ** summary chart of unconditional wages ********
 ************************************************
-
+/*
 preserve
 
 collapse (mean) lwage_h lwage_h_sd laborinc_h_av laborinc_h_sd, by(year) 
 
-** average log wage whole sample
-*twoway  (connected laborinc_h_av year) if year<=1990, title("The mean of log real labor income") 
-*twoway  (connected laborinc_h_sd year)  if year<=1990, title("The std of log real labor income") 
+** average log household income whole sample
+twoway  (connected laborinc_h_av year) if year<=1990, title("The mean of log real labor income")
+twoway  (connected laborinc_h_sd year)  if year<=1990, title("The std of log real labor income") 
 
 ** average log wage whole sample
 twoway  (connected lwage_h year) if lwage_h!=., title("The mean of log real wages") 
@@ -218,7 +215,7 @@ graph export "${graph_folder}/log_wage_av.png", as(png) replace
 twoway  (connected lwage_h_sd year) if lwage_h_sd!=., title("The standard deviation of log real wages") 
 graph export "${graph_folder}/log_wage_sd.png", as(png) replace 
 restore 
-
+ddd
 
 preserve 
 collapse (mean) lwage_h lwage_h_sd lwage_h_av_educ=lwage_h (sd) lwage_h_sd_educ = lwage_h, by(year edu_i_g) 
@@ -349,10 +346,10 @@ merge 1:1 age edu_g using "${scefolder}incvar_by_age_edu.dta",keep(master match)
 gen lincvar = sqrt(incvar)
 
 * standard deviation log wage and risk perception 
-twoway (scatter lwage_shk_gr_sd_age_edu age_h if edu_g==2, color(ltblue)) ///
-       (lfit lwage_shk_gr_sd_age_edu age_h if edu_g==2, lcolor(red)) ///
-       (scatter lincvar age_h if edu_g==2, color(gray) yaxis(2)) ///
-	   (lfit lincvar age_h if edu_g==2,lcolor(black) yaxis(2)), ///
+twoway (scatter lwage_shk_gr_sd_age_edu age_h if edu_g==3, color(ltblue)) ///
+       (lfit lwage_shk_gr_sd_age_edu age_h if edu_g==3, lcolor(red)) ///
+       (scatter lincvar age_h if edu_g==3, color(gray) yaxis(2)) ///
+	   (lfit lincvar age_h if edu_g==3,lcolor(black) yaxis(2)), ///
        title("Realized and Perceived Age Profile of Income Risks")  ///
 	   xtitle("age")  ///
 	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
@@ -410,7 +407,7 @@ graph export "${graph_folder}/log_wage_shk_gr_sd_by_sex.png", as(png) replace
 restore 
 
 */
-ddd
+
 
 
 ********************************************
@@ -425,45 +422,76 @@ tabstat lwage_shk_gr, st(sd) by(sex_h)
 ** Prepare the matrix for GMM estimation
 *****************************************
 
-*preserve 
+preserve 
 tsset uniqueid year 
 tsfill,full
 *replace lwage_shk_gr = f1.lwage_shk_gr if year>=1998 ///
 *                                       & f1.lwage_shk_gr !=. ///
 *									   & lwage_shk_gr ==. 									    
-keep uniqueid year lwage_shk_gr edu_i_g
+keep uniqueid year lwage_id_shk_gr edu_i_g
 *keep if year<=1997
-reshape wide lwage_shk_gr, i(uniqueid edu_i_g) j(year)
+reshape wide lwage_id_shk_gr, i(uniqueid edu_i_g) j(year)
 save "psid_matrix.dta",replace 
 restore 
 
 
 ******************************
-** cohort-time-specific regression
+** cohort-time-specific experience
 *********************************
 
 preserve 
 
-gen rmse = resd^2
-label var rmse "squared error"
-
 putexcel set "${table_folder}/psid_history_vol_test.xls", sheet("") replace
-putexcel A1=("year") B1=("cohort") C1=("rmse") D1 =("N") 
+putexcel A1=("year") B1=("cohort") C1=("av_gr") D1=("var_shk") E1=("av_id_gr") F1=("var_id_shk") G1=("av_ag_gr") H1=("var_ag_shk") I1 =("N") 
 local row = 2
 forvalues t =1973(1)2017{
 local l = `t'-1971
 forvalues i = 2(1)`l'{
 *quietly: reghdfe lwage_h edu_i age_h age_h2 if year <=`t'& year>=`t'-`i', a(year sex_h occupation_h) resid
-summarize rmse if year <=`t'& year>=`t'-`i'
+
+** shk
+summarize lwage_shk if year <=`t'& year>=`t'-`i'
 return list 
 local N = r(N)
-local rmse = r(mean)
-disp `rmse'
+local var_shk = r(sd)^2
+disp `var_shk'
+summarize lwage_shk_gr if year <=`t'& year>=`t'-`i'
+return list 
+local av_gr = r(mean)
+disp `av_gr'
+
+** id shk
+summarize lwage_id_shk if year <=`t'& year>=`t'-`i'
+return list 
+local N = r(N)
+local var_id_shk = r(sd)^2
+disp `var_id_shk'
+summarize lwage_id_shk_gr if year <=`t'& year>=`t'-`i'
+return list 
+local av_id_gr = r(mean)
+disp `av_id_gr'
+
+** ag shk
+summarize lwage_ag_shk if year <=`t'& year>=`t'-`i'
+return list 
+local N = r(N)
+local var_ag_shk = r(sd)^2
+disp `var_ag_shk'
+summarize lwage_ag_shk_gr if year <=`t'& year>=`t'-`i'
+return list 
+local av_ag_gr = r(mean)
+disp `av_ag_gr'
+
 putexcel A`row'=("`t'")
 local c = `t'-`i'
 putexcel B`row'=("`c'")
-putexcel C`row'=("`rmse'")
-putexcel D`row'=("`N'")
+putexcel C`row'=("`av_gr'")
+putexcel D`row'=("`var_shk'")
+putexcel E`row'=("`av_id_gr'")
+putexcel F`row'=("`var_id_shk'")
+putexcel G`row'=("`av_ag_gr'")
+putexcel H`row'=("`var_ag_shk'")
+putexcel I`row'=("`N'")
 local ++row
 }
 }
