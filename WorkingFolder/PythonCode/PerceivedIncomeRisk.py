@@ -101,7 +101,7 @@ else:
 #
 # ## Data
 #
-# The data used for this paper is from the core module of Survey of Consumer Expectation(SCE) conducted by the New York Fed, a monthly online survey for a rotating panel of around 1,300 household heads. The sample period in my paper spans from June 2013 to June 2019, in a total of 72 months. This makes about 85852 household-year observations, among which around 55,481 observations provide non-empty answers to the density question on earning growth. 
+# The data used for this paper is from the core module of Survey of Consumer Expectation(SCE) conducted by the New York Fed, a monthly online survey for a rotating panel of around 1,300 household heads over the period from June 2013 to January 2020, over a total of 80 months. This makes about 95113 household-year observations, among which around 68361 observations provide non-empty answers to the density question on earning growth. 
 #
 # Particularly relevant for my purpose, the questionnaire asks each respondent to fill perceived probabilities of their same-job-hour earning growth to pre-defined non-overlapping bins. The question is framed as "suppose that 12 months from now, you are working in the exact same [“main” if Q11>1] job at the same place you currently work and working the exact same number of hours. In your view, what would you say is the percentage chance that 12 months from now: increased by x% or more?".
 #
