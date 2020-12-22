@@ -261,7 +261,7 @@ for i,paras_est in enumerate(para_est_list):
 
 # ### Experienced volatility specific to cohort 
 
-# + {"code_folding": [5]}
+# + {"code_folding": []}
 history_vols_whole = pd.DataFrame([list(years_sub),para_est_list[3][1][0],para_est_list[3][1][1]]).transpose()
 history_vols_hsd = pd.DataFrame([list(years_sub),para_est_list[0][1][0],para_est_list[0][1][1]]).transpose()
 history_vols_hsg = pd.DataFrame([list(years_sub),para_est_list[1][1][0],para_est_list[1][1][1]]).transpose()
@@ -274,15 +274,14 @@ for dt in [history_vols_whole,
     dt.columns = ['year','permanent','transitory']
 # -
 
+## whole data 
 dataset_psid = pd.read_excel('../OtherData/psid/psid_history_vol_test.xls')
+dataset_psid_edu = pd.read_excel('../OtherData/psid/psid_history_vol_edu_test.xls')
 
 # + {"code_folding": [0]}
-## for different groups
-names = ['whole','hsd','hsg','cg'] ## whole sample/ high school dropout / high school graduate / college graduate above
-for sample_id,sample in enumerate([history_vols_whole,
-                                  history_vols_hsd,
-                                  history_vols_hsg,
-                                  history_vols_cg]):
+## for whole sample
+names = ['whole'] ## whole sample/ high school dropout / high school graduate / college graduate above
+for sample_id,sample in enumerate([history_vols_whole]):
     # prepare data 
     history_vols = dataset_psid
     history_vols['permanent'] = np.nan
@@ -296,7 +295,7 @@ for sample_id,sample in enumerate([history_vols_whole,
         born = history_vols['cohort'].iloc[i]-20
         #print(born)
         av_per_vol = np.mean(sample['permanent'].loc[(sample['year']>born) & 
-                                                                (sample['year']<=year)])
+                                                                (sample['year']<=year)] )
         #print(av_per_vol)
         av_tran_vol = np.mean(sample['transitory'].loc[(sample['year']>born) & 
                                                                 (sample['year']<=year)])
@@ -306,6 +305,42 @@ for sample_id,sample in enumerate([history_vols_whole,
         
     ## save to excel for further analysis 
     history_vols.to_excel('../OtherData/psid/psid_history_vol_test_decomposed_'+str(names[sample_id])+'.xlsx')
+
+# + {"code_folding": []}
+## for sub-education group 
+
+# prepare data 
+history_vols = dataset_psid_edu
+history_vols['permanent'] = np.nan
+history_vols['transitory'] = np.nan
+
+samples = [history_vols_hsd,
+           history_vols_hsg,
+           history_vols_cg]
+        
+
+for i in history_vols.index:
+    #print(i)
+    year = history_vols['year'].iloc[i]
+    #print(year)
+    born = history_vols['cohort'].iloc[i]-20
+    #print(born)
+    edu = history_vols['edu'].iloc[i]
+    #print(edu)
+    
+    sample = samples[edu-1] ## 1 hsd, 2 hsg, 3 cg 
+    
+    av_per_vol = np.mean(sample['permanent'].loc[(sample['year']>born) &
+                                                 (sample['year']<=year)] )
+    #print(av_per_vol)
+    av_tran_vol = np.mean(sample['transitory'].loc[(sample['year']>born) &
+                                                   (sample['year']<=year)])
+    #print(av_tran_vol)
+    history_vols['permanent'].iloc[i] = av_per_vol
+    history_vols['transitory'].iloc[i] = av_tran_vol
+        
+## save to excel for further analysis 
+history_vols.to_excel('../OtherData/psid/psid_history_vol_test_decomposed_edu.xlsx')
 
 # + [markdown] {"code_folding": []}
 # ### Estimation using simulated moments 

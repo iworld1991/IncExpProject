@@ -391,9 +391,26 @@ label var byear_gr "cohort by year of birth"
 label define byear_grlb 0 "1952" 1 "1961" 2 "1970" 3 "1980" 4 "1998"
 label value byear_gr byear_grlb
 
+
+***********************
+** generate variables 
+************************
+
+** replace educ with highest degree for each individual
+egen educ = max(Q36), by(userid) 
+*although actually no change ine ducation within the panel 
+
+** education group 
+gen educ_gr = .
+replace educ_gr = 1 if educ==1
+replace educ_gr = 2 if educ==2 | educ ==3 | educ == 4
+replace educ_gr = 3 if educ <=9 & educ>4
+
+label var educ_gr "education group"
+label define educ_grlb 1 "HS dropout" 2 "HS graduate" 3 "College/above"
+label value educ_gr educ_grlb
+
 save "${folder}/SCE/IncExpSCEProbIndM",replace 
-
-
 
 ***************************************
 **   Histograms of Moments  ***********

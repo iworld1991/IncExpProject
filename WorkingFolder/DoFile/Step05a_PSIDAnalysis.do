@@ -5,7 +5,7 @@
 
 global datafolder "/Users/Myworld/Dropbox/PSID/J276289/"
 global scefolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/"
-global otherdatafolder "/Users/Myworld/Dropbox/PSID/OtherData/"
+global otherdatafolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/OtherData/"
 global table_folder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/OtherData/PSID/"
 global graph_folder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/psid/"
 
@@ -27,15 +27,35 @@ drop date
 save "${otherdatafolder}cpiY.dta",replace 
 
 
+*************************
+** UE and recession data
+************************
+clear
+import delimited "${otherdatafolder}UNRATE.csv"
+
+gen year_str = substr(date,1,4)
+destring year_str,force replace
+rename year_str year
+drop date 
+save "${otherdatafolder}UNRATE.dta",replace 
+
+
 ****************
 ** PSID data
 ***************
 
 use "psidY.dta",clear 
 
+
 merge m:1 year using "${otherdatafolder}cpiY.dta",keep(master match)
 drop _merge 
 rename cpiaucsl CPI
+
+merge m:1 year using "${otherdatafolder}UNRATE.dta", keep(master match) 
+drop _merge 
+rename unrate ue
+
+
 
 ** Set the panel 
 xtset uniqueid year 
@@ -186,6 +206,12 @@ label var lwage_shk_gr "log growth of unexplained wage"
 label var lwage_id_shk_gr "log growth of idiosyncratic unexplained wage"
 label var lwage_ag_shk_gr "log growth of aggregate unexplained wage"
 
+
+foreach var in ue{
+gen ue_gr = ue-l2.ue
+}
+label var ue_gr "change in ue in 2 year"
+
 ** gross volatility 
 
 egen lwage_shk_gr_sd = sd(lwage_shk_gr), by(year)
@@ -330,6 +356,16 @@ twoway (scatter lwage_shk_gr_sd_age age_h, color(ltblue)) ///
 	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
 graph export "${graph_folder}/log_wage_shk_gr_by_age_compare.png", as(png) replace 
 
+
+** age-specific risks and perceptions
+
+twoway (scatter lincvar lwage_shk_gr_sd_age, color(ltblue)) ///
+       (lfit lincvar lwage_shk_gr_sd_age, lcolor(red)), ///
+       title("Realized and Perceived Income Risks")  ///
+	   xtitle("Age-specific risk") ///
+	   ytitle("Perceived risk") 
+graph export "${graph_folder}/realized_perceived_risks_by_age.png", as(png) replace  /// 
+
 restore
 
 ** age x education profile
@@ -355,6 +391,14 @@ twoway (scatter lwage_shk_gr_sd_age_edu age_h if edu_g==3, color(ltblue)) ///
 	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
 	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
 graph export "${graph_folder}/log_wage_shk_gr_by_age_edu_compare.png", as(png) replace 
+
+
+twoway (scatter lincvar lwage_shk_gr_sd_age, color(ltblue)) ///
+       (lfit lincvar lwage_shk_gr_sd_age, lcolor(red)) if lwage_shk_gr_sd!=., ///
+       title("Realized and Perceived Income Risks")  ///
+	   xtitle("Age-education-specific risk") ///
+	   ytitle("Perceived risk") 
+graph export "${graph_folder}/realized_perceived_risks_by_age_edu.png", as(png) replace  /// 
 
 restore
 
@@ -442,7 +486,7 @@ restore
 preserve 
 
 putexcel set "${table_folder}/psid_history_vol_test.xls", sheet("") replace
-putexcel A1=("year") B1=("cohort") C1=("av_gr") D1=("var_shk") E1=("av_id_gr") F1=("var_id_shk") G1=("av_ag_gr") H1=("var_ag_shk") I1 =("N") 
+putexcel A1=("year") B1=("cohort") C1=("av_gr") D1=("var_shk") E1=("av_id_gr") F1=("var_id_shk") G1=("av_ag_gr") H1=("var_ag_shk") I1 =("N") J1=("ue_av") K1=("ue_var")
 local row = 2
 forvalues t =1973(1)2017{
 local l = `t'-1971
@@ -463,7 +507,6 @@ disp `av_gr'
 ** id shk
 summarize lwage_id_shk if year <=`t'& year>=`t'-`i'
 return list 
-local N = r(N)
 local var_id_shk = r(sd)^2
 disp `var_id_shk'
 summarize lwage_id_shk_gr if year <=`t'& year>=`t'-`i'
@@ -474,13 +517,20 @@ disp `av_id_gr'
 ** ag shk
 summarize lwage_ag_shk if year <=`t'& year>=`t'-`i'
 return list 
-local N = r(N)
 local var_ag_shk = r(sd)^2
 disp `var_ag_shk'
 summarize lwage_ag_shk_gr if year <=`t'& year>=`t'-`i'
 return list 
 local av_ag_gr = r(mean)
 disp `av_ag_gr'
+
+** ag ue
+summarize ue if year <=`t'& year>=`t'-`i'
+return list 
+local ue_av = r(mean)
+disp `ue_av'
+local ue_var = r(sd)^2
+disp `ue_var'
 
 putexcel A`row'=("`t'")
 local c = `t'-`i'
@@ -492,10 +542,88 @@ putexcel F`row'=("`var_id_shk'")
 putexcel G`row'=("`av_ag_gr'")
 putexcel H`row'=("`var_ag_shk'")
 putexcel I`row'=("`N'")
+putexcel J`row'=("`ue_av'")
+putexcel K`row'=("`ue_var'")
+
 local ++row
 }
 }
 restore
+
+**** age-time-education 
+
+
+preserve 
+
+putexcel set "${table_folder}/psid_history_vol_edu_test.xls", sheet("") replace
+putexcel A1=("year") B1=("cohort") C1 =("edu") D1=("av_gr") E1=("var_shk") F1=("av_id_gr") G1=("var_id_shk") H1=("av_ag_gr") I1=("var_ag_shk") J1 =("N") K1=("ue_av") L1=("ue_var")
+local row = 2
+forvalues ed = 1(2)3{
+forvalues t =1973(1)2017{
+local l = `t'-1971
+forvalues i = 2(1)`l'{
+*quietly: reghdfe lwage_h edu_i age_h age_h2 if year <=`t'& year>=`t'-`i', a(year sex_h occupation_h) resid
+
+** shk
+summarize lwage_shk if year <=`t'& year>=`t'-`i' & edu_i_g ==`ed'
+return list 
+local N = r(N)
+local var_shk = r(sd)^2
+disp `var_shk'
+summarize lwage_shk_gr if year <=`t'& year>=`t'-`i' & edu_i_g ==`ed'
+return list 
+local av_gr = r(mean)
+disp `av_gr'
+
+** id shk
+summarize lwage_id_shk if year <=`t'& year>=`t'-`i' & edu_i_g ==`ed'
+return list 
+local var_id_shk = r(sd)^2
+disp `var_id_shk'
+summarize lwage_id_shk_gr if year <=`t'& year>=`t'-`i' & edu_i_g ==`ed'
+return list 
+local av_id_gr = r(mean)
+disp `av_id_gr'
+
+** ag shk
+summarize lwage_ag_shk if year <=`t'& year>=`t'-`i'& edu_i_g ==`ed'
+return list 
+local var_ag_shk = r(sd)^2
+disp `var_ag_shk'
+summarize lwage_ag_shk_gr if year <=`t'& year>=`t'-`i'& edu_i_g ==`ed'
+return list 
+local av_ag_gr = r(mean)
+disp `av_ag_gr'
+
+** ag ue
+summarize ue if year <=`t'& year>=`t'-`i' & edu_i_g ==`ed'
+return list 
+local ue_av = r(mean)
+disp `ue_av'
+local ue_var = r(sd)^2
+disp `ue_var'
+
+putexcel A`row'=("`t'")
+local c = `t'-`i'
+putexcel B`row'=("`c'")
+putexcel C`row'=("`ed'")
+putexcel D`row'=("`av_gr'")
+putexcel E`row'=("`var_shk'")
+putexcel F`row'=("`av_id_gr'")
+putexcel G`row'=("`var_id_shk'")
+putexcel H`row'=("`av_ag_gr'")
+putexcel I`row'=("`var_ag_shk'")
+putexcel J`row'=("`N'")
+putexcel K`row'=("`ue_av'")
+putexcel L`row'=("`ue_var'")
+
+local ++row
+}
+}
+}
+restore
+
+
 
 */
 
