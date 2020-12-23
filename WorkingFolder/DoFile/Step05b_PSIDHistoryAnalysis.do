@@ -134,7 +134,7 @@ graph export "${sum_graph_folder}/experience_var_bycohort.png", as(png) replace
 preserve
 bysort year age: gen ct = _N
 
-drop if ct<=20
+drop if ct<=30
 
 collapse lQ24_var av_gr av_id_gr av_ag_gr lvar_shk lvar_id_shk lvar_ag_shk lpermanent ltransitory ue_av ue_var, by(year age) 
 
@@ -256,6 +256,7 @@ twoway (scatter lQ24_var pt_ratio, color(ltblue)) ///
 	   ytitle("log perceived income risks") ///
 	   legend(off)
 graph export "${sum_graph_folder}/experience_var_ratio_var_data.png", as(png) replace 
+
 restore
 */
 
@@ -284,6 +285,25 @@ label var ltransitory "Experienced transitory volatility"
 
 label var ue_av "average UE rate"
 label var ue_var "volatility of UE rate"
+
+
+* ag ue
+twoway (scatter lQ24_var ue_av, color(ltblue)) ///
+       (lfit lQ24_var ue_av, lcolor(red) lw(thick) lpattern(dash)) if ue_av!=., ///
+	   title("Experienced UE and perceived income risks") ///
+	   xtitle("experienced UE rate") ///
+	   ytitle("log perceived income risks") ///
+	   legend(off)
+graph export "${sum_graph_folder}/experience_ue_var_data.png", as(png) replace 
+
+* ag ue var
+twoway (scatter lQ24_var ue_var, color(ltblue)) ///
+       (lfit lQ24_var ue_var, lcolor(red) lw(thick) lpattern(dash)) if ue_var!=., ///
+	   title("Experienced UE volatility and perceived income risks") ///
+	   xtitle("experienced UE rate") ///
+	   ytitle("log perceived income risks") ///
+	   legend(off)
+graph export "${sum_graph_folder}/experience_ue_var_var_data.png", as(png) replace 
 
 * growth 
 twoway (scatter lQ24_var av_gr, color(ltblue)) ///
@@ -369,7 +389,6 @@ twoway (scatter lQ24_var pt_ratio, color(ltblue)) ///
 graph export "${sum_graph_folder}/experience_var_ratio_var_data.png", as(png) replace 
 restore
 
-ddd
 *** by age only 
 preserve
 bysort age: gen ct = _N

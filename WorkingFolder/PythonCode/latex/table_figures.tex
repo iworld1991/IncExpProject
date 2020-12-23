@@ -1,4 +1,4 @@
-                                                                                                                                                                                                                                                                                                                                                         \newpage 
+                                                                                                                                                                                                                                                                                                                                                                                             \newpage 
    
   \section*{Tables and Figures} 
     
@@ -51,37 +51,44 @@
 
  \clearpage
 \begin{figure}[!ht]
-	\caption{Experienced Volatility and Perceived Income Risk}
-	\label{fig:var_experience_var_data}
-	\begin{center}\adjustimage{max size={0.7\linewidth}{0.4\paperheight}}{../../Graphs/ind/experience_var_var_data.png}\end{center}
-	\floatfoot{Note: experienced volatility is defined as the cross-sectional variance of unexplained income residuls within each corresponding cohort. It is computed as the mean squred error(MSE) from an income regression on observable individual characteristics including age, age-squred, time, education and gender. The perceived income risk is the average across all individuals from the cohort in that year. Cohorts are time/year-of-birth/education-specific and all cohort sized 30 or smaller are excluded.}
+	\caption{Experience and Perceived Income Risk}
+	\label{fig:var_experience_data}
+	\begin{center}
+		\adjustimage{max size={0.7\linewidth}{0.4\paperheight}}{../../Graphs/ind/experience_gr_var_data.png}
+	\adjustimage{max size={0.7\linewidth}{0.4\paperheight}}{../../Graphs/ind/experience_var_var_data.png}
+\end{center}
+	\floatfoot{Note: experienced growth is the average growth of unexplained income residual and the experienced volatility is its cross-sectional variance within each corresponding cohort. The latter is essentially computed as the mean squred error(MSE) from an income regression on observable individual characteristics including age, age-squred, time, education and gender. The perceived income risk is the average across all individuals from the cohort in that year. Cohorts are time/year-of-birth/education-specific and all cohort sized 30 or smaller are excluded.}
 \end{figure}
 
 \clearpage
 \begin{figure}[!ht]
-	\caption{Experienced Permanent Volatility and Perceived Income Risk}
-	\label{fig:experience_var_permanent_var_data}
-	\begin{center}\adjustimage{max size={0.7\linewidth}{0.4\paperheight}}{../../Graphs/ind/experience_var_permanent_var_data.png}\end{center}
-	\floatfoot{Note: experienced permanent volatility is average of the estimated risks of the permanent component of a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year.}
+	\caption{Experience and Perceived Income Risk: Permanent and Transitory}
+	\label{fig:experience_var_per_tran_var_data}
+	\begin{center}
+		\adjustimage{max size={0.6\linewidth}{0.3\paperheight}}{../../Graphs/ind/experience_var_permanent_var_data.png}
+		\adjustimage{max size={0.6\linewidth}{0.3\paperheight}}{../../Graphs/ind/experience_var_transitory_var_data.png}
+		\adjustimage{max size={0.6\linewidth}{0.3\paperheight}}{../../Graphs/ind/experience_var_ratio_var_data.png}
+\end{center}
+	\floatfoot{Note: experienced permanent (transitory) volatility is average of the estimated risks of the permanent (transitory) component of a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year. }
 \end{figure}
 
 \clearpage
+
 \begin{figure}[!ht]
-	\caption{Experienced Transitory Volatility and Perceived Income Risk}
-	\label{fig:experience_var_transitory_var_data}
-	\begin{center}\adjustimage{max size={0.7\linewidth}{0.4\paperheight}}{../../Graphs/ind/experience_var_transitory_var_data.png}\end{center}
-	\floatfoot{Note: experienced transitory volatility is average of the estimated risks of the transitory component of a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year.}
+	\caption{Experience and Perceived Income Risk: Aggregate and Idiosyncratic}
+	\label{fig:experience_id_ag_data}
+	\begin{center}\adjustimage{max size={0.4\linewidth}{0.3\paperheight}}{../../Graphs/ind/experience_id_gr_var_data.png} 
+		\adjustimage{max size={0.4\linewidth}{0.3\paperheight}}{../../Graphs/ind/experience_var_id_var_data.png}
+	\adjustimage{max size={0.4\linewidth}{0.3\paperheight}}{../../Graphs/ind/experience_ag_gr_var_data.png}
+	\adjustimage{max size={0.4\linewidth}{0.3\paperheight}}{../../Graphs/ind/experience_var_ag_var_data.png}
+\adjustimage{max size={0.4\linewidth}{0.3\paperheight}}{../../Graphs/ind/experience_ue_var_data.png}
+\adjustimage{max size={0.4\linewidth}{0.3\paperheight}}{../../Graphs/ind/experience_ue_var_var_data.png}
+\end{center}
+	\floatfoot{Note: experienced idiosyncratic income shocks are approximated as the cohort-specific average unexplained income residuals from a regression controlling time-fixed and education/time fixed effect.  Aggregate shock is approixmated as the average income change explained by the two effects.  The perceived income risk is the average across all individuals from the cohort in that year.}
 \end{figure}
 
 \clearpage
-\begin{figure}[!ht]
-	\caption{Experienced Permanent/Transitory Ratio and Perceived Income Risk}
-	\label{fig:experience_var_ratio_var_data}
-	\begin{center}\adjustimage{max size={0.7\linewidth}{0.4\paperheight}}{../../Graphs/ind/experience_var_ratio_var_data.png}\end{center}
-	\floatfoot{Note: experienced permanent/transitory ratio is ratio of the estimated risks of the permanent to transitory component of a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year.}
-\end{figure}
 
-\clearpage
 \begin{figure}[!ht]
 	\caption{Attribution and Parameter Uncertainty}
 	\label{fig:corr_var}
