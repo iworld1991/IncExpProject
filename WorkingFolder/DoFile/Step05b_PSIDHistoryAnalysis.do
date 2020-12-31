@@ -10,13 +10,13 @@ pwd
 set more off 
 capture log close
 
-import excel "${other}PSID/psid_history_vol_test_decomposed_edu.xlsx", sheet("Sheet1") firstrow
+import excel "${other}PSID/psid_history_vol_test_decomposed_whole.xlsx", sheet("Sheet1") firstrow
 
 destring year cohort av_gr var_shk av_id_gr var_id_shk av_ag_gr var_ag_shk permanent transitory N, force replace
 
 ***********************
 ** generate variables 
-************************
+***********************
 
 gen age = year-cohort + 20
 label var age "age"
@@ -51,9 +51,9 @@ replace year = 2019 if year==2017 & year[_n-1]==2018 & cohort ==cohort[_n-1]
 ************************************
 
 gen Q32 = age
-gen educ_gr = edu
+*gen educ_gr = edu
 
-merge 1:m Q32 year educ_gr using "${folder}/SCE/IncExpSCEProbIndM", keep(using match) 
+merge 1:m Q32 year using "${folder}/SCE/IncExpSCEProbIndM", keep(using match) 
 rename _merge sce_ind_merge 
 
 merge 1:1 year month userid using "${folder}/SCE/IncExpSCEDstIndM", keep(using match) 
@@ -388,6 +388,7 @@ twoway (scatter lQ24_var pt_ratio, color(ltblue)) ///
 	   legend(off)
 graph export "${sum_graph_folder}/experience_var_ratio_var_data.png", as(png) replace 
 restore
+ddd
 
 *** by age only 
 preserve

@@ -353,7 +353,7 @@
     \title{Perceived Income Risks and Subjective Attribution}\author{Tao Wang \thanks{Johns Hopkins University, twang80@jhu.edu.}}
 
 \date{\today \\(Incomplete Draft)}
-\maketitle\begin{abstract}Heterogenous-agent models with uninsured risks typically assume that agents have a perfect understanding of the size and nature of income risks. This paper explores the implications of the imperfect understanding. I first document the following empirical patterns of subjective risk profile utilizing a density income survey. First, cohorts that experienced higher income volatility perceived higher income risks. Second, earners who are younger and from low-income households have higher perceived risks. Third, perceptions of risks countercyclically react to recent realizations of labor market outcomes. Theoretically, these empirical patterns can be reconciled by a model of learning from past experiences of income realizations based on subjective attribution of the nature of income shocks. By introducing attribution errors due to the psychological tendency to external attribution for bad news and internal attribution for good news, the model provides a consistent explanation for the non-monotonic income-profile of risk perceptions and its countercyclical dynamics.\end{abstract}
+\maketitle\begin{abstract}Heterogenous-agent models under uninsured risks typically assume that agents have a perfect understanding of the size and nature of income risks. This paper explores the implications of the imperfect understanding. I first document the following empirical patterns of subjective risk profile utilizing a density income survey. First, cohorts that have experienced higher income volatility both at individual and aggregate level perceive higher income risks. Second, perceptions of risks countercyclically react to recent realizations and past experiences of macro labor markets. Third, earners who are younger,  from low-income households and low numeracy have higher perceived risks. Fourth,  higher perceived risks decrease the readiness to spend via precautionary saving motives. Theoretically, these empirical patterns can be reconciled by a model of learning from past experiences of income realizations based on subjective attribution of the nature of income shocks. By introducing attribution errors due to the psychological tendency to external attribution for bad news and internal attribution for good news, the model provides a consistent explanation for the non-monotonic income-profile of risk perceptions and its countercyclical dynamics.\end{abstract}
 
 
     
@@ -906,7 +906,7 @@ could directly examine the relationship between experiences and
 perceptions.
 
 Individuals from each cohort are borned in the same year and obtained
-the same level of their respective highest education.The experienced
+the same level of their respective highest education. The experienced
 volatility specific to a certain cohort \(c\) at a given time \(t\) can
 be approximated as the average squared residuals from an income
 regression based on the historical sample only available to the cohort's
@@ -979,21 +979,25 @@ measures, the volatility is correspondingly computed as the variance
 across time periods specific to each cohort.
 
 Figure \ref{fig:experience_id_ag_data} plot income risk perceptions
-against both aggregate and idiosyncratic experiences, measured by the
+against both aggregate and idiosyncratic experiences measured by the
 level and the volatility of shocks. It suggests different patterns
 between the aggregate and idiosyncratic experiences. In particular, a
 positive aggregate shock (both indicated by a higher aggregate income
 growth, or a lower unexmployment rate) is associated with lower risk
 perceptions. Such a negative relationship seems to be non-existent at
-the individual level. In contrast, higher individual experienced
-volatility is associated with risk perceptions. But the risk perceptions
-is not related to the aggregate volatility experience.
+the individual level. What's common between aggregate and idiosyncratic
+risks is that the volatility of both kinds of experiences are positively
+correlated with risk perceptions. Such correlations are confirmed in a
+regression of controlling other individual characteristics, as shown in
+Table \ref{micro_reg}. Individual volatility, aggregate volatility and
+experience in unemployment rates are all significantly positively
+correlated with income risk perceptions.
 
 \begin{center}
 [FIGURE \ref{fig:experience_id_ag_data} HERE]
 \end{center}
 
-In another dimension of the inquiry, one may wonder the effects from
+As another dimension of the inquiry, one may wonder the effects from
 experiences of income changes of different degree of persistance. In
 particular, do experiences of volatility from permanent and transitory
 shocks affect risk perceptions differently? In order to examine this
@@ -1055,12 +1059,16 @@ as well as job-specific characteristics. The regression is specified as
 followed.
 
 \begin{eqnarray}
-\overline{risk}_{i,c,t} = \alpha + \beta_0 \textrm{HH}_{i,c,t} + \beta_1 \textrm{expvol}_{c,t} + \beta_2 \textrm{Exp}_{i,c,t} + \beta_4 \textrm{JobType}_{i,c,t} + \epsilon_{i,t}
+\overline{risk}_{i,c,t} = \alpha + \beta_0 \textrm{HH}_{i,c,t} + \beta_1 \textrm{IdExpVol}_{c,t} + \beta_2 \textrm{AgExpVol}_{c,t} + \beta_3 \textrm{AgExpUE}_{c,t} + \beta_4 \textrm{Exp}_{i,c,t} + \beta_5 \textrm{JobType}_{i,c,t} + \epsilon_{i,t}
 \end{eqnarray}
 
 The dependent variable is the individual \(i\) from cohort \(c\)'s
-perceived risk. Experienced volatility \(\textit{expvol}_{c,t}\) is
-cohort-and-time-specific. The second type of factors denoted
+perceived risk. Individual experienced volatility
+\(\textit{IdExpVol}_{c,t}\), aggregate experience of volatility
+\(\textit{AgExpVol}_{c,t}\) and experience of unemployment rate
+\(\textit{AgExpUE}_{c,t}\) are all cohort/time-specific since different
+birth cohort at different points of time have had difference experience
+of both micro and macro histories. The second type of factors denoted
 \(\textit{HH}_{i,t}\) represents household-specific demographics such as
 the age, household income level, education, gender as well as the
 numeracy of the respondent. In particular, the numeracy score is
@@ -1084,8 +1092,11 @@ unobservable household heterogeneity.
 The regression results reported in Table \ref{micro_reg} are rather
 intuitive. From the first to the sixth column, I gradually control more
 factors. All specifications confirm that higher experienced volatility
-in the past, workers from low-income households, females, and lower
-education and self-employed jobs have higher perceived income risks.
+at both idiosyncratic level and aggregate level, as well as high
+unemployment rate experience in the past all lead to higher risk
+perceptions. Besides, workers from low-income households, females, and
+lower education and self-employed jobs have higher perceived income
+risks.
 
 In our sample, there are around \(15\%\) (6000) of the individuals who
 report themselves to be self-employed instead of working for others. The

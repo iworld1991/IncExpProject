@@ -405,6 +405,7 @@ gen educ_gr = .
 replace educ_gr = 1 if educ==1
 replace educ_gr = 2 if educ==2 | educ ==3 | educ == 4
 replace educ_gr = 3 if educ <=9 & educ>4
+drop if educ_gr==.
 
 label var educ_gr "education group"
 label define educ_grlb 1 "HS dropout" 2 "HS graduate" 3 "College/above"

@@ -177,11 +177,11 @@ egen lwage_h_sd = sd(lwage_h), by(year)
 *egen laborinc_h_sd = sd(llbinc_h), by(year)
 
 ** mincer regressions 
-reghdfe lwage_h age_h age_h2, a(i.edu_i_g i.sex_h i.occupation_h) resid
+reghdfe lwage_h age_h age_h2, a(i.sex_h i.edu_i_g i.occupation_h) resid
 predict lwage_shk, residuals 
 * including aggregate shock
 
-reghdfe lwage_h age_h age_h2, a(i.year##i.edu_i_g i.sex_h i.occupation_h) resid
+reghdfe lwage_h age_h age_h2, a(i.year i.edu_i_g i.sex_h i.occupation_h) resid
 predict lwage_id_shk, residuals
 
 gen lwage_ag_shk = lwage_shk- lwage_id_shk
@@ -550,15 +550,16 @@ local ++row
 }
 restore
 
-**** age-time-education 
+ddd
 
+**** age-time-education 
 
 preserve 
 
 putexcel set "${table_folder}/psid_history_vol_edu_test.xls", sheet("") replace
 putexcel A1=("year") B1=("cohort") C1 =("edu") D1=("av_gr") E1=("var_shk") F1=("av_id_gr") G1=("var_id_shk") H1=("av_ag_gr") I1=("var_ag_shk") J1 =("N") K1=("ue_av") L1=("ue_var")
 local row = 2
-forvalues ed = 1(2)3{
+forvalues ed = 1(1)3{
 forvalues t =1973(1)2017{
 local l = `t'-1971
 forvalues i = 2(1)`l'{
