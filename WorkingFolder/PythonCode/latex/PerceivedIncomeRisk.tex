@@ -350,7 +350,7 @@
 
 \begin{document}
     
-    \title{Perceived Income Risks and Subjective Attribution}\author{Tao Wang \thanks{Johns Hopkins University, twang80@jhu.edu.}}
+    \title{Perceived Income Risks and Subjective Attribution}\author{Tao Wang \thanks{Johns Hopkins University, twang80@jhu.edu. I thank Chris Carroll, Jonathan Wright, Edmund Crawley and participants of the behavioral economics conference at Yale SOM for useful comments.}}
 
 \date{\today \\(Incomplete Draft)}
 \maketitle\begin{abstract}Heterogenous-agent models under uninsured risks typically assume that agents have a perfect understanding of the size and nature of income risks. This paper explores the implications of the imperfect understanding. I first document the following empirical patterns of subjective risk profile utilizing a density income survey. First, cohorts that have experienced higher income volatility both at individual and aggregate level perceive higher income risks. Second, perceptions of risks countercyclically react to recent realizations and past experiences of macro labor markets. Third, earners who are younger,  from low-income households and low numeracy have higher perceived risks. Fourth,  higher perceived risks decrease the readiness to spend via precautionary saving motives. Theoretically, these empirical patterns can be reconciled by a model of learning from past experiences of income realizations based on subjective attribution of the nature of income shocks. By introducing attribution errors due to the psychological tendency to external attribution for bad news and internal attribution for good news, the model provides a consistent explanation for the non-monotonic income-profile of risk perceptions and its countercyclical dynamics.\end{abstract}
@@ -1053,31 +1053,31 @@ characteristics}\label{other-individual-characteristics}}
 
 What other factors are associated with risk perceptions? This section
 inspects the question by regressing the perceived income risks at the
-individual level on four major blocks of variables: experienced
-volatility, demographics, unemployment expectations by the respondent,
-as well as job-specific characteristics. The regression is specified as
-followed.
+individual level on four major blocks of variables: experiences,
+demographics, unemployment expectations by the respondent, as well as
+job-specific characteristics. The regression is specified as followed.
 
 \begin{eqnarray}
-\overline{risk}_{i,c,t} = \alpha + \beta_0 \textrm{HH}_{i,c,t} + \beta_1 \textrm{IdExpVol}_{c,t} + \beta_2 \textrm{AgExpVol}_{c,t} + \beta_3 \textrm{AgExpUE}_{c,t} + \beta_4 \textrm{Exp}_{i,c,t} + \beta_5 \textrm{JobType}_{i,c,t} + \epsilon_{i,t}
+\overline{risk}_{i,c,t} = \alpha + \beta_0 \textrm{HH}_{i,c,t} + \beta_1 \textrm{Exp}_{c,t} + \beta_2 \textrm{Prob}_{i,c,t} + \beta_3 \textrm{JobType}_{i,c,t} + \epsilon_{i,t}
 \end{eqnarray}
 
 The dependent variable is the individual \(i\) from cohort \(c\)'s
-perceived risk. Individual experienced volatility
-\(\textit{IdExpVol}_{c,t}\), aggregate experience of volatility
-\(\textit{AgExpVol}_{c,t}\) and experience of unemployment rate
-\(\textit{AgExpUE}_{c,t}\) are all cohort/time-specific since different
-birth cohort at different points of time have had difference experience
-of both micro and macro histories. The second type of factors denoted
-\(\textit{HH}_{i,t}\) represents household-specific demographics such as
-the age, household income level, education, gender as well as the
-numeracy of the respondent. In particular, the numeracy score is
-generated based on the individual's answers to seven questions that are
-designed to measure the individual's basic knowlege of probability,
-intrest rate compounding, the difference between nominal and real return
-and risk diversification. Third, \(\textit{Exp}_{i,t}\) represents other
-subjective expectations held by the same individual. As far as this
-paper is concerned, I include the perceived probability of unemployment
+perceived risk. The experience block \(\textit{Exp}_{c,t}\) includes
+individual experienced volatility \(\textit{IdExpVol}_{c,t}\), the
+aggregate experience of volatility \(\textit{AgExpVol}_{c,t}\) and
+experience of unemployment rate \(\textit{AgExpUE}_{c,t}\). They are all
+cohort/time-specific since different birth cohort at different points of
+time have had difference experience of both micro and macro histories.
+The second type of factors denoted \(\textit{HH}_{i,t}\) represents
+household-specific demographics such as the age, household income level,
+education, gender as well as the numeracy of the respondent. In
+particular, the numeracy score is generated based on the individual's
+answers to seven questions that are designed to measure the individual's
+basic knowlege of probability, intrest rate compounding, the difference
+between nominal and real return and risk diversification. Third,
+\(\textit{Prob}_{i,t}\) represents other subjective probabilities
+regarding unemployment held by the same individual. As far as this paper
+is concerned, I include the perceived probability of unemployment
 herself and the probability of a higher nationwide unemployment rate.
 The fourth block of factors, as called \(\textit{Jobtype}_{i,t}\)
 includes dummy variables indicating if the job is part-time or if the
