@@ -430,7 +430,7 @@ spending_reg_tb = pd.read_excel('../Tables/spending_reg.xlsx').replace(np.nan,''
 spending_reg_tb
 # -
 
-# #  A model of belief formation 
+# #  A model of risk perception formation 
 #
 # This section will show that the empirical patterns discussed above can be reconciled by a model of learning featuring an imperfect understanding of the income process. In particular, the model will specify how experienced volatility is translated into future risk perceptions and how the process also depends on people's perceived nature of the income risks. 
 #
