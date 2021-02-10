@@ -430,13 +430,14 @@ spending_reg_tb = pd.read_excel('../Tables/spending_reg.xlsx').replace(np.nan,''
 spending_reg_tb
 # -
 
-# #  Model 
+# #  A model of belief formation 
 #
 # This section will show that the empirical patterns discussed above can be reconciled by a model of learning featuring an imperfect understanding of the income process. In particular, the model will specify how experienced volatility is translated into future risk perceptions and how the process also depends on people's perceived nature of the income risks. 
 #
-# ## Income process and a model of learning  
 #
-# We start by defining an AR(1) process of the individual income. (See Appendix for an extension of the model for an income process with both permanent and transitory income risks.) In particular, the income of individual $i$ from the cohort $c$ at time $t$ depends on her previous-period income with a persistence parameter of $\rho$ and an individual and time-specific shock $\epsilon_{i,c,t}$. \footnote{There are usually predictable components of income by known individual characteristics. It is more accurate to think $y$ here as the unexplained income component. } I define cohort $c$ to be measured by the year of entry in the job market. 
+# ## Under a simple income process 
+#
+# We start by defining an AR(1) process of the individual income. In the next section for a life-cycle consumption problem, we will extend the model for a more realistic income process with risks of different persistence, i.e. permanent and transitory components. In particular, the income of individual $i$ from the cohort $c$ at time $t$ depends on her previous-period income with a persistence parameter of $\rho$ and an individual and time-specific shock $\epsilon_{i,c,t}$\footnote{There are usually predictable components of income by known individual characteristics. It is more accurate to think $y$ here as the unexplained income component.}. I define cohort $c$ to be measured by the year of entry in the job market. 
 #
 # \begin{eqnarray}
 # y_{i,c,t} = \rho y_{i,c,t-1} + \epsilon_{i,c,t}
@@ -452,9 +453,6 @@ spending_reg_tb
 #
 # Both $\rho$ and $\sigma$ are the "true" parameters only known by the modeler, but unknown by agents in the economy. Individual $i$ learns about the income process by "running a regression" of the form laid out above using a small sample of her past experience starting from the year of entering the job market $c$ till $t$. Critically, for this paper's purpose,  I allow the experience used for learning to include both her own and others' past income over the same period. It is admittedly bizarre to assume individual agents have full access to the entire population's income. A more realistic assumption could be that only a small cross-sectional sample is available to the agent. Any scope of cross-sectional learning suffices for the point to be made in this paper.  
 
-#
-# ### A baseline model of experience-based learning
-#
 # If each agent knows _perfectly_ the model parameters $\rho$ and $\sigma$, the uncertainty about future income growth is 
 #
 # \begin{eqnarray}
@@ -513,7 +511,7 @@ spending_reg_tb
 #
 
 #
-# ### Attribution  
+# ## Attribution  
 #
 # Attribution means that agents subjectively determine the nature of the income shocks, or equivalently, form perceptions about the correlation between their own outcome and others. This opens a room for possible model-misspecification about the nature of income shock due to bounded rationality. Although people specify the form of the regression model correctly, they do not necessarily perceive the nature of the income shocks correctly. 
 #
@@ -620,7 +618,7 @@ for i in range(nb_fig):
 # -
 
 #
-# ### Attribution errors
+# ## Attribution errors
 #
 # Now, let us explore some possible attribution errors. Being subjective attribution, one can possibly think of many forms in which agents' attribution is not in line with the true nature of income shocks. This section explores one plausible possibility. In particular, we incorporate the psychological tendency of ascribing bad experiences to external causes and good experience to internal ones, which is known as self-serving bias. \footnote{See <cite data-cite="al1993attributional">(Al-Zahrani et al.,1993)</cite>, <cite data-cite="campbell1999self">(Campbell and Sedikides, 1999)</cite>, <cite data-cite="seidel2010blame">(Seidel et al., 2010)</cite>.} The manifesto of the attribution error is that people asymmetrically assign the subjective correlation $\tilde \delta_{i,t}$ depending on the recent income change (or the realized shocks) being positive or negative. 
 #
@@ -805,6 +803,105 @@ for i in range(nb_fig):
     plt.axis("off")
 # -
 
+# # Experienced-based life-cycle consumption/saving  
+#
+# Each consumer solves a life-cycle consumption/saving problem formulated by <cite data-cite="gourinchas2002consumption">Gourinchas and Parker, 2002</cite>. There is only one deviation from the original model: each agent imperfectly knows the parameters of income process over the life cycle and forms his/her best guess at each point of the time based on past experience. I first set up the model under the assumption of perfect understanding and then extend it to the imperfect understanding scenarior in the next section.   
+#
+#
+#
+# ## The standard life-cycle problem
+#
+# Each agent works for $T$ periods since entering the labor market, during which he/she earns stochastic labor income $y_\tau$ at the work-age of $\tau$. After retiring at age of $T+1$, the agent lives for for another $L-T$ periods of life. Since a cannonical life-cycle problem is the same in nature regardless of the cohort and calender time, we set up the problem generally along the age of work $\tau$. The consumer chooses the whole future consumption path to maximize expected life-long utility. 
+#
+# \begin{equation}
+# \begin{split}
+# E\left[\sum^{\tau=L}_{\tau=1}\beta^\tau u(c_{\tau})\right] \\
+# u(c) = \frac{c^{1-\rho}}{1-\rho}
+# \end{split}
+# \end{equation}
+#
+# where $c_\tau$ represents consumption at the work-age of $\tau$. The felicity function $u$ takes the standard CRRA form with relative risk aversion of $\rho$. We assume away the bequest motive and preference-shifter along life cycle that are present in the original model without loss of the key insights regarding income risks. 
+#
+# Denote the financial wealth at age of $\tau$ as $b_{\tau}$. Given initial wealth $b_1$, the consumer's problem is subject to the borrowing constraint 
+#
+# \begin{equation}
+# b_{\tau}\geq 0
+# \end{equation}
+#
+# and inter-temporal budget constraint.
+#
+# \begin{equation}
+# \begin{split}
+# b_{\tau}+y_{\tau} = m_\tau   \\
+# b_{\tau+1} = (m_\tau-c_{\tau})R
+# \end{split}
+# \end{equation}
+#
+# where $m_\tau$ is the total cash in hand at the begining of period $\tau$. $R$ is the risk-free interest rate. Note that after retirement labor income is zero through the end of life. 
+#
+# The stochastic labor income during the agent's career consists of a mulplicative predictable component by known factors $Z_\tau$ and a stochastic component $\epsilon_{\tau}$ which embodies shocks of different nature.  
+#
+# \begin{equation}
+# \begin{split}
+# y_{\tau} = \phi Z_{\tau}\epsilon_{\tau} 
+# \end{split}
+# \end{equation}
+#
+#
+# Notice here I explicitly include the predictable component, deviating from the common practice in the literature. Although under perfect understanding, the predictable component does not enter consumption decision effectively since it is anticipated ex ante, this is no longer so once we introduce imperfect understanding regarding the parameters of the income process $\phi$. The prediction uncertainty enters the perception of income risks. We will return to this point in the next section. 
+#
+#
+# The stochastic shock to income $\epsilon$ is composed of two components: a permanent one $p_t$  and a transitory one $u$. The former grows by a age-specific growth rate $G$ along the life cycle and is subject to a shock $n$ at each period. 
+#
+# \begin{equation}
+# \begin{split}
+# \epsilon_{\tau} = p_{\tau}u_{\tau} \\
+# p_{\tau} = G_{\tau}p_{\tau-1} n_{\tau}
+# \end{split}
+# \end{equation}
+#
+# The permanent shock $n$ follows a log normal distribution, $ln(n_\tau) \sim N(0,\sigma^2_\tau)$. The transitory shock $u$ either takes value of zero with probability of $0\leq p<1$, i.e. unemployment, or otherwise follows a log normal with $ln(u_\tau) \sim N(0,\sigma^2_u)$. Following <cite data-cite="gourinchas2002consumption">Gourinchas and Parker, 2002</cite>, I assume the size of the volatility of the two shocks are time-invariant. The results of this paper are not sensitive to this assumption. 
+#
+# At this stage, we do not seek to differentiate the aggregate/idiosyncratic components of either one the two enter the individual consumption problem indifferently under perfect understanding. With imperfect understanding and subjective attribution, however, the differences of the two matters since it affects the prediction uncertainty and perceived income risks. 
+#
+# The following value function characterizes the problem. 
+#
+# \begin{equation}
+# \begin{split}
+# V_{\tau}(m_\tau, p_\tau) = \textrm{max} \quad u(c_\tau) + \beta E_{\tau}\left[V_{\tau+1}(m_{\tau+1}, p_{\tau+1})\right] 
+# \end{split}
+# \end{equation}
+#
+# where the agents treat total cash in hand and permanent income as the two state variables. On the backgroud, the income process parameters $\Gamma = [\phi,\sigma_n,\sigma_u]$ affect the consumption decisions. But to the extent that the agents have perfect knowledge of them, they are simply taken as given. 
+#
+#
+# ## Under imperfect understanding/learning from experience
+#
+# The crucial deviation of this model from the standard framework reproduced above is that the agents do not know about the income parameters $\Gamma$, and the decisions are only based on their best guess obtained through learning from experience in a manner we formulate in the previous section. This changes the problem in at least two ways. First, given agents potentially differ in their experiences, perceived income processes differ. Second, even if under same experiences, different subjective determinations of the nature of income shocks result in different risk perceptions. To allow for the cross-sectional heterogeneity across individuals and cohorts in income risk perceptions, now explicitly define the problem using agent-time-cohort-specific value function. For agent $i$ from cohort $c=t-\tau$ at time $t$, the value function is the following.
+#
+# \begin{equation}
+# \begin{split}
+# V_{i,\tau,t}(m_{i,\tau,t}, p_{i,\tau,t}) = \textrm{max} \quad u(c_{i,\tau+1,t+1}) + \beta E_{i,\tau,t}\left[V_{i,\tau+1,t+1}(m_{i,\tau+1,t+1}, p_{i,\tau+1,t+1})\right] 
+# \end{split}
+# \end{equation}
+#
+# Notice that the key difference of the new value function from the one under a perfect understanding is that expectational operator of next-period value function becomes subjective and potentially agent-time-specific. Another way to put it is that $E_{i,\tau,t}$ is conditional on the most recent parameter estimate of the income process $\tilde \Gamma_{i,\tau,t} = \left[\tilde \phi_{i,\tau,t},\tilde \sigma_{n,i,\tau,t}, \tilde \sigma_{u,i,\tau,t}\right]$ and the uncertainty about the estimate $Var_{i,\tau,t}(\tilde \phi)$. 
+#
+# The perceived income risk affects the value of the expected value. It implicitly contains two components. The first is the shock uncertainty that can be predicted at best by the past income volatility estimation of different components. The second is the parameter uncertainty regarding the agents' estimation of a parameter associated with the deterministic components $\phi$. Since both components imply a further dispersion from the perfect understanding case, it will unambiguously induce a stronger precautionary saving motive than the latter case. 
+#
+#
+# ## Consumption functions 
+#
+# I compare the life cycle consumption functions between
+#
+# - perfectly understanding vs imperfect understanding
+# - same age different experiences 
+# - under different digree of attribution 
+#
+# ## Implications for consumption inequality 
+#
+# - consumption inequality(thus wealth inequality) and heterogeneity in MPCs now is further amplified by belief differences in income risks. 
+
 #
 # #  Conclusion
 #
@@ -812,4 +909,10 @@ for i in range(nb_fig):
 #
 # Empirically, I utilize a recently available panel of income density surveys of U.S. earners to shed light directly on subjective income risk profiles. I explore the cross-sectional heterogeneity in income risk perceptions across ages, generations, and income group as well as its cyclicality with the current labor market outcome. I found that risk perceptions are positively correlated with experienced income volatility, therefore differing across age and cohorts. I also found perceived income risks of earners counter-cyclically react to the recent labor market conditions.
 #
-# As a next step, the project will build the experience-based-learning based on subjective attribution model into an otherwise life cycle model of consumption/saving.  
+# Finally, the paper builds the experience-based-learning and subjective attribution into an otherwise standard life cycle model of consumption. I show an imperfect understanding of the income process unambiguously motivates additional precautionary saving than in a model of perfect understanding. I also show that the consumption decisions of agents at the same age may still differ as long as they have experienced different histories at both individual and aggregate levels. Such belief heterogeneity further amplifies the inequality in consumption and wealth accumulation of different generations.
+#
+# Many interesting questions are worth exploring although they are beyond the scope of the paper. First, to what extent the model in this paper could help account for the well-documented differences between millennials and earlier generations in their saving behaviors, homeownership, and stock market investment? Within the very short span of their early career, millennials have had experienced two aggregate economic catastrophes, namely the global financial crisis and the pandemic. The evidence and model in this paper both suggest that this may have persistent impacts on the new generations' risk perceptions, thus economic decisions. 
+#
+# Second, what general equilibrium consequences would the life-cycle and intergenerational differences in risk perceptions generate? It is true that demographic compositions are slow-moving variables. But the gradual change in the demographic structure of the economy may interact with the different experienced macroeconomic histories, generating non-stationary belief distributions across time. This will undoubtedly lead to a different macroeconomic equilibrium. 
+#
+# Third, although this paper focuses on the size and nature of income risks, the imperfect understanding could also and may very likely take the form of misperceiving correlation between different random variables relevant to economic decisions. A perfect example of this is the correlation between income risks and stock market returns. The subjective correlation between the two may shed light on participation puzzles and equity premium in the macroeconomic finance literature. 
