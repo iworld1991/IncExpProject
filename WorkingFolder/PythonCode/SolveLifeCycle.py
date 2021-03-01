@@ -37,8 +37,9 @@ import matplotlib.pyplot as plt
 # %matplotlib inline
 from quantecon import MarkovChain
 import quantecon as qe 
+from mpl_toolkits.mplot3d import Axes3D
 
-# +
+# + code_folding=[0]
 ## figures configurations
 
 mp.rc('xtick', labelsize=14) 
@@ -50,7 +51,7 @@ legendsize = 12
 
 # ## The Model Class and Solver
 
-# + code_folding=[0]
+# + code_folding=[]
 lc_data = [
     ('ρ', float64),              # utility parameter CRRA
     ('β', float64),              # discount factor
@@ -59,7 +60,6 @@ lc_data = [
     ('z_val', float64[:]),       # values of z                     x
     #('a_s', float64),           # preference volatility        x 
     #('sigma_s', float64),        # loading of macro state to preference    x
-    
     ('sigma_n', float64),         # permanent shock volatility              x
     ('b_y', float64),            # loading of macro state to income
     ('sigma_u', float64),        # transitory shock volatility
@@ -71,11 +71,11 @@ lc_data = [
     #('ζ_draws', float64[:])      # Draws of preference shock ζ for MC
     ('T',int64),                 # years of work                          *   
     ('L',int64),                 # years of life                          * 
-    ('G',float64)             # growth rate of permanent income    * 
+    ('G',float64)               # growth rate of permanent income    * 
 ]
 
 
-# + code_folding=[]
+# + code_folding=[1, 7, 56, 63]
 @jitclass(lc_data)
 class LifeCycle:
     """
@@ -209,7 +209,7 @@ def K(a_in, σ_in, lc):
     return a_out, σ_out
 
 
-# + code_folding=[0]
+# + code_folding=[0, 22]
 def solve_model_backward_iter(model,        # Class with model information
                               a_vec,        # Initial condition for assets
                               σ_vec,        # Initial condition for consumption
@@ -282,9 +282,9 @@ def policyfunc(lc,
 
 # -
 
-# ## Solve the model for some made-up consumption policy at retirement 
+# ## Solve the model for some consumption from the last period 
 
-# + code_folding=[]
+# + code_folding=[0, 2]
 ## this is the retirement consumption policy 
 
 def policyPF(β,
@@ -296,19 +296,19 @@ def policyPF(β,
     return (1-c_growth)/(1-c_growth**(L-T))
 
 
-# + code_folding=[]
+# + code_folding=[0]
 ## intialize 
 
 lc = LifeCycle()
 
 # Initial the retirement consumption policy of σ = consume all assets
 
-mpc_ret = mpc_ret = policyPF(lc.β,
-                             lc.ρ,
-                             lc.R,
-                             lc.T,
-                             lc.L) 
-ratio = mpc_ret/(1-mpc_ret)
+#mpc_ret = policyPF(lc.β,
+#                   lc.ρ,
+#                   lc.R,
+#                   lc.T,
+#                   lc.L) 
+#ratio = mpc_ret/(1-mpc_ret)
 
 k = len(lc.s_grid)
 n = len(lc.P)
@@ -316,13 +316,17 @@ n = len(lc.P)
 a_init = np.empty((k, n))
 
 for z in range(n):
-    σ_init[:, z] = ratio*lc.s_grid
-    a_init[:,z] =  σ_init[:, z] + lc.s_grid
+    σ_init[:, z] = 2*lc.s_grid
+    a_init[:,z] =  2*lc.s_grid
 # -
 
-print('The MPC out of cash in hand at the retirement is '+ str(mpc_ret))
+plt.title('The consumption in the last period')
+plt.plot(σ_init[:,1],a_init[:,1])
 
 # + code_folding=[]
+#print('The MPC out of cash in hand at the retirement is '+ str(mpc_ret))
+
+# + code_folding=[0]
 ## Set quarterly parameters 
 
 lc.ρ = 0.5
@@ -332,10 +336,10 @@ lc.β = 0.96
 lc.sigma_n = np.sqrt(0.02) # permanent 
 lc.sigma_u = np.sqrt(0.04) # transitory 
 
-# + code_folding=[]
+# + code_folding=[0]
 ## shut down the macro state 
 
-lc.b_y = 0.0
+lc.b_y = 0.00
 
 # + code_folding=[0]
 as_star, σs_star = solve_model_backward_iter(lc,
@@ -345,8 +349,8 @@ as_star, σs_star = solve_model_backward_iter(lc,
 # + [markdown] code_folding=[]
 # ### Plot interpolated policy functions
 
-# + code_folding=[]
-ages  = [32,35,37,40]
+# + code_folding=[3, 5]
+ages  = [31,33,35,37,39]
 
 fig = plt.plot()
 for age in ages:
@@ -357,37 +361,135 @@ for age in ages:
 #plt.plot(as_star[0,:,0],as_star[0,:,0],'-')
 plt.legend(loc=1)
 
+# + code_folding=[4]
+## interpolate consumption function on continuous z grid 
+
+σs_list = []
+
+for i in range(lc.T):
+    this_σ= policyfunc(lc,
+                   as_star[i,:,:],
+                   σs_star[i,:,:],
+                   discrete = False)
+    σs_list.append(this_σ)
+    
+
+# + code_folding=[0]
+## plot contour for policy function 
+
+a_grid = np.linspace(0.00001,5,20)
+z_grid = np.linspace(0,8,20)
+aa,zz = np.meshgrid(a_grid,z_grid)
+
+σ_this = σs_list[3]
+
+c_stars = σ_this(a_grid,z_grid)
+
+cp = plt.contourf(aa, zz,c_stars)
+plt.title(r'$c$')
+plt.xlabel('asset')
+plt.ylabel('another state')
+
+# + code_folding=[0]
+## plot 3d consumption function 
+
+
+x,y,z =σs_star
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(x, y, -z, zdir='z', c= 'red')
+plt.savefig("demo.png")
+
+# + code_folding=[0]
+## plot 3d functions 
+x = np.linspace(0, 1, nx)
+y = np.linspace(0, 1, ny)
+xv, yv = np.meshgrid(x, y)
+
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+dem3d=ax.plot_surface(xv,yv,dem_100,cmap='afmhot', linewidth=0)
+ax.set_title('consumption function over life cycle')
+ax.set_zlabel('wealth')
+plt.show()
+# -
+
+# ### Adding a macro Markov/persistent state 
+
+## initialize another 
+lc_ag = LifeCycle()
+
+# + code_folding=[0]
+## tauchenize an ar1
+
+ρ, σ = (0.98,0.18)
+constant = 0.13  
+
+mc = qe.markov.approximation.tauchen(ρ, σ, b=constant, m=3, n=7)
+z_ss_av = constant/(1-ρ)
+z_ss_sd = σ*np.sqrt(1/(1-ρ**2))
+
+## feed the model with a markov matrix of macro state 
+lc_ag.z_val, lc_ag.P = mc.state_values, mc.P
+
+## set the macro state loading to be positive
+lc_ag.b_y = 0.1
+
+# + code_folding=[0]
+## initialize policies 
+
+k = len(lc_ag.s_grid)
+n = len(lc_ag.P)
+σ_init = np.empty((k, n))
+a_init = np.empty((k, n))
+
+for z in range(n):
+    σ_init[:, z] = 2*lc_ag.s_grid
+    a_init[:,z] =  2*lc_ag.s_grid
+
+# + code_folding=[0]
+as_star_ag, σs_star_ag = solve_model_backward_iter(lc_ag,
+                                                   a_init,
+                                                   σ_init)
+
 # + code_folding=[]
 ## interpolate consumption function on continuous z grid 
 
-σs= policyfunc(lc,
-               as_star,
-               σs_star,
-               discrete = False)
+σs_ag_list = []
+
+for i in range(lc_ag.T):
+    this_σ= policyfunc(lc_ag,
+                   as_star_ag[i,:,:],
+                   σs_star_ag[i,:,:],
+                   discrete = False)
+    σs_ag_list.append(this_σ)
 
 # + code_folding=[]
 ## plot contour for policy function 
 
-a_grid = np.linspace(0.00001,3,20)
+a_grid = np.linspace(0.00001,5,20)
 z_grid = np.linspace(0,8,20)
 aa,zz = np.meshgrid(a_grid,z_grid)
 
-c_stars = σ_bf(a_grid,z_grid)
+σ_this = σs_ag_list[15]
 
-fig,ax = plt.subplots(3,1,figsize=(7,8))
+c_stars = σ_this(a_grid,z_grid)
 
-cp = ax[0].contourf(aa, zz,c_stars)
-ax[0].set_title(r'$c$')
-ax[0].set_xlabel('asset')
-ax[0].set_ylabel('infection')
+cp = plt.contourf(aa, zz,c_stars)
+plt.title(r'$c$')
+plt.xlabel('asset')
+plt.ylabel('macro state')
+
 
 # -
 
-# ## Simulate the pre-pandemic history 
+# ## Simulate a cross history 
 
-# + code_folding=[1, 47, 97]
+# + code_folding=[1, 28, 48, 78, 100]
 #@njit
-def simulate_time_series(ifp, σ, z_idx_seq, p_income,T=400):
+def simulate_time_series(lc, σ, z_idx_seq, p_income,T=400):
     """
     Simulates a time series of length T for assets/consumptions, given optimal
     consumption/demand functions.
@@ -398,16 +500,16 @@ def simulate_time_series(ifp, σ, z_idx_seq, p_income,T=400):
     # Simulate the asset path
     a = np.zeros(T)+1e-4
     c  = np.empty_like(a)
-    c1 = np.empty_like(a)
-    c2 = np.empty_like(a)
+    #c1 = np.empty_like(a)
+    #c2 = np.empty_like(a)
     
     ## simulate histories
     ζ_sim = np.random.randn(T)
     η_sim = np.random.randn(T)
     
     
-    R = ifp.R
-    z_val = ifp.z_val ## values of the state 
+    R = lc.R
+    z_val = lc.z_val ## values of the state 
     
     
     ## permanent income shocks
@@ -417,13 +519,14 @@ def simulate_time_series(ifp, σ, z_idx_seq, p_income,T=400):
     for t in range(T):
         z_idx = z_idx_seq[t]
         z = z_val[z_idx]    
-        S = ifp.ϕ(z,ζ_sim[t])
-        Y = ifp.Y(z, η_sim[t])
+        S = lc.ϕ(z,ζ_sim[t])
+        Y = lc.Y(z, η_sim[t])
         c[t] = σ(a[t], z_idx)
-        c1[t],c2[t] = allocate(c[t], S = S) 
+        #c1[t],c2[t] = allocate(c[t], S = S) 
+        #if t<T-1:
+        #    a[t+1] = R/Γs[t] * (a[t] - c1[t]*p_vec[0]-c2[t]*p_vec[1]) + Y
         if t<T-1:
-            a[t+1] = R/Γs[t] * (a[t] - c1[t]*p_vec[0]-c2[t]*p_vec[1]) + Y
-        
+            a[t+1] = R/Γs[t] * (a[t] - c[t]) + Y
         
     ## multiply permanent income level 
     #c = c*p_income
@@ -431,9 +534,9 @@ def simulate_time_series(ifp, σ, z_idx_seq, p_income,T=400):
     #c2 = c2*p_income
     #a = a * p_income 
     
-    return a,c,c1,c2
+    return a,c
 
-def simulate_time_series_new(ifp, σ, z_seq, p_income, T=400):
+def simulate_time_series_new(lc, σ, z_seq, p_income, T=400):
     """
     Simulates a time series of length T for assets/consumptions, given optimal
     consumption/demand functions.
@@ -448,15 +551,15 @@ def simulate_time_series_new(ifp, σ, z_seq, p_income, T=400):
     # Simulate the asset path
     a = np.zeros(T)+1e-4
     c = np.empty_like(a)
-    c1 = np.empty_like(a)
-    c2 = np.empty_like(a)
+    #c1 = np.empty_like(a)
+    #c2 = np.empty_like(a)
     
     ## simulate histories
     ζ_sim = np.random.randn(T)
     η_sim = np.random.randn(T)
     
     
-    R = ifp.R
+    R = lc.R
     #z_val = ifp.z_val ## values of the state 
     
     ## permanent income shocks
@@ -465,12 +568,14 @@ def simulate_time_series_new(ifp, σ, z_seq, p_income, T=400):
     
     for t in range(T):
         z = z_seq[t] ## z values
-        S = ifp.ϕ(z,ζ_sim[t])
-        Y = ifp.Y(z, η_sim[t])
+        S = lc.ϕ(z,ζ_sim[t])
+        Y = lc.Y(z, η_sim[t])
         c[t] = σ(a[t], z)
-        c1[t],c2[t] = allocate(c[t], S = S) 
+        #c1[t],c2[t] = allocate(c[t], S = S) 
+        #if t<T-1:
+        #    a[t+1] = R/Γs[t] * (a[t] - c1[t]*p_vec[0]-c2[t]*p_vec[1]) + Y
         if t<T-1:
-            a[t+1] = R/Γs[t] * (a[t] - c1[t]*p_vec[0]-c2[t]*p_vec[1]) + Y
+            a[t+1] = R/Γs[t] * (a[t] - c[t]) + Y
         
     ## multiply permanent income level 
     #c = c*p_income
@@ -478,12 +583,12 @@ def simulate_time_series_new(ifp, σ, z_seq, p_income, T=400):
     #c2 = c2*p_income
     #a = a * p_income 
     
-    return a,c,c1,c2
+    return a,c
 
 ## now, we simulate the time-series of a cross-sectional matrix of N agents 
 
 #@njit
-def simulate_distribution(ifp, 
+def simulate_distribution(lc, 
                           a_star, 
                           p_vec, 
                           σ_star,
@@ -501,33 +606,33 @@ def simulate_distribution(ifp,
     ## z_mat is a N_sim x T sized matrix that takes the simulated Markov states 
     a_mat = np.empty((N,T))
     c_mat = np.empty((N,T))
-    c1_mat = np.empty((N,T))
-    c2_mat = np.empty((N,T))
+    #c1_mat = np.empty((N,T))
+    #c2_mat = np.empty((N,T))
     
     ## get the policy function
     
     if discrete ==True:
-        σ = policyfunc(ifp,
+        σ = policyfunc(lc,
                        a_star,
                        σ_star,
                        discrete = True)  ## interpolate for discrete z index 
         for i in range (N):
-            a_mat[i,:],c_mat[i,:],c1_mat[i,:], c2_mat[i,:] = simulate_time_series(ifp,
-                                                                                   σ,
-                                                                                   z_mat[i,:],
-                                                                                   p_income_mat[i,:],
-                                                                                   T = T)
+            a_mat[i,:],c_mat[i,:] = simulate_time_series(lc,
+                                                         σ,
+                                                         z_mat[i,:],
+                                                         p_income_mat[i,:],
+                                                         T = T)
     else:
-        σ = policyfunc(ifp,
+        σ = policyfunc(lc,
                        a_star,
                        σ_star,
                        discrete = False) ## interpolate for continous z value 
         for i in range (N):
-            a_mat[i,:],c_mat[i,:],c1_mat[i,:], c2_mat[i,:] = simulate_time_series_new(ifp,
-                                                                                      σ,
-                                                                                      z_mat[i,:],
-                                                                                      p_income_mat[i,:],
-                                                                                      T = T)
+            a_mat[i,:],c_mat[i,:]= simulate_time_series_new(lc,
+                                                            σ,
+                                                            z_mat[i,:],
+                                                            p_income_mat[i,:],
+                                                            T = T)
             
     ## multiply permanent income level 
     #c_mat= np.multiply(c_mat,p_income_mat)
@@ -535,29 +640,30 @@ def simulate_distribution(ifp,
     #c2_mat = np.multiply(c2_mat,p_income_mat)
     #a_mat = np.multiply(a_mat,p_income_mat) 
 
-    return a_mat,c_mat,c1_mat, c2_mat
+    return a_mat,c_mat
 
 # + code_folding=[]
 ## simulate a Markov sequence 
 
-mc = MarkovChain(ifp.P)
+mc = MarkovChain(lc.P)
 
 ### Simulate history of Idiosyncratic Z states 
 #### (For Z to be aggregate state. We can directly copy Z for different agents) 
 
-N = W.shape[0]  ## correspond to # of agents, the length of W matrix
-N16 = W16.shape[0]  ## correspond to # of agents, the length of W matrix
+## number of agents 
 
+N = 1000
 T = 25        ## simulated history of time period
 
-z_idx_mat = mc.simulate(T*N, random_state=13274).reshape([N,T])
+z_idx_ts = mc.simulate(T, random_state=13274)
+z_idx_mat = np.tile(z_idx_ts,(N,1))
 
 
-# + code_folding=[0, 3]
+# + code_folding=[3]
 ## simulate a permanent income distributions 
 
 @njit
-def RWSimulate(T,
+def PerIncSimulate(T,
                sigma,
                init = 0.001):
     pshk_draws = sigma*np.random.randn(T)-sigma**2/2
@@ -568,36 +674,30 @@ def RWSimulate(T,
     p_income = np.exp(log_p_inc)
     return p_income
 
-
 ## simulate histories of permanent income 
 
-p_income_mat = np.empty([N,T])
+p_income_mat = np.empty((N,T))
 
 for n in range(N):
-    p_income_mat[n,:] = RWSimulate(T,
-                                  sigma = ifp.a_p,
-                                  init = 0.0001)
+    p_income_mat[n,:] = PerIncSimulate(T,
+                                       sigma = lc.sigma_n,
+                                       init = 0.0001)
 
-# + code_folding=[0]
-## Set the size of the preference volatility to match sub-category inequality 
-
-ifp.a_s = 2
-
-# + code_folding=[0]
-## Simulate the distribution of consumption/asset (no social network learning)
+# + code_folding=[]
+## Simulate the distribution of consumption/asset (perfect understanding)
 
 p_vec = (1,1) 
-a_dist,c_dist,c1_dist,c2_dist = simulate_distribution(ifp,
-                                                      a_bf_star,
-                                                      p_vec,
-                                                      σ_bf_star,
-                                                      z_idx_mat,
-                                                      p_income_mat,
-                                                      N = N,
-                                                      T = T,
-                                                      discrete = True)
+a_dist,c_dist = simulate_distribution(lc,
+                                      a_bf_star,
+                                      p_vec,
+                                      σ_bf_star,
+                                      z_idx_mat,
+                                      p_income_mat,
+                                      N = N,
+                                      T = T,
+                                      discrete = True)
 
-# + code_folding=[0]
+# + code_folding=[]
 ## aggregate history 
 
 co_mat = np.multiply(c_dist,p_income_mat)  ## non-normalized consumption
@@ -756,879 +856,3 @@ cp3 = ax[2].contourf(aa, zz,c2_stars)
 ax[2].set_title(r'$c_n$')
 ax[2].set_xlabel('asset')
 ax[2].set_ylabel('infection')
-
-
-# -
-
-# ## Impulse reponse to an infection shock 
-
-# + code_folding=[4]
-#####################
-##  update z ########
-#####################
-
-def UpdateNextPeriod(now,
-                     psi,
-                     alpha,
-                     sigma):
-    return psi*now+alpha + sigma 
-
-
-
-# + code_folding=[0, 69, 92]
-#############################
-## continous z state  #
-############################
-
-## impulse response function plots the consumption 
-##    response after an unexpected +10% shock to the state $Z$ 
-#@njit
-def irf_(ifp,
-        p_vec,    ## price vector
-        σ_,
-        s_init,        ## initial bank balance distribution
-        z_init,        ## initial z distribution
-        z_jump = 0.5,  ## shock of z to some fraction of the agents in the economy 
-        fraction = 1,
-        period = 5):
-    
-    ## parameters 
-    R = ifp.R
-    z_val = ifp.z_val
-    eps = ifp.eps
-
-    ## simulate impulse responses 
-    N = len(s_init)
-        
-    ## aseet initial
-    a_irf = np.empty((N,period))
-    a_SS = np.empty((N,period))
-    
-    ## permanent income
-    o_irf = np.empty((N,period))
-    for n in range(N):
-        n_burn = 10
-        o_irf_burn = RWSimulate(period+n_burn,
-                                sigma = ifp.a_p,
-                                init = 0.00001)
-        
-        o_irf[n,:] = o_irf_burn[n_burn:]  ## burn the first 100 simulated observations  
-    
-    ## z state initial
-    z_SS = np.tile(z_init,(period,1)).T    
-    
-    z_irf = np.copy(z_SS)
-    cutoff_idx = np.int(N*fraction) ## the fracton of the agents shocked, all by default
-    z_irf[0:cutoff_idx,0]= z_irf[0:cutoff_idx,0]*(1+z_jump)   ## all agents increase by z_jump at time t=1
-    
-    for t in range(period-1):
-        z_irf[:,t+1] = UpdateNextPeriod(z_irf[:,t],
-                                        ρ,
-                                        constant,
-                                        0)
-    
-    ## z belief state initial
-    z_b_SS = z_SS
-    z_b_irf = z_irf
-    
-    ## simulate shocks
-    ζ_sim = np.random.randn(N,period)-1/2
-    η_sim = np.random.randn(N,period)-1/2
-    
-    ## consumption responses 
-    c_irf = np.empty((N,period))
-    c1_irf = np.empty((N,period))
-    c2_irf = np.empty((N,period))
-    c_SS = np.empty((N,period))
-    c1_SS = np.empty((N,period))
-    c2_SS = np.empty((N,period))
-    
-    
-    ## update initial asset/consumption
-    for n in range(N):
-        ## irf 
-        z = z_irf[n,0]
-        S = ifp.ϕ(z,ζ_sim[n,0])
-        Y = ifp.Y(z, η_sim[n,0])
-        a = s_init[n]+ Y
-        a_irf[n,0] = a 
-        c_irf[n,0] = σ_(a,z)
-        c1_irf[n,0],c2_irf[n,0] = allocate(c_irf[n,0], 
-                                           eps = eps,
-                                           S=S) 
-        ## SS
-        z = z_SS[n,0]
-        S = ifp.ϕ(z,ζ_sim[n,0])
-        Y = ifp.Y(z, η_sim[n,0])
-        a = s_init[n]+ Y
-        a_SS[n,0] = a 
-        c_SS[n,0] = σ_(a,z)
-        c1_SS[n,0],c2_SS[n,0] = allocate(c_SS[n,0], 
-                                         eps = eps,
-                                         S=S) 
-    
-    ## fill the rest of the histories  
-    for n in range(N):
-        Γs = o_irf[n,1:]/o_irf[n,:-1] 
-        for t in range(period-1):
-            ## irf
-            z = z_irf[n,t+1]
-            S = ifp.ϕ(z,ζ_sim[n,t+1])
-            Y = ifp.Y(z, η_sim[n,t+1])
-            a = a_irf[n,t]
-            a_irf[n,t+1] = R/Γs[t] * (a - c1_irf[n,t]*p_vec[0]-c2_irf[n,t]*p_vec[1]) + Y
-            a_new  = a_irf[n,t+1]
-            c_irf[n,t+1] = σ_(a_new,z)
-            c1_irf[n,t+1],c2_irf[n,t+1] = allocate(c_irf[n,t+1], 
-                                                   eps = eps,
-                                                   S=S) 
-            
-            
-            ## SS
-            z = z_SS[n,t+1]
-            S = ifp.ϕ(z,ζ_sim[n,t+1])
-            Y = ifp.Y(z, η_sim[n,t+1])
-            a = a_SS[n,t]
-            a_SS[n,t+1] = R/Γs[t] * (a - c1_SS[n,t]*p_vec[0]-c2_SS[n,t]*p_vec[1]) + Y
-            a_new  = a_SS[n,t+1]
-            c_SS[n,t+1] = σ_(a_new,z)
-            c1_SS[n,t+1],c2_SS[n,t+1] = allocate(c_SS[n,t+1], 
-                                                 eps = eps,
-                                                 S=S) 
-            
-    
-    ## multiply asset/consumption by permanent income level 
-    #c_irf= np.multiply(c_irf,o_irf)
-    #c1_irf = np.multiply(c1_irf,o_irf)
-    #c2_irf = np.multiply(c2_irf,o_irf)
-    #a_irf = np.multiply(a_irf,o_irf) 
-    #c_SS = np.multiply(c_SS,o_irf)
-    #c1_SS = np.multiply(c1_SS,o_irf)
-    #c2_SS = np.multiply(c2_SS,o_irf)
-    #a_SS = np.multiply(a_SS,o_irf) 
-    
-    
-    ## get the cross-sectional average 
-    z_irf,z_b_irf = np.mean(np.log(z_irf),axis=0),np.mean(np.log(z_b_irf),axis=0)
-    c_irf, c1_irf,c2_irf = np.mean(np.log(c_irf),axis=0), np.mean(np.log(c1_irf),axis=0),np.mean(np.log(c2_irf),axis=0)
-    a_irf = np.mean(np.log(a_irf), axis=0)  
-    
-    z_SS,z_b_SS = np.mean(np.log(z_SS),axis=0),np.mean(np.log(z_b_SS),axis=0)
-    c_SS, c1_SS,c2_SS = np.mean(np.log(c_SS),axis=0), np.mean(np.log(c1_SS),axis=0),np.mean(np.log(c2_SS),axis=0) 
-    a_SS = np.mean(np.log(a_SS), axis=0)
-    
-    return z_irf, z_b_irf, a_irf, c_irf, c1_irf, c2_irf, z_SS, z_b_SS, a_SS, c_SS, c1_SS, c2_SS
-
-# + code_folding=[]
-## steady state asset and states 
-s_SS_init = a_dist[:,-1]-c_dist[:,-1]
-N = s_SS_init.shape[0]
-z_SS_init = z_ss_av*np.ones(N)
-
-# + code_folding=[0]
-## get the impulse responses
-ifp.eps = 0.75
-z_irf,z_b_irf,a_irf, c_irf, c1_irf,c2_irf,z_SS,z_b_SS,a_SS, c_SS, c1_SS,c2_SS = irf_(ifp,
-                                                                                      p_vec,
-                                                                                      σ_,
-                                                                                      s_SS_init,
-                                                                                      z_SS_init,
-                                                                                      z_jump = 0.1,
-                                                                                      fraction = 1,
-                                                                                      period = 20)
-
-# + code_folding=[0]
-## plot impulses reponses
-
-fig, axs = plt.subplots(2,3, 
-                        figsize=(13, 8), 
-                        facecolor='w', 
-                        edgecolor='k')
-
-irf_plot = [z_irf, z_b_irf, a_irf, c_irf, c1_irf,c2_irf]
-ss_plot =  [z_SS, z_b_SS, a_SS, c_SS, c1_SS,c2_SS]
-
-names = [r'$\xi$',r'$\tilde \xi$',r'$m$',r'$c$',r'$c_c$',r'$c_n$']
-
-axs = axs.ravel()
-
-for i, var in enumerate(irf_plot):
-    compared_to_SS = var- ss_plot[i]  ## plot the relative differences with SS
-    rebase_SS = np.zeros(len(var))    ## set SS to be zero
-    axs[i].plot(compared_to_SS,
-                'r-',
-                lw = 4,
-               label = 'irf')
-    #axs[i].set_xticks(np.arange(1,len(var)+2))
-    axs[i].plot(rebase_SS,
-               'k-.',
-               lw = 2,
-               label ='ss')
-    axs[i].set_title(names[i], fontsize=fontsize)
-    axs[i].set_xlabel(r'$t$', fontsize=fontsize)
-    axs[i].legend(loc=0)
-    axs[i].grid()
-fig.tight_layout(pad=1.5)
-plt.savefig('../graph/model/irf_baseline.jpg')
-
-
-# + [markdown] code_folding=[]
-# ## Simulate markov sequence of underlying state and the belief states
-
-# + code_folding=[0, 7, 28, 50]
-### Simulate belief based on realized state and social network connecteness 
-
-@njit 
-def UpdateBelief(belief_vec,
-                weight_matrix):
-    return weight_matrix@belief_vec
-
-def UpdateBeliefDist(z_idx_mat,  ## cross-distirubiton of the underlying state
-                     W,
-                     z_val):      ## social influence matrix
-    N,T = z_idx_mat.shape
-    z_belief = np.zeros((N,T))
-    
-    for t in range(T):
-        z_now = z_idx_mat[:,t]
-        z_belief[:,t] = 0.0
-        
-        for i,z in enumerate(z_val):
-            
-            z_prior = z_now==i
-            z_prior = z_prior.astype('float32')
-            z_post = UpdateBelief(z_prior,
-                                  W)
-            z_belief[:,t] += z_post*z
-            
-    return z_belief     
-
-
-def UpdateBeliefDistFromVal(z_mat,  ## cross-distirubiton of the underlying state
-                            W):      ## social influence matrix
-    N,T = z_mat.shape
-    z_belief = np.zeros((N,T))
-    ## get unique values of z
-    z_val = np.unique(z_mat)
-    
-    for t in range(T):
-        z_now = z_mat[:,t]
-        z_belief[:,t] = 0.0
-        
-        for i,z in enumerate(z_val):
-            
-            z_prior = z_now==z
-            z_prior = z_prior.astype('float32')
-            z_post = UpdateBelief(z_prior,
-                                  W)
-            z_belief[:,t] += z_post*z
-            
-    return z_belief     
-
-@njit
-def discrete2continuous(z_idx_mat,
-                       z_val):
-    N,T = z_idx_mat.shape
-    z_mat = np.zeros((N,T))
-    
-    for i in range(z_mat.shape[0]):
-        for j in range(z_mat.shape[1]):
-            z_idx = z_idx_mat[i,j]
-            z_mat[i,j] = z_val[z_idx]
-    return z_mat
-
-
-# + code_folding=[0]
-## simulate belief distribution 
-
-z_val = ifp.z_val  ## get the vector of the values of z grid
-
-## generated the distribution of beliefs based on simulated history of z states
-
-z_belief = UpdateBeliefDist(z_idx_mat,
-                            W,
-                            z_val)
-
-
-## convert the markov matrix of index to a matrix of values of z
-
-z_mat = discrete2continuous(z_idx_mat,
-                            z_val)
-
-# + code_folding=[0]
-## with social network learning 
-
-pa_dist,pc_dist,pc1_dist,pc2_dist = simulate_distribution(ifp, 
-                                                          a_star, 
-                                                          p_vec, 
-                                                          σ_star,
-                                                          z_belief,
-                                                          p_income_mat,
-                                                          N = N,
-                                                          T = T,
-                                                          discrete = False)
-
-
-# + code_folding=[0]
-## compute cross-sectional summary statistics
-
-## average pattern
-
-lc_dist = np.log(c_dist) 
-lc_av = np.mean(lc_dist,axis = 0)
-
-lpc_dist = np.log(pc_dist) 
-lpc_av = np.mean(lpc_dist,axis = 0)
-
-## correlation
-lc_sd = np.sqrt(np.diag(np.cov(lc_dist.T)))
-lpc_sd = np.sqrt(np.diag(np.cov(lpc_dist.T)))
-
-
-# + code_folding=[0]
-## plot the average consumption 
-
-fig, ax = plt.subplots(figsize = (10,6))
-ax.plot(lc_av[1:],label = r'$\widebar{ln(c)}$')
-ax.plot(lpc_av[1:],label = r'$\widebar{ln(\tilde c)}$')
-ax.set(xlabel=r'$t$')
-ax.set(ylabel=r'$c$')
-plt.title('Simulated consumption series of average agent w/o social network')
-plt.legend(loc=1)
-plt.show()
-
-# + code_folding=[0]
-## plot the cross-sectional correlation of non-contact-based consumption
-
-fig, ax = plt.subplots(figsize = (10,6))
-ax.plot(lc_sd[1:],label = r'std $ln(c)$')
-ax.plot(lpc_sd[1:],label = r'std $\tilde ln(c)$')
-ax.set(xlabel=r'$t$')
-ax.set(ylabel=r'$c$')
-plt.title('Simulated cross-sectional standard deviation w/o social network')
-plt.legend(loc=1)
-plt.show()
-
-
-# -
-
-# ## Impulse response with social network learning 
-#
-# - plots the impulse response of average beliefs about the states and consumption responses after a one-time exogeous jump from low infection to high state of all agents
-
-# + code_folding=[4, 99]
-################################
-## social network learning ##
-###############################
-
-def irf_b(ifp,
-        p_vec,    ## price vector
-        σ_,
-        s_init,        ## initial bank balance distribution
-        z_init,        ## initial z distribution
-        z_jump = 0.5,  ## shock of z to some fraction of the agents in the economy 
-        fraction = 1,
-        period = 5,
-        where = (0,1),        ## fraction of nodes to be shocked 
-        weight = W):
-    
-    ## parameters 
-    R = ifp.R
-    z_val = ifp.z_val
-    eps = ifp.eps
-    
-    ## simulate impulse responses 
-    N = len(s_init)
-    
-    ## degrees 
-    degree = np.sum(weight,axis = 0)
-    rank_idx = np.flip(degree.argsort())  ## descending sorted index, e.g. the first element is the index of smallest influence
-    lb,ub = where
-    cut_lb,cut_ub = np.int(N*lb),np.int(N*ub),
-    shocked_idx = rank_idx[cut_lb:cut_ub-1]  ### the index that to be shocked 
-        
-    ## aseet initial
-    a_irf = np.empty((N,period))
-    a_SS = np.empty((N,period))
-    
-    ## permanent income
-    o_irf = np.empty((N,period))
-    for n in range(N):
-        n_burn = 10
-        o_irf_burn = RWSimulate(period+n_burn,
-                                sigma = ifp.a_p,
-                                init = 0.00001)
-        
-        o_irf[n,:] = o_irf_burn[n_burn:]  ## burn the first 100 simulated observations  
-    
-    ## z state initial
-    z_SS = np.tile(z_init,(period,1)).T    
-    
-    z_irf = np.copy(z_SS)
-    z_irf_temp = z_irf[:,0]
-    z_irf_temp[shocked_idx] = z_irf_temp[shocked_idx]*(1+z_jump)
-    z_irf[:,0]= z_irf_temp   ## all agents increase by i state 
-    
-    for t in range(period-1):
-        z_irf[:,t+1] = UpdateNextPeriod(z_irf[:,t],
-                                        ρ,
-                                        constant,
-                                        0)
-    
-    ## z belief state initial
-    z_b_SS = UpdateBeliefDistFromVal(z_SS,
-                                     W)
-    z_b_irf = UpdateBeliefDistFromVal(z_irf,
-                                      W)
-    
-    ## simulate shocks
-    ζ_sim = np.random.randn(N,period)-1/2
-    η_sim = np.random.randn(N,period)-1/2
-    
-    ## consumption responses 
-    c_irf = np.empty((N,period))
-    c1_irf = np.empty((N,period))
-    c2_irf = np.empty((N,period))
-    c_SS = np.empty((N,period))
-    c1_SS = np.empty((N,period))
-    c2_SS = np.empty((N,period))
-    
-    
-    ## update initial asset/consumption
-    for n in range(N):
-        ## irf 
-        z_b = z_b_irf[n,0]  # perceived state 
-        z = z_irf[n,0]      ## true state 
-        S = ifp.ϕ(z_b,ζ_sim[n,0])  ## preference hsock depends on believed state 
-        Y = ifp.Y(z, η_sim[n,0]) ## income depends on true state 
-        a = s_init[n]+ Y   
-        a_irf[n,0] = a 
-        c_irf[n,0] = σ_(a,z_b)  ## consumption depends on the perceived state 
-        c1_irf[n,0],c2_irf[n,0] = allocate(c_irf[n,0],
-                                           eps = eps,
-                                           S=S)
-        
-        ## SS
-        z_b = z_b_SS[n,0]   # perceived state 
-        z = z_SS[n,0]       ## true state 
-        S = ifp.ϕ(z_b,ζ_sim[n,0])  ## preference hsock depends on believed state 
-        Y = ifp.Y(z, η_sim[n,0]) ## income depends on true state 
-        a = s_init[n]+ Y   ## consumption depends on the perceived state 
-        a_SS[n,0] = a 
-        c_SS[n,0] = σ_(a,z_b)
-        c1_SS[n,0],c2_SS[n,0] = allocate(c_SS[n,0],
-                                         eps = eps,
-                                         S=S)
-    
-    ## fill the rest of the histories  
-    for n in range(N):
-        Γs = o_irf[n,1:]/o_irf[n,:-1] 
-        for t in range(period-1):
-            ## irf
-            z_b = z_b_irf[n,t+1] ## perceived state 
-            z = z_irf[n,t+1]  ## true state 
-            S = ifp.ϕ(z_b,ζ_sim[n,t+1])  ## preference hsock depends on believed state 
-            Y = ifp.Y(z, η_sim[n,t+1]) ## perception goes to the consumption decision
-            a = a_irf[n,t]  ## truth goes to law of motion
-            a_irf[n,t+1] = R/Γs[t] * (a - c1_irf[n,t]*p_vec[0]-c2_irf[n,t]*p_vec[1]) + Y  
-            a_new  = a_irf[n,t+1]
-            c_irf[n,t+1] = σ_(a_new,z_b)
-            c1_irf[n,t+1],c2_irf[n,t+1] = allocate(c_irf[n,t+1], 
-                                                   eps = eps,
-                                                   S=S)
-            
-            ## SS
-            z_b = z_b_SS[n,t+1]
-            z = z_SS[n,t+1]
-            S = ifp.ϕ(z_b,ζ_sim[n,t+1])  ## preference hsock depends on believed state 
-            Y = ifp.Y(z, η_sim[n,t+1])
-            a = a_SS[n,t]
-            a_SS[n,t+1] = R/Γs[t] * (a - c1_SS[n,t]*p_vec[0]-c2_SS[n,t]*p_vec[1]) + Y
-            a_new  = a_SS[n,t+1]
-            c_SS[n,t+1] = σ_(a_new,z_b)
-            c1_SS[n,t+1],c2_SS[n,t+1] = allocate(c_SS[n,t+1], 
-                                                 eps = eps,
-                                                 S=S)
-            
-    
-    ## multiply asset/consumption by permanent income level 
-    #c_irf= np.multiply(c_irf,o_irf)
-    #c1_irf = np.multiply(c1_irf,o_irf)
-    #c2_irf = np.multiply(c2_irf,o_irf)
-    #a_irf = np.multiply(a_irf,o_irf) 
-    #c_SS = np.multiply(c_SS,o_irf)
-    #c1_SS = np.multiply(c1_SS,o_irf)
-    #c2_SS = np.multiply(c2_SS,o_irf)
-    #a_SS = np.multiply(a_SS,o_irf) 
-     
-    
-    ## get the cross-sectional average 
-    z_irf,z_b_irf = np.mean(np.log(z_irf),axis=0),np.mean(np.log(z_b_irf),axis=0)
-    c_irf, c1_irf,c2_irf = np.mean(np.log(c_irf),axis=0), np.mean(np.log(c1_irf),axis=0),np.mean(np.log(c2_irf),axis=0)
-    a_irf = np.mean(np.log(a_irf), axis=0)  
-    
-    z_SS,z_b_SS = np.mean(np.log(z_SS),axis=0),np.mean(np.log(z_b_SS),axis=0)
-    c_SS, c1_SS,c2_SS = np.mean(np.log(c_SS),axis=0), np.mean(np.log(c1_SS),axis=0),np.mean(np.log(c2_SS),axis=0) 
-    a_SS = np.mean(np.log(a_SS), axis=0)
-    
-    return z_irf, z_b_irf, a_irf, c_irf, c1_irf, c2_irf, z_SS, z_b_SS, a_SS, c_SS, c1_SS, c2_SS
-
-# + code_folding=[]
-## steady state asset and states 
-s_SS_init = a_dist[:,-1]-c_dist[:,-1]
-N = s_SS_init.shape[0]
-z_SS_init = z_ss_av*np.ones(N)
-
-# + code_folding=[0]
-## get the impulse responses
-
-z_irf,z_b_irf,a_irf, c_irf, c1_irf,c2_irf,z_SS,z_b_SS,a_SS, c_SS, c1_SS,c2_SS = irf_b(ifp,
-                                                                                    p_vec,
-                                                                                    σ_,
-                                                                                    s_SS_init,
-                                                                                    z_SS_init,
-                                                                                    z_jump = 0.1,
-                                                                                    where = (0,0.33),
-                                                                                    period = 20,
-                                                                                    weight = W)
-
-# + code_folding=[0]
-## plot impulses reponses
-
-fig, axs = plt.subplots(2,3, 
-                        figsize=(13, 8), 
-                        facecolor='w', 
-                        edgecolor='k')
-
-irf_plot = [z_irf, z_b_irf, a_irf, c_irf, c1_irf,c2_irf]
-ss_plot =  [z_SS, z_b_SS, a_SS, c_SS, c1_SS,c2_SS]
-
-names = [r'$\xi$',r'$\tilde \xi$',r'$m$',r'$c$',r'$c_c$',r'$c_n$']
-
-axs = axs.ravel()
-
-for i, var in enumerate(irf_plot):
-    compared_to_SS = var- ss_plot[i]  ## plot the relative differences with SS
-    rebase_SS = np.zeros(len(var))    ## set SS to be zero
-    axs[i].plot(compared_to_SS,
-                'r-',
-                lw = 4,
-               label = 'irf')
-    axs[i].plot(rebase_SS,
-               'k-.',
-               lw = 2,
-               label ='ss')
-    axs[i].set_title(names[i], fontsize=fontsize)
-    axs[i].set_xlabel(r'$t$',fontsize = fontsize)
-    axs[i].legend(loc= 0)
-    axs[i].grid()
-fig.tight_layout(pad=1.4)
-# -
-
-# ### IRF w/o social network influence 
-
-# + code_folding=[0]
-## Identity matrix 
-
-Identity = np.eye(N)  ## no social network is when the weight matrix takes an identity matrix
-
-
-## no social network
-
-## get the impulse responses when there is no social network influence 
-z_irf0,z_b_irf0,a_irf0, c_irf0, c1_irf0,c2_irf0,z_SS0,z_b_SS0,a_SS0, c_SS0, c1_SS0,c2_SS0 = irf_b(ifp,
-                                                                                                    p_vec,
-                                                                                                    σ_,
-                                                                                                    s_SS_init,
-                                                                                                    z_SS_init,
-                                                                                                    z_jump = 0.1,
-                                                                                                    where = (0,0.33),
-                                                                                                    period = 20,
-                                                                                                    weight = Identity)
-
-# + code_folding=[0, 18]
-## plot impulses reponses
-
-fig, axs = plt.subplots(2,3, 
-                        figsize=(13, 8), 
-                        facecolor='w', 
-                        edgecolor='k')
-
-irf0_plot = [z_irf0, z_b_irf0, a_irf0, c_irf0, c1_irf0,c2_irf0]
-ss0_plot =  [z_SS0, z_b_SS0, a_SS0, c_SS0, c1_SS0,c2_SS0]
-
-irf_plot = [z_irf, z_b_irf, a_irf, c_irf, c1_irf,c2_irf]
-ss_plot =  [z_SS, z_b_SS, a_SS, c_SS, c1_SS,c2_SS]
-
-names = [r'$\xi$',r'$\tilde \xi$',r'$m$',r'$c$',r'$c_c$',r'$c_n$']
-
-
-axs = axs.ravel()
-
-for i, var in enumerate(irf_plot):
-    ## with social network 
-    compared_to_SS = var- ss_plot[i]  ## plot the relative differences with SS
-    rebase_SS = np.zeros(len(var))    ## set SS to be zero
-    
-    compared_to_SS0 = irf0_plot[i]- ss0_plot[i]  ## plot the relative differences with SS
-    rebase_SS0 = np.zeros(len(var))    ## set SS to be zero
-    
-    axs[i].plot(compared_to_SS,
-                'r-',
-                lw = 4,
-               label = 'irf (with network)')
-    #axs[i].plot(rebase_SS,
-    #          '-.',
-    #           lw = 2,
-    #           label ='ss')
-    # without social network 
-    axs[i].plot(compared_to_SS0,
-               'b-.',
-               lw = 4,
-               label ='irf (no network)')
-    #axs[i].plot(rebase_SS0,
-    #           '-.',
-    #           lw = 2,
-    #           label ='ss (no network)')
-        
-    axs[i].set_title(names[i], fontsize=fontsize)
-    axs[i].set_xlabel(r'$t$', fontsize=fontsize)
-    axs[i].legend(loc= 0)
-    axs[i].grid()
-fig.tight_layout(pad=1.4)
-plt.savefig('../graph/model/irf_social.jpg')
-# -
-
-# ### IRF depending on where the shocks hit 
-
-# + code_folding=[]
-wheres = [(0,0.33),
-         (0.33,0.66),
-        (0.66,0.99)
-         ]
-z_irf_list, z_b_irf_list, a_irf_list, c_irf_list, c1_irf_list,c2_irf_list = [],[],[],[],[],[]
-z_SS_list, z_b_SS_list, a_SS_list, c_SS_list, c1_SS_list,c2_SS_list = [],[],[],[],[],[]
-
-
-for i,where in enumerate(wheres):
-    ## get the impulse responses
-    z_irf,z_b_irf,a_irf, c_irf, c1_irf,c2_irf,z_SS,z_b_SS,a_SS, c_SS, c1_SS,c2_SS = irf_b(ifp,
-                                                                                        p_vec,
-                                                                                        σ_,
-                                                                                        s_SS_init,
-                                                                                        z_SS_init,
-                                                                                        z_jump = 0.1,
-                                                                                        where = where,
-                                                                                        period = 20,
-                                                                                        weight = W) 
-    z_irf_list.append(z_irf)
-    z_b_irf_list.append(z_b_irf)
-    a_irf_list.append(a_irf)
-    c_irf_list.append(c_irf)
-    c1_irf_list.append(c1_irf)
-    c2_irf_list.append(c2_irf)
-    
-    z_SS_list.append(z_SS)
-    z_b_SS_list.append(z_b_SS)
-    a_SS_list.append(a_SS)
-    c_SS_list.append(c_SS)
-    c1_SS_list.append(c1_SS)
-    c2_SS_list.append(c2_SS)
-
-# + code_folding=[0]
-## plot impulses reponses
-
-labels = ['top','middle','bottom']
-
-fig, axs = plt.subplots(2,3, 
-                        figsize=(12, 8), 
-                        facecolor='w', 
-                        edgecolor='k')
-
-irf_list_plot = [z_irf_list, z_b_irf_list, a_irf_list, c_irf_list, c1_irf_list,c2_irf_list]
-#ss_plot =  [z_SS, z_b_SS, a_SS, c_SS, c1_SS,c2_SS]
-ss_list_plot = [z_SS_list, z_b_SS_list, a_SS_list, c_SS_list, c1_SS_list,c2_SS_list]
-
-
-
-
-names = [r'$\xi$',r'$\tilde \xi$',r'$m$',r'$c$',r'$c_c$',r'$c_n$']
-lps = ['-','--','-.']
-
-
-
-axs = axs.ravel()
-
-for i, var in enumerate(irf_list_plot):
-    for s in range(len(labels)):
-        compared_to_SS = var[s]- ss_list_plot[i][s]  ## plot the relative differences with SS
-        rebase_SS = np.zeros(len(var[s]))    ## set SS to be zero
-        axs[i].plot(compared_to_SS,
-                    lps[s],
-                    lw = 4,
-                   label = labels[s])
-    #axs[i].plot(rebase_SS,
-    #           'r-.',
-    #           lw = 2,
-    #           label ='ss')
-    axs[i].set_title(names[i],fontsize=fontsize)
-    axs[i].set_xlabel(r'$t$',fontsize=fontsize)
-    axs[i].legend(loc= 0)
-    axs[i].grid()
-fig.tight_layout(pad=1.4)
-plt.savefig('../graph/model/irf_where.jpg')
-# -
-
-# ### IRF depending on the EOS
-
-# + code_folding=[]
-eps_vals = np.array([0.75,0.99,1.5])
-
-z_irf_list, z_b_irf_list, a_irf_list, c_irf_list, c1_irf_list,c2_irf_list = [],[],[],[],[],[]
-z_SS_list, z_b_SS_list, a_SS_list, c_SS_list, c1_SS_list,c2_SS_list = [],[],[],[],[],[]
-
-
-for i,eps in enumerate(eps_vals):
-    ifp.eps  = eps 
-    z_irf,z_b_irf,a_irf, c_irf, c1_irf,c2_irf,z_SS,z_b_SS,a_SS, c_SS, c1_SS,c2_SS = irf_b(ifp,
-                                                                                        p_vec,
-                                                                                        σ_,
-                                                                                        s_SS_init,
-                                                                                        z_SS_init,
-                                                                                        z_jump = 0.1,
-                                                                                        where = (0,0.33),
-                                                                                        period = 20,
-                                                                                        weight = W)
-    z_irf_list.append(z_irf) 
-    z_b_irf_list.append(z_b_irf)
-    a_irf_list.append(a_irf)
-    c_irf_list.append(c_irf)
-    c1_irf_list.append(c1_irf)
-    c2_irf_list.append(c2_irf)
-    
-    z_SS_list.append(z_SS) 
-    z_b_SS_list.append(z_b_SS)
-    a_SS_list.append(a_SS)
-    c_SS_list.append(c_SS)
-    c1_SS_list.append(c1_SS)
-    c2_SS_list.append(c2_SS)
-
-
-# + code_folding=[0]
-## plot impulses reponses
-
-
-fig, axs = plt.subplots(2,3, 
-                        figsize=(13, 8), 
-                        facecolor='w', 
-                        edgecolor='k')
-
-irf_list_plot = [z_irf_list, z_b_irf_list, a_irf_list, c_irf_list, c1_irf_list,c2_irf_list]
-ss_list_plot = [z_SS_list, z_b_SS_list, a_SS_list, c_SS_list, c1_SS_list,c2_SS_list]
-
-
-names = [r'$\xi$',r'$\tilde \xi$',r'$m$',r'$c$',r'$c_c$',r'$c_n$']
-lps = ['-','--','-.']
-
-
-
-axs = axs.ravel()
-
-for i, var in enumerate(irf_list_plot):
-    for s,eps in enumerate(eps_vals):
-        compared_to_SS = var[s]- ss_list_plot[i][s]  ## plot the relative differences with SS
-        rebase_SS = np.zeros(len(var[s]))    ## set SS to be zero
-        axs[i].plot(compared_to_SS,
-                    lps[s],
-                    lw = 4,
-                   label = str(eps))
-        axs[i].set_title(names[i],fontsize=fontsize)
-        axs[i].set_xlabel(r'$t$',fontsize=fontsize)
-        axs[i].legend(loc= 0)
-        axs[i].grid()
-        
-fig.tight_layout(pad=1.3)
-plt.savefig('../graph/model/irf_eos.jpg')
-# -
-
-# ### IRF of different social network structure 
-
-# + code_folding=[0]
-## weight matrix 
-
-W_list = [W,W16]
-
-z_irf_list, z_b_irf_list, a_irf_list, c_irf_list, c1_irf_list,c2_irf_list = [],[],[],[],[],[]
-z_SS_list, z_b_SS_list, a_SS_list, c_SS_list, c1_SS_list,c2_SS_list = [],[],[],[],[],[]
-
-ifp.eps = 0.75
-
-for i,wt_mat in enumerate(W_list):
-    ## nb of agents differ in 2016 and 2019
-    ## need to adjust the matrix size 
-    N_now = wt_mat.shape[0]    
-    ss_SS_init_now = s_SS_init[0:N_now-1]
-    z_SS_init_now = z_SS_init[0:N_now-1]
-    
-    # generate impulse responses 
-    z_irf,z_b_irf,a_irf, c_irf, c1_irf,c2_irf,z_SS,z_b_SS,a_SS, c_SS, c1_SS,c2_SS = irf_b(ifp,
-                                                                                        p_vec,
-                                                                                        σ_,
-                                                                                        s_SS_init,
-                                                                                        z_SS_init,
-                                                                                        z_jump = 0.1,
-                                                                                        where = (0,0.33),
-                                                                                        period = 20,
-                                                                                        weight = wt_mat)
-    z_irf_list.append(z_irf) 
-    z_b_irf_list.append(z_b_irf)
-    a_irf_list.append(a_irf)
-    c_irf_list.append(c_irf)
-    c1_irf_list.append(c1_irf)
-    c2_irf_list.append(c2_irf)
-    
-    z_SS_list.append(z_SS) 
-    z_b_SS_list.append(z_b_SS)
-    a_SS_list.append(a_SS)
-    c_SS_list.append(c_SS)
-    c1_SS_list.append(c1_SS)
-    c2_SS_list.append(c2_SS)
-
-# + code_folding=[0]
-## plot impulses reponses
-
-
-fig, axs = plt.subplots(2,3, 
-                        figsize=(13, 8), 
-                        facecolor='w', 
-                        edgecolor='k')
-
-irf_list_plot = [z_irf_list, z_b_irf_list, a_irf_list, c_irf_list, c1_irf_list,c2_irf_list]
-ss_list_plot = [z_SS_list, z_b_SS_list, a_SS_list, c_SS_list, c1_SS_list,c2_SS_list]
-
-
-names = [r'$\xi$',r'$\tilde \xi$',r'$m$',r'$c$',r'$c_c$',r'$c_n$']
-lps = ['-','--','-.']
-w_names = ['2019','2016']
-
-
-axs = axs.ravel()
-
-for i, var in enumerate(irf_list_plot):
-    for s,wt_mat in enumerate(W_list):
-        compared_to_SS = var[s]- ss_list_plot[i][s]  ## plot the relative differences with SS
-        rebase_SS = np.zeros(len(var[s]))    ## set SS to be zero
-        axs[i].plot(compared_to_SS,
-                    lps[s],
-                    lw = 4,
-                   label = w_names[s])
-        axs[i].set_title(names[i],fontsize=fontsize)
-        axs[i].set_xlabel(r'$t$',fontsize=fontsize)
-        axs[i].legend(loc= 0)
-        axs[i].grid()
-        
-fig.tight_layout(pad=1.3)
-plt.savefig('../graph/model/irf_network.jpg')
-# -
-
-
