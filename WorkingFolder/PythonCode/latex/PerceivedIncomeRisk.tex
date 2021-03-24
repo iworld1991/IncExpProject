@@ -661,6 +661,181 @@ distribution, while my paper directly studies the individual specific
 variance of these shocks perceived by different individuals.
 
 
+    \hypertarget{theoretical-framework}{%
+\section{Theoretical framework}\label{theoretical-framework}}
+
+\hypertarget{income-process-and-risk-perceptions}{%
+\subsection{Income process and risk
+perceptions}\label{income-process-and-risk-perceptions}}
+
+Log income of individual \(i\) from cohort \(c\) at time \(t\) follows
+the following process (\cite{meghir2004income}). Cohort \(c\) represents
+the year of entering the job market. It contains a predictable component
+\(z\), and a stochastical component \(e\). The latter consists of
+aggregate component \(g\), idiosyncratic permanent \(p\), MA(1)
+component \(\eta\) and a transitory component \(\psi\). Here I do not
+consider unemployment risk since the perceived risk measured in the
+survey conditions on staying employed.
+
+\begin{equation}
+\begin{split}
+& y_{i,c,t} = z_{i,c,t}+e_{i,c,t} \\
+& e_{i,c,t}=g_t+p_{i,c,t}+\eta_{i,c,t}+\psi_{i,c,t}  \\
+& g_t = g_{t-1} + \xi_{t} \\
+& p_{i,c,t} = p_{i,c,t-1}+\theta_{i,c,t} \\
+& \eta_{i,c,t} = \phi\epsilon_{i,c,t-1}+\epsilon_{i,c,t}
+\end{split}
+\end{equation}
+
+All shocks including the aggregate \(\xi_t\), and idiosyncratic ones
+follow normal distributions, with zero means and time-invariant
+variances denoted as \(\sigma^2_{\xi}\),
+\(\sigma^2_{\theta}\),\(\sigma^2_{\epsilon}\),\(\sigma^2_{\psi}\).
+Hypothetically, these variances could differ both across cohorts and
+time. I focus on the most simple case here and results with
+cohort-specific income risks are reported in the appendix.
+
+Income growth from \(t\) to \(t+1\) consists predictable changes in
+\(z_{i,c,t+1}\), and those from realized income shocks.
+
+\begin{equation}
+\begin{split}
+\Delta y_{i,c,t+1} & =  \Delta z_{i,c,t+1}+\Delta e_{i,c,t} \\
+&= \Delta z_{i,c,t+1}+\xi_{t+1}+\theta_{i,c,t+1}+\epsilon_{i,c,t+1}+(\phi-1)\epsilon_{i,c,t}+\psi_{i,c,t+1}
+\end{split}
+\end{equation}
+
+All shocks that have realized till \(t\) are observed by the agent at
+time \(t\). Therefore, under full-information rational
+expectation(FIRE), namely when the agent perfectly knows the income
+process and parameters, the perceived income risks or the perceived
+variance of income growth from \(t\) to \(t+1\) is equal to the
+following.
+
+\begin{equation}
+Var_{t}^*(\Delta y_{i,c,t+1}) =Var_{t}^*(\Delta e_{i,c,t+1}) =   \sigma^2_\xi+\sigma^2_\theta + \sigma^2_\epsilon+\sigma^2_\psi 
+\end{equation}
+
+FIRE has a number of testable predictions about the behaviors of
+perceived risks.
+
+\begin{itemize}
+\item
+  First, agents who share the same income process have no disagreements
+  on perceived risks. This can be checked by comparing
+  within-cohort/group dispersion in perceived risks.
+\item
+  Second, the perceived risks under such an assumed income process are
+  not dependent on past/recent income realizations. This can be tested
+  by estimating the correlation between perceived risks and past income
+  realizations or their proxies if the latter is not directly observed.
+\item
+  Third, under the assumed progress, the variances of different-natured
+  shocks sum up to exactly the perceived income risks and the loadings
+  of all components are all positive. I report detailed derivations and
+  proofs in the Appendix that these predictions are robust to the
+  alternative income process and the time-aggregation problem discussed
+  in the literature. The latter arises when the underlying income
+  process is set at a higher frequency than the observed frequency of
+  reported income or income expectations. This will cause different
+  sizes of loadings of all future shocks to perceived annual risk but
+  does not change the positivity of the loadings from different
+  components onto perceived risk.
+\end{itemize}
+
+The challenge of testing the third prediction is that the risk
+parameters are not directly observable. Econometricians and modelers
+usually estimate them relying upon cross-sectional moment information
+from some panel data and take them as the model parameters understood
+perfectly by the agents. I can therefore use econometricians' best
+estimates using past income data as the FIRE benchmark (I will discuss
+the concerns of this approach later). Assuming the unexplained income
+residuals from this estimation regression is
+\(\hat e_{i,t}= y_{i,c,t}-\hat z_{i,c,t}\)(\(\hat z_{i,c,t}\) is the
+observable counterpart of \(z_{i,c,t}\) from data). The unconditional
+cross-sectional variance of the change in residuals(equivalent to the
+\texttt{income\ volatility\textquotesingle{}\textquotesingle{}\ or}instability'\,'
+in the literature) is the following. Let's call this growth volatility.
+It can be further decomposed into different components in order to get
+the component-specific risk.
+
+\begin{equation}
+Var(\Delta \hat e_{i,c,t}) = \hat\sigma^2_\xi+\hat\sigma^2_\theta + ((1-\phi)^2+1)\hat\sigma^2_\epsilon+\hat\sigma^2_\psi 
+\end{equation}
+
+Notice the unconditional growth volatility overlaps with the FIRE
+perceived risk in every component of the risks. But it is unambiguously
+greater than the perceived risk under FIRE because econometricians' do
+not directly observe the MA(1) shock from \(t-1\). But this suffices to
+suggest that growth volatility is positively correlated with perceived
+risk.
+
+Corresponding to the growth volatility, let's also define the level
+volatility as the cross-sectional variance of the levels of the
+residuals, which is denoted by \(Var(\hat e_{i,t})\). Different from
+growth volatility, it includes the cumulative volatility from all the
+past permanent shocks as well as the MA shock from \(t-1\), all of which
+are not correlated with the perceived risk under FIRE. Therefore, it any
+it will have only a weak correlation with perceived risks under FIRE.
+
+This suggests the fourth testable prediction stated as below. Since we
+can obtain \(Var(\Delta \hat e_{i,c,t})\) and \(Var(\hat e_{i,c,t})\)
+using past income data, we can test this prediction.
+
+\begin{itemize}
+\tightlist
+\item
+  Growth volatility and risk perceptions are positively correlated. In
+  contrast, level volatility is only weakly correlated with perceived
+  risks.
+\end{itemize}
+
+It is worth asking how sensitive this prediction is to possible model
+misspecification of the income process in the first place. We consider
+three most common issues in the literature regarding the income risks.
+
+\begin{itemize}
+\item
+  \textbf{Permanent versus persistent shock}. Replacing the permanent
+  shock to \(p\) with a persistent one in the above process essentially
+  adds another component from the previous period to the growth in
+  residuals, hence increases overall unconditional volatility. In the
+  meantime, it does not change the perceived risk under FIRE. Therefore,
+  the effect of making the permanent shock persistent will lead to a
+  smaller correlation between FIRE risk perception and growth
+  volatility. But the correlation will remain positive.
+\item
+  \textbf{Moving average shock or purely transitory shock}. Our model
+  actually nests both cases. Setting \(\phi=0\) corresponds to purely
+  transitory shocks. Any positive \(\phi\) allows the coexistence of MA
+  shock and transitory shocks. Our test is also robust to this
+  alternative specification.
+\item
+  \textbf{Time-invariant versus time-varying volatility}. Under the
+  former assumption, the income volaility estimated from past income
+  data can be directly comparable with the perceived risks reported for
+  a different period. But doing so under the later assumption is
+  inconsistent with the model. It requires the perceived risks and the
+  realized income data are for the same time horizon. This is hard to
+  satisfy based on the current data avaiability. But what's assuring is
+  that if the stochastical volatilities are persistent over the time, we
+  should still expect to see positive correlation between past
+  volatility and FIRE risk perception even if the former is estimated
+  from an earlier period.
+\end{itemize}
+
+There is another complication regarding the FIRE test: the superior
+information problem. It states that what econometrician's treat as
+income shocks are actually in the information set of the FIRE agents.
+Think this as when the known characteristics \(\hat z\) used in the
+regression only partially captures the true predictable components
+\(z\). Hence the sample residuals \(\hat e\) are bigger than its true
+counterparts and this results in higher estimated growth and level
+volatility from data than the level relevant to FIRE agents in the
+model. It is true that this leads to a lower correlation between
+volatility and perceived risks, but it does not alter the prediction
+about the positive correlation between the two.
+
     \hypertarget{data-variables-and-density-estimation}{%
 \section{Data, variables and density
 estimation}\label{data-variables-and-density-estimation}}
@@ -1723,9 +1898,9 @@ the bias is absent.
 
 
 
-    \hypertarget{experienced-based-life-cycle-consumptionsaving}{%
-\section{Experienced-based life-cycle
-consumption/saving}\label{experienced-based-life-cycle-consumptionsaving}}
+    \hypertarget{experience-based-life-cycle-consumptionsaving}{%
+\section{Experience-based life-cycle
+consumption/saving}\label{experience-based-life-cycle-consumptionsaving}}
 
 Each consumer solves a life-cycle consumption/saving problem formulated
 by \cite{gourinchas2002consumption}. There is only one deviation from
