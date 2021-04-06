@@ -55,7 +55,7 @@ rename IncSkew incskew
 rename Q24_rmean rincmean
 rename Q24_rvar rincvar
 
-rename Q36 educ
+*rename Q36 educ
 rename D6 HHinc 
 rename Q32 age 
 rename Q33 gender 
@@ -122,6 +122,7 @@ foreach mom in mean var{
 	eststo r`mom'2: reg Inc_mom l(1/6).Inc_mom, vce(cluster date)
 	eststo r`mom'3: reg Inc_mom l(1/8).Inc_mom, vce(cluster date)
  }
+ 
   
 esttab using "${sum_table_folder}/ind/autoregIndM.csv", mtitles se  r2 replace
 eststo clear

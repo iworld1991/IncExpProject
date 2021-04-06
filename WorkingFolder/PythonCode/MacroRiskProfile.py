@@ -63,7 +63,7 @@ pd.options.display.float_format = '{:,.2f}'.format
 ## s&p 500 series
 
 start = datetime.datetime(2000, 1, 30)
-end = datetime.datetime(2020, 1, 30)
+end = datetime.datetime(2020, 3, 30)
 
 # + {"code_folding": []}
 ## downloading the data from Fred

@@ -1,15 +1,3 @@
-
-="",="(1)",="(2)"
-="",="log perceived risk",="log perceived iqr"
-
-="log experienced volatility",="6.750*",="6.876***"
-="",="(2.53)",="(5.36)"
-
-="R-squre",="0.0242",="0.0438"
-="N",="15017",="16062"
-="Control age",="Yes",="Yes"
-="Control educ",="Yes",="Yes"
-="Control income",="Yes",="Yes"
-
-="t statistics in parentheses"
-="* p<0.05, ** p<0.01, *** p<0.001"
+version https://git-lfs.github.com/spec/v1
+oid sha256:64bab093694a0497d392f4a8c4aca75efd4931d756dec9cb9aea8529960d88fe
+size 357

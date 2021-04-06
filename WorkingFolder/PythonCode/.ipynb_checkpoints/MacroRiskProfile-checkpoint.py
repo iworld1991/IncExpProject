@@ -1,12 +1,13 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,py:light
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.3
+#       format_version: '1.5'
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -35,6 +36,7 @@ from statsmodels.graphics import tsaplots as tsplt
 
 # +
 plt.style.use('ggplot')
+plt.rcParams.update({'figure.max_open_warning': 0})
 #from IPython.display import set_matplotlib_formats
 #set_matplotlib_formats('pdf','png','jpg')
 #plt.rcParams['savefig.dpi'] = 75
@@ -55,18 +57,19 @@ plt.style.use('ggplot')
 
 pd.options.display.float_format = '{:,.2f}'.format
 
-# ###  1. Download stock return series
+# ###  1. Download stock return and wage rate series 
 
 # + {"code_folding": []}
 ## s&p 500 series
 
 start = datetime.datetime(2000, 1, 30)
-end = datetime.datetime(2020, 3, 30)
+end = datetime.datetime(2020, 4, 30)
 
 # + {"code_folding": []}
 ## downloading the data from Fred
 sp500D= web.DataReader('sp500', 'fred', start, end)
 vixD = web.DataReader('VIXCLS','fred',start,end)
+he = web.DataReader('CES0500000003','fred',start,end) #hourly earning private
 # -
 
 vixD.plot(lw = 2)
@@ -86,17 +89,17 @@ vixD.index = pd.to_datetime(vixD.index)
 vixM = vixD.resample('M').mean()
 # -
 
-sp500M
-
 sp500M.plot(lw = 3)
 #sp500Mplt = plt.title('S&P 500 (end of month)')
 
-sp500MR = np.log(sp500M).diff(periods = 12)
+sp500MR = np.log(sp500M).diff(periods = 3)
+he = he.diff(periods = 3)
+he.columns = ['he']
 
 sp500MR.plot(lw = 3 )
 sp500MRplt = plt.title('Monthly return of S&P 500')
 
-sp500MR
+he.plot(lw = 2)
 
 # ###  2. Loading and cleaning perceived income series
 
@@ -125,7 +128,8 @@ dem_var = ['Q32',  ## age
            'Q33',  ## gender
            'Q36',  ## education (1-8 low to high, 9 other)
            'byear', ## cohort
-           'D6']
+           'D6',
+           'Q6new']
 
 sub_var2 = ['IncSkew']
 
@@ -137,7 +141,7 @@ IncSCEIndMoms = SCEIndM[sub_var+dem_var+sub_var2]
 IncSCEIndMoms = IncSCEIndMoms.dropna(how='any')
 #IncSCEIndMomsEst = IncSCEIndMomsEst.dropna(how='any')
 
-# +
+# + {"code_folding": []}
 ## rename
 
 IncSCEIndMoms = IncSCEIndMoms.rename(columns={'Q24_mean': 'incexp',
@@ -149,7 +153,8 @@ IncSCEIndMoms = IncSCEIndMoms.rename(columns={'Q24_mean': 'incexp',
                                               'D6':'HHinc',
                                               'Q32':'age',
                                               'Q33':'gender',
-                                              'Q36':'educ'
+                                              'Q36':'educ',
+                                              'Q6new': 'Stkprob'
                                              })
 
 
@@ -187,8 +192,8 @@ vars_cat = ['HHinc','gender','age_gr','byear_gr','HHinc_gr','educ_gr']
 for var in vars_cat:
     IncSCEIndMoms[var] = pd.Categorical(IncSCEIndMoms[var],ordered = False)
 
-# + {"code_folding": []}
-moms = ['incexp','incvar','inciqr','rincexp','rincvar','incskew']
+# + {"code_folding": [14]}
+moms = ['incexp','incvar','inciqr','rincexp','rincvar']
 #moms_est = ['IncSkew','IncKurt']
 
 ## compute population summary stats for these ind moms
@@ -213,7 +218,7 @@ IncSCEPopMomsMean = pd.pivot_table(data = IncSCEIndMoms,
                                                                                   'incskew':'skewMean'})
 # -
 
-T = len(IncSCEPopMomsEstMean)
+T = len(IncSCEPopMomsMed)
 
 # ### 3. Cross-sectional patterns of subjective distributions
 #
@@ -241,7 +246,7 @@ for mom in moms:
                  bins = 20)
     plt.xlabel(mom, fontsize = 13)
     plt.ylabel("Frequency",fontsize = 13)
-    plt.savefig('../Graphs/ind/hist'+str(mom)+'.jpg')
+    plt.savefig('../Graphs/ind/hist_'+str(mom)+'.jpg')
 # -
 
 # ### 4. Combinine the two series
@@ -261,6 +266,7 @@ IncSCEPopMomsMean.index = pd.DatetimeIndex(IncSCEPopMomsMean['date'] ,freq='infe
 # + {"code_folding": []}
 dt_combM = pd.concat([sp500MR,
                       vixM,
+                      he,
                       IncSCEPopMomsMed,
                       IncSCEPopMomsMean],
                      join="inner",
@@ -268,6 +274,8 @@ dt_combM = pd.concat([sp500MR,
 # -
 
 dt_combM.tail()
+
+dt_combM.to_stata('../SurveyData/SCE/IncExpSCEPopMacroM.dta')
 
 # +
 ## save sp500 as stata for other analysis
@@ -290,10 +298,18 @@ dt_combMacroM = pd.merge(sp500MR,
                          left_index = True,
                          right_index = True)
 
+dt_combMacroM = pd.merge(dt_combMacroM,
+                         he,
+                         left_index = True,
+                         right_index = True)
+
 dt_combIndM = pd.merge(dt_combMacroM,
                        IncSCEIndMoms,
                        left_index = True,
                        right_index = True)
+
+
+dt_combIndM.to_stata('../SurveyData/SCE/IncExpSCEIndMacroM.dta')
 # -
 
 # ### 5. Seasonal adjustment (not successful yet)
@@ -302,7 +318,6 @@ dt_combIndM = pd.merge(dt_combMacroM,
 #to_sa_test = ['meanMed']
 #to_sa_list = list(dt_combM.columns.drop('sp500'))
 
-# + {"code_folding": []}
 ## inspect for seasonal pattern by looking into the autocovariance
 """
 for sr in to_sa_list:
@@ -332,16 +347,202 @@ for sr in to_sa_test:
 """
 # -
 
-# ### 6. Correlation with stock market returns and times series patterns
+# ### 6. Correlation with labor market outcomes 
 
 corr_table = dt_combM.corr()
 corr_table.to_excel('../Tables/corrM.xlsx')
 corr_table
 
+# + {"code_folding": [16]}
+lag_loop = 5
+
+def pval_str(pval):
+    if pval < 0.01:
+        star = '***'
+    elif pval >= 0.01 and pval<0.05:
+        star = '**'
+    elif pval >= 0.05 and pval <= 0.1:
+        star = '*'
+    else:
+        star = ''
+    return star
+
+def corrtostr(corr):
+    return str(round(corr[0],2)) + str(pval_str(corr[1]))
+
+def corrprint(corr,
+              var):
+    print('correlation coefficient betwen sp500 and median'+
+              str(var) +
+              ' is ' +
+              str(round(corr[0],2)) +
+              ', and p-value is ' +
+              str(round(corr[1],2))
+             )
+
+corr_list = []
+col_list = []
+
+
+## mean
+for moms in ['var','iqr','rvar']:
+    col_list.append('mean:'+str(moms))
+    for lag in range(lag_loop):
+        corr = st.pearsonr(np.array(dt_combM['he'][:-(lag+1)]),
+                           np.array(dt_combM[str(moms)+'Mean'])[(lag+1):]
+                          )
+        corr_str = corrtostr(corr)
+        corr_list.append(corr_str)
+        #corrprint(corr,moms)
+## median
+for moms in ['var','iqr','rvar']:
+    col_list.append('median:'+str(moms))
+    for lag in range(lag_loop):
+        corr = st.pearsonr(np.array(dt_combM['he'][:-(lag+1)]),
+                           np.array(dt_combM[str(moms)+'Med'])[(lag+1):]
+                          )
+        corr_str = corrtostr(corr)
+        corr_list.append(corr_str)
+        #corrprint(corr, moms)
+
+
+
+corr_array = np.array(corr_list).reshape([int(len(corr_list)/lag_loop),
+                                          lag_loop])
+corr_df = pd.DataFrame(corr_array,
+                       index = col_list)
+
+corr_df.T
+
+# +
+## output tables to latex
+
+beginningtex = """
+\\begin{table}[ht]
+\\centering
+\\begin{adjustbox}{width={\\textwidth}}
+\\begin{threeparttable}
+\\caption{Current Labor Market Conditions and Perceived Income Risks}
+\\label{macro_corr_he}
+"""
+
+endtex = """\\begin{tablenotes}
+\item *** p$<$0.001, ** p$<$0.01 and * p$<$0.05.
+\item This table reports correlation coefficients between different perceived income moments(inc for nominal
+and rinc for real) at time
+$t$ and the quarterly growth rate in hourly earning at $t,t-1,...,t-k$.
+\\end{tablenotes}
+\\end{threeparttable}
+\\end{adjustbox}
+\\end{table}"""
+
+## write to latex
+
+f = open('../Tables/latex/macro_corr_he.tex', 'w')
+f.write(beginningtex)
+tb_ltx = corr_df.T.to_latex().replace('llllll','cccccc')
+f.write(tb_ltx)
+f.write(endtex)
+f.close()
+
+## output table to excel
+corr_df.to_excel('../Tables/macro_corr_he.xlsx')
+# -
+
+mom_dict = {'exp':'expected nominal growth',
+          'rexp':'expected real growth',
+          'var':'nominal income risk',
+          'rvar':'real income risk',
+          'iqr':'nomial 75/25 IQR',
+           'skew':'skewness'}
+
+# + {"code_folding": []}
+## plots of correlation for Mean population stats
+
+figsize = (80,40)
+lw = 20
+fontsize = 80
+
+for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
+    fig, ax = plt.subplots(figsize = figsize)
+    ax2 = ax.twinx()
+    ax.plot(dt_combM['he'],
+           color='black',
+           lw= lw,
+           label= 'wage YoY ')
+    ax2.plot(dt_combM[str(moms)+'Mean'],
+             'r--',
+             lw = lw,
+             label = str(mom_dict[moms])+' (RHS)')
+    #ax.set_xticklabels(dt_combM.index)
+    ax.legend(loc = 2,
+             fontsize = fontsize)
+    ax.set_xlabel("month",fontsize = fontsize)
+    ax.grid()
+    ax.set_ylabel('% growth',fontsize = fontsize)
+    ax.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.legend(loc = 1,
+              fontsize = fontsize)
+    plt.savefig('../Graphs/pop/tsMean'+str(moms)+'_he.jpg')
+
+# +
+## moving average
+
+dt_combM3mv = dt_combM.rolling(3).mean()
+
+# +
+## plots of correlation for 3-month moving mean average
+
+for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
+    fig, ax = plt.subplots(figsize = figsize)
+    ax2 = ax.twinx()
+    ax.plot(dt_combM3mv['he'],
+           color='black',
+           lw = lw,
+           label=' wage YoY')
+    ax2.plot(dt_combM3mv[str(moms)+'Mean'],
+             'r--',
+             lw = lw,
+             label=str(mom_dict[moms])+' (RHS)')
+    ax.legend(loc= 1,
+             fontsize = fontsize)
+    ax.set_xlabel("month",fontsize = fontsize)
+    ax.set_ylabel('% growth',fontsize = fontsize)
+    ax2.legend(loc = 2,
+             fontsize = fontsize)
+    ax.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.tick_params(axis='both',
+                    which='major',
+                    labelsize = fontsize)
+    plt.savefig('../Graphs/pop/tsMean3mv'+str(moms)+'_he.jpg')
+# -
+
+# ### 6b. Individual regressions
+
+"""
+for i,moms in enumerate( ['incexp','incvar','inciqr','rincvar','incskew']):
+    print(moms)
+    Y = np.array(dt_combIndM[moms])[forward:]
+    X = np.array(dt_combIndM['he'])[:-forward]
+    X = sm.add_constant(X)
+    model = sm.OLS(Y,X)
+    rs = model.fit()
+    print(rs.summary())
+"""
+
+# ### 7. Correlation with stock market returns and times series patterns
+
 # + {"code_folding": [4, 18]}
 ## try different lags or leads
 
-lead_loop = 12
+lead_loop = 13
 
 def pval_str(pval):
     if pval < 0.01:
@@ -400,7 +601,7 @@ corr_df = pd.DataFrame(corr_array,
 
 corr_df.T
 
-# +
+# + {"code_folding": [0]}
 ## output tables to latex
 
 beginningtex = """
@@ -433,9 +634,160 @@ f.close()
 
 ## output table to excel
 corr_df.to_excel('../Tables/macro_corr.xlsx')
+# -
 
-# + {"code_folding": []}
-## correlation coefficients by sub group 
+IncSCEIndMoms = IncSCEIndMoms.drop(columns='date')
+
+# + {"code_folding": [0, 12]}
+## correlation coefficients by sub group generation
+
+### subgroup population summary statistics
+
+gr_vars = ['byear_gr']
+lead_loop = 12
+
+moms = ['incvar','rincvar','incskew']
+
+
+## mean est 
+
+for gr in gr_vars:
+    
+    corr_list = []
+    col_list = []
+    
+    sub_pd = pd.pivot_table(data = IncSCEIndMoms,
+                            index=['date',gr],
+                            values = moms,
+                            aggfunc= 'mean').unstack()  ## index being time only 
+    sub_pd = sub_pd.dropna(how='any')
+    ## mean moments 
+    for mom in moms:
+        # group 1 
+        col_list.append('mean:'+str(mom)+str(' for 50s'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'50s'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+            
+        # group 2 
+        col_list.append('mean:'+str(mom)+str(' for 60s'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'60s'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+            
+            
+        # group 3
+        col_list.append('mean:'+str(mom)+str(' for 70s'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'70s'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+            
+           # group 3
+        col_list.append('mean:'+str(mom)+str(' for 80s'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'80s'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+            
+
+    corr_array = np.array(corr_list).reshape([int(len(corr_list)/lead_loop),
+                                              lead_loop])
+    corr_df = pd.DataFrame(corr_array,
+                           index = col_list)
+    
+## save 
+corr_df.T.to_excel('../Tables/macro_corr_byear_gr.xlsx')
+
+# + {"code_folding": [23]}
+## correlation coefficients by sub group age
+
+### subgroup population summary statistics
+
+gr_vars = ['age_gr']
+lead_loop = 12
+
+moms = ['incvar','rincvar','incskew']
+
+
+## mean est 
+
+for gr in gr_vars:
+    
+    corr_list = []
+    col_list = []
+    
+    sub_pd = pd.pivot_table(data = IncSCEIndMoms,
+                            index=['date',gr],
+                            values = moms,
+                            aggfunc= 'mean').unstack()  ## index being time only 
+    sub_pd = sub_pd.dropna(how='any')
+    ## mean moments 
+    for mom in moms:
+        # group 1 
+        col_list.append('mean:'+str(mom)+str(' for young'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'young'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+            
+        # group 2 
+        col_list.append('mean:'+str(mom)+str(' for middle-age'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'middle-age'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+            
+            
+        # group 3
+        col_list.append('mean:'+str(mom)+str(' for old'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'old'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+            
+            
+
+    corr_array = np.array(corr_list).reshape([int(len(corr_list)/lead_loop),
+                                              lead_loop])
+    corr_df = pd.DataFrame(corr_array,
+                           index = col_list)
+    
+## save 
+corr_df.T.to_excel('../Tables/macro_corr_age_gr.xlsx')
+
+# + {"code_folding": [12, 23]}
+## correlation coefficients by sub group HHinc
 
 ### subgroup population summary statistics
 
@@ -444,7 +796,6 @@ lead_loop = 12
 
 moms = ['incvar','rincvar','incskew']
 
-#IncSCEIndMoms = IncSCEIndMoms.drop(columns='date')
 
 ## mean est 
 
@@ -471,8 +822,63 @@ for gr in gr_vars:
             corr_str = corrtostr(corr)
             corr_list.append(corr_str)
             
+        # group 2 
+        col_list.append('mean:'+str(mom)+str(' for high'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'high'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
+     
+
+    corr_array = np.array(corr_list).reshape([int(len(corr_list)/lead_loop),
+                                              lead_loop])
+    corr_df = pd.DataFrame(corr_array,
+                           index = col_list)
+    
+## save 
+corr_df.T.to_excel('../Tables/macro_corr_HHinc_gr.xlsx')
+
+# + {"code_folding": []}
+## correlation coefficients by sub group educ 
+
+### subgroup population summary statistics
+
+gr_vars = ['educ_gr']
+lead_loop = 12
+
+moms = ['incvar','rincvar','incskew']
+
+
+## mean est 
+
+for gr in gr_vars:
+    
+    corr_list = []
+    col_list = []
+    
+    sub_pd = pd.pivot_table(data = IncSCEIndMoms,
+                            index=['date',gr],
+                            values = moms,
+                            aggfunc= 'mean').unstack()  ## index being time only 
+    sub_pd = sub_pd.dropna(how='any')
+    ## mean moments 
+    for mom in moms:
+        # group 1 
+        col_list.append('mean:'+str(mom)+str(' for low'))
+        sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
+        
+        for lead in range(lead_loop):    
+            corr = st.pearsonr(sp500[lead+1:],
+                               np.array(sub_pd[mom,'low'])[:-(lead+1)]
+                              )
+            corr_str = corrtostr(corr)
+            corr_list.append(corr_str)
             
-        # group 3
+        # group 2 
         col_list.append('mean:'+str(mom)+str(' for high'))
         sp500 = np.array(sp500MR.loc[sub_pd.index]).flatten()
         
@@ -483,39 +889,56 @@ for gr in gr_vars:
             corr_str = corrtostr(corr)
             corr_list.append(corr_str)
             
+            
 
     corr_array = np.array(corr_list).reshape([int(len(corr_list)/lead_loop),
                                               lead_loop])
     corr_df = pd.DataFrame(corr_array,
                            index = col_list)
     
+## save 
+corr_df.T.to_excel('../Tables/macro_corr_educ_gr.xlsx')
 # -
 
 corr_df
 
-corr_df.to_excel('../Tables/macro_corr_HHinc_gr.xlsx')
+# + {"code_folding": []}
+## plot sp500 return forward months later and realized income 
+
+forward = 12
 
 # + {"code_folding": []}
 ## plots of correlation for MEDIAN population stats
 
 figsize = (80,40)
 lw = 20
-fontsize = 70
+fontsize = 80
 
-for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
+for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
-    ax.bar(dt_combM.index, dt_combM['sp500'], color='gray', width=25,label='SP500')
-    ax2.plot(dt_combM[str(moms)+'Med'],
+    ax.bar(dt_combM.index[:-forward], 
+           dt_combM['sp500'][forward:],
+           color = 'gray', 
+           width = 25,
+           label = 'sp500 YoY '+str(forward)+'m later')
+    ax2.plot(dt_combM.index,
+             dt_combM[str(moms)+'Med'],
              'r--',
              lw = lw,
-             label=str(moms)+' (RHS)')
+             label=str(mom_dict[moms])+' (RHS)')
     #ax.set_xticklabels(dt_combM.index)
-    ax.legend(loc = 0,
+    ax.legend(loc = 2,
               fontsize = fontsize)
     ax.set_xlabel("month",fontsize = fontsize)
     ax.set_ylabel('% return',fontsize = fontsize)
-    ax2.legend(loc=2,
+    ax.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.legend(loc = 1,
                fontsize = fontsize)
     ax2.set_ylabel(moms,fontsize = fontsize)
     plt.savefig('../Graphs/pop/tsMed'+str(moms)+'.jpg')
@@ -525,38 +948,39 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
 
 
 
-# + {"code_folding": [2]}
+# + {"code_folding": []}
 ## plots of correlation for Mean population stats
 
-for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
+for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
-    ax.bar(dt_combM.index,
-           dt_combM['sp500'],
+    ax.bar(dt_combM.index[:-forward],
+           dt_combM['sp500'][forward:],
            color='gray',
-           width=25,
-           label='SP500')
+           width= 25,
+           label= 'sp500 YoY '+str(forward)+'m later')
     ax2.plot(dt_combM[str(moms)+'Mean'],
              'r--',
              lw = lw,
-             label=str(moms)+' (RHS)')
+             label = str(mom_dict[moms])+' (RHS)')
     #ax.set_xticklabels(dt_combM.index)
-    ax.legend(loc=0,
+    ax.legend(loc = 2,
              fontsize = fontsize)
     ax.set_xlabel("month",fontsize = fontsize)
     ax.set_ylabel('% return',fontsize = fontsize)
-    ax2.legend(loc=2,
+    ax.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.legend(loc = 1,
               fontsize = fontsize)
     plt.savefig('../Graphs/pop/tsMean'+str(moms)+'.jpg')
 
     #cor,pval = st.pearsonr(np.array(dt_combM['sp500']),
     #                      np.array(dt_combM[str(moms)+'Mean']))
     #print('Correlation coefficient is '+str(round(cor,3)) + ', p-value is '+ str(round(pval,3)))
-
-# + {"code_folding": []}
-## moving average
-
-dt_combM3mv = dt_combM.rolling(3).mean()
 # -
 
 crr3mv_table = dt_combM3mv.corr()
@@ -566,24 +990,30 @@ crr3mv_table
 # + {"code_folding": []}
 ## plots of correlation for 3-month moving MEDIAN average
 
-for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
+for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
-    ax.bar(dt_combM3mv.index,
-           dt_combM3mv['sp500'],
+    ax.bar(dt_combM3mv.index[:-forward],
+           dt_combM3mv['sp500'][forward:],
            color='gray',
            width=25,
-           label='SP500')
+           label = 'sp500 YoY '+str(forward)+'m later')
     ax2.plot(dt_combM3mv[str(moms)+'Med'],
              'r--',
              lw = lw,
-             label=str(moms)+' (RHS)')
+             label = str(mom_dict[moms])+' (RHS)')
     #ax.set_xticklabels(dt_combM.index)
     ax.legend(loc=0,
               fontsize = fontsize)
     ax.set_xlabel("month",fontsize = fontsize)
     ax.set_ylabel('% return',fontsize = fontsize)
-    ax2.legend(loc=2,
+    ax.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.legend(loc = 2,
               fontsize = fontsize)
     plt.savefig('../Graphs/pop/tsMed3mv'+str(moms)+'.jpg')
     #cor,pval = st.pearsonr(np.array(dt_combM3mv['sp500']),
@@ -594,18 +1024,18 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
 # + {"code_folding": []}
 ## plots of correlation for 3-month moving mean average
 
-for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
+for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
-    ax.bar(dt_combM3mv.index,
-           dt_combM3mv['sp500'],
+    ax.bar(dt_combM3mv.index[:-forward],
+           dt_combM3mv['sp500'][forward:],
            color='gray',
            width=25,
-           label='SP500')
+           label='sp500 YoY '+str(forward)+'m later')
     ax2.plot(dt_combM3mv[str(moms)+'Mean'],
              'r--',
              lw = lw,
-             label=str(moms)+' (RHS)')
+             label=str(mom_dict[moms])+' (RHS)')
     #ax.set_xticklabels(dt_combM.index)
     ax.legend(loc=0,
              fontsize = fontsize)
@@ -613,6 +1043,12 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
     ax.set_ylabel('% return',fontsize = fontsize)
     ax2.legend(loc=2,
              fontsize = fontsize)
+    ax.tick_params(axis='both', 
+                   which='major', 
+                   labelsize = fontsize)
+    ax2.tick_params(axis='both',
+                    which='major',
+                    labelsize = fontsize)
     plt.savefig('../Graphs/pop/tsMean3mv'+str(moms)+'.jpg')
     #cor,pval =st.pearsonr(np.array(dt_combM['sp500']),
     #                      np.array(dt_combM3mv[str(moms)+'Mean']))
@@ -621,17 +1057,18 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
 
 # -
 
-# ### 7. Individual regressions
+# ### 7b. Individual regressions 
 
 # + {"code_folding": []}
-lead = 2
-
 for i,moms in enumerate( ['incexp','incvar','inciqr','rincvar','incskew']):
     print(moms)
-    Y = np.array(dt_combIndM[moms])[lead+1:]
-    X = np.array(dt_combIndM['sp500'])[:-(lead+1)]
+    Y = np.array(dt_combIndM[moms])[forward:]
+    X = np.array(dt_combIndM['sp500'])[:-forward]
     X = sm.add_constant(X)
     model = sm.OLS(Y,X)
     rs = model.fit()
     print(rs.summary())
+
+# -
+
 

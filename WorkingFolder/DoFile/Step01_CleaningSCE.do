@@ -19,9 +19,9 @@ pwd
 set more off 
 
 
-use "${folder}/SCE/NYFED_SCE_2013.dta",clear
-append using "${folder}/SCE/NYFED_SCE_2014_2016.dta",force
-append using  "${folder}/SCE/NYFED_SCE_post2016new.dta",force
+use "${folder}/SCE/NYFED_SCE_13_16.dta",clear
+append using "${folder}/SCE/NYFED_SCE_17_19.dta",force
+append using  "${folder}/SCE/NYFED_SCE_20.dta",force
 
 sort date
 unique userid
@@ -250,7 +250,7 @@ global keeplist date year month userid tenure weight ///
 	   HH2_1 HH2_2 HH2_3 HH2_4 HH2_5 HH2_6 HH2_7 HH2_8 HH2_9 HH2_10 HH2_11 ///
 	   _STATE Q41 Q42 Q43 Q43a Q44 Q45b ///
 	   Q45new_1 Q45new_2 Q45new_3 Q45new_4 Q45new_5 Q45new_6 Q45new_7 Q45new_8 Q45new_9 ///
-	   Q46 Q47 D1 D3 D6 D2new_1 D2new_2 D2new_3 D2new_4 D2new_5 D2new_6 D2new_7 D2new_8 D2newdk_1 DSAME DQ38 ///
+	   Q46 Q47 D1 D3 D6 D2new_1 D2new_2 D2new_3 D2new_4 D2new_5 D2new_6 D2new_7 D2new_8 D2new_9 DSAME DQ38 ///
 	   DHH2_1 DHH2_2 DHH2_3 DHH2_4 DHH2_5 DHH2_6 DHH2_7 DHH2_8 DHH2_9 DHH2_10 DHH2_11 DHH2_11_other D5b Q48 QRA1 QRA2 ///
 	   _AGE_CAT _NUM_CAT _REGION_CAT _COMMUTING_ZONE _EDU_CAT _HH_INC_CAT ///
 	   Q1 Q2 Q3 Q4new Q5new Q6new Q9_mean Q9_var ///
