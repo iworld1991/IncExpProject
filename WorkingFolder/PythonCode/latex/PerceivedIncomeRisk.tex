@@ -680,20 +680,20 @@ survey conditions on staying employed.
 \begin{equation}
 \begin{split}
 & y_{i,c,t} = z_{i,c,t}+e_{i,c,t} \\
-& e_{i,c,t}=g_t+p_{i,c,t}+\eta_{i,c,t}+\psi_{i,c,t}  \\
-& g_t = g_{t-1} + \xi_{t} \\
-& p_{i,c,t} = p_{i,c,t-1}+\theta_{i,c,t} \\
-& \eta_{i,c,t} = \phi\epsilon_{i,c,t-1}+\epsilon_{i,c,t}
+& e_{i,c,t}=g_t+p_{i,c,t}+\eta_{i,c,t}+\theta_{i,c,t}  \\
+& g_{t+1} = g_t + \xi_{t+1} \\
+& p_{i,c,t+1} = p_{i,c,t}+\psi_{i,c,t-1} \\
+& \eta_{i,c,t+1} = \phi\epsilon_{i,c,t}+\epsilon_{i,c,t+1}
 \end{split}
 \end{equation}
 
-All shocks including the aggregate \(\xi_t\), and idiosyncratic ones
-follow normal distributions, with zero means and time-invariant
-variances denoted as \(\sigma^2_{\xi}\),
+All shocks including the aggregate one, and idiosyncratic ones follow
+normal distributions with zero means and time-invariant variances
+denoted as \(\sigma^2_{\xi}\),
 \(\sigma^2_{\theta}\),\(\sigma^2_{\epsilon}\),\(\sigma^2_{\psi}\).
 Hypothetically, these variances could differ both across cohorts and
 time. I focus on the most simple case here and results with
-cohort-specific income risks are reported in the appendix.
+cohort-specific income risks are reported in the Appendix.
 
 Income growth from \(t\) to \(t+1\) consists predictable changes in
 \(z_{i,c,t+1}\), and those from realized income shocks.
@@ -701,7 +701,7 @@ Income growth from \(t\) to \(t+1\) consists predictable changes in
 \begin{equation}
 \begin{split}
 \Delta y_{i,c,t+1} & =  \Delta z_{i,c,t+1}+\Delta e_{i,c,t} \\
-&= \Delta z_{i,c,t+1}+\xi_{t+1}+\theta_{i,c,t+1}+\epsilon_{i,c,t+1}+(\phi-1)\epsilon_{i,c,t}+\psi_{i,c,t+1}
+&= \Delta z_{i,c,t+1}+\xi_{t+1}+\psi_{i,c,t+1}+\epsilon_{i,c,t+1}+(\phi-1)\epsilon_{i,c,t}-\phi\epsilon_{i,c,t-1}+\theta_{i,c,t+1}
 \end{split}
 \end{equation}
 
@@ -713,7 +713,7 @@ variance of income growth from \(t\) to \(t+1\) is equal to the
 following.
 
 \begin{equation}
-Var_{t}^*(\Delta y_{i,c,t+1}) =Var_{t}^*(\Delta e_{i,c,t+1}) =   \sigma^2_\xi+\sigma^2_\theta + \sigma^2_\epsilon+\sigma^2_\psi 
+Var_{t}^*(\Delta y_{i,c,t+1}) =Var_{t}^*(\Delta e_{i,c,t+1}) =   \sigma^2_\xi+\sigma^2_\psi + \sigma^2_\epsilon+\sigma^2_\theta 
 \end{equation}
 
 FIRE has a number of testable predictions about the behaviors of
@@ -754,13 +754,13 @@ residuals from this estimation regression is
 \(\hat e_{i,t}= y_{i,c,t}-\hat z_{i,c,t}\)(\(\hat z_{i,c,t}\) is the
 observable counterpart of \(z_{i,c,t}\) from data). The unconditional
 cross-sectional variance of the change in residuals(equivalent to the
-\texttt{income\ volatility\textquotesingle{}\textquotesingle{}\ or}instability'\,'
-in the literature) is the following. Let's call this growth volatility.
-It can be further decomposed into different components in order to get
-the component-specific risk.
+\emph{income volatility} or \emph{instability} in the literature) is the
+following. Let's call this growth volatility. It can be further
+decomposed into different components in order to get the
+component-specific risk.
 
 \begin{equation}
-Var(\Delta \hat e_{i,c,t}) = \hat\sigma^2_\xi+\hat\sigma^2_\theta + ((1-\phi)^2+1)\hat\sigma^2_\epsilon+\hat\sigma^2_\psi 
+Var(\Delta \hat e_{i,c,t}) = \hat\sigma^2_\xi+\hat\sigma^2_\psi + ((1-\phi)^2+\phi^2+1)\hat\sigma^2_\epsilon+\hat\sigma^2_\theta 
 \end{equation}
 
 Notice the unconditional growth volatility overlaps with the FIRE

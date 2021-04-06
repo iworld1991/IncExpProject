@@ -100,26 +100,26 @@ else:
 #
 # ## Income process and risk perceptions
 #
-# Log income of individual $i$ from cohort $c$ at time $t$ follows the following process (<cite data-cite="meghir2004income">(Meghir and Pistaferri(2004))</cite>). Cohort $c$ represents the year of entering the job market. It contains a predictable component $z$, and a stochastical component $e$. The latter consists of aggregate component $g$, idiosyncratic permanent $p$, MA(1) component $\eta$ and a transitory component $\psi$. Here I do not consider unemployment risk since the perceived risk measured in the survey conditions on staying employed.
+# Log income of individual $i$ from cohort $c$ at time $t$ follows the following process (<cite data-cite="meghir2004income">(Meghir and Pistaferri(2004)</cite>). Cohort $c$ represents the year of entering the job market. It contains a predictable component $z$, and a stochastical component $e$. The latter consists of aggregate component $g$, idiosyncratic permanent $p$, MA(1) component $\eta$ and a transitory component $\psi$. Here I do not consider unemployment risk since the perceived risk measured in the survey conditions on staying employed.
 #
 # \begin{equation}
 # \begin{split}
 # & y_{i,c,t} = z_{i,c,t}+e_{i,c,t} \\
-# & e_{i,c,t}=g_t+p_{i,c,t}+\eta_{i,c,t}+\psi_{i,c,t}  \\
-# & g_t = g_{t-1} + \xi_{t} \\
-# & p_{i,c,t} = p_{i,c,t-1}+\theta_{i,c,t} \\
-# & \eta_{i,c,t} = \phi\epsilon_{i,c,t-1}+\epsilon_{i,c,t}
+# & e_{i,c,t}=g_t+p_{i,c,t}+\eta_{i,c,t}+\theta_{i,c,t}  \\
+# & g_{t+1} = g_t + \xi_{t+1} \\
+# & p_{i,c,t+1} = p_{i,c,t}+\psi_{i,c,t-1} \\
+# & \eta_{i,c,t+1} = \phi\epsilon_{i,c,t}+\epsilon_{i,c,t+1}
 # \end{split}
 # \end{equation}
 #
-# All shocks including the aggregate $\xi_t$, and idiosyncratic ones follow normal distributions, with zero means and time-invariant variances denoted as $\sigma^2_{\xi}$, $\sigma^2_{\theta}$,$\sigma^2_{\epsilon}$,$\sigma^2_{\psi}$. Hypothetically, these variances could differ both across cohorts and time. I focus on the most simple case here and results with cohort-specific income risks are reported in the appendix. 
+# All shocks including the aggregate one, and idiosyncratic ones follow normal distributions with zero means and time-invariant variances denoted as $\sigma^2_{\xi}$, $\sigma^2_{\theta}$,$\sigma^2_{\epsilon}$,$\sigma^2_{\psi}$. Hypothetically, these variances could differ both across cohorts and time. I focus on the most simple case here and results with cohort-specific income risks are reported in the Appendix. 
 #
 # Income growth from $t$ to $t+1$ consists predictable changes in $z_{i,c,t+1}$, and those from realized income shocks. 
 #
 # \begin{equation}
 # \begin{split}
 # \Delta y_{i,c,t+1} & =  \Delta z_{i,c,t+1}+\Delta e_{i,c,t} \\
-# &= \Delta z_{i,c,t+1}+\xi_{t+1}+\theta_{i,c,t+1}+\epsilon_{i,c,t+1}+(\phi-1)\epsilon_{i,c,t}+\psi_{i,c,t+1}
+# &= \Delta z_{i,c,t+1}+\xi_{t+1}+\psi_{i,c,t+1}+\epsilon_{i,c,t+1}+(\phi-1)\epsilon_{i,c,t}-\phi\epsilon_{i,c,t-1}+\theta_{i,c,t+1}
 # \end{split}
 # \end{equation}
 #
@@ -127,7 +127,7 @@ else:
 # All shocks that have realized till $t$ are observed by the agent at time $t$. Therefore, under full-information rational expectation(FIRE), namely when the agent perfectly knows the income process and parameters, the perceived income risks or the perceived variance of income growth from $t$ to $t+1$ is equal to the following.
 #
 # \begin{equation}
-# Var_{t}^*(\Delta y_{i,c,t+1}) =Var_{t}^*(\Delta e_{i,c,t+1}) =   \sigma^2_\xi+\sigma^2_\theta + \sigma^2_\epsilon+\sigma^2_\psi 
+# Var_{t}^*(\Delta y_{i,c,t+1}) =Var_{t}^*(\Delta e_{i,c,t+1}) =   \sigma^2_\xi+\sigma^2_\psi + \sigma^2_\epsilon+\sigma^2_\theta 
 # \end{equation}
 #
 # FIRE has a number of testable predictions about the behaviors of perceived risks. 
@@ -139,10 +139,10 @@ else:
 # - Third, under the assumed progress, the variances of different-natured shocks sum up to exactly the perceived income risks and the loadings of all components are all positive. I report detailed derivations and proofs in the Appendix that these predictions are robust to the alternative income process and the time-aggregation problem discussed in the literature. The latter arises when the underlying income process is set at a higher frequency than the observed frequency of reported income or income expectations. This will cause different sizes of loadings of all future shocks to perceived annual risk but does not change the positivity of the loadings from different components onto perceived risk. 
 #
 # The challenge of testing the third prediction is that the risk parameters are not directly observable. Econometricians and modelers usually estimate them relying upon cross-sectional moment information from some panel data and take them as the model parameters understood perfectly by the agents. I can therefore use econometricians' best estimates using past income data as the FIRE benchmark (I will discuss the concerns of this approach later).
-# Assuming the unexplained income residuals from this estimation regression is $\hat e_{i,t}= y_{i,c,t}-\hat z_{i,c,t}$($\hat z_{i,c,t}$ is the observable counterpart of $z_{i,c,t}$ from data). The unconditional cross-sectional variance of the change in residuals(equivalent to the ``income volatility'' or ``instability'' in the literature) is the following. Let's call this growth volatility. It can be further decomposed into different components in order to get the component-specific risk. 
+# Assuming the unexplained income residuals from this estimation regression is $\hat e_{i,t}= y_{i,c,t}-\hat z_{i,c,t}$($\hat z_{i,c,t}$ is the observable counterpart of $z_{i,c,t}$ from data). The unconditional cross-sectional variance of the change in residuals(equivalent to the _income volatility_ or _instability_ in the literature) is the following. Let's call this growth volatility. It can be further decomposed into different components in order to get the component-specific risk. 
 #
 # \begin{equation}
-# Var(\Delta \hat e_{i,c,t}) = \hat\sigma^2_\xi+\hat\sigma^2_\theta + ((1-\phi)^2+1)\hat\sigma^2_\epsilon+\hat\sigma^2_\psi 
+# Var(\Delta \hat e_{i,c,t}) = \hat\sigma^2_\xi+\hat\sigma^2_\psi + ((1-\phi)^2+\phi^2+1)\hat\sigma^2_\epsilon+\hat\sigma^2_\theta 
 # \end{equation}
 #
 # Notice the unconditional growth volatility overlaps with the FIRE perceived risk in every component of the risks. But it is unambiguously greater than the perceived risk under FIRE because econometricians' do not directly observe the MA(1) shock from $t-1$. But this suffices to suggest that growth volatility is positively correlated with perceived risk. 
@@ -226,7 +226,7 @@ else:
 # \end{center}
 #
 
-# + {"caption": "Distribution of Individual Moments", "code_folding": [], "label": "fig:histmoms", "note": "this figure plots histograms of the individual income moments. inc for nominal and rinc for real.", "hide_input": true, "hide_output": true}
+# + {"caption": "Distribution of Individual Moments", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:histmoms", "note": "this figure plots histograms of the individual income moments. inc for nominal and rinc for real."}
 ## insert figures
 
 graph_path = os.path.join(path,'../Graphs/ind/')
@@ -247,7 +247,7 @@ for i in range(nb_fig):
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
 
-# + {"caption": "Perceived Income by Income", "code_folding": [], "label": "fig:barplot_byinc", "note": "this figure plots average perceived income risks by the range of household income.", "widefigure": true, "hide_input": true, "hide_output": true}
+# + {"caption": "Perceived Income by Income", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:barplot_byinc", "note": "this figure plots average perceived income risks by the range of household income.", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/ind/')
 
@@ -263,7 +263,7 @@ for i in range(nb_fig):
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
 
-# + {"caption": "Perceived Income by Age", "code_folding": [], "label": "fig:ts_incvar_age", "note": "this figure plots average perceived income risks of different age groups over time.", "widefigure": true, "hide_input": true, "hide_output": true}
+# + {"caption": "Perceived Income by Age", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:ts_incvar_age", "note": "this figure plots average perceived income risks of different age groups over time.", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/ind/ts/')
 
@@ -301,7 +301,7 @@ for i in range(nb_fig):
 #
 # The counter-cyclicality in subjective risk perceptions seen in the survey may suggest the standard assumption of state-independent symmetry in income shocks is questionable. But it may well be, alternatively, because people's subjective reaction to the positive and negative shocks are asymmetric even if the underlying process being symmetric. The model to be constructed in the theoretical section explores the possible role of both. 
 
-# + {"caption": "Recent Labor Market Outcome and Perceived Risks", "code_folding": [], "label": "fig:tshe", "note": "Recent labor market outcome is measured by hourly earning growth (YoY).", "hide_input": true, "hide_output": true}
+# + {"caption": "Recent Labor Market Outcome and Perceived Risks", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:tshe", "note": "Recent labor market outcome is measured by hourly earning growth (YoY)."}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/pop/')
 
@@ -369,7 +369,7 @@ mom_group_state
 #
 #
 
-# + {"caption": "Experienced Volatility and Perceived Income Risk", "code_folding": [], "label": "fig:var_experience_var_data", "note": "Experienced volatility is the mean squred error(MSE) of income regression based on a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year.", "hide_input": true, "hide_output": true}
+# + {"caption": "Experienced Volatility and Perceived Income Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:var_experience_var_data", "note": "Experienced volatility is the mean squred error(MSE) of income regression based on a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year."}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/ind/')
 
@@ -387,7 +387,7 @@ for i in range(nb_fig):
     plt.axis("off") 
 plt.tight_layout(pad =0, w_pad=0, h_pad=0)
 
-# + {"caption": "Experienced Permanent Volatility and Perceived Income Risk", "code_folding": [], "label": "fig:experience_var_permanent_var_data", "note": "Experienced permanent volatility is average of the estimated risks of the permanent income component of a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year.", "hide_input": true, "hide_output": true}
+# + {"caption": "Experienced Permanent Volatility and Perceived Income Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:experience_var_permanent_var_data", "note": "Experienced permanent volatility is average of the estimated risks of the permanent income component of a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year."}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/ind/')
 
@@ -405,7 +405,7 @@ for i in range(nb_fig):
     plt.axis("off") 
 plt.tight_layout(pad =0, w_pad=0, h_pad=0)
 
-# + {"caption": "Experienced Transitory Volatility and Perceived Income Risk", "code_folding": [], "label": "fig:experience_var_transitory_var_data", "note": "Experienced transitory volatility is average of the estimated risks of the transitory component of a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year.", "hide_input": true, "hide_output": true}
+# + {"caption": "Experienced Transitory Volatility and Perceived Income Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:experience_var_transitory_var_data", "note": "Experienced transitory volatility is average of the estimated risks of the transitory component of a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year."}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/ind/')
 
@@ -423,7 +423,7 @@ for i in range(nb_fig):
     plt.axis("off") 
 plt.tight_layout(pad =0, w_pad=0, h_pad=0)
 
-# + {"caption": "Experienced Permanent/Transitory Ratio and Perceived Income Risk", "code_folding": [], "label": "fig:experience_var_ratio_var_data", "note": "Experienced permanent/transitory ratio is ratio of the estimated risks of the permanent to transitory component of a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year.", "hide_input": true, "hide_output": true}
+# + {"caption": "Experienced Permanent/Transitory Ratio and Perceived Income Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:experience_var_ratio_var_data", "note": "Experienced permanent/transitory ratio is ratio of the estimated risks of the permanent to transitory component of a particular year-cohort sample. The perceived income risk is the average across all individuals from the cohort in that year."}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/ind/')
 
@@ -650,7 +650,7 @@ spending_reg_tb
 # - In the same time, future perceptions of the risks inflate the past volatility proportionally depending on their subjective attribution. A higher degree of external attribution reflected by a higher $\tilde \delta_{i,t}$ implies a higher parameter uncertainty (Figure \ref{fig:corr_var}) and higher inflation of past volatility into the future. (Figure \ref{fig:var_experience_var})
 #
 
-# + {"caption": "Attribution and Parameter Uncertainty", "code_folding": [], "label": "fig:corr_var", "widefigure": true, "hide_input": true, "hide_output": true}
+# + {"caption": "Attribution and Parameter Uncertainty", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:corr_var", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -666,7 +666,7 @@ for i in range(nb_fig):
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
 
-# + {"caption": "Experienced Volatility and Perceived Risk", "code_folding": [], "label": "fig:var_experience_var", "widefigure": true, "hide_input": true, "hide_output": true}
+# + {"caption": "Experienced Volatility and Perceived Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:var_experience_var", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -717,7 +717,7 @@ for i in range(nb_fig):
 #
 # - In the presence of aggregate risks and attribution error, the average perceived risks are counter-cyclical. 
 
-# + {"caption": "Attribution Function", "code_folding": [], "label": "fig:theta_corr", "widefigure": true, "hide_input": true, "hide_output": true}
+# + {"caption": "Attribution Function", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:theta_corr", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -733,7 +733,7 @@ for i in range(nb_fig):
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
 
-# + {"caption": "Current Income and Perceived Risk", "code_folding": [], "label": "fig:var_recent", "widefigure": true, "hide_input": true, "hide_output": true}
+# + {"caption": "Current Income and Perceived Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:var_recent", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -760,7 +760,7 @@ for i in range(nb_fig):
 #
 # A subtle but interesting point is that the U-shape is skewed toward left, meaning perceived risks decrease with the income over the most part of the income distribution before the pattern reverses. More intuitively, it means that although low and high income perceived risks to be higher because of its deviation from the its long-run mean. This force is muted for the high income group because they have a lower peceived risks due to the attribution errors. 
 
-# + {"caption": "Simulated Income Profile of Perceived Risk", "code_folding": [], "label": "fig:var_recent_sim", "widefigure": true, "hide_input": true, "hide_output": true}
+# + {"caption": "Simulated Income Profile of Perceived Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:var_recent_sim", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -781,7 +781,7 @@ for i in range(nb_fig):
 #
 # Figure \ref{fig:var_age_sim} plots the simulated age profile of perceived income risks with and without attribution errors. Due to experience-based learning, older agents have a larger sample size when learning about the model parameter, which induces the parameter uncertainty to be lower. What is interesting is that with attribution errors, since the parameter uncertainty is inflated proportionally with the degree of attribution, it makes the negative correlation between the perceived income risks and age more salient. This is consistent with our empirical findings shown in Figure \ref{fig:ts_incvar_age}. 
 
-# + {"caption": "Simulated Experience of Volatility and Perceived Risk", "code_folding": [], "label": "fig:var_experience_var_sim", "widefigure": true, "hide_input": true, "hide_output": true}
+# + {"caption": "Simulated Experience of Volatility and Perceived Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:var_experience_var_sim", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -797,7 +797,7 @@ for i in range(nb_fig):
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
 
-# + {"caption": "Simulated Age Profile of Perceived Risk", "code_folding": [], "label": "fig:var_age_sim", "widefigure": true, "hide_input": true, "hide_output": true}
+# + {"caption": "Simulated Age Profile of Perceived Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:var_age_sim", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -836,7 +836,7 @@ for i in range(nb_fig):
 #
 # The upper panel in Figure \ref{fig:recent_change_var_sim} illustrates the first point. The scatter plots showcase the correlation between average income changes across population and average perceive risks under purely idiosyncratic risks and aggregate risks. The negative correlation with aggregate risks illustrate the counter-cylical perceived risks. There is no such a correlation under purely idiosyncratic risks. The bottom panel in Figure \ref{fig:recent_change_var_sim} testifies the second point. It plots the same correlation with and without attribution errors when the aggregate risk exists. Attribution errors brings about the asymmetry not seen when the bias is absent. 
 
-# + {"caption": "Simulatd Average Labor Market and Perceived Risk", "code_folding": [], "label": "fig:recent_change_var_sim1", "widefigure": true, "hide_input": true, "hide_output": true}
+# + {"caption": "Simulatd Average Labor Market and Perceived Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:recent_change_var_sim1", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
@@ -852,7 +852,7 @@ for i in range(nb_fig):
     plt.imshow(mpimg.imread(file_list[i]))
     plt.axis("off")
 
-# + {"caption": "Simulated Average Labor Market Outcome and Perceived Risk", "code_folding": [], "label": "fig:recent_change_var_sim2", "widefigure": true, "hide_input": true, "hide_output": true}
+# + {"caption": "Simulated Average Labor Market Outcome and Perceived Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:recent_change_var_sim2", "widefigure": true}
 ## insert figures 
 graph_path = os.path.join(path,'../Graphs/theory/')
 
