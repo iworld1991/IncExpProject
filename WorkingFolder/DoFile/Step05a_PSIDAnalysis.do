@@ -346,7 +346,6 @@ restore
 
 ** notice here we use lwage_id_shk_gr !!
 
-
 ** byear_5yr and age
 
 preserve

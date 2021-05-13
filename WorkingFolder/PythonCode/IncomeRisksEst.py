@@ -107,7 +107,7 @@ plt.legend(loc=1)
 
 # ### Estimation
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## some fake data moments with alternative parameters
 
 ## fix ratio of p and t risks
@@ -160,6 +160,101 @@ plt.plot(dt_fake.sigmas[1][1:]**2,'-*',label='Truth')
 plt.legend(loc=0)
 # -
 
+# ### Estimation using SIPP data
+
+# +
+## SIPP data 
+SIPP = pd.read_stata('../../../SIPP/sipp_matrix.dta',
+                    convert_categoricals=False)   
+SIPP.index = SIPP['uniqueid']
+SIPP = SIPP.drop(['uniqueid'], axis=1)
+SIPP = SIPP.dropna(axis=0,how='all')
+SIPP = SIPP.dropna(axis=1,how='all')
+
+#SIPP=SIPP.dropna(subset=['byear_5yr'])
+#SIPP['byear_5yr'] = SIPP['byear_5yr'].astype('int32')
+# -
+
+SIPP.dtypes
+
+# +
+## different samples 
+
+education_groups = [1, #'HS dropout',
+                   2, # 'HS graduate',
+                   3] #'college graduates/above'
+gender_groups = [1, #'male',
+                2] #'female'
+
+#byear_groups = list(np.array(SIPP.byear_5yr.unique(),dtype='int32'))
+
+age_groups = list(np.array(SIPP.age_5yr.unique(),dtype='int32'))
+
+group_by = ['educ','gender','age_5yr']
+all_drop = group_by #+['age_h','byear_5yr']
+
+## full sample 
+sample_full =  SIPP.drop(all_drop,axis=1)
+
+## sub sample 
+sub_samples = []
+para_est_list = []
+sub_group_names = []
+
+for edu in education_groups:
+    for gender in gender_groups:
+        for age5 in age_groups:
+            belong = (SIPP['educ']==edu) & (SIPP['gender']==gender) & (SIPP['age_5yr']==age5)
+            obs = np.sum(belong)
+            #print(obs)
+            if obs > 1:
+                sample = SIPP.loc[belong].drop(all_drop,axis=1)
+                sub_samples.append(sample)
+                sub_group_names.append((edu,gender,age5))
+
+# +
+## estimation for full sample 
+
+sipp_para_est_full = estimate_sample(sample_full)
+
+# +
+## time stamp 
+t0 = 1971
+tT = 2016
+t_break = 1998 #the year when no annual data was released i.e. no 1998 data 
+years = np.arange(t0+1,tT+2)
+years=years.astype(int)
+
+years_sub = np.concatenate((np.arange(t0+1,t_break),np.arange(t_break+1,tT+2,2)))
+
+# +
+## plot estimate 
+
+lw = 3
+for i,paras_est in enumerate([data_para_est_full]):
+    print('whole sample')
+    fig = plt.figure(figsize=([12,4]))
+    this_est = paras_est
+    plt.subplot(1,2,1)
+    plt.title('Permanent Risk')
+    plt.plot(years_sub,
+             this_est[1][0][1:].T**2,
+             'r-o',
+             lw=lw,
+             label='Estimation')
+    plt.grid(True)
+
+    plt.subplot(1,2,2)
+    plt.title('Transitory Risk')
+    plt.plot(years_sub,
+             this_est[1][1][1:].T**2,
+             'r-o',
+             lw=lw,
+             label='Estimation')
+    plt.legend(loc=0)
+    plt.grid(True)
+# -
+
 # ### Estimation using PSID data
 #
 #
@@ -185,7 +280,7 @@ PSID = PSID.dropna(axis=1,how='all')
 
 PSID.dtypes
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## different samples 
 
 education_groups = [1, #'HS dropout',
