@@ -43,7 +43,6 @@ sort ID year month
 
 tabstat ID,s(count) by(date) column(statistics)
 
-
 *****************************************
 ****  Renaming so that more consistent **
 *****************************************
@@ -84,23 +83,40 @@ gen Inciqr_ch = .
 gen Inc_mom = .
 gen Inc_mom_ch = .
 
+*** take the log
+
+foreach mom in var{
+	gen linc`mom'= log(inc`mom') 
+	gen lrinc`mom' = log(rinc`mom') 
+}
+
+
+foreach mom in iqr{
+	gen linc`mom'= log(inc`mom') 
+}
+
+label var linciqr "log perceived iqr"
+label var lincvar "log perceived risk"
+label var lrincvar "log perceived risk (real)"
+	
 ************************************************
 ** spending decisions and perceived risks **
 ************************************************
-
-
-foreach mom in mean var{
-    xtset ID date
-	eststo `mom': xtreg spending inc`mom', fe
-	eststo `mom': xtreg spending rinc`mom', fe
-}
-
-foreach var in UEprobAgg UEprobInd{
-    eststo `var': xtreg spending `var', fe
-}
-esttab using "${sum_table_folder}/ind/spending_reg_fe.csv", mtitles se  r2 replace
 eststo clear
+xtset ID date
 
+label var UEprobAgg "UE expecation"
+
+eststo: reg spending lrincvar
+eststo: areg spending lrincvar, a(date)
+eststo: areg spending lrincvar, a(ID)
+eststo: areg spending lrincvar i.year, a(ID)
+eststo: areg spending lincvar, a(ID)
+eststo: areg spending UEprobAgg, a(date)
+
+esttab using "${sum_table_folder}/ind/spending_reg_fe.csv", label mtitles se r2 ///
+ drop(_cons *.year) replace
+eststo clear
 
 ************************************************
 ** pesistence of the individual perceived risks **
@@ -126,7 +142,6 @@ foreach mom in mean var{
   
 esttab using "${sum_table_folder}/ind/autoregIndM.csv", mtitles se  r2 replace
 eststo clear
-
 
 
 log close 

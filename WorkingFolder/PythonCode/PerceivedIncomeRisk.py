@@ -22,13 +22,12 @@
 #
 # One important assumption prevailing in macroeconomic models with uninsured risks is that agents have a perfect understanding of the income risks. Under the assumption, economists typically estimate the income process based on micro income data and then treat the estimates as the true model parameters known by the agents making decisions in the model\footnote{For example, <cite data-cite="krueger2016macroeconomics">(Krueger, et al.,2016)</cite>, <cite data-cite="bayer2019precautionary">(Bayer, et al., 2019)</cite>.}. But given the mounting evidence that people form expectations in ways deviating from full-information rationality, leading to perennial heterogeneity in economic expectations held by micro agents, this assumption seems to be too stringent. To the extent that agents make decisions based on their *respective* perceptions, understanding the *perceived* income risk profile and its correlation structure with other macro variables are the keys to explaining their behavior patterns.
 #
-# The contributions of this paper are both theoretical and empirical. In the theory, it constructs a subjective model of learning that features agents' imperfect understanding of the size as well as the nature of income risks. In terms of the size, the imperfect understanding is modeled as a lack of knowledge of the true parameter of an assumed income process. Agents form their best guess about the parameters by learning from the past experienced income of their own as well as others. Such experience-based learning mechanisms engenders the perceived risks to be dependent on age, generation, and macroeconomic history. At the same time, the imperfect understanding of the nature of risks is captured by assuming that individuals do not understand if the income risks are commonly shared aggregate shock or idiosyncratic ones. They learn about the model based on a subjective determination of the nature of the past shocks, which is called *attribution* in this paper. The role of attribution in perception formation and prediction has been long developed in social pyschology literature\footnote{See <cite data-cite="heider1958psychology">(Heider, 1958)</cite>, <cite data-cite="kelley1967attribution">(Kelley, 1967)</cite>, <cite data-cite="kelley1980attribution">(Kelley and Michela, 1980)</cite>, <cite data-cite="fiske1991social">(Fiske and Taylor, 1991)</cite>, and <cite data-cite="weiner2010attribution">(Weiner, 2010)</cite>.}. This paper adapts the idea into a learning framework used by economists. With different subjective attributions, agents arrive at different degrees of model parameter uncertainty, thus different perceptions about income risks. 
+# The theoretical contribution of this paper on this front is to establish a unified framework for perceived income risks under different possible income processes seen in the macro literature. Under a clearly specified income process, I can examine to what extent the perceived income risks align with a number of benchmark predictions under full-information rational expectation(FIRE) and with a list of empirically documented facts regarding the income risk dynamics. For instance, is there a large degree of dispersion in risk perceptions among agents who the modelers assume face the same level of risks? Or are perceived risks state-dependent and countercyclical as documented by some literature? Does the perceived risk reflect a quasi-perfect understanding of the income risks of different nature? 
 #
-# This general framework allows me to explore the implications of different attributions. For instance, I show that a higher degree of external attribution, i.e. perceiving the shocks to be common ones instead of idiosyncratic ones, leads to higher risk perceptions. This introduces a well-specified channel through which some imperfect understanding of the nature of shocks leads to differences in risk perceptions. The intuition for this is straightforward. As an econometrician would perfectly understand, learning comes from variations in the sample either cross-sectionally or over time. As agents subjectively perceive the correlation of her own income shocks and others' to be higher, the cross-sectional variation from the sample useful to the learning is reduced, which leads to higehr uncertainty associated with the parameter estimate. I show such a mechanism is generalizable to different assumed income processes such as AR(1) or one with permanent/transitory components of time-varying risks. 
+# Individuals of varying characteristics face potentially different income processes. Even under the same income process, the realizations of income differ across agents due to differences in realized shocks. In addition to the fact that realized income is not observed in these surveys, this makes it additionally challenging to undertake comparisons between perceptions and the underlying process in a similar manner as for expectations about macroeconomic variables such as inflation. A clear comparison of such spirit is also possibly sensitive to the consistency between the frequency of the reported income perception and the frequency of the underlying income process,  i.e. the time aggregation problem. Besides, I also explicitly take into account the presence of the superior information problem extensively discussed in the literature. 
 #
-# Incorporating attribution in learning allows it possible to explore the implications of possible mischaracterization of experienced shocks. Among various possible deviations, I explore a particular kind of attribution error which is reminiscent of the "self-serving bias" in the social psychology. In particular, it assumes that people have a tendency to external (internal) attribution in the face of negative (positive) experiences. By allowing the subjective correlation to be a function of the recent experience such as income change, the model neatly captures this psychological tendency. What is interesting is that such a state-dependence of attribution in learning may help explain why the average perceived risk is lower for the high-income groups than the low-income ones. In the presence of aggregate risks, it also generates counter-cyclical patterns of the average perceived risks, i.e. bad times are associated with high subjective risks. In addition, such a mechanism of asymmetric attribution may also help explain perception patterns by people at different income distributions about their relative position in the society. For instance, based on matched administrative records of income and perception surveys in Danmark, <cite data-cite="hvidberg2020social">(Hvidberg et al, 2021)</cite> found that the high-income group tends to underestimate its rank in the distribution while the low-income group is prone to overestimation. In my model, this can be explained by the fact that high-income(low-income) groups on average are prone to internal-attribution(external attribution), thus perceiving higher (lower) ex-post income inequality, leading to underperceived(overperceived) ranks. Drawing on another line of findings in their paper, it suggests that income perceptions not only affect micro/macro decisions, but also affect people' views about fairness and redistribution policies. In that regard, my model could be potentially useful in explaining differences in fairness attitudes. 
+# After clarifying these issues in the theory, I proceed to establish the empirical facts regarding income risk perceptions. Spefically, I utilize the recently available density forecasts of labor income surveyed by New York Fed's Survey of Consumer Expectation (SCE). What is special about this survey is that agents are asked to provide histogram-type forecasts of their earning growth over the next 12 months together with a set of expectational questions about the macroeconomy. When the individual density forecast is available, a parametric density estimation can be made to obtain the individual-specific subjective distribution. And higher moments reflecting the perceived income risks such as variance, as well as the asymmetry of the distribution such as skewness allow me to directly characterize the perceived risk profile without relying on external estimates from cross-sectional microdata. This provides the first-hand measured perceptions on income risks that are truly relevant to individual decisions.
 #
-# Empirically, the paper sheds light on the perceptions of income risks by utilizing the recently available density forecasts of labor income surveyed by New York Fed's Survey of Consumer Expectation (SCE). What is special about this survey is that agents are asked to provide histogram-type forecasts of their earning growth over the next 12 months together with a set of expectational questions about the macroeconomy. When the individual density forecast is available, a parametric density estimation can be made to obtain the individual-specific subjective distribution. And higher moments reflecting the perceived income risks such as variance, as well as the asymmetry of the distribution such as skewness allow me to directly characterize the perceived risk profile without relying on external estimates from cross-sectional microdata. This provides the first-hand measured perceptions on income risks that are truly relevant to individual decisions.
 # Perceived income risks exhibits a number of important patterns that are consistent with the predictions of my model of experience-based learning with subjective attribution. 
 #
 # - Higher experienced volatility is associated with higher perceived income risks. This helps explain why perceived risks differ systematically across different generations, who have experienced different histories of the income shocks. Besides, perceived risks declines with one's age.
@@ -40,16 +39,26 @@
 # - Perceived income risks translate into economic decisions in a way consistent with precautionary saving motives. In particular, households with higher income risk perceptions expect a higher growth in expenditure, i.e. lower consumption today versus tomorrow.  
 #
 #
-# These patterns suggest that individuals have a roughly good yet imperfect understanding of their income risks. Good, in the sense that subjective perceptions are broadly consistent with the realization of cross-sectional income patterns. This is attained in my model because agents learn from past experiences, roughly as econometricians do. In contrast, subjective perceptions are imperfect in that bounded rationality prevents people from knowing about the true income process perfectly, which even hardworking economists equipped with different advanced econometrical techniques and a larger sample of income data cannot easily claim to have.
+# These patterns suggest that individuals have a roughly good yet imperfect understanding of their income risks. Good, in the sense that subjective perceptions are broadly consistent with the realization of cross-sectional income patterns. This is attained in my model because agents learn from past experiences, roughly as econometricians do. In contrast, subjective perceptions are imperfect in that bounded rationality prevents people from knowing about the true size and nature of income shocks as well some parameters of the process perfectly. If hardworking economists equipped with advanced econometrical techniques and a large sample of income data do not necessarily specify the income process correctly, it is feasible to admit the agents in the model to be subject to the same difficulty. 
 #
-# As illustrated by much empirical work of testing the rationality in expectation formation, it is admittedly challenging to separately account for the differences in perceptions driven by the "truth" and the part driven by the pure subjective heterogeneity. The most straightforward way seems to be to treat econometrician's external estimates of the income process as the proxy to the truth, for which the subjective surveys are compared. But this approach implicitly assumes that econometricians correctly specify the model of the income process and ignores the possible superior information that is available only to the people in the sample but not to econometricians. The model built in this paper reconciles both possibilities by modeling agents as boundedly rational econometricians subject to model misspecification. 
+# As illustrated by much empirical work of testing the rationality in expectations, it is admittedly challenging to separately account for the differences in perceptions driven by the "truth" and the part driven by the pure subjective heterogeneity. The most straightforward way seems to be to treat econometrician's external estimates of the income process as the proxy to the truth, for which the subjective surveys are compared. But this approach implicitly assumes that econometricians correctly specify the model of the income process and ignores the possible superior information that is available only to the people in the sample but not to econometricians. The model built in this paper reconciles both possibilities by modeling agents as boundedly rational econometricians subject to model misspecifications. 
 #  
 # Finally, the subjective learning model will be incorporated into an otherwise standard life-cycle consumption/saving model with uninsured idiosyncratic and aggregate risks. Experience-based learning makes income expectations and risks state-dependent when agents make dynamically optimal decisions at each point of the time. In particular, higher perceived risks will induce more precautionary saving behaviors. If this perceived risk is state-dependent on recent income changes, it will potentially shift the distribution of MPCs along income deciles, therefore, amplify the channels aggregate demand responses to shocks. 
 #
 #      
 # ##  Related literature
 #
-# From both theoretical and empirical points of view, this paper is an extension of experience-based learning that is developed to account for how experiences shape people's economic expectations and subsequent behaviors. This paper extends the framework in three directions. First, building on the work that shows that experiences affect expectations\footnote{A very close line of literature focuses on the impacts of experience on preferences, such as risk-taking <cite data-cite="malmendier2011depression">Malmendier and Nagel, 2011</cite>.}, such as inflation (<cite data-cite="malmendier2015learning">(Malmendier and Nagel, 2015)</cite>) risky asset return (<cite data-cite="malmendier2019investor">(Malmendier, et al., 2019)</cite>), and housing prices (<cite data-cite="kuchler2019personal">(Kuchler and Zafar, 2019)</cite>). I show in the same framework that perceptions of second moments such as income risks can be influenced by the experienced outcome as well as its volatility. This is confirmed by the empirical evidence using the recently available density survey. This contributes to the understanding of how experiences of first and second moments shape perceptions in higher moments\footnote{For similar evidence for the house price, see <cite data-cite="kuchler2019personal">(Kuchler and Zafar, 2019)</cite>.}.Second, I introduce the subjective attribution into the framework to allow for the possibility of an imperfect understanding of the nature of the shocks. Finally, this paper tries to build such a belief-formation mechanism into workhorse models of consumption/saving to explore its macroeconomic implications. 
+# This paper is the closest to the literature on income risks, precautionary saving, and the partial insurance. 
+#
+# - <cite data-cite="gottschalk1994growth">(Gottschalk et al. 1994)</cite>
+# - <cite data-cite="carroll1997nature">(Carroll and Samwick, 1997)</cite>
+# - <cite data-cite="meghir2004income">(Storesletten et al. 2004)</cite>, 
+# - <cite data-cite="storesletten2004cyclical">(Meghir and Pistaferri, 2004)</cite>, 
+# - <cite data-cite="blundell_consumption_2008">(Blundell et al. 2008)</cite>
+# - <cite data-cite="guvenen2014nature">(Guvenen et al. 2014)</cite>
+# - <cite data-cite="bloom2018great">(Bloom et al. 2018)</cite>
+#
+#
 #
 # Besides, this paper is relevant to four lines of literature. First, it is related to an old but recently reviving interest in studying consumption/saving behaviors in models incorporating imperfect expectations and perceptions. For instance, the closest to the current paper, <cite data-cite="pischke1995individual">(Pischke, 1995)</cite> explores the implications of the incomplete information about aggregate/individual income innovations by modeling agent's learning about inome component as a signal extraction problem. <cite data-cite="wang2004precautionary">(Wang, 2004)</cite> extends the framework to incorporate precautionary saving motives. In a similar spirit, <cite data-cite="carroll_sticky_2018">(Carroll et al. 2018)</cite> reconciles the low micro-MPC and high macro-MPCs by introducing to the model an information rigidity of households in learning about macro news while being updated about micro news. <cite data-cite="rozsypal_overpersistence_2017">(Rozsypal and Schlafmann, 2017)</cite> found that households' expectation of income exhibits an over-persistent bias using both expected and realized household income from Michigan household survey. The paper also shows that incorporating such bias affects the aggregate consumption function by distorting the cross-sectional distributions of marginal propensity to consume(MPCs) across the population.  <cite data-cite="lian2019imperfect">(Lian, 2019)</cite> shows that an imperfect perception of wealth accounts for such phenomenon as excess sensitivity to current income and higher MPCs out of wealth than current income and so forth. My paper has a similar flavor to all of these works in that I also explore the behavioral implications of households' perceptual imperfection. But it has important two distinctions. First, this paper focuses on higher moments such as income risks. Second, most of these existing work either considers inattention of shocks or bias introduced by the model parameter, none of these explores the possible misperception of the nature of income shocks. \footnote{For instance, <cite data-cite="pischke1995individual">(Pischke, 1995)</cite> assumes that agents know perfectly about the variance of permanent and transitory income so that they could filter the two components from observable income changes. This paper instead assumes that that the agents do not observe the two perfectly.} 
 #
@@ -100,7 +109,7 @@ else:
 #
 # ## Income process and risk perceptions
 #
-# Log income of individual $i$ from cohort $c$ at time $t$ follows the following process (<cite data-cite="meghir2004income">(Meghir and Pistaferri(2004)</cite>). Cohort $c$ represents the year of entering the job market. It contains a predictable component $z$, and a stochastical component $e$. The latter consists of aggregate component $g$, idiosyncratic permanent $p$, MA(1) component $\eta$ and a transitory component $\psi$. Here I do not consider unemployment risk since the perceived risk measured in the survey conditions on staying employed.
+# Log income of individual $i$ from cohort $c$ at time $t$ follows the following process (<cite data-cite="meghir2004income">(Meghir and Pistaferri(2004)</cite>). Cohort $c$ represents the year of entering the job market. It contains a predictable component $z$, and a stochastical component $e$. The latter consists of aggregate component $g$, idiosyncratic permanent $\psi$, MA(1) component $\eta$ and a transitory component $\theta$. Here I do not consider unemployment risk since the perceived risk measured in the survey conditions on staying employed.
 #
 # \begin{equation}
 # \begin{split}
@@ -139,7 +148,7 @@ else:
 # - Third, under the assumed progress, the variances of different-natured shocks sum up to exactly the perceived income risks and the loadings of all components are all positive. I report detailed derivations and proofs in the Appendix that these predictions are robust to the alternative income process and the time-aggregation problem discussed in the literature. The latter arises when the underlying income process is set at a higher frequency than the observed frequency of reported income or income expectations. This will cause different sizes of loadings of all future shocks to perceived annual risk but does not change the positivity of the loadings from different components onto perceived risk. 
 #
 # The challenge of testing the third prediction is that the risk parameters are not directly observable. Econometricians and modelers usually estimate them relying upon cross-sectional moment information from some panel data and take them as the model parameters understood perfectly by the agents. I can therefore use econometricians' best estimates using past income data as the FIRE benchmark (I will discuss the concerns of this approach later).
-# Assuming the unexplained income residuals from this estimation regression is $\hat e_{i,t}= y_{i,c,t}-\hat z_{i,c,t}$($\hat z_{i,c,t}$ is the observable counterpart of $z_{i,c,t}$ from data). The unconditional cross-sectional variance of the change in residuals(equivalent to the _income volatility_ or _instability_ in the literature) is the following. Let's call this growth volatility. It can be further decomposed into different components in order to get the component-specific risk. 
+# Assuming the unexplained income residuals from this estimation regression is $\hat e_{i,t}= y_{i,c,t}-\hat z_{i,c,t}$($\hat z_{i,c,t}$ is the observable counterpart of $z_{i,c,t}$ from data). The unconditional cross-sectional variance of the change in residuals(equivalent to the ``income volatility'' or ``instability'' in the literature) is the following. Let's call this growth volatility. It can be further decomposed into different components in order to get the component-specific risk. 
 #
 # \begin{equation}
 # Var(\Delta \hat e_{i,c,t}) = \hat\sigma^2_\xi+\hat\sigma^2_\psi + ((1-\phi)^2+\phi^2+1)\hat\sigma^2_\epsilon+\hat\sigma^2_\theta 
@@ -496,380 +505,7 @@ spending_reg_tb = pd.read_excel('../Tables/spending_reg.xlsx').replace(np.nan,''
 spending_reg_tb
 # -
 
-# #  A model of risk perception formation 
-#
-# This section will show that the empirical patterns discussed above can be reconciled by a model of learning featuring an imperfect understanding of the income process. In particular, the model will specify how experienced volatility is translated into future risk perceptions and how the process also depends on people's perceived nature of the income risks. 
-#
-#
-# ## Under a simple income process 
-#
-# We start by defining an AR(1) process of the individual income. In the next section for a life-cycle consumption problem, we will extend the model for a more realistic income process with risks of different persistence, i.e. permanent and transitory components. In particular, the income of individual $i$ from the cohort $c$ at time $t$ depends on her previous-period income with a persistence parameter of $\rho$ and an individual and time-specific shock $\epsilon_{i,c,t}$\footnote{There are usually predictable components of income by known individual characteristics. It is more accurate to think $y$ here as the unexplained income component.}. I define cohort $c$ to be measured by the year of entry in the job market. 
-#
-# \begin{eqnarray}
-# y_{i,c,t} = \rho y_{i,c,t-1} + \epsilon_{i,c,t}
-# \end{eqnarray}
-#
-# It is assumed that the $\rho$ is the same across all inviduals. Also, I assume the income shock $\epsilon_{i,c,t}$ to be i.i.d., namely independent across individuals and the time and with an identical variance, as defined in the equation below. Later sections will relax this assumption by allowing for cross-sectional correlation, namely some aggregate risks. Further extensions are also allowed for cohort or time-specific volatility. The i.i.d. assumption implies at any time $t$, the variance-covariance matrix of income shocks across individuals is a diagonal matrix defined as below. 
-#
-# \begin{eqnarray}
-# E(\epsilon_{t}'\epsilon_{t}|Y_{t-1}) = \sigma^2 I_n \quad \forall t 
-# \end{eqnarray}
-#
-# where $\sigma^2$ is the volatility of income shock and $I_n$ is an identity matrix whose length is the number of agents in the economy, $n$. Although income volatility is not cohort-specific, any past shock still leaves different impacts on the young and old generations because of different experiences of histories. This is reminiscent of <cite data-cite="bansal2004risks">Storesletten et al. (2004)</cite>. Since both $\rho$ and $\sigma^2$ are not cohort-specific, I drop the subscript $c$ from now on to avoid clustering. 
-#
-# Both $\rho$ and $\sigma$ are the "true" parameters only known by the modeler, but unknown by agents in the economy. Individual $i$ learns about the income process by "running a regression" of the form laid out above using a small sample of her past experience starting from the year of entering the job market $c$ till $t$. Critically, for this paper's purpose,  I allow the experience used for learning to include both her own and others' past income over the same period. It is admittedly bizarre to assume individual agents have full access to the entire population's income. A more realistic assumption could be that only a small cross-sectional sample is available to the agent. Any scope of cross-sectional learning suffices for the point to be made in this paper.  
-
-# If each agent knows _perfectly_ the model parameters $\rho$ and $\sigma$, the uncertainty about future income growth is 
-#
-# \begin{eqnarray}
-# \begin{split}
-# Var^*_{i,t}(\Delta y_{i,t+1}) & =  Var^*_{i,t}(y_{i,t+1}- y_{i,t}) \\ 
-# & =  Var^*_{i,t}((\rho-1)y_{i,t} + \epsilon_{i,t+1}) \\
-# & = Var^*_{i,t}(\epsilon_{i,t+1}) \\
-# & = \sigma^2
-# \end{split}
-# \end{eqnarray}
-#
-# The superscript $*$ is the notation for perfect understanding. The first equality follows because both $y_{i,t}$ and the persistent parameter $\rho$ is known by the agent. The second follows because $\sigma^2$ is also known. 
-#
-# Under _imperfect_ understanding and learning, both $\rho$ and $\sigma^2$ are unknown to agents. Therefore, the agent needs to learn about the parameters from the small panel sample experienced up to that point of the time. We represent the sample estimates of $\rho$ and $\sigma^2$ using $\widehat \rho$ and $\hat{\sigma}^2$. 
-#
-# \begin{eqnarray}
-# \begin{split}
-# \widehat Var_{i,t}(\Delta y_{i,t+1}) & = y_{i,t}^2 \underbrace{\widehat{Var}^{\rho}_{i,t}}_{\text{Persistence uncertainty}} + \underbrace{\hat{\sigma}^2_{i,t}}_{\text{Shock uncertainty}}
-# \end{split}
-# \end{eqnarray}
-#
-# The perceived risks of future income growth have two components. The first one comes from the uncertainty about the persistence parameter. It reflects how uncertain the agent feels about the degree to which realized income shocks will affect her future income, which is non-existent under perfect understanding. I will refer to this as the parameter uncertainty or persistence uncertainty hereafter. Notice the persistence uncertainty is scaled by the squared size of the contemporary income. It implies that the income risks are size-dependent under imperfect understanding. It introduces one of the possible channels via which current income affects perceived income risk. 
-#
-# The second component of perceived risk has to do with the unrealized shock itself. Hence, it can be called shock uncertainty. Because the agent does not know perfectly the underlying volatility of the income shock, she can only infer that from the past volatility. 
-#
-# We assume agents learn about the parameters using a least-square rule widely used in the learning literature (For instance, <cite data-cite="marcet1989convergence">Marcet and Sargent (1989)</cite>, <cite data-cite="evans2012learning">Evans and Honkapohja (2012)</cite>, <cite data-cite="malmendier2015learning">Malmendier and Negal (2015)</cite>) The bounded rationality prevents her from adopting any more sophisticated rule that econometricians may consider to be superior to the OLS in this context. (For instance, OLS applied in autocorrelated models induce bias in estimate.) Under OLS learning, the parameter estimate is the following.
-#
-#
-# \begin{eqnarray}
-# \hat \rho_{i,t} = (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y_{j,t-k-1}y_{j,t-k})
-# \end{eqnarray}
-#
-# The sample variance of regression residuals $\widehat e$, or the mean squared errors (MSE),  in econometrician's word,  are the agents' best guess of the income volatility $\sigma^2$. It can be seen as the experienced volatility over the past history. 
-#
-# \begin{eqnarray}
-# \widehat{\sigma}^2_{i,t} = s^2_{i,t} = \frac{1}{N_{i,t}-1} \sum^{n}_{j=1}\sum^{t-c}_{k=0} \hat e_{j,t-k}^2
-# \end{eqnarray}
-#
-# where $N_{i,t}$ is the size of the panel sample available to the agent $i$ at time t. It is equal to $n_{i}(t-c_{i})$, the number of people in the sample times the duration of agent $i$'s career. 
-#
-# We first consider the case when the agent understands that the income shocks are i.i.d. To put it differently, this is when the agent correctly specify the income model when learning. Under i.i.d. assumption, the estimated uncertainty about the estimate is 
-#
-# \begin{eqnarray}
-# \widehat {Var}^{\rho}_{i,t} = (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}\widehat{\sigma}^2_{i,t}
-# \end{eqnarray}
-#
-# Experience-based learning naturally introduces a mechanism for the perceived income risks to be cohort-specific and age-specific. Different generations who have experienced different realizations of the income shocks have different estimates of $Var^{\rho}$ and $\sigma^2$, thus differ in their uncertainty about future income. In the meantime, people at an older age are faced with a larger sample size than younger ones, this will drive the age profile of perceived risks in line with the observation that the perceived risk is lower as one grows older. Also, note that the learning literature has explored a wide variety of assumptions on the gains from learning to decline over time or age. These features can be easily incorporated into my framework. For now, equal weighting of the past experience suffices for the exposition here. 
-#
-# We can rewrite the perceived risk under correct model specification as the following. 
-#
-#
-# \begin{eqnarray}
-# \widehat{Var}_{i,t}(\Delta y_{i,t+1}) = [(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}y^2_{i,t} + 1] \hat{\sigma}^2_{i,t}
-# \end{eqnarray}
-#
-#
-
-#
-# ## Attribution  
-#
-# Attribution means that agents subjectively determine the nature of the income shocks, or equivalently, form perceptions about the correlation between their own outcome and others. This opens a room for possible model-misspecification about the nature of income shock due to bounded rationality. Although people specify the form of the regression model correctly, they do not necessarily perceive the nature of the income shocks correctly. 
-#
-# Without taking stances on how exactly people might mis-attribute, it is worth discussing the general implications of subjective attribution for risk perceptions. For instance, would it imply a higher perceived income risk if the subjective perception of the cross-sectional correlation is higher? 
-#
-# Under the least-square estimation, the estimated parameter uncertainty takes a general sandwich form as below. It is similar to accounting for within-time clustering in computing standard errors by econometricians. The main distinction is that the following is subjective. 
-#
-# \begin{eqnarray}
-# \begin{split}
-# \tilde {Var}^{\rho}_{i,t} & =   (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(\sum^{t-c}_{k=0}\tilde \Omega_{i,t-k})(\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}
-# \end{split}
-# \end{eqnarray}
-#
-# where $\tilde \Omega_{t-k}$ is the perceived variance-covariance of income and income shocks within each point of time. It reflects how individual $i$ thinks about the correlation between her own income and others'. 
-#
-# \begin{eqnarray}
-# \begin{split}
-# \tilde \Omega_{i,t} = \tilde E_{i,t}(Y_{t-1}e_{t}'e_{t}Y_{t-1})
-# \end{split}
-# \end{eqnarray}
-#
-# In order to get more intuition, we can simplify the matrix in the following way. If we assume constant group size $n$ over time and the homoscedasticity, i.e. income risks $\sigma$ do not change over time, given the individual ascribes a subjective correlation coefficient of $\tilde \delta_{\epsilon, i,t}$ across income shocks and a correlation $\tilde \delta_{y, i,t}$ across the levels of income, $\tilde \Omega_{i,t}$ can be approximated as the following. (See the appendix for derivation) \footnote{This is analogous to the cluster-robust standard error by <cite data-cite="cameron2011robust">Cameron et al. (2011)</cite>. But again, they are different because here it is subjective.} 
-#
-#
-# \begin{eqnarray}
-# \begin{split}
-# \tilde \Omega_{i,t} & \approx \sum^{n}_{j=1}y^2_{j,t} (1+\tilde \delta_{y,i,t}\tilde \delta_{\epsilon,i,t}(n-1))\tilde \sigma^2_{t}
-# \end{split}
-# \end{eqnarray}
-#
-# It follows that the parameter uncertainty under the subjective attribution writes as below.
-#
-# \begin{eqnarray}
-# \begin{split}
-# \tilde {Var}^{\rho}_{i,t} & = (\sum^{t-c}_{k=0}\sum^{n}_{j=1}y^2_{j,t-k-1})^{-1}(1+ \tilde\delta_{i,t}(n-1))\tilde{\sigma}^2_{t}
-# \end{split}
-# \end{eqnarray}
-#
-# Notice we bundle the two correlation coefficients parameters together as a single parameter of the attribution $\tilde\delta_{i,t}$. 
-#
-# \begin{eqnarray}
-# \tilde \delta_{y,i,t}\tilde \delta_{\epsilon,i,t}\equiv \tilde \delta_{i,t}  
-# \end{eqnarray}
-#
-# The subjective attribution is jointly determined by two perceived correlation parameters, $\tilde \delta_{\epsilon}$ and $\tilde \delta_y$. They can be more intuively thought as long-run attribution and short-run attribution, respectively, because the former is the perceived correlation in the level of the income and later in shocks. The multiplication of two jointly governs the degree to which the agents inflate experienced volatility in forming perceptions about future income risks. 
-#
-# We can define internal and external attribution as the following. 
-#
-# \begin{eqnarray}
-# \begin{split}
-# \textrm{Internal attribution: }\quad \tilde\delta_{i,t} = 0 \\
-# \textrm{External attribution: }\quad \tilde\delta_{i,t} \in (0,1]
-# \end{split}
-# \end{eqnarray}
-#
-# The internal attribution represents the scenario when the agent $i$ thinks that her income shock or the long-run income is uncorrelated with others' ($\tilde \delta_{\epsilon} = 0$ or $\tilde \delta_y = 0$). In contrast, the external attribution stands for the case when the agent perceive her own income to be positively correlated with others'. The external attribution attains its maximum value of $1$ if the agent thinks both her income shock and income are perfectly correlated with others. In general, $\tilde \delta_{\epsilon,i,t}$ and $\tilde \delta_{y,i,t}$ are not necessarily consistent with the true income process. Since long-run correlation increases with the short-run correlation, bundling them together as a single parameter is feasible. 
-#
-# Now, it is clear that the subjective attribution affects perceived risks through its effect on parameter uncertainty. One can show that a higher degree of external attribution (a higher $\tilde \delta_{i,t}$)  is associated with higher parameter uncertainty as well as higher perceived risks.  
-#
-# \begin{eqnarray}
-# \begin{split}
-# \tilde {Var}_{i,t}(\Delta y_{i,t+1}|\tilde \delta_{i,t}) >  \tilde {Var}_{i,t}(\Delta y_{i,t+1}|\tilde \delta'_{i,t}) \quad \forall \tilde \delta_{i,t} > \tilde \delta'_{i,t}
-# \end{split}
-# \end{eqnarray}
-#
-# Taking stock, we have the following predictions about how the perceived income risks depend on experienced volatility and subjective attribution. 
-#
-# - Higher experienced volatility, measured by $s^2 \equiv \tilde{\sigma}^2_{i,t}$ leads to higher perceived income risks. 
-#
-# - In the same time, future perceptions of the risks inflate the past volatility proportionally depending on their subjective attribution. A higher degree of external attribution reflected by a higher $\tilde \delta_{i,t}$ implies a higher parameter uncertainty (Figure \ref{fig:corr_var}) and higher inflation of past volatility into the future. (Figure \ref{fig:var_experience_var})
-#
-
-# + {"caption": "Attribution and Parameter Uncertainty", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:corr_var", "widefigure": true}
-## insert figures 
-graph_path = os.path.join(path,'../Graphs/theory/')
-
-fig_list = ['corr_var.jpg']
-            
-nb_fig = len(fig_list)
-file_list = [graph_path+fig for fig in fig_list]
-
-## show figures 
-plt.figure(figsize=(10,10))
-for i in range(nb_fig):
-    plt.subplot(nb_fig,1,i+1)
-    plt.imshow(mpimg.imread(file_list[i]))
-    plt.axis("off")
-
-# + {"caption": "Experienced Volatility and Perceived Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:var_experience_var", "widefigure": true}
-## insert figures 
-graph_path = os.path.join(path,'../Graphs/theory/')
-
-fig_list = ['var_experience_var.jpg']
-            
-nb_fig = len(fig_list)
-file_list = [graph_path+fig for fig in fig_list]
-
-## show figures 
-plt.figure(figsize=(10,10))
-for i in range(nb_fig):
-    plt.subplot(nb_fig,1,i+1)
-    plt.imshow(mpimg.imread(file_list[i]))
-    plt.axis("off")
-# -
-
-#
-# ## Attribution errors
-#
-# Now, let us explore some possible attribution errors. Being subjective attribution, one can possibly think of many forms in which agents' attribution is not in line with the true nature of income shocks. This section explores one plausible possibility. In particular, we incorporate the psychological tendency of ascribing bad experiences to external causes and good experiences to internal ones, which is known as self-serving bias. \footnote{See <cite data-cite="zuckerman1979attribution">(Zuckerman, 1979)</cite>, <cite data-cite="al1993attributional">(Al-Zahrani et al.,1993)</cite>, <cite data-cite="campbell1999self">(Campbell and Sedikides, 1999)</cite>, <cite data-cite="seidel2010blame">(Seidel et al., 2010)</cite>.} The manifestation of the attribution error is that people asymmetrically assign the subjective correlation $\tilde \delta_{i,t}$ depending on the recent income change (or the realized shocks) being positive or negative. 
-#
-# More formally, define an attribution function that maps the recent income change $\Delta y_{i,t}$ into the subjective attribution $\tilde \delta_{i,t}$, according to the following form. 
-# \begin{eqnarray}
-# \begin{split}
-# \tilde \delta(\Delta y_{i,t}) = 1- \frac{1}{(1+e^{\alpha-\theta \Delta y_{i,t}})}
-# \end{split}
-# \end{eqnarray}
-#
-# Figure \ref{fig:theta_corr} plots the attribution function under different parameter value. Basically, the attribution function is a variant of a logistic function with its function value bounded between $[0,1]$. It takes an s-shape and the parameter $\theta$ governs the steepness of the s-shape around its input value.  The higher the value of $\theta$ is,  the more prone to such an error. It takes any non-negative value. $\alpha$ is an adjustable parameter chosen such that the attribution free of attribution errors happens to be equal to the true correlation dictated by the underlying income process, $\delta$. Or it can be used to capture the degree of bias in attribution, which is a separate mechanism from the attribution error examined here. 
-#
-# Such a state-dependence of the attribution leads to systematically higher perceived risks by the "unlucky group", i.e. agents who have experienced negative income shocks than the "lucky group" even if the underlying income process does not have such a feature. It is important to note that this difference still exists even if the underlying shocks are indeed non-independent. Although different types of income shocks have different implications as to which group correctly or mis-specifies the model, it does not alter the distinction between the lucky and unlucky group. To put it differently,  the underlying process only determines who is over-confident or under-confident. But the group with a positive experience (thus internal distribution) is always more certain about their future income than the negative-experienced group. 
-#
-# So far, we have maintained the assumption of i.i.d. shock. What if there is indeed some aggregate risk? It turns out the presence of aggregate risk will induce the counter-cyclical pattern of the average perceived risk under such attribution errors. To see this clearly, I define at each point of the time $t$, there is $\lambda_t$ fraction of the agents that have experienced a positive income change, the "lucky group". Then the average perceived risk across all agents is a weighted average of the perceived risks between two groups. 
-#
-# \begin{eqnarray}
-# \begin{split}
-# \tilde {Var}_{t}(\Delta y_{i,t+1}) & = \underbrace{\lambda_t}_{\text{lucky fraction}} \tilde{Var_t}^{internal} + (1-\lambda_t) \tilde{Var_t}^{external} 
-# \end{split}
-# \end{eqnarray}
-#
-# The counter-cyclicality of perceived risk is very straightforward in such an environment. Imagine a positive aggregate shock at a given time, it leads to a larger fraction of the people who have experienced positive shocks, thus internal attribution and lowers perceived risks, while a negative aggregate shock induces more people to externally attribute and higher perceive risks. 
-#
-# Both the presence of attribution errors and aggregate risks are necessary conditions for generating the counter-cyclicality. Under aggregate risk, the fraction of lucky group $\lambda_t$ is procyclical, while under idiosyncratic risks, it is a constant $0.5$. With attribution error, the perceived risk under external attribution is always higher than that of internal attribution, i.e. $\tilde{Var_t}^{external} >\tilde{Var_t}^{internal}$, while the two are equal without attribution errors. 
-#
-# To summarize, introducing a particular form of attribution errors leads to testable predictions. 
-#
-# - Perceived income risks are state-dependent, i.e. the recent past income,  even if the underlying income process assumes income risks are independent of the past. Because of the attribution errors, we will also see the perceived income risks will be systematically lower for the high-income group than the low-income group.
-#
-# - In the presence of aggregate risks and attribution error, the average perceived risks are counter-cyclical. 
-
-# + {"caption": "Attribution Function", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:theta_corr", "widefigure": true}
-## insert figures 
-graph_path = os.path.join(path,'../Graphs/theory/')
-
-fig_list = ['theta_corr.jpg']
-            
-nb_fig = len(fig_list)
-file_list = [graph_path+fig for fig in fig_list]
-
-## show figures 
-plt.figure(figsize=(10,10))
-for i in range(nb_fig):
-    plt.subplot(nb_fig,1,i+1)
-    plt.imshow(mpimg.imread(file_list[i]))
-    plt.axis("off")
-
-# + {"caption": "Current Income and Perceived Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:var_recent", "widefigure": true}
-## insert figures 
-graph_path = os.path.join(path,'../Graphs/theory/')
-
-fig_list = ['var_recent.jpg']
-            
-nb_fig = len(fig_list)
-file_list = [graph_path+fig for fig in fig_list]
-
-## show figures 
-plt.figure(figsize=(10,10))
-for i in range(nb_fig):
-    plt.subplot(nb_fig,1,i+1)
-    plt.imshow(mpimg.imread(file_list[i]))
-    plt.axis("off")
-# -
-
-# ## Simulation 
-#
-# ### Current income and perceived risks
-#
-# How do perceived risks depend on the current income level of $y_{i,t}$? Since the recent income changes $\Delta y_{i,t}$ triggers asymmetric attribution, the perceived risks depend on the current level of income beyond the past-dependence of future income on current income that is embodied in the AR(1) process. In particular, $\widehat{Var}^\rho_{i,t}$ does not depend on $\Delta y_{i,t}$ while $\tilde{Var}^\rho_{i,t}$ does and is always greater than the former as a positive, it will amplify the loading of the current level of income into perceived risks about future income. This generates a U-shaped perceived income profile depending on current level income.  
-#
-# Figure \ref{fig:var_recent} and \ref{fig:var_recent_sim} plots both the theory-predicted and simulated correlation between $y_{i,t}$ and perceived income risks with/without attribution errors. In the former scenario, perceived risks only mildly change with current income and the entire income profile of perceived risk is approximately flat. In the latter scenario, in contrast, perceived risks exhibit a clear U-shape across the income distribution. People sitting at both ends of the income distribution have high perceived risks than ones in the middle. The non-monotonic of the income profile arise due to the combined effects directly from $y_{i,t}$ and indirectly via its impact on $\tilde Var^{\rho}$. The former effect is symmetric around the long-run average of income (zero here). Deviations from the long-run mean on both sides lead to higher perceived risk. The latter monotonically decreases with current income because higher income level is associated with a more positive income change recently. The two effects combined create a U-shaped pattern.
-#
-# A subtle but interesting point is that the U-shape is skewed toward left, meaning perceived risks decrease with the income over the most part of the income distribution before the pattern reverses. More intuitively, it means that although low and high income perceived risks to be higher because of its deviation from the its long-run mean. This force is muted for the high income group because they have a lower peceived risks due to the attribution errors. 
-
-# + {"caption": "Simulated Income Profile of Perceived Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:var_recent_sim", "widefigure": true}
-## insert figures 
-graph_path = os.path.join(path,'../Graphs/theory/')
-
-fig_list = ['var_recent_sim.jpg']
-            
-nb_fig = len(fig_list)
-file_list = [graph_path+fig for fig in fig_list]
-
-## show figures 
-plt.figure(figsize=(10,10))
-for i in range(nb_fig):
-    plt.subplot(nb_fig,1,i+1)
-    plt.imshow(mpimg.imread(file_list[i]))
-    plt.axis("off")
-# -
-
-# ### Age and experience and perceived risks 
-#
-# Figure \ref{fig:var_age_sim} plots the simulated age profile of perceived income risks with and without attribution errors. Due to experience-based learning, older agents have a larger sample size when learning about the model parameter, which induces the parameter uncertainty to be lower. What is interesting is that with attribution errors, since the parameter uncertainty is inflated proportionally with the degree of attribution, it makes the negative correlation between the perceived income risks and age more salient. This is consistent with our empirical findings shown in Figure \ref{fig:ts_incvar_age}. 
-
-# + {"caption": "Simulated Experience of Volatility and Perceived Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:var_experience_var_sim", "widefigure": true}
-## insert figures 
-graph_path = os.path.join(path,'../Graphs/theory/')
-
-fig_list = ['var_experience_var_sim.jpg']
-            
-nb_fig = len(fig_list)
-file_list = [graph_path+fig for fig in fig_list]
-
-## show figures 
-plt.figure(figsize=(10,10))
-for i in range(nb_fig):
-    plt.subplot(nb_fig,1,i+1)
-    plt.imshow(mpimg.imread(file_list[i]))
-    plt.axis("off")
-
-# + {"caption": "Simulated Age Profile of Perceived Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:var_age_sim", "widefigure": true}
-## insert figures 
-graph_path = os.path.join(path,'../Graphs/theory/')
-
-fig_list = ['var_age_sim.jpg']
-            
-nb_fig = len(fig_list)
-file_list = [graph_path+fig for fig in fig_list]
-
-## show figures 
-plt.figure(figsize=(10,10))
-for i in range(nb_fig):
-    plt.subplot(nb_fig,1,i+1)
-    plt.imshow(mpimg.imread(file_list[i]))
-    plt.axis("off")
-# -
-
-#
-# ### Aggregate risk and counter-cyclicality 
-#
-# Previously, I assume the underlying shock is i.i.d. This section considers the implication of the attribution errors in the presence of both aggregate and idiosyncratic risks. This can be modeled by assuming that the shocks to individuals' income are positively correlated with each other at each point of the time. Denoting $\delta>0$ as the true cross-sectional correlation of income shocks, the conditional variance-covariance of income shocks within each period is the following. 
-#
-#
-# \begin{eqnarray}
-# \begin{split}
-# E(\epsilon_{t}'\epsilon_{t}|Y_{t-1}) = \Sigma^2 = \sigma^2\Omega \quad \forall t  
-# \end{split}
-# \end{eqnarray}
-#
-# where $\Omega$ takes one in its diagonal and $\delta$ in off-diagonal.  
-#
-# The learning process and the attribution errors all stay the same as before. Individuals specify their subjective structure of the shocks depending on the sign and size of their own experienced income changes. By the same mechanism elaborated above, a lucky person has lower perceived risks than her unlucky peer at any point of the time. This distinction between the two group stays the same even if the underlying income shocks are indeed correlated. 
-#
-# What's new in the presence of aggregate risks lies in the behaviors of average perceived risks, because there is an aggregate shock that drives the comovement of the income shocks affecting individuals. Compared to the environment with pure idiosyncratic risks, there is no longer an approximately equal fraction of lucky and unlucky agents at a given time. Instead, the relative fraction of each group depends on the recently realized aggregate shock. If the aggregate shock is positive, more people have experienced good luck and may, therefore, underestimate the correlation (a smaller $\tilde \delta$). This drives down the average perceived income risks among the population. If the aggregate shock is negative, more people have just experienced income decrease thus arriving at a higher perceived income uncertainty. 
-#
-# This naturally leads to a counter-cyclical pattern of the average perceived risks in the economy. The interplay of aggregate risks and attribution errors adds cyclical movements of the average perceived risks. The two conditions are both necessary to generate this pattern. Without the aggregate risk, both income shocks and perceived income shocks are purely idiosyncratic and they are averaged out in the aggregate level. Without attribution errors, agents symmetrically process experiences when forming future risk perceptions.
-#
-# The upper panel in Figure \ref{fig:recent_change_var_sim} illustrates the first point. The scatter plots showcase the correlation between average income changes across population and average perceive risks under purely idiosyncratic risks and aggregate risks. The negative correlation with aggregate risks illustrate the counter-cylical perceived risks. There is no such a correlation under purely idiosyncratic risks. The bottom panel in Figure \ref{fig:recent_change_var_sim} testifies the second point. It plots the same correlation with and without attribution errors when the aggregate risk exists. Attribution errors brings about the asymmetry not seen when the bias is absent. 
-
-# + {"caption": "Simulatd Average Labor Market and Perceived Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:recent_change_var_sim1", "widefigure": true}
-## insert figures 
-graph_path = os.path.join(path,'../Graphs/theory/')
-
-fig_list = ['var_recent_change_sim.jpg']
-            
-nb_fig = len(fig_list)
-file_list = [graph_path+fig for fig in fig_list]
-
-## show figures 
-plt.figure(figsize=(70,45))
-for i in range(nb_fig):
-    plt.subplot(nb_fig,1,i+1)
-    plt.imshow(mpimg.imread(file_list[i]))
-    plt.axis("off")
-
-# + {"caption": "Simulated Average Labor Market Outcome and Perceived Risk", "code_folding": [], "hide_input": true, "hide_output": true, "label": "fig:recent_change_var_sim2", "widefigure": true}
-## insert figures 
-graph_path = os.path.join(path,'../Graphs/theory/')
-
-fig_list = ['var_recent_change_sim2.jpg']
-            
-nb_fig = len(fig_list)
-file_list = [graph_path+fig for fig in fig_list]
-
-## show figures 
-plt.figure(figsize=(70,45))
-for i in range(nb_fig):
-    plt.subplot(nb_fig,1,i+1)
-    plt.imshow(mpimg.imread(file_list[i]))
-    plt.axis("off")
-# -
-
-# # Experience-based life-cycle consumption/saving  
+# # A life-cycle model with heterogeneous risk perceptions
 #
 # Each consumer solves a life-cycle consumption/saving problem formulated by <cite data-cite="gourinchas2002consumption">Gourinchas and Parker, 2002</cite>. There is only one deviation from the original model: each agent imperfectly knows the parameters of income process over the life cycle and forms his/her best guess at each point of the time based on past experience. I first set up the model under the assumption of perfect understanding and then extend it to the imperfect understanding scenarior in the next section.   
 #
@@ -941,7 +577,7 @@ for i in range(nb_fig):
 # where the agents treat total cash in hand and permanent income as the two state variables. On the backgroud, the income process parameters $\Gamma = [\phi,\sigma_n,\sigma_u]$ affect the consumption decisions. But to the extent that the agents have perfect knowledge of them, they are simply taken as given. 
 #
 #
-# ## Under imperfect understanding/learning from experience
+# ## Under heterogenous perceptions
 #
 # The crucial deviation of this model from the standard framework reproduced above is that the agents do not know about the income parameters $\Gamma$, and the decisions are only based on their best guess obtained through learning from experience in a manner we formulate in the previous section. This changes the problem in at least two ways. First, given agents potentially differ in their experiences, perceived income processes differ. Second, even if under same experiences, different subjective determinations of the nature of income shocks result in different risk perceptions. To allow for the cross-sectional heterogeneity across individuals and cohorts in income risk perceptions, now explicitly define the problem using agent-time-cohort-specific value function. For agent $i$ from cohort $c=t-\tau$ at time $t$, the value function is the following.
 #

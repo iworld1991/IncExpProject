@@ -14,7 +14,7 @@
 #     name: python3
 # ---
 
-# ## Perceived Labor Income Risks and Asset Returns
+# ## Perceived Labor Income Risks and Macroeconomic conditions
 #
 #
 # - This notebook first downloads asset return indicators
@@ -63,7 +63,7 @@ pd.options.display.float_format = '{:,.2f}'.format
 ## s&p 500 series
 
 start = datetime.datetime(2000, 1, 30)
-end = datetime.datetime(2020, 4, 30)
+end = datetime.datetime(2020, 3, 30)
 
 # + {"code_folding": []}
 ## downloading the data from Fred
@@ -193,7 +193,7 @@ for var in vars_cat:
     IncSCEIndMoms[var] = pd.Categorical(IncSCEIndMoms[var],ordered = False)
 
 # + {"code_folding": [14]}
-moms = ['incexp','incvar','inciqr','rincexp','rincvar']
+moms = ['incexp','incvar','inciqr','rincexp','rincvar','incskew']
 #moms_est = ['IncSkew','IncKurt']
 
 ## compute population summary stats for these ind moms
@@ -220,36 +220,7 @@ IncSCEPopMomsMean = pd.pivot_table(data = IncSCEIndMoms,
 
 T = len(IncSCEPopMomsMed)
 
-# ### 3. Cross-sectional patterns of subjective distributions
-#
-
-# + {"code_folding": []}
-### histograms
-
-for mom in moms:
-    if mom !='incskew':
-        to_plot = IncSCEIndMoms[mom]
-    else:
-        mom_nonan = IncSCEIndMoms[mom].dropna()
-        mom_lb, mom_ub = np.percentile(mom_nonan,2),np.percentile(mom_nonan,98) ## exclude top and bottom 3% observations
-        #print(mom_lb)
-        #print(mom_ub)
-        to_keep = (mom_nonan < mom_ub) & (mom_nonan > mom_lb) & (mom_nonan!=0)
-        #print(to_keep.shape)
-        to_plot = mom_nonan[to_keep]
-    #print(mom_nonan_truc.shape)
-    
-    fig,ax = plt.subplots(figsize=(6,4))
-    sns.distplot(to_plot,
-                 kde = True,
-                 color = 'red',
-                 bins = 20)
-    plt.xlabel(mom, fontsize = 13)
-    plt.ylabel("Frequency",fontsize = 13)
-    plt.savefig('../Graphs/ind/hist_'+str(mom)+'.jpg')
-# -
-
-# ### 4. Combinine the two series
+# ### 3. Combinine the two series
 
 # + {"code_folding": []}
 ## streamline the dates for merging
@@ -312,7 +283,7 @@ dt_combIndM = pd.merge(dt_combMacroM,
 dt_combIndM.to_stata('../SurveyData/SCE/IncExpSCEIndMacroM.dta')
 # -
 
-# ### 5. Seasonal adjustment (not successful yet)
+# ### 4. Seasonal adjustment (not successful yet)
 
 # +
 #to_sa_test = ['meanMed']
@@ -347,14 +318,14 @@ for sr in to_sa_test:
 """
 # -
 
-# ### 6. Correlation with labor market outcomes 
+# ### 5. Correlation with labor market outcomes 
 
 corr_table = dt_combM.corr()
 corr_table.to_excel('../Tables/corrM.xlsx')
 corr_table
 
-# + {"code_folding": [16]}
-lag_loop = 5
+# + {"code_folding": [2, 16]}
+lag_loop = 7
 
 def pval_str(pval):
     if pval < 0.01:
@@ -372,7 +343,7 @@ def corrtostr(corr):
 
 def corrprint(corr,
               var):
-    print('correlation coefficient betwen sp500 and median'+
+    print('correlation coefficient betwen ue and median'+
               str(var) +
               ' is ' +
               str(round(corr[0],2)) +
@@ -385,7 +356,7 @@ col_list = []
 
 
 ## mean
-for moms in ['var','iqr','rvar']:
+for moms in ['var','iqr','rvar','skew']:
     col_list.append('mean:'+str(moms))
     for lag in range(lag_loop):
         corr = st.pearsonr(np.array(dt_combM['he'][:-(lag+1)]),
@@ -394,6 +365,7 @@ for moms in ['var','iqr','rvar']:
         corr_str = corrtostr(corr)
         corr_list.append(corr_str)
         #corrprint(corr,moms)
+"""
 ## median
 for moms in ['var','iqr','rvar']:
     col_list.append('median:'+str(moms))
@@ -404,7 +376,7 @@ for moms in ['var','iqr','rvar']:
         corr_str = corrtostr(corr)
         corr_list.append(corr_str)
         #corrprint(corr, moms)
-
+"""
 
 
 corr_array = np.array(corr_list).reshape([int(len(corr_list)/lag_loop),
@@ -446,7 +418,7 @@ f.write(endtex)
 f.close()
 
 ## output table to excel
-corr_df.to_excel('../Tables/macro_corr_he.xlsx')
+corr_df.T.to_excel('../Tables/macro_corr_he.xlsx')
 # -
 
 mom_dict = {'exp':'expected nominal growth',
@@ -463,7 +435,7 @@ figsize = (80,40)
 lw = 20
 fontsize = 80
 
-for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
+for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
     ax.plot(dt_combM['he'],
@@ -495,10 +467,10 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
 
 dt_combM3mv = dt_combM.rolling(3).mean()
 
-# +
+# + {"code_folding": [2]}
 ## plots of correlation for 3-month moving mean average
 
-for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
+for i,moms in enumerate( ['exp','var','iqr','rexp','rvar','skew']):
     fig, ax = plt.subplots(figsize = figsize)
     ax2 = ax.twinx()
     ax.plot(dt_combM3mv['he'],
@@ -524,7 +496,7 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
     plt.savefig('../Graphs/pop/tsMean3mv'+str(moms)+'_he.jpg')
 # -
 
-# ### 6b. Individual regressions
+# ### 5b. Individual regressions
 
 """
 for i,moms in enumerate( ['incexp','incvar','inciqr','rincvar','incskew']):
@@ -537,7 +509,7 @@ for i,moms in enumerate( ['incexp','incvar','inciqr','rincvar','incskew']):
     print(rs.summary())
 """
 
-# ### 7. Correlation with stock market returns and times series patterns
+# ### 6. Correlation with stock market returns and times series patterns
 
 # + {"code_folding": [4, 18]}
 ## try different lags or leads
@@ -572,7 +544,7 @@ corr_list = []
 col_list = []
 
 #print('median')
-for moms in ['var','iqr','rvar','skew']:
+for moms in ['var','iqr','rvar']:
     col_list.append('median:'+str(moms))
     for lead in range(lead_loop):
         corr = st.pearsonr(np.array(dt_combM['sp500'][lead+1:]),
@@ -582,7 +554,7 @@ for moms in ['var','iqr','rvar','skew']:
         corr_list.append(corr_str)
         #corrprint(corr, moms)
 
-for moms in ['var','iqr','rvar','skew']:
+for moms in ['var','iqr','rvar']:
     col_list.append('mean:'+str(moms))
     for lead in range(lead_loop):
         corr = st.pearsonr(np.array(dt_combM['sp500'][lead+1:]),
@@ -948,7 +920,7 @@ for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
 
 
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## plots of correlation for Mean population stats
 
 for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):
@@ -987,7 +959,7 @@ crr3mv_table = dt_combM3mv.corr()
 crr3mv_table.to_excel('../Tables/corr3mvM.xlsx')
 crr3mv_table
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## plots of correlation for 3-month moving MEDIAN average
 
 for i,moms in enumerate( ['exp','var','iqr','rexp','rvar']):

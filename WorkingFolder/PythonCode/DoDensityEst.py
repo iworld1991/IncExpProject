@@ -75,7 +75,8 @@ for i in range(nobs):
     print(Inc)
     try:
     #if not np.isnan(Inc).any():
-        stats_est = SynDensityStat(SCE_bins,Inc)     
+        stats_est = SynDensityStat(SCE_bins,
+                                   Inc)     
         if not np.isnan(stats_est['mean']).any():
             ct = ct+1
             IndSCE_moment_est['IncMean'][i] = stats_est['mean']

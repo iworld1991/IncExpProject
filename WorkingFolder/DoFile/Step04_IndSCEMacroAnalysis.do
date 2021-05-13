@@ -40,7 +40,6 @@ gen `mom'_ch = `mom' - l1.`mom'
 label var `mom'_ch "change in `mom'"
 }
 
-
 ************************
 ***** regression *******
 ***********************

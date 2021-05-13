@@ -37,7 +37,7 @@ def toPara(vec,
     return vec[:ma_q-1], vec[ma_q:].reshape(2,t)
 
 
-# + {"code_folding": [38, 42, 53, 66, 74, 89, 97, 115, 140, 149, 177, 181, 186, 202, 222, 236, 253, 273, 279, 301, 324, 352, 370, 380, 390, 410, 438, 461, 479, 508]}
+# + {"code_folding": [38, 42, 53, 66, 74, 89, 97, 115, 140, 149, 177, 181, 186, 202, 222, 236, 253, 273, 279, 301, 324, 352, 370, 380, 390, 410, 438, 461, 479, 508, 525]}
 ## class of integrated moving average process, trend/cycle process allowing for serial correlation transitory shocks
 class IMAProcess:
     '''
@@ -571,32 +571,32 @@ class IMAProcess:
 # + {"code_folding": []}
 ## debugging test of the data 
 
-t = 100
-ma_nosa = np.array([1])
-p_sigmas = np.arange(t)  # sizes of the time-varying permanent volatility 
-p_sigmas_rw = np.ones(t) # a special case of time-invariant permanent volatility, random walk 
-p_sigmas_draw = np.random.uniform(0,1,t) ## allowing for time-variant shocks 
+#t = 100
+#ma_nosa = np.array([1])
+#p_sigmas = np.arange(t)  # sizes of the time-varying permanent volatility 
+#p_sigmas_rw = np.ones(t) # a special case of time-invariant permanent volatility, random walk 
+#p_sigmas_draw = np.random.uniform(0,1,t) ## allowing for time-variant shocks 
 
-pt_ratio = 0.33
-t_sigmas = pt_ratio * p_sigmas_draw # sizes of the time-varyingpermanent volatility
-sigmas = np.array([p_sigmas_draw,
-                   t_sigmas])
+#pt_ratio = 0.33
+#t_sigmas = pt_ratio * p_sigmas_draw # sizes of the time-varyingpermanent volatility
+#sigmas = np.array([p_sigmas_draw,
+#                   t_sigmas])
 
-dt = IMAProcess(t = t,
-                ma_coeffs = ma_nosa)
-dt.sigmas = sigmas
-dt.n_agg = 12
+#dt = IMAProcess(t = t,
+#                ma_coeffs = ma_nosa)
+#dt.sigmas = sigmas
+#dt.n_agg = 12
 
-sim_data = dt.SimulateSeries(n_sim = 800)
-sim_moms = dt.SimulatedMoments()
+#sim_data = dt.SimulateSeries(n_sim = 800)
+#sim_moms = dt.SimulatedMoments()
 
 # + {"code_folding": []}
 ## invoke an instance 
 
-dt_fake = IMAProcess(t = t,
-                     ma_coeffs = ma_nosa)
-dt_fake.sigmas = sigmas 
-dt_fake.n_agg = 12
+#dt_fake = IMAProcess(t = t,
+#                     ma_coeffs = ma_nosa)
+#dt_fake.sigmas = sigmas 
+#dt_fake.n_agg = 12
 
 #data_fake= dt_fake.SimulateSeries(n_sim = 500)
 #moms_fake = dt_fake.SimulatedMoments()
@@ -641,16 +641,16 @@ dt_fake.n_agg = 12
 
 # ## Estimate volatility 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## simulate volatility 
 
-dt.SimulateSVols()
-dt.SimulateSVolsAgg()
-dt.SimulateSVolsAggMoms()
+#dt.SimulateSVols()
+#dt.SimulateSVolsAgg()
+#dt.SimulateSVolsAggMoms()
 
-dt_fake.SimulateSVols()
-dt_fake.SimulateSVolsAgg()
-svols_fake = dt_fake.SimulateSVolsAggMoms()
+#dt_fake.SimulateSVols()
+#dt_fake.SimulateSVolsAgg()
+#svols_fake = dt_fake.SimulateSVolsAggMoms()
 
 # + {"code_folding": []}
 #plt.plot(dt.vols_agg_sim_moms['ATV'])

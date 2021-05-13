@@ -10,6 +10,7 @@
 clear
 global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
 global folder "${mainfolder}/SurveyData/"
+global data_folder "/Users/Myworld/Dropbox/ExpProject/workingfolder/SurveyData/SCE/"
 global otherfolder "${mainfolder}/OtherData/"
 global sum_graph_folder "${mainfolder}/Graphs/pop"
 global sum_table_folder "${mainfolder}/Tables"
@@ -19,9 +20,9 @@ pwd
 set more off 
 
 
-use "${folder}/SCE/NYFED_SCE_13_16.dta",clear
-append using "${folder}/SCE/NYFED_SCE_17_19.dta",force
-append using  "${folder}/SCE/NYFED_SCE_20.dta",force
+use "${data_folder}NYFED_SCE_13_16.dta",clear
+append using "${data_folder}NYFED_SCE_17_19.dta",force
+append using  "${data_folder}NYFED_SCE_20.dta",force
 
 sort date
 unique userid
@@ -256,7 +257,8 @@ global keeplist date year month userid tenure weight ///
 	   Q1 Q2 Q3 Q4new Q5new Q6new Q9_mean Q9_var ///
 	   Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 Q12new Q13new Q14new ///
 	   Q25v2 Q25v2part2 Q31v2 Q31v2part2 C1_mean C1_var ///
-	   Q26v2 Q26v2part2 QNUM1 QNUM2 QNUM3 QNUM5 QNUM6 QNUM8 QNUM9 
+	   Q26v2 Q26v2part2 QNUM1 QNUM2 QNUM3 QNUM5 QNUM6 QNUM8 QNUM9  ///
+	   Q17new Q18new Q19 Q20new Q21new Q22new 
  
 keep ${keeplist}
 

@@ -85,7 +85,6 @@ rename IncSkew incskew
 rename Q24_rmean rincmean
 rename Q24_rvar rincvar
 
-rename Q36 educ
 rename D6 HHinc 
 rename Q32 age 
 rename Q33 gender 
@@ -144,6 +143,17 @@ label var state_id "state id"
 
 *egen byear_g = cut(byear), group(4)
 
+egen byear_5yr = cut(byear), ///
+     at(1945 1950 1955 1960 1965 1970 ///
+	    1975 1980 1985 1990 1995 2000 ///
+		2005 2010)
+label var byear_5yr "5-year cohort"
+
+egen age_5yr = cut(age), ///
+     at(20 25 30 35 40 45 ///
+	    50 55 60)
+label var age_5yr "5-year age"
+
 gen byear_g = cond(byear>=1980,1,0)
 label define byearglb 0 "before 1980s" 1 "after 1980s"
 *label define byearglb 0 "1950s" 1 "1960s" 2 "1970s" 3 "1980s"
@@ -189,7 +199,7 @@ label value nlit_g nlitlb
 
 local group_vars byear_g age_g edu_g HHinc_g fbetter nlit_g
 
-
+ddd
 *********************************
 *** bar charts *****
 **********************************
@@ -204,30 +214,92 @@ graph bar incvar, ///
 graph export "${sum_graph_folder}/boxplot_var_HHinc_stata.png", as(png) replace 
 
 
+graph bar rincvar, ///
+           over(HHinc,relabel(1 "<10k" 2 "<20k" 3 "<30k" 4 "<40k" 5 "<50k" 6 "<60k" 7 "<75k" 8 "<100k" 9 "<150k" 10 "<200k" 11 ">200k")) ///
+		   bar(1, color(navy)) ///
+		   title("Perceived Real Income Risk by Household Income") ///
+		   b1title("Household income") ///
+		   ytitle("Average perceived risk of real income") 
+graph export "${sum_graph_folder}/boxplot_rvar_HHinc_stata.png", as(png) replace 
+
 *********************************
 *** generate group summary data file *****
 **********************************
 
 * by age 
 
-
 preserve 
-collapse incvar, by(age) 
+collapse incvar rincvar, by(age) 
 save "${folder}/SCE/incvar_by_age.dta",replace
+restore 
+
+* by age x gender 
+preserve
+collapse incvar rincvar, by(age gender) 
+save "${folder}/SCE/incvar_by_age_gender.dta",replace 
 restore 
 
 * by age x education 
 preserve
-collapse incvar, by(age edu_g) 
+collapse incvar rincvar, by(age edu_g) 
 save "${folder}/SCE/incvar_by_age_edu.dta",replace 
 restore 
 
-
-* by age x gender 
+* by age x education x gender
 preserve
-collapse incvar, by(age gender) 
-save "${folder}/SCE/incvar_by_age_gender.dta",replace 
+collapse incvar rincvar, by(age edu_g gender) 
+save "${folder}/SCE/incvar_by_age_edu_gender.dta",replace 
 restore 
+
+* by age5 x education x gender
+preserve
+collapse incvar rincvar, by(age_5yr edu_g gender) 
+save "${folder}/SCE/incvar_by_age5y_edu_gender.dta",replace 
+restore 
+
+* by year of birth
+
+preserve 
+collapse incvar rincvar, by(byear) 
+save "${folder}/SCE/incvar_by_byear.dta",replace
+restore 
+
+* by year of birth(5year) and age
+
+preserve 
+collapse incvar rincvar, by(byear_5yr age) 
+save "${folder}/SCE/incvar_by_byear_5_yr_age.dta",replace
+restore 
+
+* by year of birth and gender
+
+preserve 
+collapse incvar rincvar, by(byear gender) 
+save "${folder}/SCE/incvar_by_byear_gender.dta",replace
+restore 
+
+* by year of birth and education
+
+preserve 
+collapse incvar rincvar, by(byear edu_g) 
+save "${folder}/SCE/incvar_by_byear_edu.dta",replace
+restore 
+
+* by year of birth(5 year cohort) and education
+
+preserve 
+collapse incvar rincvar, by(byear_5yr edu_g) 
+save "${folder}/SCE/incvar_by_byear_5yr_edu.dta",replace
+restore 
+
+
+* by year of birth(5 year cohort) and education and gender 
+
+preserve 
+collapse incvar rincvar, by(byear_5yr edu_g gender) 
+save "${folder}/SCE/incvar_by_byear_5yr_edu_gender.dta",replace
+restore 
+
 
 **********************************
 *** tables and hists of Vars *****

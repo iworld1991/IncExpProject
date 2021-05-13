@@ -30,7 +30,7 @@ import copy as cp
 
 from IncomeProcess import IMAProcess as ima
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## debugging test of the data 
 
 t = 100
@@ -166,52 +166,73 @@ plt.legend(loc=0)
 
 # + {"code_folding": []}
 ## PSID data 
-PSID = pd.read_stata('../../../PSID/J276289/psid_matrix.dta')   
+PSID = pd.read_stata('../../../PSID/J276289/psid_matrix.dta',
+                    convert_categoricals=False)   
 PSID.index = PSID['uniqueid']
 PSID = PSID.drop(['uniqueid'], axis=1)
 PSID = PSID.dropna(axis=0,how='all')
 PSID = PSID.dropna(axis=1,how='all')
+
+#PSID = PSID.rename(columns={'edu_i_g':'edu_i_g', ##
+#                           'sex_h':'sex_h',   # 1 male 2 female 
+#                           'byear_5yr':'byear_5yr'})
+
+#PSID=PSID.dropna(subset=['byear_5yr'])
+
+#PSID['byear_5yr'] = PSID['byear_5yr'].astype('int32')
+
 # -
 
-PSID.shape
+PSID.dtypes
 
 # + {"code_folding": []}
 ## different samples 
 
-education_groups = ['HS dropout',
-                   'HS graduate',
-                   'college graduates/above']
+education_groups = [1, #'HS dropout',
+                   2, # 'HS graduate',
+                   3] #'college graduates/above'
+gender_groups = [1, #'male',
+                2] #'male'
 
-samples = []
-para_est_list = []
+#byear_groups = list(np.array(PSID.byear_5yr.unique(),dtype='int32'))
+
+age_groups = list(np.array(PSID.age_5yr.unique(),dtype='int32'))
+
+
+group_by = ['edu_i_g','sex_h','age_5yr']
+all_drop = group_by #+['age_h','byear_5yr']
 
 ## full sample 
-sample =  PSID.drop(['edu_i_g'],axis=1)
-samples.append(sample)
+sample_full =  PSID.drop(all_drop,axis=1)
 
-## sub education sample 
+
+## sub sample 
+sub_samples = []
+para_est_list = []
+sub_group_names = []
+
 for edu in education_groups:
-    sample = PSID.loc[PSID['edu_i_g']==edu].drop(['edu_i_g'],axis=1)
-    samples.append(sample)
+    for gender in gender_groups:
+        for age5 in age_groups:
+            belong = (PSID['edu_i_g']==edu) & (PSID['sex_h']==gender) & (PSID['age_5yr']==age5)
+            obs = np.sum(belong)
+            #print(obs)
+            if obs > 1:
+                sample = PSID.loc[belong].drop(all_drop,axis=1)
+                sub_samples.append(sample)
+                sub_group_names.append((edu,gender,age5))
 
-# + {"code_folding": [1]}
-## estimation
-for sample in samples:
-    data = np.array(sample)
-    data_mean = np.nanmean(data,axis=0)
-    data_var = ma.cov(ma.masked_invalid(data), rowvar=False)
-    moms_data = {'Mean':data_mean,
-                 'Var':data_var}
-    ## initialize 
-    dt_data_est = cp.deepcopy(dt)
-    t_data = len(data_var)+1
-    dt_data_est.t = t_data
-    dt_data_est.GetDataMoments(moms_data)
-    para_guess_this = np.ones(2*t_data + dt_data_est.ma_q)
-    
+# + {"code_folding": []}
+## estimation for full sample 
+
+data_para_est_full = estimate_sample(sample_full)
+
+# + {"code_folding": []}
+## estimation for sub-group
+
+for sample in sub_samples:
     ## estimation
-    data_para_est = dt_data_est.EstimatePara(method='CG',
-                               para_guess = para_guess_this)
+    data_para_est = estimate_sample(sample)
     para_est_list.append(data_para_est)
 
 # + {"code_folding": []}
@@ -229,15 +250,14 @@ years_sub
 
 years
 
-# + {"code_folding": [0]}
-## check the estimation and true parameters 
+# +
+## plot estimate 
 
 lw = 3
-for i,paras_est in enumerate(para_est_list):
+for i,paras_est in enumerate([data_para_est_full]):
+    print('whole sample')
     fig = plt.figure(figsize=([12,4]))
-    
     this_est = paras_est
-    
     plt.subplot(1,2,1)
     plt.title('Permanent Risk')
     plt.plot(years_sub,
@@ -256,13 +276,43 @@ for i,paras_est in enumerate(para_est_list):
              label='Estimation')
     plt.legend(loc=0)
     plt.grid(True)
+
+# + {"code_folding": [5]}
+## generate a dataset of year, edu, gender, byear_5yr permanent and transitory 
+
+est_df = pd.DataFrame()
+
+#vols_est_sub_group = pd.DataFrame([])
+for i,para_est in enumerate(para_est_list):
+    #print(i)
+    group_var = sub_group_names[i]
+    #print(group_var)
+    times = len(years_sub)
+    this_est = pd.DataFrame([[group_var[0]]*times,   ##educ
+                             [group_var[1]]*times,   ## gender 
+                             [group_var[2]]*times,   ## 
+                             list(years_sub),
+                             para_est[1][0],
+                             para_est[1][1]]).transpose()
+    est_df = est_df.append(this_est)
 # -
 
+## post processing
+est_df.columns = grouping_by+['year','permanent','transitory']
+est_df=est_df.dropna(how='any')
+for var in grouping_by+['year']:
+    est_df[var] = est_df[var].astype('int32')
+
+est_df.to_stata('../OtherData/psid/psid_history_vol_decomposed_edu_gender_age5.dta')
 
 # ### Experienced volatility specific to cohort 
 
 # + {"code_folding": []}
-history_vols_whole = pd.DataFrame([list(years_sub),para_est_list[3][1][0],para_est_list[3][1][1]]).transpose()
+## full sample 
+history_vols_whole = pd.DataFrame([list(years_sub),para_est_full[1][0],para_est_full[1][1]]).transpose()
+
+
+## sub group 
 history_vols_hsd = pd.DataFrame([list(years_sub),para_est_list[0][1][0],para_est_list[0][1][1]]).transpose()
 history_vols_hsg = pd.DataFrame([list(years_sub),para_est_list[1][1][0],para_est_list[1][1][1]]).transpose()
 history_vols_cg = pd.DataFrame([list(years_sub),para_est_list[2][1][0],para_est_list[2][1][1]]).transpose()
@@ -275,10 +325,11 @@ for dt in [history_vols_whole,
 # -
 
 ## whole data 
-dataset_psid = pd.read_excel('../OtherData/psid/psid_history_vol_test.xls')
-dataset_psid_edu = pd.read_excel('../OtherData/psid/psid_history_vol_edu_test.xls')
+dataset_psid = pd.read_excel('../OtherData/psid/psid_history_vol.xls')
+## education data
+dataset_psid_edu = pd.read_excel('../OtherData/psid/psid_history_vol_edu.xls')
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## for whole sample
 names = ['whole'] ## whole sample/ high school dropout / high school graduate / college graduate above
 for sample_id,sample in enumerate([history_vols_whole]):
@@ -304,9 +355,9 @@ for sample_id,sample in enumerate([history_vols_whole]):
         history_vols['transitory'].iloc[i] = av_tran_vol
         
     ## save to excel for further analysis 
-    history_vols.to_excel('../OtherData/psid/psid_history_vol_test_decomposed_'+str(names[sample_id])+'.xlsx')
+    history_vols.to_excel('../OtherData/psid/psid_history_vol_decomposed_'+str(names[sample_id])+'.xlsx')
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## for sub-education group 
 
 # prepare data 
@@ -340,7 +391,7 @@ for i in history_vols.index:
     history_vols['transitory'].iloc[i] = av_tran_vol
         
 ## save to excel for further analysis 
-history_vols.to_excel('../OtherData/psid/psid_history_vol_test_decomposed_edu.xlsx')
+history_vols.to_excel('../OtherData/psid/psid_history_vol_decomposed_edu.xlsx')
 
 # + [markdown] {"code_folding": []}
 # ### Estimation using simulated moments 

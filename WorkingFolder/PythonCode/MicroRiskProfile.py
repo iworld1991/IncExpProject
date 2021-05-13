@@ -62,8 +62,10 @@ pd.options.display.float_format = '{:,.2f}'.format
 
 dataset = pd.read_stata('../SurveyData/SCE/IncExpSCEProbIndM.dta')   
 dataset_est = pd.read_stata('../SurveyData/SCE/IncExpSCEDstIndM.dta')
-dataset_psid = pd.read_excel('../OtherData/psid/psid_history_vol_test.xls')
-dataset_psid_edu = pd.read_excel('../OtherData/psid/psid_history_vol_edu_test.xls')
+dataset_psid = pd.read_excel('../OtherData/psid/psid_history_vol.xls')
+dataset_psid_edu = pd.read_excel('../OtherData/psid/psid_history_vol_edu.xls')
+
+dataset_psid.columns
 
 # + {"code_folding": []}
 ## variable list by catogrories 
@@ -118,6 +120,9 @@ SCEM = pd.merge(SCEM_base,
                 how='left', 
                 left_on = vars_id, 
                 right_on = vars_id)
+# -
+
+SCEM['Q24_rvar'].mean()
 
 # +
 ## describe data 
@@ -152,6 +157,11 @@ SCEM = SCEM.rename(columns = {'D6':'HHinc',
 dataset_psid_edu = dataset_psid_edu.rename(columns={'edu':'educ_gr'})
 
 SCEM.columns
+
+# +
+## generate age square
+
+SCEM['age2']=SCEM['age']**2
 # -
 
 ## convert categorical educ_gr to int to merge 
@@ -163,7 +173,7 @@ SCEM['educ_gr'].value_counts()
 ## index 
 SCEM['year'] = pd.DatetimeIndex(SCEM['date']).year
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## Merge with historical volatilty 
 dataset_psid['age'] = dataset_psid['year']-dataset_psid['cohort'] + 20
 dataset_psid_edu['age'] = dataset_psid_edu['year']-dataset_psid_edu['cohort'] + 20
@@ -171,26 +181,29 @@ SCEM['age'] = SCEM['age'].astype('int',
                                  errors='ignore')
 ## for education subgroup 
 
-#SCEM = pd.merge(SCEM, 
-#                dataset_psid_edu,  
-#                how= 'outer', 
-#                left_on = ['year','age','educ_gr'], 
-#                right_on = ['year','age','educ_gr'])
+SCEM = pd.merge(SCEM, 
+                dataset_psid_edu,  
+                how= 'outer', 
+                left_on = ['year','age','educ_gr'], 
+                right_on = ['year','age','educ_gr'])
 
 ## no education subgroup
-SCEM = pd.merge(SCEM, 
-                dataset_psid,  
-                how= 'outer', 
-                left_on = ['year','age'], 
-                right_on = ['year','age'])
+#SCEM = pd.merge(SCEM, 
+#                dataset_psid,  
+#                how= 'outer', 
+#                left_on = ['year','age'], 
+#                right_on = ['year','age'])
 
-# + {"code_folding": [0]}
-SCEM = SCEM.rename(columns={'av_gr':'ExpGr',          ##  experience of income growth
-                            'var_shk':'ExpVol',      ## experience of income vol
-                           'av_id_gr':'IdExpGr',    ## idiosyncratic experience of income growth
-                           'var_id_shk':'IdExpVol',  ## idiosyncratic experience of income vol
-                           'av_ag_gr':'AgExpGr',     ## aggregate experience of income growth
-                           'var_ag_shk':'AgExpVol',  ## aggregate experience of vol
+# + {"code_folding": []}
+SCEM = SCEM.rename(columns={'av_shk_gr':'ExpGr',          ##  experience of income growth
+                            'var_shk':'ExpVol',      ## experienced lvel vol
+                            'var_shk_gr':'ExpGrVol',  ## experienced growth vol
+                           'av_id_shk_gr':'IdExpGr',    ## idiosyncratic experience of income growth
+                           'var_id_shk':'IdExpVol',  ## idiosyncratic experienced of level vol
+                            'var_id_shk_gr':'IdExpGrVol',  ## idiosyncratic experienced growth vol
+                           'av_ag_shk_gr':'AgExpGr',     ## aggregate experience of income growth
+                           'var_ag_shk':'AgExpVol',  ## aggregate experienced level vol
+                           'var_ag_shk_gr':'AgExpGrVol',  ## aggregate experienced growth vol
                            'ue_av':'AgExpUE',       ## aggregate experience of UE 
                            'ue_var':'AgExpUEVol'}) ## aggregate experience of UE vol
 
@@ -285,8 +298,7 @@ sns.heatmap(SCEM.corr(), annot = True)
 # ###  3. Histograms
 
 # + {"code_folding": []}
-moms = ['incexp','rincexp','incvar','rincvar']
-
+moms = ['incexp','rincexp','incvar','rincvar','incskew']
 
 ## by age 
 fig,axes = plt.subplots(len(moms),figsize=(4,14))
@@ -380,7 +392,7 @@ for i,mom in enumerate(moms):
               size = 15)
 plt.savefig('../Graphs/ind/bar_by_nlit')
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## by income group 
 
 fontsize = 80
@@ -408,7 +420,7 @@ for mom in ['incvar','rincvar']:
 
 # + {"code_folding": [11, 16]}
 ## variances by groups 
-
+"""
 gplist = ['HHinc','age_gr']
 momlist = ['incvar','rincvar']
 incg_lb = list(inc_grp.values())
@@ -444,15 +456,121 @@ for i in range(len(gplist)):
         bp.set_ylabel(mom,fontsize = 25)
         
 plt.savefig('../Graphs/ind/boxplot.jpg')
+
+"""
 # -
 
-# ### 4. Experienced volatility and risks
+# ### 4. Within-group variations 
 
-# + {"code_folding": [2]}
-keeps = ['incexp','incvar','inciqr','rincexp','rincvar','incskew','ExpVol']
+# +
+mean_std = np.sqrt(SCEM['incvar'].mean())
+print("Mean of nominal risk perception is " 
+      +str(round(mean_std,3))
+     +' in stv')
+
+med_std = np.sqrt(SCEM['incvar'].median())
+print("Median of nominal risk perception is " 
+      +str(round(med_std,3))
+     +' in stv')
+
+
+med_std = np.sqrt(SCEM['incvar'].median())
+print("Median of nominal risk perception is " 
+      +str(round(med_std,3))
+     +' in stv')
+
+# +
+mean_std = np.sqrt(SCEM['rincvar'].mean())
+print("Mean of risk perception is " 
+      +str(round(mean_std,3))
+     +' in stv')
+
+med_std = np.sqrt(SCEM['rincvar'].median())
+print("Median of risk perception is " 
+      +str(round(med_std,3))
+     +' in stv')
+
+
+med_std = np.sqrt(SCEM['rincvar'].median())
+print("Median of risk perception is " 
+      +str(round(med_std,3))
+     +' in stv')
+# -
+
+SCEM['incstd'] = np.sqrt(SCEM['incvar'])
+SCEM['rincstd'] = np.sqrt(SCEM['rincvar'])
+
+# +
+### first step regression 
+mom_list = ['incexp',
+            'incvar',
+            'inciqr',
+            'incskew',
+            'rincexp',
+            'incstd',
+            'rincstd',
+            'rincvar']
+
+for i,mom in enumerate(mom_list):
+    model = smf.ols(formula = str(mom)
+                    +'~ age+age2+C(parttime) + C(selfemp) + C(gender)+ C(HHinc_gr) + C(nlit_gr)+C(educ_gr)+C(year)',
+                    data = SCEM)
+    result = model.fit()
+    SCEM[mom+'_rd']=result.resid
+# -
+
+SCEM.columns
+
+print('First-step R2 is '+str(round(result.rsquared,2)))
+
+# +
+riqr = SCEM['rincstd_rd'].quantile(q=0.9)-SCEM['rincstd_rd'].quantile(q=0.1)
+
+print("10/90 IQR of risk perception is " 
+      +str(round(riqr,3))
+     +' in stv')
+
+iqr = SCEM['incstd_rd'].quantile(q=0.9)-SCEM['incstd_rd'].quantile(q=0.1)
+print("10/90 IQR of nominal risk perception is " 
+      +str(round(iqr,3))
+     +' in stv')
+
+# + {"code_folding": []}
+### histograms
+
+for mom in mom_list:
+    if mom !='incskew':
+        to_plot = SCEM[mom+str('_rd')]
+    else:
+        mom_nonan = SCEM[mom].dropna()
+        mom_lb, mom_ub = np.percentile(mom_nonan,2),np.percentile(mom_nonan,98) ## exclude top and bottom 3% observations
+        #print(mom_lb)
+        #print(mom_ub)
+        to_keep = (mom_nonan < mom_ub) & (mom_nonan > mom_lb) & (mom_nonan!=0)
+        #print(to_keep.shape)
+        to_plot = mom_nonan[to_keep]
+    #print(mom_nonan_truc.shape)
+    
+    fig,ax = plt.subplots(figsize=(8,6))
+    sns.distplot(to_plot,
+                 kde = True,
+                 color = 'red',
+                 bins = 60)
+    plt.xticks(fontsize = 14)
+    plt.yticks(fontsize = 14)
+    plt.xlabel(mom, fontsize = 15)
+    plt.ylabel("Frequency",fontsize = 15)
+    plt.savefig('../Graphs/ind/hist_'+str(mom)+'.jpg')
+# -
+
+# ### 5. Experienced volatility and risks
+
+# + {"code_folding": []}
+keeps = ['incexp','incvar','inciqr','rincexp','rincvar','incskew','ExpGr',
+         'ExpVol','ExpGrVol','IdExpGr','IdExpGrVol','IdExpVol']
 
 SCEM_cohort = pd.pivot_table(data = SCEM,
-                             index=['year','age'],
+                             index=['year','age','educ_gr'],
                              values = keeps,
                              aggfunc= 'mean').reset_index().rename(columns={'incexp': 'expMean',
                                                                             'rincexp':'rexpMean',
@@ -460,6 +578,9 @@ SCEM_cohort = pd.pivot_table(data = SCEM,
                                                                             'inciqr': 'iqrMean',
                                                                             'rincvar':'rvarMean',
                                                                             'incskew':'skewMean'})
+# -
+
+SCEM_cohort.columns
 
 # + {"code_folding": []}
 ## scatter plot of experienced volatility and perceived risk 
@@ -474,21 +595,26 @@ plt.ylabel('logged perceived risk')
 
 plt.savefig('../Graphs/ind/scatter_history_vol_var.jpg')
 
-# +
+# + {"code_folding": []}
 ## generate logs 
 
-vars_log = ['incvar','rincvar','inciqr','ExpVol','IdExpVol','AgExpVol','UEprobAgg','UEprobInd']
+vars_log = ['incvar','rincvar','inciqr','ExpVol','ExpGrVol','IdExpVol','IdExpGrVol','AgExpVol','AgExpGrVol','UEprobAgg','UEprobInd']
 
 for var in vars_log:
-    SCEM[var] = np.log(SCEM[var]+0.0000001)
+    SCEM[var] = np.log(SCEM[var]+0.00000000001)
+# -
 
-# + {"code_folding": [36]}
+SCEM.columns
+
+
+
+# + {"code_folding": []}
 ## full-table for risks  
 
 rs_list = {}  ## list to store results 
 nb_spc = 4  ## number of specifications 
 
-dep_list = ['incvar','inciqr'] 
+dep_list = ['rincvar','inciqr'] 
 
 for i,mom in enumerate(dep_list):
     ## model 1 
@@ -524,7 +650,7 @@ dfoutput = summary_col(rs_names,
                         stars = True,
                         regressor_order = ['ExpVol',
                                            'ExpGr',
-                                           'IdExpVol',
+                                           'IdExpVol'
                                            'IdExpGr',
                                            'AgExpUEVol',
                                            'AgExpUE',
@@ -616,7 +742,7 @@ f.close()
 tb.to_excel('../Tables/micro_reg_history_vol.xlsx')
 # -
 
-# ###  5. Main regression
+# ###  6. Main regression
 
 # +
 ## preps 
@@ -767,7 +893,7 @@ tb.to_excel('../Tables/micro_reg.xlsx')
 
 tb
 
-# + {"code_folding": [5, 7]}
+# + {"code_folding": [5, 7, 37]}
 ## full-table for expected growth, appendix 
 
 rs_list = {}  ## list to store results 
@@ -861,9 +987,7 @@ f.close()
 """
 # -
 
-# ## 5. Perceived risks and decisions
-#
-#
+# ### 6. Perceived risks and decisions
 
 # + {"code_folding": []}
 ## full-table for risks  
@@ -876,7 +1000,7 @@ dep_list3 = ['incexp','incvar','rincvar','incskew','UEprobAgg']
 
 for i,mom in enumerate(dep_list3):
     ## model 1 
-    model = smf.ols(formula = 'spending'+ '~'+ mom,
+    model = smf.ols(formula = 'spending'+ '+'+ mom,
                     data = SCEM)
     rs_list[nb_spc*i] = model.fit()
     

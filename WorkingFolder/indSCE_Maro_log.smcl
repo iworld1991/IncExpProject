@@ -3,17 +3,16 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Maro_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}14 Dec 2020, 11:20:05
+ {txt}opened on:  {res}22 Apr 2021, 19:59:55
 {txt}
 {com}. 
-. use "${c -(}folder{c )-}/SCE/IncExpSCEPopMacroM.dta"
+. use "${c -(}folder{c )-}/SCE/IncExpSCEIndMacroM.dta"
 {txt}
 {com}. 
-. 
 . ************************
 . ***** date *************
 . ***********************
-. generate new_date = dofc(index)
+. generate new_date = dofc(date)
 {txt}
 {com}. gen year = year(new_date)
 {txt}
@@ -21,7 +20,7 @@
 {txt}
 {com}. gen date_str = string(year)+ "m"+string(month)
 {txt}
-{com}. drop index new_date 
+{com}. drop date index new_date 
 {txt}
 {com}. gen date = monthly(date_str,"YM")
 {txt}
@@ -29,8 +28,11 @@
 {txt}
 {com}. drop date_str
 {txt}
-{com}. tsset date 
-{res}{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m1
+{com}. order userid date 
+{txt}
+{com}. xtset userid date 
+{res}{txt}{col 8}panel variable:  {res}userid (unbalanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m3, but with gaps
 {txt}{col 17}delta:  {res}1 month
 {txt}
 {com}. 
@@ -39,1045 +41,109 @@
 . ************************
 . 
 . 
-. local Moments varMean iqrMean rvarMean varMed iqrMed rvarMed 
+. local Moments incvar rincvar inciqr incskew 
 {txt}
 {com}. 
 . foreach mom in `Moments'{c -(}
 {txt}  2{com}. gen `mom'_ch = `mom' - l1.`mom'
 {txt}  3{com}. label var `mom'_ch "change in `mom'"
 {txt}  4{com}. {c )-}
-{txt}(1 missing value generated)
-(1 missing value generated)
-(1 missing value generated)
-(1 missing value generated)
-(1 missing value generated)
-(1 missing value generated)
+{txt}(13451 missing values generated)
+(13451 missing values generated)
+(13451 missing values generated)
+(13451 missing values generated)
 
 {com}. 
-. 
-. 
-. ************************
-. ***** regression *******
-. ***********************
-. 
-. /*
-> ** sp 500
-> 
-> foreach mom in `Moments'{c -(}
-> forvalues i=1(1)12{c -(}
-> reg  `mom'  f`i'.sp500
-> return list 
-> local id = `i'+1
-> putexcel set "${c -(}sum_table_folder{c )-}/macro_corr_stata_3m.xls", sheet("`mom'") modify 
-> local coeff = _b[f`i'.sp500]
-> local coeff : display %5.3f `coeff'
-> local se = _se[f`i'.sp500]
-> local t = `coeff'/`se'
-> local p = 2*ttail(e(df_r),abs(`t'))
-> 
-> local star = ""
-> if `p'< =0.01 local star = "***"
-> if `p'<=0.05 & `p'> 0.01 local star = "**"
-> if `p' <=0.1 & `p'> 0.05 local star = "*"
-> *local coeff_str: display `coeff' `star'
-> 
-> putexcel A`id' =(`i')
-> putexcel B`id' = (`coeff')
-> *putexcel C`id' = (`se')
-> *putexcel D`id' =(`p')
-> putexcel C`id' =("`star'")
-> 
-> {c )-}
-> putexcel A1 =("# months ahead")
-> putexcel B1 = ("coefficients")
-> putexcel C1 = ("star")
-> putexcel D1 = ("`mom'")
-> 
-> {c )-}
-> */
-. 
-. ** wage growth 
-. 
-. foreach mom in `Moments'{c -(}
-{txt}  2{com}. forvalues i=1(1)6{c -(}
-{txt}  3{com}. reg  `mom'  l`i'.he
-{txt}  4{com}. return list 
-{txt}  5{com}. local id = `i'+1
-{txt}  6{com}. putexcel set "${c -(}sum_table_folder{c )-}/macro_corr_stata_he.xls", sheet("`mom'") modify 
-{txt}  7{com}. local coeff = _b[l`i'.he]
-{txt}  8{com}. local coeff : display %5.3f `coeff'
-{txt}  9{com}. local se = _se[l`i'.he]
-{txt} 10{com}. local t = `coeff'/`se'
-{txt} 11{com}. local p = 2*ttail(e(df_r),abs(`t'))
-{txt} 12{com}. 
-. local star = ""
-{txt} 13{com}. if `p'< =0.01 local star = "***"
-{txt} 14{com}. if `p'<=0.05 & `p'> 0.01 local star = "**"
-{txt} 15{com}. if `p' <=0.1 & `p'> 0.05 local star = "*"
-{txt} 16{com}. *local coeff_str: display `coeff' `star'
-. 
-. putexcel A`id' =(`i')
-{txt} 17{com}. putexcel B`id' = (`coeff')
-{txt} 18{com}. *putexcel C`id' = (`se')
-. *putexcel D`id' =(`p')
-. putexcel C`id' =("`star'")
-{txt} 19{com}. 
-. {c )-}
-{txt} 20{com}. putexcel A1 =("# months before")
-{txt} 21{com}. putexcel B1 = ("coefficients")
-{txt} 22{com}. putexcel C1 = ("star")
-{txt} 23{com}. putexcel D1 = ("`mom'")
-{txt} 24{com}. {c )-}
+. ddd
+{err}unrecognized command:  ddd
+{txt}{search r(199):r(199);}
 
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}      79
-{txt}{hline 13}{char +}{hline 30}           F(  1,    77) ={res}    6.63
-    {txt}   Model {char |} {res} 7.8238e-09     1  7.8238e-09           {txt}Prob > F      = {res} 0.0119
-    {txt}Residual {char |} {res} 9.0866e-08    77  1.1801e-09           {txt}R-squared     = {res} 0.0793
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0673
-    {txt}   Total {char |} {res} 9.8690e-08    78  1.2653e-09           {txt}Root MSE      = {res} 3.4e-05
+end of do-file
+
+{search r(199):r(199);}
+
+{com}. reg rincvar l1.rincvar
+
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   22146
+{txt}{hline 13}{char +}{hline 30}           F(  1, 22144) ={res}18141.98
+    {txt}   Model {char |} {res} .013687113     1  .013687113           {txt}Prob > F      = {res} 0.0000
+    {txt}Residual {char |} {res} .016706416 22144  7.5444e-07           {txt}R-squared     = {res} 0.4503
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.4503
+    {txt}   Total {char |} {res} .030393529 22145  1.3725e-06           {txt}Root MSE      = {res} .00087
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{col 1}     rincvar{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2}-.0002205{col 26}{space 2} .0000856{col 37}{space 1}   -2.57{col 46}{space 3}0.012{col 54}{space 4}-.0003911{col 67}{space 3}  -.00005
+{space 5}rincvar {c |}
+{space 9}L1. {c |}{col 14}{res}{space 2} .6340358{col 26}{space 2} .0047073{col 37}{space 1}  134.69{col 46}{space 3}0.000{col 54}{space 4} .6248092{col 67}{space 3} .6432624
 {txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0003658{col 26}{space 2}  .000015{col 37}{space 1}   24.37{col 46}{space 3}0.000{col 54}{space 4} .0003359{col 67}{space 3} .0003957
+{space 7}_cons {c |}{col 14}{res}{space 2} .0002316{col 26}{space 2} 6.89e-06{col 37}{space 1}   33.62{col 46}{space 3}0.000{col 54}{space 4} .0002181{col 67}{space 3} .0002451
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}
-{txt}scalars:
-              r(level) =  {res}95
+{com}. reg rincvar l1.rincvar l2.rincvar
 
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      78
-{txt}{hline 13}{char +}{hline 30}           F(  1,    76) ={res}   18.65
-    {txt}   Model {char |} {res} 1.9279e-08     1  1.9279e-08           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 7.8569e-08    76  1.0338e-09           {txt}R-squared     = {res} 0.1970
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.1865
-    {txt}   Total {char |} {res} 9.7847e-08    77  1.2707e-09           {txt}Root MSE      = {res} 3.2e-05
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   14808
+{txt}{hline 13}{char +}{hline 30}           F(  2, 14805) ={res} 8969.82
+    {txt}   Model {char |} {res} .009382668     2  .004691334           {txt}Prob > F      = {res} 0.0000
+    {txt}Residual {char |} {res} .007743212 14805  5.2301e-07           {txt}R-squared     = {res} 0.5479
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.5478
+    {txt}   Total {char |} {res} .017125879 14807  1.1566e-06           {txt}Root MSE      = {res} .00072
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{col 1}     rincvar{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L2. {c |}{col 14}{res}{space 2} -.000348{col 26}{space 2} .0000806{col 37}{space 1}   -4.32{col 46}{space 3}0.000{col 54}{space 4}-.0005085{col 67}{space 3}-.0001875
+{space 5}rincvar {c |}
+{space 9}L1. {c |}{col 14}{res}{space 2} .4629722{col 26}{space 2}  .007271{col 37}{space 1}   63.67{col 46}{space 3}0.000{col 54}{space 4} .4487201{col 67}{space 3} .4772243
+{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .2998471{col 26}{space 2} .0069393{col 37}{space 1}   43.21{col 46}{space 3}0.000{col 54}{space 4} .2862453{col 67}{space 3}  .313449
 {txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0003876{col 26}{space 2} .0000141{col 37}{space 1}   27.52{col 46}{space 3}0.000{col 54}{space 4} .0003595{col 67}{space 3} .0004156
+{space 7}_cons {c |}{col 14}{res}{space 2} .0001205{col 26}{space 2} 7.20e-06{col 37}{space 1}   16.74{col 46}{space 3}0.000{col 54}{space 4} .0001064{col 67}{space 3} .0001346
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}
-{txt}scalars:
-              r(level) =  {res}95
+{com}. reg rincvar l1.rincvar l2.rincvar l3.rincvar
 
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      77
-{txt}{hline 13}{char +}{hline 30}           F(  1,    75) ={res}   13.80
-    {txt}   Model {char |} {res} 1.2599e-08     1  1.2599e-08           {txt}Prob > F      = {res} 0.0004
-    {txt}Residual {char |} {res} 6.8487e-08    75  9.1316e-10           {txt}R-squared     = {res} 0.1554
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.1441
-    {txt}   Total {char |} {res} 8.1086e-08    76  1.0669e-09           {txt}Root MSE      = {res} 3.0e-05
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   10193
+{txt}{hline 13}{char +}{hline 30}           F(  3, 10189) ={res} 4983.42
+    {txt}   Model {char |} {res} .005911691     3  .001970564           {txt}Prob > F      = {res} 0.0000
+    {txt}Residual {char |} {res} .004028972 10189  3.9542e-07           {txt}R-squared     = {res} 0.5947
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.5946
+    {txt}   Total {char |} {res} .009940663 10192  9.7534e-07           {txt}Root MSE      = {res} .00063
 
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{col 1}     rincvar{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L3. {c |}{col 14}{res}{space 2}-.0002814{col 26}{space 2} .0000758{col 37}{space 1}   -3.71{col 46}{space 3}0.000{col 54}{space 4}-.0004324{col 67}{space 3}-.0001305
+{space 5}rincvar {c |}
+{space 9}L1. {c |}{col 14}{res}{space 2} .4053753{col 26}{space 2} .0088548{col 37}{space 1}   45.78{col 46}{space 3}0.000{col 54}{space 4} .3880181{col 67}{space 3} .4227325
+{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .2689199{col 26}{space 2} .0088937{col 37}{space 1}   30.24{col 46}{space 3}0.000{col 54}{space 4} .2514866{col 67}{space 3} .2863533
+{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .1310345{col 26}{space 2} .0080175{col 37}{space 1}   16.34{col 46}{space 3}0.000{col 54}{space 4} .1153187{col 67}{space 3} .1467503
 {txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2}  .000378{col 26}{space 2} .0000132{col 37}{space 1}   28.55{col 46}{space 3}0.000{col 54}{space 4} .0003516{col 67}{space 3} .0004043
+{space 7}_cons {c |}{col 14}{res}{space 2} .0000828{col 26}{space 2} 7.64e-06{col 37}{space 1}   10.84{col 46}{space 3}0.000{col 54}{space 4} .0000678{col 67}{space 3} .0000978
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      76
-{txt}{hline 13}{char +}{hline 30}           F(  1,    74) ={res}   17.56
-    {txt}   Model {char |} {res} 1.5550e-08     1  1.5550e-08           {txt}Prob > F      = {res} 0.0001
-    {txt}Residual {char |} {res} 6.5535e-08    74  8.8561e-10           {txt}R-squared     = {res} 0.1918
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.1809
-    {txt}   Total {char |} {res} 8.1085e-08    75  1.0811e-09           {txt}Root MSE      = {res} 3.0e-05
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L4. {c |}{col 14}{res}{space 2}-.0003131{col 26}{space 2} .0000747{col 37}{space 1}   -4.19{col 46}{space 3}0.000{col 54}{space 4} -.000462{col 67}{space 3}-.0001642
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0003832{col 26}{space 2}  .000013{col 37}{space 1}   29.39{col 46}{space 3}0.000{col 54}{space 4} .0003573{col 67}{space 3} .0004092
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      75
-{txt}{hline 13}{char +}{hline 30}           F(  1,    73) ={res}    6.61
-    {txt}   Model {char |} {res} 6.7104e-09     1  6.7104e-09           {txt}Prob > F      = {res} 0.0122
-    {txt}Residual {char |} {res} 7.4078e-08    73  1.0148e-09           {txt}R-squared     = {res} 0.0831
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0705
-    {txt}   Total {char |} {res} 8.0789e-08    74  1.0917e-09           {txt}Root MSE      = {res} 3.2e-05
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L5. {c |}{col 14}{res}{space 2}-.0002063{col 26}{space 2} .0000802{col 37}{space 1}   -2.57{col 46}{space 3}0.012{col 54}{space 4}-.0003663{col 67}{space 3}-.0000464
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0003649{col 26}{space 2}  .000014{col 37}{space 1}   26.12{col 46}{space 3}0.000{col 54}{space 4} .0003371{col 67}{space 3} .0003928
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      74
-{txt}{hline 13}{char +}{hline 30}           F(  1,    72) ={res}   15.49
-    {txt}   Model {char |} {res} 1.4178e-08     1  1.4178e-08           {txt}Prob > F      = {res} 0.0002
-    {txt}Residual {char |} {res} 6.5882e-08    72  9.1503e-10           {txt}R-squared     = {res} 0.1771
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.1657
-    {txt}   Total {char |} {res} 8.0060e-08    73  1.0967e-09           {txt}Root MSE      = {res} 3.0e-05
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     varMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L6. {c |}{col 14}{res}{space 2}-.0003154{col 26}{space 2} .0000801{col 37}{space 1}   -3.94{col 46}{space 3}0.000{col 54}{space 4}-.0004751{col 67}{space 3}-.0001557
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0003824{col 26}{space 2} .0000138{col 37}{space 1}   27.74{col 46}{space 3}0.000{col 54}{space 4} .0003549{col 67}{space 3} .0004099
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      79
-{txt}{hline 13}{char +}{hline 30}           F(  1,    77) ={res}   16.07
-    {txt}   Model {char |} {res} .000012011     1  .000012011           {txt}Prob > F      = {res} 0.0001
-    {txt}Residual {char |} {res} .000057561    77  7.4755e-07           {txt}R-squared     = {res} 0.1726
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.1619
-    {txt}   Total {char |} {res} .000069573    78  8.9196e-07           {txt}Root MSE      = {res} .00086
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2}-.0086409{col 26}{space 2} .0021557{col 37}{space 1}   -4.01{col 46}{space 3}0.000{col 54}{space 4}-.0129334{col 67}{space 3}-.0043484
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0215531{col 26}{space 2} .0003778{col 37}{space 1}   57.04{col 46}{space 3}0.000{col 54}{space 4} .0208007{col 67}{space 3} .0223055
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      78
-{txt}{hline 13}{char +}{hline 30}           F(  1,    76) ={res}   30.49
-    {txt}   Model {char |} {res} .000019785     1  .000019785           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res}  .00004932    76  6.4895e-07           {txt}R-squared     = {res} 0.2863
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.2769
-    {txt}   Total {char |} {res} .000069105    77  8.9747e-07           {txt}Root MSE      = {res} .00081
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L2. {c |}{col 14}{res}{space 2}-.0111482{col 26}{space 2}  .002019{col 37}{space 1}   -5.52{col 46}{space 3}0.000{col 54}{space 4}-.0151694{col 67}{space 3}-.0071269
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0219807{col 26}{space 2} .0003529{col 37}{space 1}   62.29{col 46}{space 3}0.000{col 54}{space 4} .0212778{col 67}{space 3} .0226835
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      77
-{txt}{hline 13}{char +}{hline 30}           F(  1,    75) ={res}   17.91
-    {txt}   Model {char |} {res} .000012862     1  .000012862           {txt}Prob > F      = {res} 0.0001
-    {txt}Residual {char |} {res} .000053869    75  7.1825e-07           {txt}R-squared     = {res} 0.1927
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.1820
-    {txt}   Total {char |} {res}  .00006673    76  8.7803e-07           {txt}Root MSE      = {res} .00085
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L3. {c |}{col 14}{res}{space 2}-.0089919{col 26}{space 2} .0021249{col 37}{space 1}   -4.23{col 46}{space 3}0.000{col 54}{space 4} -.013225{col 67}{space 3}-.0047589
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0216352{col 26}{space 2} .0003713{col 37}{space 1}   58.28{col 46}{space 3}0.000{col 54}{space 4} .0208956{col 67}{space 3} .0223748
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      76
-{txt}{hline 13}{char +}{hline 30}           F(  1,    74) ={res}   21.02
-    {txt}   Model {char |} {res} .000014752     1  .000014752           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} .000051925    74  7.0169e-07           {txt}R-squared     = {res} 0.2212
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.2107
-    {txt}   Total {char |} {res} .000066677    75  8.8903e-07           {txt}Root MSE      = {res} .00084
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L4. {c |}{col 14}{res}{space 2} -.009644{col 26}{space 2} .0021033{col 37}{space 1}   -4.59{col 46}{space 3}0.000{col 54}{space 4}-.0138349{col 67}{space 3} -.005453
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0217394{col 26}{space 2}  .000367{col 37}{space 1}   59.23{col 46}{space 3}0.000{col 54}{space 4} .0210081{col 67}{space 3} .0224708
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      75
-{txt}{hline 13}{char +}{hline 30}           F(  1,    73) ={res}   12.36
-    {txt}   Model {char |} {res} 9.6369e-06     1  9.6369e-06           {txt}Prob > F      = {res} 0.0008
-    {txt}Residual {char |} {res} .000056936    73  7.7994e-07           {txt}R-squared     = {res} 0.1448
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.1330
-    {txt}   Total {char |} {res} .000066573    74  8.9963e-07           {txt}Root MSE      = {res} .00088
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L5. {c |}{col 14}{res}{space 2}-.0078197{col 26}{space 2} .0022246{col 37}{space 1}   -3.52{col 46}{space 3}0.001{col 54}{space 4}-.0122534{col 67}{space 3}-.0033861
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0214246{col 26}{space 2} .0003874{col 37}{space 1}   55.30{col 46}{space 3}0.000{col 54}{space 4} .0206526{col 67}{space 3} .0221967
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      74
-{txt}{hline 13}{char +}{hline 30}           F(  1,    72) ={res}   26.20
-    {txt}   Model {char |} {res} .000017605     1  .000017605           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} .000048371    72  6.7181e-07           {txt}R-squared     = {res} 0.2668
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.2567
-    {txt}   Total {char |} {res} .000065975    73  9.0377e-07           {txt}Root MSE      = {res} .00082
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     iqrMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L6. {c |}{col 14}{res}{space 2}-.0111143{col 26}{space 2} .0021712{col 37}{space 1}   -5.12{col 46}{space 3}0.000{col 54}{space 4}-.0154425{col 67}{space 3}-.0067862
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0219494{col 26}{space 2} .0003735{col 37}{space 1}   58.76{col 46}{space 3}0.000{col 54}{space 4} .0212048{col 67}{space 3} .0226941
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      79
-{txt}{hline 13}{char +}{hline 30}           F(  1,    77) ={res}   23.47
-    {txt}   Model {char |} {res} 1.5479e-07     1  1.5479e-07           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 5.0785e-07    77  6.5955e-09           {txt}R-squared     = {res} 0.2336
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.2236
-    {txt}   Total {char |} {res} 6.6264e-07    78  8.4954e-09           {txt}Root MSE      = {res} 8.1e-05
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2}-.0009809{col 26}{space 2} .0002025{col 37}{space 1}   -4.84{col 46}{space 3}0.000{col 54}{space 4}-.0013841{col 67}{space 3}-.0005777
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0010353{col 26}{space 2} .0000355{col 37}{space 1}   29.17{col 46}{space 3}0.000{col 54}{space 4} .0009646{col 67}{space 3}  .001106
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      78
-{txt}{hline 13}{char +}{hline 30}           F(  1,    76) ={res}   26.64
-    {txt}   Model {char |} {res} 1.6820e-07     1  1.6820e-07           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 4.7988e-07    76  6.3142e-09           {txt}R-squared     = {res} 0.2595
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.2498
-    {txt}   Total {char |} {res} 6.4807e-07    77  8.4165e-09           {txt}Root MSE      = {res} 7.9e-05
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L2. {c |}{col 14}{res}{space 2}-.0010279{col 26}{space 2} .0001992{col 37}{space 1}   -5.16{col 46}{space 3}0.000{col 54}{space 4}-.0014245{col 67}{space 3}-.0006312
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0010442{col 26}{space 2} .0000348{col 37}{space 1}   30.00{col 46}{space 3}0.000{col 54}{space 4} .0009749{col 67}{space 3} .0011136
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      77
-{txt}{hline 13}{char +}{hline 30}           F(  1,    75) ={res}   17.01
-    {txt}   Model {char |} {res} 1.1973e-07     1  1.1973e-07           {txt}Prob > F      = {res} 0.0001
-    {txt}Residual {char |} {res} 5.2804e-07    75  7.0405e-09           {txt}R-squared     = {res} 0.1848
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.1740
-    {txt}   Total {char |} {res} 6.4777e-07    76  8.5233e-09           {txt}Root MSE      = {res} 8.4e-05
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L3. {c |}{col 14}{res}{space 2}-.0008676{col 26}{space 2} .0002104{col 37}{space 1}   -4.12{col 46}{space 3}0.000{col 54}{space 4}-.0012867{col 67}{space 3}-.0004485
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0010168{col 26}{space 2} .0000368{col 37}{space 1}   27.66{col 46}{space 3}0.000{col 54}{space 4} .0009436{col 67}{space 3}   .00109
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      76
-{txt}{hline 13}{char +}{hline 30}           F(  1,    74) ={res}   15.01
-    {txt}   Model {char |} {res} 1.0047e-07     1  1.0047e-07           {txt}Prob > F      = {res} 0.0002
-    {txt}Residual {char |} {res} 4.9526e-07    74  6.6928e-09           {txt}R-squared     = {res} 0.1686
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.1574
-    {txt}   Total {char |} {res} 5.9573e-07    75  7.9431e-09           {txt}Root MSE      = {res} 8.2e-05
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L4. {c |}{col 14}{res}{space 2}-.0007959{col 26}{space 2} .0002054{col 37}{space 1}   -3.87{col 46}{space 3}0.000{col 54}{space 4}-.0012052{col 67}{space 3}-.0003866
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0010015{col 26}{space 2} .0000358{col 37}{space 1}   27.94{col 46}{space 3}0.000{col 54}{space 4} .0009301{col 67}{space 3}  .001073
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      75
-{txt}{hline 13}{char +}{hline 30}           F(  1,    73) ={res}    8.14
-    {txt}   Model {char |} {res} 5.8455e-08     1  5.8455e-08           {txt}Prob > F      = {res} 0.0056
-    {txt}Residual {char |} {res} 5.2404e-07    73  7.1786e-09           {txt}R-squared     = {res} 0.1004
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0880
-    {txt}   Total {char |} {res} 5.8249e-07    74  7.8715e-09           {txt}Root MSE      = {res} 8.5e-05
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L5. {c |}{col 14}{res}{space 2} -.000609{col 26}{space 2} .0002134{col 37}{space 1}   -2.85{col 46}{space 3}0.006{col 54}{space 4}-.0010344{col 67}{space 3}-.0001837
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0009683{col 26}{space 2} .0000372{col 37}{space 1}   26.05{col 46}{space 3}0.000{col 54}{space 4} .0008942{col 67}{space 3} .0010423
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      74
-{txt}{hline 13}{char +}{hline 30}           F(  1,    72) ={res}   19.04
-    {txt}   Model {char |} {res} 1.2067e-07     1  1.2067e-07           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 4.5620e-07    72  6.3362e-09           {txt}R-squared     = {res} 0.2092
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.1982
-    {txt}   Total {char |} {res} 5.7687e-07    73  7.9024e-09           {txt}Root MSE      = {res} 8.0e-05
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}    rvarMean{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L6. {c |}{col 14}{res}{space 2}-.0009202{col 26}{space 2} .0002109{col 37}{space 1}   -4.36{col 46}{space 3}0.000{col 54}{space 4}-.0013405{col 67}{space 3}-.0004998
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2}  .001018{col 26}{space 2} .0000363{col 37}{space 1}   28.06{col 46}{space 3}0.000{col 54}{space 4} .0009457{col 67}{space 3} .0010903
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      79
-{txt}{hline 13}{char +}{hline 30}           F(  1,    77) ={res}    1.99
-    {txt}   Model {char |} {res} 5.6057e-11     1  5.6057e-11           {txt}Prob > F      = {res} 0.1619
-    {txt}Residual {char |} {res} 2.1644e-09    77  2.8109e-11           {txt}R-squared     = {res} 0.0252
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0126
-    {txt}   Total {char |} {res} 2.2204e-09    78  2.8467e-11           {txt}Root MSE      = {res} 5.3e-06
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2}-.0000187{col 26}{space 2} .0000132{col 37}{space 1}   -1.41{col 46}{space 3}0.162{col 54}{space 4} -.000045{col 67}{space 3} 7.65e-06
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2}  .000071{col 26}{space 2} 2.32e-06{col 37}{space 1}   30.64{col 46}{space 3}0.000{col 54}{space 4} .0000664{col 67}{space 3} .0000756
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      78
-{txt}{hline 13}{char +}{hline 30}           F(  1,    76) ={res}    0.04
-    {txt}   Model {char |} {res} 1.1566e-12     1  1.1566e-12           {txt}Prob > F      = {res} 0.8427
-    {txt}Residual {char |} {res} 2.2179e-09    76  2.9183e-11           {txt}R-squared     = {res} 0.0005
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res}-0.0126
-    {txt}   Total {char |} {res} 2.2190e-09    77  2.8819e-11           {txt}Root MSE      = {res} 5.4e-06
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L2. {c |}{col 14}{res}{space 2}-2.70e-06{col 26}{space 2} .0000135{col 37}{space 1}   -0.20{col 46}{space 3}0.843{col 54}{space 4}-.0000297{col 67}{space 3} .0000243
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0000683{col 26}{space 2} 2.37e-06{col 37}{space 1}   28.86{col 46}{space 3}0.000{col 54}{space 4} .0000636{col 67}{space 3}  .000073
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      77
-{txt}{hline 13}{char +}{hline 30}           F(  1,    75) ={res}    0.23
-    {txt}   Model {char |} {res} 2.4664e-12     1  2.4664e-12           {txt}Prob > F      = {res} 0.6352
-    {txt}Residual {char |} {res} 8.1518e-10    75  1.0869e-11           {txt}R-squared     = {res} 0.0030
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res}-0.0103
-    {txt}   Total {char |} {res} 8.1765e-10    76  1.0759e-11           {txt}Root MSE      = {res} 3.3e-06
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L3. {c |}{col 14}{res}{space 2}-3.94e-06{col 26}{space 2} 8.27e-06{col 37}{space 1}   -0.48{col 46}{space 3}0.635{col 54}{space 4}-.0000204{col 67}{space 3} .0000125
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2}  .000068{col 26}{space 2} 1.44e-06{col 37}{space 1}   47.11{col 46}{space 3}0.000{col 54}{space 4} .0000652{col 67}{space 3} .0000709
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      76
-{txt}{hline 13}{char +}{hline 30}           F(  1,    74) ={res}    0.67
-    {txt}   Model {char |} {res} 7.3573e-12     1  7.3573e-12           {txt}Prob > F      = {res} 0.4149
-    {txt}Residual {char |} {res} 8.0979e-10    74  1.0943e-11           {txt}R-squared     = {res} 0.0090
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res}-0.0044
-    {txt}   Total {char |} {res} 8.1715e-10    75  1.0895e-11           {txt}Root MSE      = {res} 3.3e-06
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L4. {c |}{col 14}{res}{space 2}-6.81e-06{col 26}{space 2} 8.31e-06{col 37}{space 1}   -0.82{col 46}{space 3}0.415{col 54}{space 4}-.0000234{col 67}{space 3} 9.74e-06
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0000685{col 26}{space 2} 1.45e-06{col 37}{space 1}   47.27{col 46}{space 3}0.000{col 54}{space 4} .0000656{col 67}{space 3} .0000714
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      75
-{txt}{hline 13}{char +}{hline 30}           F(  1,    73) ={res}    2.68
-    {txt}   Model {char |} {res} 2.8921e-11     1  2.8921e-11           {txt}Prob > F      = {res} 0.1059
-    {txt}Residual {char |} {res} 7.8772e-10    73  1.0791e-11           {txt}R-squared     = {res} 0.0354
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0222
-    {txt}   Total {char |} {res} 8.1664e-10    74  1.1036e-11           {txt}Root MSE      = {res} 3.3e-06
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L5. {c |}{col 14}{res}{space 2}-.0000135{col 26}{space 2} 8.27e-06{col 37}{space 1}   -1.64{col 46}{space 3}0.106{col 54}{space 4}  -.00003{col 67}{space 3} 2.94e-06
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0000697{col 26}{space 2} 1.44e-06{col 37}{space 1}   48.34{col 46}{space 3}0.000{col 54}{space 4} .0000668{col 67}{space 3} .0000725
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      74
-{txt}{hline 13}{char +}{hline 30}           F(  1,    72) ={res}    4.67
-    {txt}   Model {char |} {res} 4.9726e-11     1  4.9726e-11           {txt}Prob > F      = {res} 0.0340
-    {txt}Residual {char |} {res} 7.6639e-10    72  1.0644e-11           {txt}R-squared     = {res} 0.0609
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0479
-    {txt}   Total {char |} {res} 8.1612e-10    73  1.1180e-11           {txt}Root MSE      = {res} 3.3e-06
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      varMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L6. {c |}{col 14}{res}{space 2}-.0000187{col 26}{space 2} 8.64e-06{col 37}{space 1}   -2.16{col 46}{space 3}0.034{col 54}{space 4}-.0000359{col 67}{space 3}-1.45e-06
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0000705{col 26}{space 2} 1.49e-06{col 37}{space 1}   47.42{col 46}{space 3}0.000{col 54}{space 4} .0000675{col 67}{space 3} .0000735
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      79
-{txt}{hline 13}{char +}{hline 30}           F(  1,    77) ={res}    2.05
-    {txt}   Model {char |} {res} 3.5734e-07     1  3.5734e-07           {txt}Prob > F      = {res} 0.1564
-    {txt}Residual {char |} {res} .000013433    77  1.7446e-07           {txt}R-squared     = {res} 0.0259
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0133
-    {txt}   Total {char |} {res} .000013791    78  1.7680e-07           {txt}Root MSE      = {res} .00042
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2}-.0014904{col 26}{space 2} .0010414{col 37}{space 1}   -1.43{col 46}{space 3}0.156{col 54}{space 4}-.0035641{col 67}{space 3} .0005833
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0120422{col 26}{space 2} .0001825{col 37}{space 1}   65.97{col 46}{space 3}0.000{col 54}{space 4} .0116787{col 67}{space 3} .0124057
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      78
-{txt}{hline 13}{char +}{hline 30}           F(  1,    76) ={res}    0.04
-    {txt}   Model {char |} {res} 6.6523e-09     1  6.6523e-09           {txt}Prob > F      = {res} 0.8486
-    {txt}Residual {char |} {res} .000013779    76  1.8130e-07           {txt}R-squared     = {res} 0.0005
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res}-0.0127
-    {txt}   Total {char |} {res} .000013785    77  1.7903e-07           {txt}Root MSE      = {res} .00043
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L2. {c |}{col 14}{res}{space 2}-.0002044{col 26}{space 2} .0010672{col 37}{space 1}   -0.19{col 46}{space 3}0.849{col 54}{space 4}-.0023298{col 67}{space 3}  .001921
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0118252{col 26}{space 2} .0001865{col 37}{space 1}   63.40{col 46}{space 3}0.000{col 54}{space 4} .0114537{col 67}{space 3} .0121967
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      77
-{txt}{hline 13}{char +}{hline 30}           F(  1,    75) ={res}    0.00
-    {txt}   Model {char |} {res} 5.1377e-11     1  5.1377e-11           {txt}Prob > F      = {res} 0.9742
-    {txt}Residual {char |} {res} 3.6528e-06    75  4.8704e-08           {txt}R-squared     = {res} 0.0000
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res}-0.0133
-    {txt}   Total {char |} {res} 3.6528e-06    76  4.8064e-08           {txt}Root MSE      = {res} .00022
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L3. {c |}{col 14}{res}{space 2}  .000018{col 26}{space 2} .0005533{col 37}{space 1}    0.03{col 46}{space 3}0.974{col 54}{space 4}-.0010843{col 67}{space 3} .0011203
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0117466{col 26}{space 2} .0000967{col 37}{space 1}  121.50{col 46}{space 3}0.000{col 54}{space 4}  .011554{col 67}{space 3} .0119392
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      76
-{txt}{hline 13}{char +}{hline 30}           F(  1,    74) ={res}    0.23
-    {txt}   Model {char |} {res} 1.1101e-08     1  1.1101e-08           {txt}Prob > F      = {res} 0.6362
-    {txt}Residual {char |} {res} 3.6406e-06    74  4.9197e-08           {txt}R-squared     = {res} 0.0030
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res}-0.0104
-    {txt}   Total {char |} {res} 3.6517e-06    75  4.8689e-08           {txt}Root MSE      = {res} .00022
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L4. {c |}{col 14}{res}{space 2}-.0002646{col 26}{space 2} .0005569{col 37}{space 1}   -0.48{col 46}{space 3}0.636{col 54}{space 4}-.0013743{col 67}{space 3} .0008452
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0117947{col 26}{space 2} .0000972{col 37}{space 1}  121.36{col 46}{space 3}0.000{col 54}{space 4}  .011601{col 67}{space 3} .0119883
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      75
-{txt}{hline 13}{char +}{hline 30}           F(  1,    73) ={res}    1.36
-    {txt}   Model {char |} {res} 6.6640e-08     1  6.6640e-08           {txt}Prob > F      = {res} 0.2478
-    {txt}Residual {char |} {res} 3.5838e-06    73  4.9094e-08           {txt}R-squared     = {res} 0.0183
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0048
-    {txt}   Total {char |} {res} 3.6505e-06    74  4.9331e-08           {txt}Root MSE      = {res} .00022
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L5. {c |}{col 14}{res}{space 2}-.0006503{col 26}{space 2} .0005581{col 37}{space 1}   -1.17{col 46}{space 3}0.248{col 54}{space 4}-.0017626{col 67}{space 3} .0004621
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0118598{col 26}{space 2} .0000972{col 37}{space 1}  122.02{col 46}{space 3}0.000{col 54}{space 4} .0116661{col 67}{space 3} .0120535
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      74
-{txt}{hline 13}{char +}{hline 30}           F(  1,    72) ={res}    3.47
-    {txt}   Model {char |} {res} 1.6779e-07     1  1.6779e-07           {txt}Prob > F      = {res} 0.0666
-    {txt}Residual {char |} {res} 3.4815e-06    72  4.8354e-08           {txt}R-squared     = {res} 0.0460
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.0327
-    {txt}   Total {char |} {res} 3.6492e-06    73  4.9990e-08           {txt}Root MSE      = {res} .00022
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      iqrMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L6. {c |}{col 14}{res}{space 2} -.001085{col 26}{space 2} .0005825{col 37}{space 1}   -1.86{col 46}{space 3}0.067{col 54}{space 4}-.0022462{col 67}{space 3} .0000761
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0119315{col 26}{space 2} .0001002{col 37}{space 1}  119.06{col 46}{space 3}0.000{col 54}{space 4} .0117318{col 67}{space 3} .0121313
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      79
-{txt}{hline 13}{char +}{hline 30}           F(  1,    77) ={res}   29.80
-    {txt}   Model {char |} {res} 3.3783e-08     1  3.3783e-08           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 8.7296e-08    77  1.1337e-09           {txt}R-squared     = {res} 0.2790
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.2697
-    {txt}   Total {char |} {res} 1.2108e-07    78  1.5523e-09           {txt}Root MSE      = {res} 3.4e-05
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2}-.0004583{col 26}{space 2} .0000839{col 37}{space 1}   -5.46{col 46}{space 3}0.000{col 54}{space 4}-.0006254{col 67}{space 3}-.0002911
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0003945{col 26}{space 2} .0000147{col 37}{space 1}   26.81{col 46}{space 3}0.000{col 54}{space 4} .0003652{col 67}{space 3} .0004238
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      78
-{txt}{hline 13}{char +}{hline 30}           F(  1,    76) ={res}   29.12
-    {txt}   Model {char |} {res} 3.2904e-08     1  3.2904e-08           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 8.5868e-08    76  1.1298e-09           {txt}R-squared     = {res} 0.2770
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.2675
-    {txt}   Total {char |} {res} 1.1877e-07    77  1.5425e-09           {txt}Root MSE      = {res} 3.4e-05
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L2. {c |}{col 14}{res}{space 2}-.0004546{col 26}{space 2} .0000842{col 37}{space 1}   -5.40{col 46}{space 3}0.000{col 54}{space 4}-.0006224{col 67}{space 3}-.0002868
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0003943{col 26}{space 2} .0000147{col 37}{space 1}   26.78{col 46}{space 3}0.000{col 54}{space 4} .0003649{col 67}{space 3} .0004236
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      77
-{txt}{hline 13}{char +}{hline 30}           F(  1,    75) ={res}   18.71
-    {txt}   Model {char |} {res} 2.3707e-08     1  2.3707e-08           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 9.5034e-08    75  1.2671e-09           {txt}R-squared     = {res} 0.1997
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.1890
-    {txt}   Total {char |} {res} 1.1874e-07    76  1.5624e-09           {txt}Root MSE      = {res} 3.6e-05
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L3. {c |}{col 14}{res}{space 2}-.0003861{col 26}{space 2} .0000893{col 37}{space 1}   -4.33{col 46}{space 3}0.000{col 54}{space 4}-.0005639{col 67}{space 3}-.0002083
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0003826{col 26}{space 2} .0000156{col 37}{space 1}   24.53{col 46}{space 3}0.000{col 54}{space 4} .0003515{col 67}{space 3} .0004136
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      76
-{txt}{hline 13}{char +}{hline 30}           F(  1,    74) ={res}   24.61
-    {txt}   Model {char |} {res} 2.6453e-08     1  2.6453e-08           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 7.9536e-08    74  1.0748e-09           {txt}R-squared     = {res} 0.2496
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.2394
-    {txt}   Total {char |} {res} 1.0599e-07    75  1.4132e-09           {txt}Root MSE      = {res} 3.3e-05
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L4. {c |}{col 14}{res}{space 2}-.0004084{col 26}{space 2} .0000823{col 37}{space 1}   -4.96{col 46}{space 3}0.000{col 54}{space 4}-.0005724{col 67}{space 3}-.0002444
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0003847{col 26}{space 2} .0000144{col 37}{space 1}   26.78{col 46}{space 3}0.000{col 54}{space 4} .0003561{col 67}{space 3} .0004134
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      75
-{txt}{hline 13}{char +}{hline 30}           F(  1,    73) ={res}   24.89
-    {txt}   Model {char |} {res} 2.6783e-08     1  2.6783e-08           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 7.8562e-08    73  1.0762e-09           {txt}R-squared     = {res} 0.2542
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.2440
-    {txt}   Total {char |} {res} 1.0535e-07    74  1.4236e-09           {txt}Root MSE      = {res} 3.3e-05
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L5. {c |}{col 14}{res}{space 2}-.0004122{col 26}{space 2} .0000826{col 37}{space 1}   -4.99{col 46}{space 3}0.000{col 54}{space 4}-.0005769{col 67}{space 3}-.0002476
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0003849{col 26}{space 2} .0000144{col 37}{space 1}   26.74{col 46}{space 3}0.000{col 54}{space 4} .0003562{col 67}{space 3} .0004135
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
-      Source {c |}       SS       df       MS              Number of obs ={res}      74
-{txt}{hline 13}{char +}{hline 30}           F(  1,    72) ={res}   33.68
-    {txt}   Model {char |} {res} 3.2050e-08     1  3.2050e-08           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} 6.8511e-08    72  9.5154e-10           {txt}R-squared     = {res} 0.3187
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.3093
-    {txt}   Total {char |} {res} 1.0056e-07    73  1.3775e-09           {txt}Root MSE      = {res} 3.1e-05
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     rvarMed{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 10}he {c |}
-{space 9}L6. {c |}{col 14}{res}{space 2}-.0004742{col 26}{space 2} .0000817{col 37}{space 1}   -5.80{col 46}{space 3}0.000{col 54}{space 4}-.0006371{col 67}{space 3}-.0003113
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0003936{col 26}{space 2} .0000141{col 37}{space 1}   28.00{col 46}{space 3}0.000{col 54}{space 4} .0003655{col 67}{space 3} .0004216
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}scalars:
-              r(level) =  {res}95
-
-{txt}matrices:
-              r(table) : {res} 9 x 2
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-{res}{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/macro_corr_stata_he.xls saved
-
+{com}. clear
+
+. do "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/DoFile/Step05b_PSIDHistoryAnalysis.do"
+{txt}
+{com}. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
+{txt}
+{com}. global other "${c -(}mainfolder{c )-}/OtherData/"
+{txt}
+{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/ind"
+{txt}
+{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables/"
+{txt}
 {com}. 
-. 
-. ************************
-. ***** correlation plot *******
-. ***********************
-. 
-. foreach mom in `Moments'{c -(}
-{txt}  2{com}. xcorr `mom' sp500, lag(12) title("`mom' and stock market")
-{txt}  3{com}. *reg `mom'  c.l1.sp500##i.byear_gr c.l1.sp500##i.HHinc_gr c.l1.sp500##i.educ_gr c.l1.sp500##i.age_gr
-. *reg `mom'  c.Stkprob##i.byear_gr c.Stkprob##i.HHinc_gr c.Stkprob##i.educ_gr c.Stkprob##i.age_gr
-. graph export "${c -(}sum_graph_folder{c )-}/ts/corr_`mom'_stk_3m.png",as(png) replace 
-{txt}  4{com}. {c )-}
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/corr_varMean_stk_3m.png written in PNG format)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/corr_iqrMean_stk_3m.png written in PNG format)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/corr_rvarMean_stk_3m.png written in PNG format)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/corr_varMed_stk_3m.png written in PNG format)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/corr_iqrMed_stk_3m.png written in PNG format)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/corr_rvarMed_stk_3m.png written in PNG format)
-
-{com}. 
-. log close 
-      {txt}name:  {res}<unnamed>
-       {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Maro_log.smcl
-  {txt}log type:  {res}smcl
- {txt}closed on:  {res}14 Dec 2020, 11:20:25
-{txt}{.-}
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. set more off 
+{txt}
+{com}. capture log close
 {smcl}
-{txt}{sf}{ul off}
+{com}{sf}{ul off}

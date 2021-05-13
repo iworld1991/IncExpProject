@@ -1,12 +1,13 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,py:light
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.2.3
+#       format_version: '1.5'
+#       jupytext_version: 1.6.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -31,7 +32,7 @@ import pandas as pd
 
 # ### Case 1. Generalized Beta Distribution
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 def GeneralizedBetaEst(bin,
                        probs,
                        rep = 3):
@@ -115,7 +116,7 @@ def GeneralizedBetaEst(bin,
         return para_est   # could be 2 or 4 parameters 
 
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 def GeneralizedBetaStats(a,b,lb,ub):
     """
     This function computes the moments of a generalized beta distribution, mean and variance for now. 

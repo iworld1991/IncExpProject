@@ -20,8 +20,7 @@
 #  - a predictable component $Z_{i,t}$;
 #  - an aggregate growth rate $G_t$;
 #  - a permanent income component with shocks $P_{i,t}$;
-#  - a transitory component with shocks $\psi_{i,t}$;
-#  - a MA(1) component $\epsilon_{i,t}$ with some persistence $\phi$;
+#  - a MA(1) component $\epsilon_{i,t}$ with some persistence $\phi$ and purely transitory when $\phi=0$
 #  
 #  
 #  
@@ -46,26 +45,26 @@
 #
 # #### Income process and risk perceptions
 #
-# Log income of individual $i$ from cohort $c$ at time $t$ follows the following process (<cite data-cite="meghir2004income">(Meghir and Pistaferri(2004)</cite>). Cohort $c$ represents the year of entering the job market. It contains a predictable component $z$, and a stochastical component $e$. The latter consists of aggregate component $g$, idiosyncratic permanent $p$, MA(1) component $\eta$ and a transitory component $\psi$. Here I do not consider unemployment risk since the perceived risk measured in the survey conditions on staying employed.
+# Log income of individual $i$ from cohort $c$ at time $t$ follows the following process (<cite data-cite="meghir2004income">(Meghir and Pistaferri(2004)</cite>). Cohort $c$ represents the year of entering the job market. It contains a predictable component $z$, and a stochastical component $e$. The latter consists of aggregate component $g$, idiosyncratic permanent $\psi$, MA(1) or possibly purely transitory component $\theta$ and. Here I do not consider unemployment risk since the perceived risk measured in the survey conditions on staying employed.
 #
 # \begin{equation}
 # \begin{split}
 # & y_{i,c,t} = z_{i,c,t}+e_{i,c,t} \\
-# & e_{i,c,t}=g_t+p_{i,c,t}+\eta_{i,c,t}+\theta_{i,c,t}  \\
+# & e_{i,c,t}=g_t+p_{i,c,t}+\theta_{i,c,t} \\
 # & g_{t+1} = g_t + \xi_{t+1} \\
 # & p_{i,c,t+1} = p_{i,c,t}+\psi_{i,c,t-1} \\
-# & \eta_{i,c,t+1} = \phi\epsilon_{i,c,t}+\epsilon_{i,c,t+1}
+# & \theta_{i,c,t+1} = \phi\epsilon_{i,c,t}+\epsilon_{i,c,t+1}
 # \end{split}
 # \end{equation}
 #
-# All shocks including the aggregate one, and idiosyncratic ones follow normal distributions with zero means and time-invariant variances denoted as $\sigma^2_{\xi}$, $\sigma^2_{\theta}$,$\sigma^2_{\epsilon}$,$\sigma^2_{\psi}$. Hypothetically, these variances could differ both across cohorts and time. I focus on the most simple case here and results with cohort-specific income risks are reported in the Appendix. 
+# All shocks including the aggregate one, and idiosyncratic ones follow normal distributions with zero means and time-invariant variances denoted as $\sigma^2_{\xi}$, $\sigma^2_{\epsilon}$,$\sigma^2_{\psi}$. Hypothetically, these variances could differ both across cohorts and time. I focus on the most simple case here and results with cohort-specific income risks are reported in the Appendix. 
 #
 # Income growth from $t$ to $t+1$ consists predictable changes in $z_{i,c,t+1}$, and those from realized income shocks. 
 #
 # \begin{equation}
 # \begin{split}
 # \Delta y_{i,c,t+1} & =  \Delta z_{i,c,t+1}+\Delta e_{i,c,t} \\
-# &= \Delta z_{i,c,t+1}+\xi_{t+1}+\psi_{i,c,t+1}+\epsilon_{i,c,t+1}+(\phi-1)\epsilon_{i,c,t}-\phi\epsilon_{i,c,t-1}+\theta_{i,c,t+1}
+# &= \Delta z_{i,c,t+1}+\xi_{t+1}+\psi_{i,c,t+1}+\epsilon_{i,c,t+1}+(\phi-1)\epsilon_{i,c,t}-\phi\epsilon_{i,c,t-1}
 # \end{split}
 # \end{equation}
 #
@@ -73,7 +72,7 @@
 # All shocks that have realized till $t$ are observed by the agent at time $t$. Therefore, under full-information rational expectation(FIRE), namely when the agent perfectly knows the income process and parameters, the perceived income risks or the perceived variance of income growth from $t$ to $t+1$ is equal to the following.
 #
 # \begin{equation}
-# Var_{t}^*(\Delta y_{i,c,t+1}) =Var_{t}^*(\Delta e_{i,c,t+1}) =   \sigma^2_\xi+\sigma^2_\psi + \sigma^2_\epsilon+\sigma^2_\theta 
+# Var_{t}^*(\Delta y_{i,c,t+1}) =Var_{t}^*(\Delta e_{i,c,t+1}) =   \sigma^2_\xi+\sigma^2_\psi + \sigma^2_\epsilon 
 # \end{equation}
 #
 # FIRE has a number of testable predictions about the behaviors of perceived risks. 
@@ -85,10 +84,10 @@
 # - Third, under the assumed progress, the variances of different-natured shocks sum up to exactly the perceived income risks and the loadings of all components are all positive. I report detailed derivations and proofs in the Appendix that these predictions are robust to the alternative income process and the time-aggregation problem discussed in the literature. The latter arises when the underlying income process is set at a higher frequency than the observed frequency of reported income or income expectations. This will cause different sizes of loadings of all future shocks to perceived annual risk but does not change the positivity of the loadings from different components onto perceived risk. 
 #
 # The challenge of testing the third prediction is that the risk parameters are not directly observable. Econometricians and modelers usually estimate them relying upon cross-sectional moment information from some panel data and take them as the model parameters understood perfectly by the agents. I can therefore use econometricians' best estimates using past income data as the FIRE benchmark (I will discuss the concerns of this approach later).
-# Assuming the unexplained income residuals from this estimation regression is $\hat e_{i,t}= y_{i,c,t}-\hat z_{i,c,t}$($\hat z_{i,c,t}$ is the observable counterpart of $z_{i,c,t}$ from data). The unconditional cross-sectional variance of the change in residuals(equivalent to the ``income volatility'' or ``instability'' in the literature) is the following. Let's call this growth volatility. It can be further decomposed into different components in order to get the component-specific risk. 
+# Assuming the unexplained income residuals from this estimation regression is $\hat e_{i,t}= y_{i,c,t}-\hat z_{i,c,t}$($\hat z_{i,c,t}$ is the observable counterpart of $z_{i,c,t}$ from data). The unconditional cross-sectional variance of the change in residuals(equivalent to the _income volatility_ or _instability_ in the literature) is the following. Let's call this growth volatility. It can be further decomposed into different components in order to get the component-specific risk. 
 #
 # \begin{equation}
-# Var(\Delta \hat e_{i,c,t}) = \hat\sigma^2_\xi+\hat\sigma^2_\psi + ((1-\phi)^2+\phi^2+1)\hat\sigma^2_\epsilon+\hat\sigma^2_\theta 
+# Var(\Delta \hat e_{i,c,t}) = \hat\sigma^2_\xi+\hat\sigma^2_\psi + ((1-\phi)^2+\phi^2+1)\hat\sigma^2_\epsilon 
 # \end{equation}
 #
 # Notice the unconditional growth volatility overlaps with the FIRE perceived risk in every component of the risks. But it is unambiguously greater than the perceived risk under FIRE because econometricians' do not directly observe the MA(1) shock from $t-1$. But this suffices to suggest that growth volatility is positively correlated with perceived risk. 
@@ -113,22 +112,50 @@
 #
 # #### under time aggregation 
 #
-# Assume that the underlying income shocks have a quarterly frequency while the observed income and income expectations are annually reported. Quarterly variables are denoted by its annual counterpart with a quarter superscript $q=1,2,3,4$. 
+# Assume now instead that the annually observed income and income expectations come from a time-aggregation of $h$ periods within a year. For instance, $h=4$ for quarterly drawn shocks and $h=12$ for monthly ones. Use superscript $q$ as the time stamp of the sub-period relative to the begining of the year. We also coveniently have $y^{q}_{i,c,t}= y^{h-q}_{i,c,t+1} \quad \forall t$. For instance, $y^{h}_{i,c,t}=y^{0}_{i,c,t+1}$ equivalently represent the income at h-th subperiod in year $t$ and 0-th subperiod in year $t+1$. Then annual income and its growth are the time-average of all income draws from $h$ subperiods. 
 #
 # \begin{equation}
 # \begin{split}
-# & y_{i,c,t} = \sum^4_{q=1}z^q_{i,c,t}+\sum^4_{q=1}e^q_{i,c,t} \\
-# & \rightarrow \Delta y_{i,c,t+1} = \sum^4_{q=1}\Delta z^q_{i,c,t} + \sum^4_{q=1} \Delta e^q_{i,c,t} \\
-# & = \sum^4_{q=1}\Delta z^q_{i,c,t} + \sum^4_{q=1} ()
+#  y_{i,c,t} & =   \frac{1}{h}\sum^h_{q=1}z^q_{i,c,t}+ \frac{1}{h}\sum^h_{q=1}e^q_{i,c,t} \\
+# \Delta y_{i,c,t+1} & =  \frac{1}{h}\sum^h_{q=1}\Delta z^q_{i,c,t+1} + \frac{1}{h} \sum^h_{q=1} \Delta e^q_{i,c,t+1} \\
+#  & = \frac{1}{h} \sum^h_{q=1}\Delta z^q_{i,c,t+1} +  \frac{1}{h}\sum^h_{q=1} (g^1_{g+1}-g^1_t)+\frac{1}{h}\sum^h_{q=1} (p^1_{i,c,g+1}-g^1_{i,c,t}) \\
+# & + \frac{1}{h}[\sum^h_{s=1}(s-1)\xi^s_{t+1}-\sum^h_{s=1}(s-1)\xi^s_{t}] + + \frac{1}{h}[\sum^h_{s=1}(s-1)\psi^s_{i,c,t+1}-\sum^h_{s=1}(s-1)\psi^s_{i,c,t}] \\
+# & + \frac{1}{h}[\phi(\sum^h_{s=1}\epsilon^{s-1}_{i,c,t+1}-\sum^h_{s=1}\epsilon^{s-1}_{i,c,t})+\sum^h_{s=1}\epsilon^{s}_{i,c,t+1}-\sum^h_{s=1}\epsilon^{s}_{i,c,t}]  \\
+# & = \sum^h_{q=1}\Delta z^q_{i,c,t+1} +\frac{1}{h}\sum^h_{s=1}[\xi^{s+1}_t+(s-1)\xi^s_{t+1}-(s-1)\xi^s_{t}] + \\
+# & + \frac{1}{h}\sum^h_{s=1}[\phi^{s+1}_{i,c,t}+(s-1)\psi^s_{i,c,t+1}-(s-1)\psi^s_{i,c,t}] \\
+# & + \frac{1}{h}[\phi(\sum^h_{s=1}\epsilon^{s-1}_{i,c,t+1}-\sum^h_{s=1}\epsilon^{s-1}_{i,c,t})+\sum^h_{s=1}\epsilon^{s}_{i,c,t+1}-\sum^h_{s=1}\epsilon^{s}_{i,c,t}]  \\
+# & =  \sum^h_{q=1}\Delta z^q_{i,c,t+1} + \frac{1}{h}\sum^h_{s=1}(s-1)\xi^s_{t+1} + \frac{1}{h}\xi^1_{t+1} - \frac{1}{h} \sum^{h-3}_{k=0}(h-2-k)\xi^{-k}_{t+1} \\
+# & + \frac{1}{h}\sum^h_{s=1}(s-1)\psi^s_{i,c,t+1} + \frac{1}{h}\psi^1_{i,c,t+1} - \frac{1}{h} \sum^{h-3}_{k=0}(h-2-k)\psi^{-k}_{i,c,t+1}  + \frac{1}{h}[-\phi\epsilon^{-h}_{i,c,t+1} \\
+# & -\sum^{h-1}_{k=1}(1+\phi)\epsilon^{-k}_{i,c,t+1} + (\phi-1)\epsilon^{0}_{i,c,t+1}+\sum^{h-1}_{k=1}\epsilon^{k}_{i,c,t+1} + \epsilon^h_{i,c,t+1}]  
 # \end{split}
 # \end{equation}
 #
+# Under constant volatility, the FIRE conditional and unconditional variances of income growth are respectively the following 
+#
+# \begin{equation}
+# \begin{split}
+# Var^{0*}(\Delta y_{i,c,t+1}) & = \frac{1}{h^2}[\sum^h_{s=1}(s-1)^2+1]\sigma^2_\xi + \frac{1}{h^2}[\sum^h_{s=1}(s-1)^2+1]\sigma^2_\psi + \frac{1}{h^2}\sigma^2_\epsilon \\
+# Var(\Delta e_{i,c,t+1}) &= \frac{1}{h^2}[\sum^h_{s=1}(s-1)^2+\sum^{h-3}_{k=0}(h-2-k)^2]\sigma^2_\xi \\
+# & + \frac{1}{h^2}[\sum^h_{s=1}(s-1)^2+\sum^{h-3}_{k=0}(h-2-k)^2]\sigma^2_\psi  \\
+# & + \frac{1}{h^2}[\phi^2+(\phi-1)^2+2(h-1)(\phi+1)^2+1]\sigma^2_\epsilon \\
+# \end{split}
+# \end{equation}
 #
 #
 # #### under superior information 
 #
 #
 # #### under time-varying income volatilities 
+
+# - <cite data-cite="gottschalk1994growth">(Gottschalk et al. 1994)</cite>
+# - <cite data-cite="carroll1997nature">(Carroll and Samwick, 1997)</cite>
+# - <cite data-cite="meghir2004income">(Storesletten et al. 2004)</cite>, 
+# - <cite data-cite="storesletten2004cyclical">(Meghir and Pistaferri, 2004)</cite>, 
+# - <cite data-cite="blundell_consumption_2008">(Blundell et al. 2008)</cite>
+# - <cite data-cite="guvenen2014nature">(Guvenen et al. 2014)</cite>
+# - <cite data-cite="bloom2018great">(Bloom et al. 2018)</cite>
+#
+#
 
 import numpy as np 
 import matplotlib.pyplot as plt
@@ -173,7 +200,7 @@ spec = [
 """
 
 
-# + {"code_folding": [1, 20, 31, 36, 46, 58, 75, 91, 132, 152, 171, 186, 216, 217, 284, 301, 304, 305, 308, 362, 371, 380, 388, 402, 412, 419, 439]}
+# + {"code_folding": [1, 20, 31, 36, 46, 58, 75, 91, 132, 152, 171, 186, 216, 284, 301, 304, 305, 308, 362, 371, 380, 388, 402, 412, 419, 439]}
 class LearningIncome:
     def __init__(self,
                  ar_paras = np.array([0.95,0.1]),

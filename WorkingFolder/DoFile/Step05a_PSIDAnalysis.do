@@ -56,7 +56,6 @@ drop _merge
 rename unrate ue
 
 
-
 ** Set the panel 
 xtset uniqueid year 
 
@@ -143,14 +142,31 @@ keep if (rtoh ==1 & year<=1982) | (rtoh ==10 & year>1982)
 * head is 1 before 1982 and 10 after 1982
 
 * age 
-drop if age_h <22 | age_h > 55 
+drop if age_h <20 | age_h > 58 
 
 * stay in sample for at least 9 years
-*keep if tenure >=9
+keep if tenure >=15
 
 *******************
 ** new variables
 *******************
+
+** year of birth 
+
+gen byear = year-age
+label var byear "year of birth"
+
+egen byear_5yr = cut(byear), ///
+     at(1915 1920 1925 1930 1935 1940 ///
+	    1945 1950 1955 1960 1965 1970 ///
+	    1975 1980 1985 1990 1995 2000 ///
+		2005 2010)
+label var byear_5yr "5-year cohort"
+
+egen age_5yr = cut(age), ///
+     at(20 25 30 35 40 45 ///
+	    50 55 60)
+label var age_5yr "5-year age"
 
 ** nominal to real terms 
 replace wage_h = wage_h*CPI/100
@@ -324,15 +340,305 @@ restore
 */
 
 
-** age profile 
+*****************************************************************************
+**** comparison and perceptions and realizations for idiosyncratic shocks ***
+****************************************************************************
+
+** notice here we use lwage_id_shk_gr !!
+
+
+** byear_5yr and age
 
 preserve
 * average log wage
-collapse (mean) lwage_shk_gr_av_age = lwage_shk_gr (sd) lwage_shk_gr_sd_age = lwage_shk_gr, by(age_h) 
+collapse (count) ct = lwage_shk_gr ///
+         (mean) lwage_shk_gr_av_byear= lwage_id_shk_gr ///
+         (sd) lwage_shk_gr_sd_byear= lwage_id_shk_gr ///
+		 (mean) lwage_shk_av_byear= lwage_id_shk ///
+         (sd) lwage_shk_sd_byear = lwage_id_shk, by(byear_5yr age_h)
+gen age = age_h
+summarize ct
+keep if ct >10
+merge 1:1 byear_5yr age using "${scefolder}incvar_by_byear_5_yr_age.dta",keep(match) 
+
+gen lincvar = sqrt(incvar)
+gen lrincvar = sqrt(rincvar)
+
+reg lrincvar lwage_shk_gr_sd_byear
+
+* standard deviation real log wage growth and risk perception
+
+twoway (scatter lwage_shk_gr_sd_byear byear_5yr, color(ltblue)) ///
+       (lfit lwage_shk_gr_sd_byear byear_5yr, lcolor(red)) ///
+       (scatter lrincvar byear_5yr, color(gray) yaxis(2)) ///
+	   (lfit lrincvar byear_5yr,lcolor(black) yaxis(2)), ///
+       title("Realized Volatility and Perceived Risks by Cohort/Age")  ///
+	   xtitle("year of birth")  ///
+	   ytitle("income volatility (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0))  ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+graph export "${graph_folder}/real_log_wage_shk_gr_by_byear_age_compare.png", as(png) replace 
+
+
+* standard deviation log wage level and risk perception 
+
+twoway (scatter lwage_shk_sd_byear byear_5yr, color(ltblue)) ///
+       (lfit lwage_shk_sd_byear byear_5yr, lcolor(red)) ///
+       (scatter lrincvar byear_5yr, color(gray) yaxis(2)) ///
+	   (lfit lrincvar byear_5yr,lcolor(black) yaxis(2)), ///
+       title("Realized Inequality and Perceived Risks by Cohort/Age")  ///
+	   xtitle("year of birth")  ///
+	   ytitle("income inequality (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+graph export "${graph_folder}/real_log_wage_shk_by_byear_age_compare.png", as(png) replace 
+
+restore
+
+** cohort and gender 
+
+preserve
+* average log wage
+collapse (mean) lwage_shk_gr_av_byear= lwage_id_shk_gr ///
+         (sd) lwage_shk_gr_sd_byear= lwage_id_shk_gr ///
+		 (mean) lwage_shk_av_byear= lwage_id_shk ///
+         (sd) lwage_shk_sd_byear = lwage_id_shk, by(byear sex_h)
+
+gen gender = sex_h 
+
+merge 1:1 byear gender using "${scefolder}incvar_by_byear_gender.dta",keep(match) 
+
+gen lincvar = sqrt(incvar)
+gen lrincvar = sqrt(rincvar)
+
+keep if gender==1
+
+* standard deviation real log wage growth and risk perception
+
+twoway (scatter lwage_shk_gr_sd_byear byear, color(ltblue)) ///
+       (lfit lwage_shk_gr_sd_byear byear, lcolor(red)) ///
+       (scatter lrincvar byear, color(gray) yaxis(2)) ///
+	   (lfit lrincvar byear,lcolor(black) yaxis(2)), ///
+       title("Realized Volatility and Perceived Risks by Cohort/Gender")  ///
+	   xtitle("year of birth")  ///
+	   ytitle("income volatility (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+graph export "${graph_folder}/real_log_wage_shk_gr_by_byear_gender_compare.png", as(png) replace 
+
+
+* standard deviation log wage level and risk perception 
+
+twoway (scatter lwage_shk_sd_byear byear, color(ltblue)) ///
+       (lfit lwage_shk_sd_byear byear, lcolor(red)) ///
+       (scatter lrincvar byear, color(gray) yaxis(2)) ///
+	   (lfit lrincvar byear,lcolor(black) yaxis(2)), ///
+       title("Realized Inequality and Perceived Risks by Cohort/Gender")  ///
+	   xtitle("year of birth")  ///
+	    ytitle("income inequality (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+graph export "${graph_folder}/real_log_wage_shk_by_byear_gender_compare.png", as(png) replace 
+
+restore
+
+
+** cohort 
+
+preserve
+* average log wage
+collapse (mean) lwage_shk_gr_av_byear= lwage_id_shk_gr ///
+         (sd) lwage_shk_gr_sd_byear= lwage_id_shk_gr ///
+		 (mean) lwage_shk_av_byear= lwage_id_shk ///
+         (sd) lwage_shk_sd_byear = lwage_id_shk, by(byear) 
+
+merge 1:1 byear using "${scefolder}incvar_by_byear.dta",keep(match) 
+
+gen lincvar = sqrt(incvar)
+gen lrincvar = sqrt(rincvar)
+
+
+* standard deviation log wage growth and risk perception
+
+twoway (scatter lwage_shk_gr_sd_byear byear, color(ltblue)) ///
+       (lfit lwage_shk_gr_sd_byear byear, lcolor(red)) ///
+       (scatter lincvar byear, color(gray) yaxis(2)) ///
+	   (lfit lincvar byear,lcolor(black) yaxis(2)), ///
+       title("Realized and Perceived Income Risks by Cohort")  ///
+	   xtitle("year of birth")  ///
+	   ytitle("income inequality (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+graph export "${graph_folder}/log_wage_shk_gr_by_byear_compare.png", as(png) replace 
+
+
+* standard deviation real log wage growth and risk perception
+
+twoway (scatter lwage_shk_gr_sd_byear byear, color(ltblue)) ///
+       (lfit lwage_shk_gr_sd_byear byear, lcolor(red)) ///
+       (scatter lrincvar byear, color(gray) yaxis(2)) ///
+	   (lfit lrincvar byear,lcolor(black) yaxis(2)), ///
+       title("Realized Volatility and Perceived Risks by Cohort")  ///
+	   xtitle("year of birth")  ///
+	   ytitle("income volatility (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+graph export "${graph_folder}/real_log_wage_shk_gr_by_byear_compare.png", as(png) replace 
+
+
+* standard deviation log wage level and risk perception 
+
+twoway (scatter lwage_shk_sd_byear byear, color(ltblue)) ///
+       (lfit lwage_shk_sd_byear byear, lcolor(red)) ///
+       (scatter lrincvar byear, color(gray) yaxis(2)) ///
+	   (lfit lrincvar byear,lcolor(black) yaxis(2)), ///
+       title("Realized Inequality and Perceived Risks by Cohort")  ///
+	   xtitle("year of birth")  ///
+	   ytitle("income inequality (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+graph export "${graph_folder}/real_log_wage_shk_by_byear_compare.png", as(png) replace 
+
+restore
+
+
+** cohort/education profile
+
+preserve
+* average log wage
+collapse (mean) lwage_shk_gr_av_byear_edu = lwage_id_shk_gr ///
+         (sd) lwage_shk_gr_sd_byear_edu = lwage_id_shk_gr ///
+		 (mean) lwage_shk_av_byear_edu = lwage_id_shk ///
+         (sd) lwage_shk_sd_byear_edu = lwage_id_shk, by(byear_5yr edu_i_g) 
+
+gen edu_g = edu_i_g 
+
+merge 1:1 byear_5yr edu_g using "${scefolder}incvar_by_byear_5yr_edu.dta",keep(match) 
+
+gen lincvar = sqrt(incvar)
+gen lrincvar = sqrt(rincvar)
+
+drop if edu_g==1
+
+* standard deviation log wage growth and risk perception 
+
+twoway (scatter lwage_shk_gr_sd_byear_edu byear_5yr, color(ltblue)) ///
+       (lfit lwage_shk_gr_sd_byear_edu byear_5yr, lcolor(red)) ///
+       (scatter lrincvar byear_5yr, color(gray) yaxis(2)) ///
+	   (lfit lrincvar byear_5yr,lcolor(black) yaxis(2)), ///
+       title("Realized Volatility and Perceived Risks by Cohort/Education")  ///
+	   xtitle("year of birth")  ///
+	   ytitle("income volatility (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+					  
+graph export "${graph_folder}/real_log_wage_shk_gr_by_byear_5yr_edu_compare.png", as(png) replace 
+
+* standard deviation log wage level and risk perception 
+
+twoway (scatter lwage_shk_sd_byear_edu byear_5yr, color(ltblue)) ///
+       (lfit lwage_shk_sd_byear_edu byear_5yr, lcolor(red)) ///
+       (scatter lrincvar byear_5yr, color(gray) yaxis(2)) ///
+	   (lfit lrincvar byear_5yr,lcolor(black) yaxis(2)), ///
+       title("Realized Inequality and Perceived Risks by Cohort/Education")  ///
+	   xtitle("year of birth")  ///
+	   ytitle("income inequality (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+	   
+graph export "${graph_folder}/real_log_wage_shk_by_byear_5yr_edu_compare.png", as(png) replace 
+
+restore
+
+
+** 5-year cohort/education/gender profile
+
+preserve
+* average log wage
+collapse (mean) lwage_shk_gr_av_byear_5yr_edu = lwage_id_shk_gr ///
+         (sd) lwage_shk_gr_sd_byear_5yr_edu = lwage_id_shk_gr ///
+		 (mean) lwage_shk_av_byear_5yr_edu = lwage_id_shk ///
+         (sd) lwage_shk_sd_byear_5yr_edu = lwage_id_shk, by(byear_5yr edu_i_g sex_h)
+		 
+gen edu_g = edu_i_g 
+gen gender = sex_h 
+
+merge 1:1 byear_5yr edu_g gender using "${scefolder}incvar_by_byear_5yr_edu_gender.dta",keep(match) 
+
+gen lincvar = sqrt(incvar)
+gen lrincvar = sqrt(rincvar)
+
+drop if edu_g==1 
+*keep if gender==2
+
+* standard deviation log wage growth and risk perception 
+twoway (scatter lwage_shk_gr_sd_byear_5yr_edu byear_5yr, color(ltblue)) ///
+       (lfit lwage_shk_gr_sd_byear_5yr_edu byear_5yr, lcolor(red)) ///
+       (scatter lrincvar byear_5yr, color(gray) yaxis(2)) ///
+	   (lfit lrincvar byear_5yr,lcolor(black) yaxis(2)), ///
+       title("Realized Volatility and Perceived Risks by Cohort/Education")  ///
+	   xtitle("year of birth")  ///
+	   ytitle("income volatility (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+					  
+graph export "${graph_folder}/real_log_wage_shk_gr_by_byear_5yr_edu_gender_compare.png", as(png) replace 
+
+
+* standard deviation log wage level and risk perception 
+
+twoway (scatter lwage_shk_sd_byear_5yr_edu byear_5yr, color(ltblue)) ///
+       (lfit lwage_shk_sd_byear_5yr_edu byear_5yr, lcolor(red)) ///
+       (scatter lrincvar byear_5yr, color(gray) yaxis(2)) ///
+	   (lfit lrincvar byear_5yr,lcolor(black) yaxis(2)), ///
+       title("Realized Inequality and Perceived Risks by Cohort/Education")  ///
+	   xtitle("year of birth")  ///
+	   ytitle("income inequality (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+	   
+graph export "${graph_folder}/real_log_wage_shk_by_byear_5yr_edu_gender_compare.png", as(png) replace 
+
+restore
+
+
+** age profile 
+preserve
+* average log wage
+collapse (mean) lwage_shk_gr_av_age = lwage_id_shk_gr ///
+         (sd)   lwage_shk_gr_sd_age = lwage_id_shk_gr ///
+		 (mean)	lwage_shk_av_age = lwage_id_shk ///
+		 (sd)    lwage_shk_sd_age = lwage_id_shk, by(age_h) 
 
 gen age = age_h 
 merge 1:1 age using "${scefolder}incvar_by_age.dta",keep(master match) 
 gen lincvar = sqrt(incvar)
+gen lrincvar = sqrt(rincvar)
+
+/*
+* growth 
 twoway (scatter lwage_shk_gr_av_age age_h) (lfit lwage_shk_gr_av_age age_h), ///
        title("Growth rates of log real wage and age") ///
                 xtitle("age") 
@@ -342,96 +648,228 @@ graph export "${graph_folder}/log_wage_shk_gr_by_age.png", as(png) replace
 twoway (scatter lwage_shk_gr_sd_age age_h) (lfit lwage_shk_gr_sd_age age_h), ///
        title("Gross volatility of log real wage and age")  ///
 	   xtitle("age") 
-graph export "${graph_folder}/log_wage_shk_gr_by_age.png", as(png) replace 
+graph export "${graph_folder}/log_wage_shk_gr_sd_by_age.png", as(png) replace 
 
-* standard deviation log wage and risk perception 
+
+* level 
+twoway (scatter lwage_shk_av_age age_h) (lfit lwage_shk_av_age age_h), ///
+       title("Growth rates of log real wage and age") ///
+                xtitle("age") 
+graph export "${graph_folder}/log_wage_shk_by_age.png", as(png) replace 
+
+
+* standard deviation level 
+twoway (scatter lwage_shk_sd_age age_h) (lfit lwage_shk_sd_age age_h), ///
+       title("Growth rates of log real wage and age") ///
+                xtitle("age") 
+graph export "${graph_folder}/log_wage_shk_sd_by_age.png", as(png) replace 
+*/
+
+* standard deviation log wage and real risk perception 
 
 twoway (scatter lwage_shk_gr_sd_age age_h, color(ltblue)) ///
        (lfit lwage_shk_gr_sd_age age_h, lcolor(red)) ///
-       (scatter lincvar age_h, color(gray) yaxis(2)) ///
-	   (lfit lincvar age_h,lcolor(black) yaxis(2)), ///
-       title("Realized and Perceived Age Profile of Income Risks")  ///
+       (scatter lrincvar age_h, color(gray) yaxis(2)) ///
+	   (lfit lrincvar age_h,lcolor(black) yaxis(2)), ///
+       title("Realized Volatility and Perceived Risks by Age")  ///
 	   xtitle("age")  ///
+	    ytitle("income volatility (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
 	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
 	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
-graph export "${graph_folder}/log_wage_shk_gr_by_age_compare.png", as(png) replace 
+graph export "${graph_folder}/real_log_wage_shk_gr_by_age_compare.png", as(png) replace 
+
+** age-specific level risks and perceptions
+
+twoway (scatter lwage_shk_sd_age age_h, color(ltblue)) ///
+       (lfit lwage_shk_sd_age age_h, lcolor(red)) ///
+       (scatter lrincvar age_h, color(gray) yaxis(2)) ///
+	   (lfit lrincvar age_h,lcolor(black) yaxis(2)), ///
+       title("Realized Inequality Perceived Risks by Age")  ///
+	   xtitle("age")  ///
+	   ytitle("income inequality (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+graph export "${graph_folder}/real_log_wage_shk_by_age_compare.png", as(png) replace 
 
 
-** age-specific risks and perceptions
 
-twoway (scatter lincvar lwage_shk_gr_sd_age, color(ltblue)) ///
-       (lfit lincvar lwage_shk_gr_sd_age, lcolor(red)), ///
-       title("Realized and Perceived Income Risks")  ///
-	   xtitle("Age-specific risk") ///
+** age-specific level risks and perceptions 
+ 
+twoway (scatter lrincvar lwage_shk_gr_sd_age, color(ltblue)) ///
+       (lfit lrincvar lwage_shk_gr_sd_age, lcolor(red)), ///
+       title("Realized Volatility and Perceived Risks")  ///
+	   xtitle("Age-specific volatility") ///
 	   ytitle("Perceived risk") 
-graph export "${graph_folder}/realized_perceived_risks_by_age.png", as(png) replace  /// 
+graph export "${graph_folder}/real_realized_perceived_risks_by_age.png", as(png) replace 
+*/
 
 restore
+
 
 ** age x education profile
 
 preserve
 * average log wage
-collapse (mean) lwage_shk_gr_av_age_edu = lwage_shk_gr (sd) lwage_shk_gr_sd_age_edu = lwage_shk_gr, by(age_h edu_i_g) 
+collapse (mean) lwage_shk_gr_av_age_edu = lwage_id_shk_gr ///
+         (sd) lwage_shk_gr_sd_age_edu = lwage_id_shk_gr ///
+		 (mean) lwage_shk_av_age_edu = lwage_id_shk ///
+         (sd) lwage_shk_sd_age_edu = lwage_id_shk, by(age_h edu_i_g) 
 
 gen age = age_h 
 gen edu_g = edu_i_g 
+keep if edu_g !=1
 
 merge 1:1 age edu_g using "${scefolder}incvar_by_age_edu.dta",keep(master match) 
 
 gen lincvar = sqrt(incvar)
+gen lrincvar = sqrt(rincvar)
 
-* standard deviation log wage and risk perception 
-twoway (scatter lwage_shk_gr_sd_age_edu age_h if edu_g==3, color(ltblue)) ///
-       (lfit lwage_shk_gr_sd_age_edu age_h if edu_g==3, lcolor(red)) ///
-       (scatter lincvar age_h if edu_g==3, color(gray) yaxis(2)) ///
-	   (lfit lincvar age_h if edu_g==3,lcolor(black) yaxis(2)), ///
-       title("Realized and Perceived Age Profile of Income Risks")  ///
+* standard deviation log wage growth and risk perception 
+twoway (scatter lwage_shk_gr_sd_age_edu age_h, color(ltblue)) ///
+       (lfit lwage_shk_gr_sd_age_edu age_h, lcolor(red)) ///
+       (scatter lrincvar age_h, color(gray) yaxis(2)) ///
+	   (lfit lrincvar age_h,lcolor(black) yaxis(2)), ///
+       title("Realized Volatility and Perceived Risks by Age/Education")  ///
 	   xtitle("age")  ///
+	   ytitle("income volatility (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
 	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
 	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
-graph export "${graph_folder}/log_wage_shk_gr_by_age_edu_compare.png", as(png) replace 
+graph export "${graph_folder}/real_log_wage_shk_gr_by_age_edu_compare.png", as(png) replace 
 
 
-twoway (scatter lincvar lwage_shk_gr_sd_age, color(ltblue)) ///
-       (lfit lincvar lwage_shk_gr_sd_age, lcolor(red)) if lwage_shk_gr_sd!=., ///
-       title("Realized and Perceived Income Risks")  ///
-	   xtitle("Age-education-specific risk") ///
+* standard deviation log wage level and risk perception 
+twoway (scatter lwage_shk_sd_age_edu age_h, color(ltblue)) ///
+       (lfit lwage_shk_sd_age_edu age_h, lcolor(red)) ///
+       (scatter lrincvar age_h, color(gray) yaxis(2)) ///
+	   (lfit lrincvar age_h,lcolor(black) yaxis(2)), ///
+       title("Realized Inequality and Perceived Risks by Age/Education")  ///
+	   xtitle("age")  ///
+	   ytitle("income inequality (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+graph export "${graph_folder}/real_log_wage_shk_by_age_edu_compare.png", as(png) replace 
+
+
+* perceived riks by age/education  
+twoway (scatter lrincvar lwage_shk_gr_sd_age, color(ltblue)) ///
+       (lfit lrincvar lwage_shk_gr_sd_age, lcolor(red)) if lwage_shk_gr_sd!=., ///
+       title("Realized Volatility and Perceived Risks by Age/Education")  ///
+	   xtitle("Volatility") ///
 	   ytitle("Perceived risk") 
-graph export "${graph_folder}/realized_perceived_risks_by_age_edu.png", as(png) replace  /// 
+graph export "${graph_folder}/real_realized_perceived_risks_by_age_edu.png", as(png) replace  
+
 
 restore
 
-
-** gender profile 
+/*
+** age/gender profile 
 
 ** scatter 
 preserve 
-collapse (mean) lwage_shk_gr_av_age_sex = lwage_shk_gr (sd) lwage_shk_gr_sd_age_sex = lwage_shk_gr, by(age_h sex_h) 
+collapse (mean) lwage_shk_gr_av_age_sex = lwage_id_shk_gr ///
+         (sd) lwage_shk_gr_sd_age_sex = lwage_id_shk_gr ///
+		 (mean) lwage_shk_av_age_sex = lwage_id_shk ///
+         (sd) lwage_shk_sd_age_sex = lwage_id_shk, by(age_h sex_h) 
 gen age = age_h
 
 gen gender = sex_h
 
 merge 1:1 age gender using "${scefolder}incvar_by_age_gender.dta",keep(master match) 
 gen lincvar = sqrt(incvar)
+gen lrincvar = sqrt(rincvar)
 
-* standard deviation log wage and risk perception 
-twoway (scatter lwage_shk_gr_sd_age_sex age_h if gender==2, color(ltblue)) ///
-       (lfit lwage_shk_gr_sd_age_sex age_h if gender==2, lcolor(red)) ///
-       (scatter lincvar age_h if gender==2, color(gray) yaxis(2)) ///
-	   (lfit lincvar age_h  if gender==2,lcolor(black) yaxis(2)), ///
-       title("Realized and Perceived Age Profile of Income Risks")  ///
+* standard deviation log wage growth and risk perception 
+twoway (scatter lwage_shk_gr_sd_age_sex age_h, color(ltblue)) ///
+       (lfit lwage_shk_gr_sd_age_sex age_h, lcolor(red)) ///
+       (scatter lrincvar age_h, color(gray) yaxis(2)) ///
+	   (lfit lrincvar age_h,lcolor(black) yaxis(2)), ///
+       title("Realized Volatility and Perceived Risks by Age/Gender")  ///
 	   xtitle("age")  ///
+	   ytitle("income volatility (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
 	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
 	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
-graph export "${graph_folder}/log_wage_shk_gr_by_age_gender_compare.png", as(png) replace 
+graph export "${graph_folder}/real_log_wage_shk_gr_by_age_gender_compare.png", as(png) replace 
+
+* standard deviation log wage level and risk perception 
+twoway (scatter lwage_shk_sd_age_sex age_h, color(ltblue)) ///
+       (lfit lwage_shk_sd_age_sex age_h, lcolor(red)) ///
+       (scatter lrincvar age_h, color(gray) yaxis(2)) ///
+	   (lfit lrincvar age_h,lcolor(black) yaxis(2)), ///
+       title("Realized Inequality and Perceived Risks by Age/Gender")  ///
+	   xtitle("age")  ///
+	   ytitle("income inequality (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+graph export "${graph_folder}/real_log_wage_shk_by_age_gender_compare.png", as(png) replace 
+
+restore
+*/
+
+** age/gender/educ profile 
+
+** scatter 
+preserve 
+collapse (mean) lwage_shk_gr_av_age_sex = lwage_id_shk_gr ///
+         (sd) lwage_shk_gr_sd_age_sex = lwage_id_shk_gr ///
+		 (mean) lwage_shk_av_age_sex = lwage_id_shk ///
+         (sd) lwage_shk_sd_age_sex = lwage_id_shk, by(age_h sex_h edu_i_g) 
+gen age = age_h
+gen gender = sex_h
+gen edu_g = edu_i_g 
+drop if edu_g ==1
+
+merge 1:1 age gender edu_g using "${scefolder}incvar_by_age_edu_gender.dta",keep(master match) 
+gen lincvar = sqrt(incvar)
+gen lrincvar = sqrt(rincvar)
+
+* standard deviation log wage growth and risk perception 
+twoway (scatter lwage_shk_gr_sd_age_sex age_h, color(ltblue)) ///
+       (lfit lwage_shk_gr_sd_age_sex age_h, lcolor(red)) ///
+       (scatter lrincvar age_h, color(gray) yaxis(2)) ///
+	   (lfit lrincvar age_h,lcolor(black) yaxis(2)), ///
+       title("Realized Volatility and Perceived Risks by Age/Gender/Educ")  ///
+	   xtitle("age")  ///
+	   ytitle("income volatility (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+graph export "${graph_folder}/real_log_wage_shk_gr_by_age_edu_gender_compare.png", as(png) replace 
+
+* standard deviation log wage level and risk perception 
+twoway (scatter lwage_shk_sd_age_sex age_h, color(ltblue)) ///
+       (lfit lwage_shk_sd_age_sex age_h, lcolor(red)) ///
+       (scatter lrincvar age_h, color(gray) yaxis(2)) ///
+	   (lfit lrincvar age_h,lcolor(black) yaxis(2)), ///
+       title("Realized Inequality and Perceived Risks by Age/Gender/Educ")  ///
+	   xtitle("age")  ///
+	   ytitle("income inequality (std)") ///
+	   ytitle("risk perception (std)", axis(2)) ///
+	   ysc(titlegap(3) outergap(0)) ///
+	   legend(col(2) lab(1 "Realized") lab(2 "Realized (fitted)")  ///
+	                  lab(3 "Perceived (RHS)") lab(4 "Perceived (fitted)(RHS)"))
+graph export "${graph_folder}/real_log_wage_shk_by_age_edu_gender_compare.png", as(png) replace 
 
 restore
 
+/*
 ** time series 
 
 preserve 
-collapse (mean) lwage_shk_gr_av_sex=lwage_shk_gr (sd) lwage_shk_gr_sd_sex = lwage_shk_gr, by(year sex_h) 
+collapse (mean) lwage_shk_gr_av_sex=lwage_id_shk_gr ///
+         (sd) lwage_shk_gr_sd_sex = lwage_id_shk_gr, by(year sex_h) 
 * average log wage
 
 twoway  (connected lwage_shk_gr_av_sex year if lwage_shk_gr_av_sex!=. & sex_h==1) ///
@@ -449,10 +887,7 @@ twoway  (connected lwage_shk_gr_sd_sex year if lwage_shk_gr_sd_sex!=. & sex_h==1
 graph export "${graph_folder}/log_wage_shk_gr_sd_by_sex.png", as(png) replace
 
 restore 
-
 */
-
-
 
 ********************************************
 ** Unconditional summary statistics *****
@@ -472,21 +907,22 @@ tsfill,full
 *replace lwage_shk_gr = f1.lwage_shk_gr if year>=1998 ///
 *                                       & f1.lwage_shk_gr !=. ///
 *									   & lwage_shk_gr ==. 									    
-keep uniqueid year lwage_id_shk_gr edu_i_g
+keep uniqueid year lwage_id_shk_gr edu_i_g sex_h age_5yr
 *keep if year<=1997
-reshape wide lwage_id_shk_gr, i(uniqueid edu_i_g) j(year)
+reshape wide lwage_id_shk_gr, i(uniqueid edu_i_g sex_h age_5yr) j(year)
 save "psid_matrix.dta",replace 
 restore 
-
-
+ddd
 ******************************
 ** cohort-time-specific experience
 *********************************
 
 preserve 
 
-putexcel set "${table_folder}/psid_history_vol_test.xls", sheet("") replace
-putexcel A1=("year") B1=("cohort") C1=("av_gr") D1=("var_shk") E1=("av_id_gr") F1=("var_id_shk") G1=("av_ag_gr") H1=("var_ag_shk") I1 =("N") J1=("ue_av") K1=("ue_var")
+putexcel set "${table_folder}/psid_history_vol.xls", sheet("") replace
+putexcel A1=("year") B1=("cohort") C1=("av_shk_gr") D1=("var_shk") E1=("av_id_shk_gr") ///
+         F1=("var_id_shk") G1=("av_ag_shk_gr") H1=("var_ag_shk") I1 =("N") J1=("ue_av") K1=("ue_var") ///
+		 L1=("var_shk_gr") M1=("var_id_shk_gr") N1=("var_ag_shk_gr")
 local row = 2
 forvalues t =1973(1)2017{
 local l = `t'-1971
@@ -501,8 +937,11 @@ local var_shk = r(sd)^2
 disp `var_shk'
 summarize lwage_shk_gr if year <=`t'& year>=`t'-`i'
 return list 
-local av_gr = r(mean)
-disp `av_gr'
+local av_shk_gr = r(mean)
+disp `av_shk_gr'
+local var_shk_gr = r(sd)^2
+disp `var_shk_gr'
+
 
 ** id shk
 summarize lwage_id_shk if year <=`t'& year>=`t'-`i'
@@ -511,8 +950,11 @@ local var_id_shk = r(sd)^2
 disp `var_id_shk'
 summarize lwage_id_shk_gr if year <=`t'& year>=`t'-`i'
 return list 
-local av_id_gr = r(mean)
-disp `av_id_gr'
+local av_id_shk_gr = r(mean)
+disp `av_id_shk_gr'
+local var_id_shk_gr = r(sd)^2
+disp `var_id_shk_gr'
+
 
 ** ag shk
 summarize lwage_ag_shk if year <=`t'& year>=`t'-`i'
@@ -521,8 +963,10 @@ local var_ag_shk = r(sd)^2
 disp `var_ag_shk'
 summarize lwage_ag_shk_gr if year <=`t'& year>=`t'-`i'
 return list 
-local av_ag_gr = r(mean)
-disp `av_ag_gr'
+local av_ag_shk_gr = r(mean)
+disp `av_ag_shk_gr'
+local var_ag_shk_gr = r(sd)^2
+disp `var_ag_shk_gr'
 
 ** ag ue
 summarize ue if year <=`t'& year>=`t'-`i'
@@ -535,29 +979,33 @@ disp `ue_var'
 putexcel A`row'=("`t'")
 local c = `t'-`i'
 putexcel B`row'=("`c'")
-putexcel C`row'=("`av_gr'")
+putexcel C`row'=("`av_shk_gr'")
 putexcel D`row'=("`var_shk'")
-putexcel E`row'=("`av_id_gr'")
+putexcel E`row'=("`av_id_shk_gr'")
 putexcel F`row'=("`var_id_shk'")
-putexcel G`row'=("`av_ag_gr'")
+putexcel G`row'=("`av_ag_shk_gr'")
 putexcel H`row'=("`var_ag_shk'")
 putexcel I`row'=("`N'")
 putexcel J`row'=("`ue_av'")
 putexcel K`row'=("`ue_var'")
+putexcel L`row'=("`var_shk_gr'")
+putexcel M`row'=("`var_id_shk_gr'")
+putexcel N`row'=("`var_ag_shk_gr'")
 
 local ++row
 }
 }
 restore
 
-ddd
 
 **** age-time-education 
 
 preserve 
 
-putexcel set "${table_folder}/psid_history_vol_edu_test.xls", sheet("") replace
-putexcel A1=("year") B1=("cohort") C1 =("edu") D1=("av_gr") E1=("var_shk") F1=("av_id_gr") G1=("var_id_shk") H1=("av_ag_gr") I1=("var_ag_shk") J1 =("N") K1=("ue_av") L1=("ue_var")
+putexcel set "${table_folder}/psid_history_vol_edu.xls", sheet("") replace
+putexcel A1=("year") B1=("cohort") C1 =("edu") D1=("av_shk_gr") E1=("var_shk") F1=("av_id_shk_gr") ///
+         G1=("var_id_shk") H1=("av_ag_shk_gr") I1=("var_ag_shk") J1 =("N") K1=("ue_av") L1=("ue_var") ///
+		 M1=("var_shk_gr") N1=("var_id_shk_gr") O1=("var_ag_shk_gr")
 local row = 2
 forvalues ed = 1(1)3{
 forvalues t =1973(1)2017{
@@ -573,8 +1021,11 @@ local var_shk = r(sd)^2
 disp `var_shk'
 summarize lwage_shk_gr if year <=`t'& year>=`t'-`i' & edu_i_g ==`ed'
 return list 
-local av_gr = r(mean)
-disp `av_gr'
+local av_shk_gr = r(mean)
+disp `av_shk_gr'
+local var_shk_gr = r(sd)^2
+disp `var_shk_gr'
+
 
 ** id shk
 summarize lwage_id_shk if year <=`t'& year>=`t'-`i' & edu_i_g ==`ed'
@@ -583,8 +1034,10 @@ local var_id_shk = r(sd)^2
 disp `var_id_shk'
 summarize lwage_id_shk_gr if year <=`t'& year>=`t'-`i' & edu_i_g ==`ed'
 return list 
-local av_id_gr = r(mean)
-disp `av_id_gr'
+local av_id_shk_gr = r(mean)
+disp `av_id_shk_gr'
+local var_id_shk_gr = r(sd)^2
+disp `var_id_shk_gr'
 
 ** ag shk
 summarize lwage_ag_shk if year <=`t'& year>=`t'-`i'& edu_i_g ==`ed'
@@ -593,8 +1046,10 @@ local var_ag_shk = r(sd)^2
 disp `var_ag_shk'
 summarize lwage_ag_shk_gr if year <=`t'& year>=`t'-`i'& edu_i_g ==`ed'
 return list 
-local av_ag_gr = r(mean)
-disp `av_ag_gr'
+local av_ag_shk_gr = r(mean)
+disp `av_ag_shk_gr'
+local var_ag_shk_gr = r(sd)^2
+disp `var_ag_shk_gr'
 
 ** ag ue
 summarize ue if year <=`t'& year>=`t'-`i' & edu_i_g ==`ed'
@@ -608,15 +1063,18 @@ putexcel A`row'=("`t'")
 local c = `t'-`i'
 putexcel B`row'=("`c'")
 putexcel C`row'=("`ed'")
-putexcel D`row'=("`av_gr'")
+putexcel D`row'=("`av_shk_gr'")
 putexcel E`row'=("`var_shk'")
-putexcel F`row'=("`av_id_gr'")
+putexcel F`row'=("`av_id_shk_gr'")
 putexcel G`row'=("`var_id_shk'")
-putexcel H`row'=("`av_ag_gr'")
+putexcel H`row'=("`av_ag_shk_gr'")
 putexcel I`row'=("`var_ag_shk'")
 putexcel J`row'=("`N'")
 putexcel K`row'=("`ue_av'")
 putexcel L`row'=("`ue_var'")
+putexcel M`row'=("`var_shk_gr'")
+putexcel N`row'=("`var_id_shk_gr'")
+putexcel O`row'=("`var_ag_shk_gr'")
 
 local ++row
 }

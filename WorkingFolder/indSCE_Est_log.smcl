@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Est_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}14 Dec 2020, 13:16:37
+ {txt}opened on:  {res}23 Apr 2021, 10:22:28
 {txt}
 {com}. 
 . *********************************************************
@@ -51,7 +51,7 @@
 {txt}{hline 10}{c TT}{hline 27}
    copies {c |} observations       surplus
 {hline 10}{c +}{hline 27}
-        1 {c |}        {res}95113             0
+        1 {c |}        {res}98593             0
 {txt}{hline 10}{c BT}{hline 27}
 
 {com}. 
@@ -64,7 +64,7 @@
 {txt}{col 5}Result{col 38}# of obs.
 {col 5}{hline 41}
 {col 5}not matched{col 30}{res}               0
-{txt}{col 5}matched{col 30}{res}          95,113{txt}  (_merge==3)
+{txt}{col 5}matched{col 30}{res}          98,593{txt}  (_merge==3)
 {col 5}{hline 41}
 
 {com}. rename _merge hh_info_merge
@@ -92,7 +92,7 @@
 {txt}{col 5}Result{col 38}# of obs.
 {col 5}{hline 41}
 {col 5}not matched{col 30}{res}               0
-{txt}{col 5}matched{col 30}{res}          95,113{txt}  (_merge==3)
+{txt}{col 5}matched{col 30}{res}          98,593{txt}  (_merge==3)
 {col 5}{hline 41}
 
 {com}. rename _merge sp_merge
@@ -105,7 +105,7 @@
 {res}{txt}
 {com}. xtset ID date   /* this is not correct. ID is unique here.*/
 {res}{txt}{col 8}panel variable:  {res}ID (unbalanced)
-{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m1, but with gaps
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m4, but with gaps
 {txt}{col 17}delta:  {res}1 month
 {txt}
 {com}. sort ID year month 
@@ -116,7 +116,7 @@
 . ******************************
 . 
 . keep if Q32 <= 65 & Q32 >= 20
-{txt}(9973 observations deleted)
+{txt}(10376 observations deleted)
 
 {com}. 
 . *****************************************
@@ -136,9 +136,7 @@
 {com}. rename Q24_rvar rincvar
 {res}{txt}
 {com}. 
-. rename Q36 educ
-{res}{txt}
-{com}. rename D6 HHinc 
+. rename D6 HHinc 
 {res}{txt}
 {com}. rename Q32 age 
 {res}{txt}
@@ -167,7 +165,7 @@
 . ****************************
 . 
 . replace incskew = . if incskew==0
-{txt}(31814 real changes made, 31814 to missing)
+{txt}(32933 real changes made, 32933 to missing)
 
 {com}. 
 . 
@@ -183,12 +181,12 @@
 {txt}  3{com}.           egen `var'pu=pctile(`var'),p(99)
 {txt}  4{com}.           replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
 {txt}  5{com}. {c )-}
-{txt}(1136 real changes made, 1136 to missing)
-(1088 real changes made, 1088 to missing)
-(3040 real changes made, 3040 to missing)
-(800 real changes made, 800 to missing)
-(1176 real changes made, 1176 to missing)
-(575 real changes made, 575 to missing)
+{txt}(1172 real changes made, 1172 to missing)
+(1123 real changes made, 1123 to missing)
+(3158 real changes made, 3158 to missing)
+(831 real changes made, 831 to missing)
+(1215 real changes made, 1215 to missing)
+(588 real changes made, 588 to missing)
 
 {com}. 
 . /*
@@ -221,6 +219,22 @@
 . 
 . *egen byear_g = cut(byear), group(4)
 . 
+. egen byear_5yr = cut(byear), ///
+>      at(1945 1950 1955 1960 1965 1970 ///
+>             1975 1980 1985 1990 1995 2000 ///
+>                 2005 2010)
+{txt}
+{com}. label var byear_5yr "5-year cohort"
+{txt}
+{com}. 
+. egen age_5yr = cut(age), ///
+>      at(20 25 30 35 40 45 ///
+>             50 55 60)
+{txt}(15341 missing values generated)
+
+{com}. label var age_5yr "5-year age"
+{txt}
+{com}. 
 . gen byear_g = cond(byear>=1980,1,0)
 {txt}
 {com}. label define byearglb 0 "before 1980s" 1 "after 1980s"
@@ -239,16 +253,16 @@
 {txt}
 {com}. 
 . gen edu_g = . 
-{txt}(85140 missing values generated)
+{txt}(88217 missing values generated)
 
 {com}. replace edu_g = 1 if educ==1
-{txt}(694 real changes made)
+{txt}(721 real changes made)
 
 {com}. replace edu_g = 2 if educ==2 | educ ==3 | educ == 4
-{txt}(36926 real changes made)
+{txt}(38196 real changes made)
 
 {com}. replace edu_g = 3 if educ <=9 & educ>4
-{txt}(47520 real changes made)
+{txt}(49300 real changes made)
 
 {com}. 
 . label var edu_g "education group"
@@ -264,7 +278,7 @@
 {txt}
 {com}. 
 . egen HHinc_g = cut(HHinc), group(2)
-{txt}(11858 missing values generated)
+{txt}(12278 missing values generated)
 
 {com}. label var HHinc_g "Household income group"
 {txt}
@@ -281,7 +295,7 @@
 . gen fbetter =cond(Q1>2,1,0)
 {txt}
 {com}. replace fbetter = . if Q1 ==3  
-{txt}(37884 real changes made, 37884 to missing)
+{txt}(39151 real changes made, 39151 to missing)
 
 {com}. label var fbetter "finance better"
 {txt}
@@ -294,7 +308,7 @@
 . gen nlit_g = cond(nlit>=3,1,0) 
 {txt}
 {com}. replace nlit_g = . if nlit ==.
-{txt}(30156 real changes made, 30156 to missing)
+{txt}(30181 real changes made, 30181 to missing)
 
 {com}. label var nlit_g "numeracy literacy score group"
 {txt}
@@ -306,229 +320,39 @@
 . local group_vars byear_g age_g edu_g HHinc_g fbetter nlit_g
 {txt}
 {com}. 
-. 
-. *********************************
-. *** bar charts *****
-. **********************************
-. 
-. 
-. graph bar incvar, ///
->            over(HHinc,relabel(1 "<10k" 2 "<20k" 3 "<30k" 4 "<40k" 5 "<50k" 6 "<60k" 7 "<75k" 8 "<100k" 9 "<150k" 10 "<200k" 11 ">200k")) ///
->                    bar(1, color(navy)) ///
->                    title("Perceived Risk by Household Income") ///
->                    b1title("Household income") ///
->                    ytitle("Average perceived risk") 
-{res}{txt}
-{com}. graph export "${c -(}sum_graph_folder{c )-}/boxplot_var_HHinc_stata.png", as(png) replace 
-{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/boxplot_var_HHinc_stata.png written in PNG format)
-
-{com}. 
-. 
-. *********************************
-. *** generate group summary data file *****
-. **********************************
-. 
-. * by age 
-. 
-. 
-. preserve 
-{txt}
-{com}. collapse incvar, by(age) 
-{txt}
-{com}. save "${c -(}folder{c )-}/SCE/incvar_by_age.dta",replace
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData//SCE/incvar_by_age.dta saved
-
-{com}. restore 
-{txt}
-{com}. 
-. * by age x education 
-. preserve
-{txt}
-{com}. collapse incvar, by(age edu_g) 
-{txt}
-{com}. save "${c -(}folder{c )-}/SCE/incvar_by_age_edu.dta",replace 
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData//SCE/incvar_by_age_edu.dta saved
-
-{com}. restore 
-{txt}
-{com}. 
-. 
-. * by age x gender 
-. preserve
-{txt}
-{com}. collapse incvar, by(age gender) 
-{txt}
-{com}. save "${c -(}folder{c )-}/SCE/incvar_by_age_gender.dta",replace 
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData//SCE/incvar_by_age_gender.dta saved
-
-{com}. restore 
-{txt}
-{com}. 
-. **********************************
-. *** tables and hists of Vars *****
-. **********************************
-. 
-. /*
-> local Moments incmean incvar inciqr rincmean rincvar incskew
-> 
-> foreach gp in `group_vars' {c -(}
-> tabstat `Moments', st(p10 p50 p90) by(`gp')
-> {c )-}
-> 
-> 
-> foreach gp in `group_vars' {c -(}
-> table `gp', c(median incvar mean incvar median rincvar mean rincvar) by(year)
-> {c )-}
-> 
-> 
-> ** histograms 
-> 
-> foreach mom in `Moments'{c -(}
-> 
-> twoway (hist `mom',fcolor(ltblue) lcolor(none)), ///
->            ytitle("") ///
->            title("`mom'")
-> graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'.png",as(png) replace  
-> 
-> {c )-}
-> 
-> 
-> * 4 groups 
-> foreach gp in byear_g{c -(}
-> foreach mom in `Moments'{c -(}
-> twoway (hist `mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
->        (hist `mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
->            (hist `mom' if `gp'==2,fcolor(red) lcolor("")) ///
->            (hist `mom' if `gp'==3,fcolor(green) lcolor("")), ///
->            xtitle("") ///
->            ytitle("") ///
->            title("`mom'") ///
->            legend(label(1 `gp'=0) label(2 `gp'=1) label(3 `gp'=2) label(4 `gp'=3) col(1))
-> 
-> graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'_`gp'.png",as(png) replace  
-> {c )-}
-> {c )-}
-> 
-> * 3 groups 
-> foreach gp in HHinc_g age_g{c -(}
-> foreach mom in `Moments'{c -(}
-> 
-> twoway (hist `mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
->        (hist `mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
->            (hist `mom' if `gp'==2,fcolor(red) lcolor("")), ///
->            xtitle("") ///
->            ytitle("") ///
->            title("`mom'") ///
->            legend(label(1 `gp'=0) label(2 `gp'=1) label(3 `gp'=2) col(1))
-> 
-> graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'_`gp'.png",as(png) replace  
-> 
-> {c )-}
-> {c )-}
-> 
-> * 2 groups 
-> 
-> 
-> foreach gp in edu_g fbetter{c -(}
-> foreach mom in `Moments'{c -(}
-> 
-> twoway (hist `mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
->        (hist `mom' if `gp'==1,fcolor(ltblue) lcolor("")), ///
->            xtitle("") ///
->            ytitle("") ///
->            title("`mom'") ///
->            legend(label(1 `gp'=0) label(2 `gp'=1) col(1))
-> 
-> graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'_`gp'.png",as(png) replace  
-> 
-> {c )-}
-> {c )-}
-> 
-> */
-. 
-. 
-. **********************************
-. *** time series pltos by group *****
-. **********************************
-. 
-. 
-. ** 2 groups 
-. foreach agg in mean median{c -(}
-{txt}  2{com}.   foreach gp in fbetter{c -(}
-{txt}  3{com}.    preserve 
-{txt}  4{com}.    
-.    collapse (`agg') `Moments' sp500, by(date `gp')
-{txt}  5{com}.    xtset `gp' date 
-{txt}  6{com}. 
-. foreach mom in `Moments'{c -(}
-{txt}  7{com}. keep if `mom'!=.
-{txt}  8{com}. * moments only 
-. 
-. twoway (tsline `mom' if `gp'== 0,lp(solid) lwidth(thick)) ///
->        (tsline `mom' if `gp'== 1,lp(dash) lwidth(thick)), ///
->        xtitle("date") ///
->            ytitle("") ///
->            title("`mom' by recent household finance condition") ///
->            legend(label(1 "worse") label(2 "better") col(4))
-{txt}  9{com}.  graph export "${c -(}sum_graph_folder{c )-}/ts/ts_`mom'_`gp'_`agg'.png",as(png) replace  
-{txt} 10{com}.  
-. {c )-}
-{txt} 11{com}.   restore
-{txt} 12{com}. {c )-}
-{txt} 13{com}. {c )-}
-{res}{txt}{col 8}panel variable:  {res}fbetter (weakly balanced)
-{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m1
-{txt}{col 17}delta:  {res}1 month
-{txt}(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_fbetter_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_fbetter_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incvar_fbetter_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincvar_fbetter_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_inciqr_fbetter_mean.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incskew_fbetter_mean.png written in PNG format)
-{res}{txt}{col 8}panel variable:  {res}fbetter (weakly balanced)
-{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m1
-{txt}{col 17}delta:  {res}1 month
-{txt}(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_incmean_fbetter_median.png written in PNG format)
-(0 observations deleted)
-{res}{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/ind/ts/ts_rincmean_fbetter_median.png written in PNG format)
-(0 observations deleted)
-{res}{err}{hline 2}Break{hline 2}
-{txt}{search r(1):r(1);}
+. ddd
+{err}unrecognized command:  ddd
+{txt}{search r(199):r(199);}
 
 end of do-file
 
-{err}{hline 2}Break{hline 2}
-{txt}{search r(1):r(1);}
+{search r(199):r(199);}
 
-{com}. do "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/DoFile/Step05a_PSIDAnalysis.do"
+{com}. reg incvar l11.incvar
+{err}not sorted
+{txt}{search r(5):r(5);}
+
+{com}. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD82631.000000"
 {txt}
-{com}. **************************************************************
-. *! PSID data cleaning
-. *! Last modified: May1 2020 by Tao 
-. **************************************************************
-. 
-. global datafolder "/Users/Myworld/Dropbox/PSID/J276289/"
+{com}. clear
 {txt}
-{com}. global scefolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/"
+{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
 {txt}
-{com}. global otherdatafolder "/Users/Myworld/Dropbox/PSID/OtherData/"
+{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
 {txt}
-{com}. global table_folder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/OtherData/PSID/"
+{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/ind"
 {txt}
-{com}. global graph_folder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/psid/"
-{txt}
-{com}. 
-. cd ${c -(}datafolder{c )-}
-{res}/Users/Myworld/Dropbox/PSID/J276289
+{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
 {txt}
 {com}. 
-. capture log close
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. set more off 
+{txt}
+{com}. capture log close
 {smcl}
 {com}{sf}{ul off}

@@ -14,16 +14,33 @@
 #     name: python3
 # ---
 
-# ## Solve a life-cycle consumption/saving problem 
+# ## Solve a life-cycle consumption/saving problem under perfect/subjective risk perception
 #
-# - This notebook reproduces the life cycle consumption model by Gourinchas and Parker 2002 
+# - This notebook reproduces the life cycle consumption model by Gourinchas and Parker 2002 with the subjective belief formation about income risks
+#   - Preference/income process
 #
-#   - CRRA utility 
-#   - No bequest motive
-#   - During work: labor income risk: permanent + transitory/unemployment 
-#   - During retirement: no risk
-#
-#
+#       - CRRA utility 
+#       - No bequest motive (different from the original model)
+#       - During work: labor income risk: permanent + MA(1)/persistent/transitory + unemployment 
+#        - A constant growth rate of permanent income over the life cycle
+#         - it is subject to aggregate shock
+#       - During retirement: no risk
+#   - Belief formation
+#       - all state variables are obsersable: permanent income, ma(1) shock or the persistent shock
+#       - what's not perfectly known is the size and nature of the risks 
+#       - Perfect understanding case
+#       - Benchmark case without perfect understanding
+#          - individual observe past income realizations
+#          - subjectively determine the degree of persistence or the ma(1) coefficient 
+#          - form the best guess of income volatility using past experience, i.e. unexplained residuals  
+#       - Extenstion 0 
+#          - adding aggregate risks, and agents need to learn about the growth rate using cross-sectional experiences
+#          - so subjectively determine the cross-sectional correlation
+#          - form the best guess and the corresponding uncertainty based on the attribution
+#          
+#       - Extenstion 1
+#          - persistence attribution is assymmetric: determined by realized income shocks 
+#          - correlation attribution is assymetric: determined by realized income shocks 
 
 import numpy as np
 import pandas as pd
@@ -31,13 +48,16 @@ from quantecon.optimize import brent_max, brentq
 from interpolation import interp, mlinterp
 from scipy import interpolate
 import numba as nb
-from numba import njit, float64, int64, boolean,jitclass
+from numba import njit, float64, int64, boolean
+from numba.experimental import jitclass
 import matplotlib as mp
 import matplotlib.pyplot as plt
 # %matplotlib inline
 from quantecon import MarkovChain
 import quantecon as qe 
 from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
+
 
 # + code_folding=[0]
 ## figures configurations
@@ -51,7 +71,7 @@ legendsize = 12
 
 # ## The Model Class and Solver
 
-# + code_folding=[]
+# + code_folding=[0]
 lc_data = [
     ('ρ', float64),              # utility parameter CRRA
     ('β', float64),              # discount factor
@@ -61,22 +81,25 @@ lc_data = [
     #('a_s', float64),           # preference volatility        x 
     #('sigma_s', float64),       # loading of macro state to preference    x
     ('sigma_n', float64),        # permanent shock volatility              x
-    ('ϕ',float64),               # MA(1) coefficient, or essentially the autocorrelation coef of non-persmanent income
-    ('sigma_ϵ', float64),        # transitory shock volatility
+    ('x',float64),               # MA(1) coefficient, or essentially the autocorrelation coef of non-persmanent income
+    ('sigma_eps', float64),      # transitory shock volatility
     ('U',float64),               # the probability of being unemployed    * 
     ('b_y', float64),            # loading of macro state to income        x 
     ('s_grid', float64[:]),      # Grid over savings
+    ('eps_grid', float64[:]),    # Grid over savings
     ('n_shk_draws', float64[:]), ## Draws of permanent income shock 
-    ('ϵ_shk_draws', float64[:]), # Draws of MA/transitory income shocks 
+    ('eps_shk_draws', float64[:]), # Draws of MA/transitory income shocks 
     ('ue_shk_draws',boolean[:]), # Draws of unemployment shock 
     #('ζ_draws', float64[:])     # Draws of preference shock ζ for MC
     ('T',int64),                 # years of work                          *   
     ('L',int64),                 # years of life                          * 
-    ('G',float64)               # growth rate of permanent income    * 
+    ('G',float64),               # growth rate of permanent income    *
+    ('theta',float64),           ## extrapolation parameter 
+    ('shock_draw_size',int64)    ## nb of points drawn for shocks 
 ]
 
 
-# + code_folding=[7]
+# + code_folding=[1, 59, 63]
 @jitclass(lc_data)
 class LifeCycle:
     """
@@ -90,21 +113,22 @@ class LifeCycle:
                  P = np.array([(0.9, 0.1),
                              (0.1, 0.9)]),
                  z_val = np.array([1.0,2.0]), 
-                 sigma_n = 0.15,     ## size of permanent income shocks
+                 sigma_n = 0.01,     ## size of permanent income shocks
                  #a_s = 0.02,     ## size of the taste shock  
                  #b_s = 0.0,       ## coefficient of pandemic state on taste 
-                 ϕ = 0.1,           ## MA(1) coefficient of non-permanent inocme shocks
-                 sigma_ϵ = 0.2,     ## size of transitory income risks
-                 U = 0.0,           ## unemployment risk probability (0-1)
+                 x = 0.9,           ## MA(1) coefficient of non-permanent inocme shocks
+                 sigma_eps = 0.03,     ## size of transitory income risks
+                 U = 0.1,           ## unemployment risk probability (0-1)
                  b_y = 0.0,         ## loading of macro state on income  
                  R = 1.03,           ## interest factor 
                  T = 40,             ## work age, from 25 to 65
                  L = 60,             ## life length 85
-                 G = 1.0,            ## growth rate of permanent income 
+                 G = 1.00,            ## growth rate of permanent income 
                  shock_draw_size = 50,
                  grid_max = 2.5,
-                 grid_size = 50,
-                 seed = 1234):
+                 grid_size = 40,
+                 seed = 1234,
+                 theta = 2):
 
         np.random.seed(seed)  # arbitrary seed
 
@@ -114,21 +138,22 @@ class LifeCycle:
         self.G = G
         self.T,self.L = T,L
         
-        self.sigma_u= sigma_u, 
         self.sigma_n = sigma_n
-        self.ϕ = ϕ
-        self.sigma_ϵ = sigma_ϵ
+        self.x = x
+        self.sigma_eps = sigma_eps
         self.b_y = b_y
         
         self.n_shk_draws = sigma_n*np.random.randn(shock_draw_size)-sigma_n**2/2
-        self.ϵ_shk_draws = sigma_ϵ*np.random.randn(shock_draw_size)-sigma_ϵ**2/2
+        self.eps_shk_draws = sigma_eps*np.random.randn(shock_draw_size)-sigma_eps**2/2
         self.ue_shk_draws = np.random.uniform(0,1,shock_draw_size)<U
 
         self.s_grid = np.exp(np.linspace(np.log(1e-6), np.log(grid_max), grid_size))
-        lb_sigma_ϵ = -sigma_ϵ**2/2-2*\sigma_ϵ
-        ub_sigma_ϵ = -sigma_ϵ**2/2+2*\sigma_ϵ
-        self.ϵ_grid = np.linspace(lb_sigma_ϵ,ub_sigma_ϵ,grid_size)
+        lb_sigma_ϵ = -sigma_eps**2/2-2*sigma_eps
+        ub_sigma_ϵ = -sigma_eps**2/2+2*sigma_eps
+        self.eps_grid = np.linspace(lb_sigma_ϵ,ub_sigma_ϵ,grid_size)
         
+        self.theta = theta 
+        self.shock_draw_size = shock_draw_size
         # This creates an unevenly spaced grids where grids are more dense in low values
         
         # Test stability assuming {R_t} is IID and adopts the lognormal
@@ -157,7 +182,7 @@ class LifeCycle:
         return np.exp(n_shk)
 
 
-# + code_folding=[4]
+# + code_folding=[1, 40]
 @njit
 def K(aϵ_in, σ_in, lc):
     """
@@ -165,29 +190,32 @@ def K(aϵ_in, σ_in, lc):
     using the endogenous grid method.
 
         * lc is an instance of life cycle model
-        * a_in[i, z] is an asset grid
-        * σ_in[i, z] is consumption at a_in[i, z]
+        * σ_in is a n1 x n2 x n3 dimension consumption policy 
+          * n1 = dim(s), n2 = dim(eps), n3 = dim(z)
+        * aϵ_in is the same sized grid points of the three state variable 
+        * aϵ_in[:,j,z] is the vector of asset grids corresponding to j-th grid of eps and z-th grid of z 
+        * σ_in[i,j,z] is consumption at aϵ_in[i,j,z]
     """
 
     # Simplify names
     u_prime, u_prime_inv = lc.u_prime, lc.u_prime_inv
     R, ρ, P, β = lc.R, lc.ρ, lc.P, lc.β
     z_val = lc.z_val
-    s_grid,ϵ_grid = lc.s_grid,lc.ϵ_grid
-    n_shk_draws, ϵ_shk_draws, ue_shk_draws= lc.n_shk_draws, lc.ϵ_shk_draws, lc.ue_shk_draws
+    s_grid,eps_grid = lc.s_grid,lc.eps_grid
+    n_shk_draws, eps_shk_draws, ue_shk_draws= lc.n_shk_draws, lc.eps_shk_draws, lc.ue_shk_draws
     Y = lc.Y
     ####################
     ρ = lc.ρ
     Γ = lc.Γ
     G = lc.G
-    ϕ = lc.ϕ
+    x = lc.x
     ###################
     
     n = len(P)
 
     # Create consumption function by linear interpolation
     ########################################################
-    σ = lambda a,ϵ,z: mlinterp((aϵ_in[:,0,z],a_in[0,:,z]),σ_in[:,:,z], (a,ϵ)) 
+    σ = lambda a,ϵ,z: mlinterp((aϵ_in[:,0,z],eps_grid),σ_in[:,:,z], (a,ϵ)) 
     ########## need to replace with multiinterp 
 
     # Allocate memory
@@ -196,68 +224,173 @@ def K(aϵ_in, σ_in, lc):
     # Obtain c_i at each s_i, z, store in σ_out[i, z], computing
     # the expectation term by Monte Carlo
     for i, s in enumerate(s_grid):
-        for j, ϵ in enumerate(ϵ_grid):
+        for j, eps in enumerate(eps_grid):
             for z in range(n):
                 # Compute expectation
                 Ez = 0.0
                 for z_hat in range(n):
                     z_val_hat = z_val[z_hat]
-                    for ϵ_shk in lc.ϵ_shk_draws:
-                        for ue_shk in lc.ue_shk_draws:
-                            for n_shk in lc.n_shk_draws:
+                    for eps_shk in eps_shk_draws:
+                        for ue_shk in ue_shk_draws:
+                            for n_shk in n_shk_draws:
                                 Γ_hat = Γ(n_shk) 
-                                u_shk = ϕ*ϵ+ϵ_shk
-                                Y_hat = Y(z_val_hat,u_shk)*(1-ue_shk) ## conditional employed 
-                                c_hat = σ(R/(G*Γ_hat) * s + Y_hat,ϵ_shk,z_hat)
+                                u_shk = x*eps+eps_shk
+                                Y_hat = Y(z_val_hat,u_shk)*(1-ue_shk) ## conditional on being employed 
+                                c_hat = σ(R/(G*Γ_hat) * s + Y_hat,eps_shk,z_hat)
                                 utility = (G*Γ_hat)**(1-ρ)*u_prime(c_hat)
                                 Ez += utility * P[z, z_hat]
-                Ez = Ez / (len(n_shk_draws)*len(ϵ_shk_draws)*len(ue_shk_draws))
+                Ez = Ez / (len(n_shk_draws)*len(eps_shk_draws)*len(ue_shk_draws))
                 σ_out[i, j, z] =  u_prime_inv(β * R* Ez)
 
     # Calculate endogenous asset grid
     aϵ_out = np.empty_like(σ_out)
     
-    for j,ϵ in eneumerate(ϵ_grid):
+    for j,ϵ in enumerate(eps_grid):
         for z in range(n):
             aϵ_out[:,j,z] = s_grid + σ_out[:,j,z]
 
     # Fixing a consumption-asset pair at (0, 0) improves interpolation
-    σ_out[0, ,:] = 0.0
-    a_out[0, ,:] = 0.0
+    for j,ϵ in enumerate(eps_grid):
+        for z in range(n):
+            σ_out[0,j,z] = 0.0
+            aϵ_out[0,j,z] = 0.0
 
     return aϵ_out, σ_out
 
 
-# + code_folding=[0, 22]
-## need to modify 
+# -
+
+@njit
+def extrapolate(theta,
+                x,
+                eps_shk):
+        alpha=np.log((1-x)/x) ## get the alpha for unbiased x
+        x_sub = 1/(1+np.exp(alpha-theta*eps_shk))
+        return x_sub
+
+
+# + code_folding=[57]
+@njit
+def K_br(aϵ_in, σ_in, lc):
+    """
+    UNDER BOUNDED RATIONALITY assumption
+    The Coleman--Reffett operator for the life-cycle consumption problem. 
+    using the endogenous grid method.
+
+        * lc is an instance of life cycle model
+        * σ_in is a n1 x n2 x n3 dimension consumption policy 
+          * n1 = dim(s), n2 = dim(eps), n3 = dim(z)
+        * aϵ_in is the same sized grid points of the three state variable 
+        * aϵ_in[:,j,z] is the vector of asset grids corresponding to j-th grid of eps and z-th grid of z 
+        * σ_in[i,j,z] is consumption at aϵ_in[i,j,z]
+    """
+
+    # Simplify names
+    u_prime, u_prime_inv = lc.u_prime, lc.u_prime_inv
+    R, ρ, P, β = lc.R, lc.ρ, lc.P, lc.β
+    z_val = lc.z_val
+    s_grid,eps_grid = lc.s_grid,lc.eps_grid
+    n_shk_draws, eps_shk_draws, ue_shk_draws= lc.n_shk_draws, lc.eps_shk_draws, lc.ue_shk_draws
+    Y = lc.Y
+    ####################
+    ρ = lc.ρ
+    Γ = lc.Γ
+    G = lc.G
+    x = lc.x
+    theta = lc.theta 
+    ###################
+    
+    n = len(P)
+
+    # Create consumption function by linear interpolation
+    ########################################################
+    σ = lambda a,ϵ,z: mlinterp((aϵ_in[:,0,z],eps_grid),σ_in[:,:,z], (a,ϵ)) 
+    ########## need to replace with multiinterp 
+
+    # Allocate memory
+    σ_out = np.empty_like(σ_in)  ## grid_size_s X grid_size_ϵ X grid_size_z
+
+    # Obtain c_i at each s_i, z, store in σ_out[i, z], computing
+    # the expectation term by Monte Carlo
+    for i, s in enumerate(s_grid):
+        for j, eps in enumerate(eps_grid):
+            ##############################################################
+            x_sj = extrapolate(theta,
+                               lc.x,
+                              eps) ## sj: subjective 
+            sigma_eps_sj = abs(eps)
+            eps_shk_draws_sj = sigma_eps_sj*np.random.randn(lc.shock_draw_size)-sigma_eps_sj**2/2
+            #############################################################
+            for z in range(n):
+                # Compute expectation
+                Ez = 0.0
+                for z_hat in range(n):
+                    z_val_hat = z_val[z_hat]
+                    ################################
+                    for eps_shk in eps_shk_draws_sj:
+                        ############################
+                        for ue_shk in ue_shk_draws:
+                            for n_shk in n_shk_draws:
+                                Γ_hat = Γ(n_shk) 
+                                ###############
+                                u_shk = x_sj*eps+eps_shk
+                                ####################
+                                Y_hat = Y(z_val_hat,u_shk)*(1-ue_shk) ## conditional on being employed 
+                                c_hat = σ(R/(G*Γ_hat) * s + Y_hat,eps_shk,z_hat)
+                                utility = (G*Γ_hat)**(1-ρ)*u_prime(c_hat)
+                                Ez += utility * P[z, z_hat]
+                Ez = Ez / (len(n_shk_draws)*len(eps_shk_draws_sj)*len(ue_shk_draws))
+                σ_out[i, j, z] =  u_prime_inv(β * R* Ez)
+
+    # Calculate endogenous asset grid
+    aϵ_out = np.empty_like(σ_out)
+    
+    for j,ϵ in enumerate(eps_grid):
+        for z in range(n):
+            aϵ_out[:,j,z] = s_grid + σ_out[:,j,z]
+
+    # Fixing a consumption-asset pair at (0, 0) improves interpolation
+    for j,ϵ in enumerate(eps_grid):
+        for z in range(n):
+            σ_out[0,j,z] = 0.0
+            aϵ_out[0,j,z] = 0.0
+
+    return aϵ_out, σ_out
+
+
+# + code_folding=[0, 23]
 def solve_model_backward_iter(model,        # Class with model information
-                              a_vec,        # Initial condition for assets
+                              aϵ_vec,        # Initial condition for assets and MA shocks
                               σ_vec,        # Initial condition for consumption
                               #tol=1e-6,
                               #max_iter=2000,
                               #verbose=True,
                               #print_skip=50
-                             ):
+                              br = False):
 
     # Set up loop
     #i = 0
     #error = tol + 1
 
     ## memories for life-cycle solutions 
-    n_grids = len(σ_vec)
+    n_grids1 = σ_vec.shape[0]
+    n_grids2 =σ_vec.shape[1]
     n_z = len(model.P)                       
-    as_new =  np.empty((model.T,n_grids,n_z),dtype = np.float64)
-    σs_new =  np.empty((model.T,n_grids,n_z),dtype = np.float64)
+    aϵs_new =  np.empty((model.T,n_grids1,n_grids2,n_z),dtype = np.float64)
+    σs_new =  np.empty((model.T,n_grids1,n_grids2,n_z),dtype = np.float64)
     
-    as_new[0,:,:] = a_vec
-    σs_new[0,:,:] = σ_vec
+    aϵs_new[0,:,:,:] = aϵ_vec
+    σs_new[0,:,:,:] = σ_vec
     
     for i in range(model.T-1):
         print(f"at work age of "+str(model.T-i))
-        a_vec_next, σ_vec_next = as_new[i,:,:],σs_new[i,:,:]
-        a_new, σ_new = K(a_vec_next, σ_vec_next, model)
-        as_new[i+1,:,:] = a_new
-        σs_new[i+1,:,:] = σ_new
+        aϵ_vec_next, σ_vec_next = aϵs_new[i,:,:,:],σs_new[i,:,:,:]
+        if br==False:
+            aϵ_new, σ_new = K(aϵ_vec_next, σ_vec_next, model)
+        elif br==True:
+            aϵ_new, σ_new = K_br(aϵ_vec_next, σ_vec_next, model)
+        aϵs_new[i+1,:,:,:] = aϵ_new
+        σs_new[i+1,:,:,:] = σ_new
     
     #while i < max_iter and error > tol:
     #    a_new, σ_new = K(a_vec, σ_vec, model)
@@ -273,7 +406,7 @@ def solve_model_backward_iter(model,        # Class with model information
     #if verbose and i < max_iter:
     #    print(f"\nConverged in {i} iterations.")
 
-    return as_new, σs_new
+    return aϵs_new, σs_new
 
 
 # + code_folding=[0]
@@ -300,11 +433,31 @@ def policyfunc(lc,
     return σ
 
 
+# + code_folding=[0]
+def policyfuncMA(lc,
+                 aϵ_star,
+                 σ_star):
+    """
+     * ifp is an instance of IFP
+        * aϵ_star is the endogenous grid solution
+        * σ_star is optimal consumption on the grid    
+    """
+   
+   # get z_grid 
+    s_grid = lc.s_grid
+    
+    # Create consumption function by linear interpolation
+    a = aϵ_star[:,0]         
+    σ =  interpolate.interp2d(a, s_grid, σ_star.T) 
+    
+    return σ
+
+
 # -
 
 # ## Solve the model for some consumption from the last period 
 
-# + code_folding=[0, 2]
+# + code_folding=[2]
 ## this is the retirement consumption policy 
 
 def policyPF(β,
@@ -331,20 +484,20 @@ lc = LifeCycle()
 #ratio = mpc_ret/(1-mpc_ret)
 
 k = len(lc.s_grid)
+k2 =len(lc.eps_grid)
+
 n = len(lc.P)
-σ_init = np.empty((k, n))
-a_init = np.empty((k, n))
+σ_init = np.empty((k,k2,n))
+a_init = np.empty((k,k2,n))
 
 for z in range(n):
-    σ_init[:, z] = 2*lc.s_grid
-    a_init[:,z] =  2*lc.s_grid
+    for j in range(k2):
+        σ_init[:,j,z] = 2*lc.s_grid
+        a_init[:,j,z] =  2*lc.s_grid
 # -
 
 plt.title('The consumption in the last period')
-plt.plot(σ_init[:,1],a_init[:,1])
-
-# + code_folding=[]
-#print('The MPC out of cash in hand at the retirement is '+ str(mpc_ret))
+plt.plot(σ_init[:,1,1],a_init[:,1,1])
 
 # + code_folding=[0]
 ## Set quarterly parameters 
@@ -352,129 +505,249 @@ plt.plot(σ_init[:,1],a_init[:,1])
 lc.ρ = 0.5
 lc.R = 1.03
 lc.β = 0.96
+lc.x = 0.5
 
 lc.sigma_n = np.sqrt(0.02) # permanent 
-lc.sigma_u = np.sqrt(0.04) # transitory 
+lc.sigma_eps = np.sqrt(0.09) # transitory 
 
 # + code_folding=[0]
 ## shut down the macro state 
 
 lc.b_y = 0.00
 
-# + code_folding=[0]
-as_star, σs_star = solve_model_backward_iter(lc,
-                                             a_init, 
-                                             σ_init)
+# + code_folding=[]
+## solve the model for a range of ma(1) coefficients
+
+x_ls = [0.0,0.6,0.9]
+as_stars =[]
+σs_stars = []
+for i,x in enumerate(x_ls):
+    lc.x = x
+    as_star, σs_star = solve_model_backward_iter(lc,
+                                                 a_init,
+                                                 σ_init)
+    as_stars.append(as_star)
+    σs_stars.append(σs_star)
+# -
+
+as_star.shape
 
 # + [markdown] code_folding=[]
 # ### Plot interpolated policy functions
 
-# + code_folding=[3, 5]
-ages  = [31,33,35,37,39]
+# + code_folding=[]
+ages  = [25,35,45,59]
+n_sub = len(ages)
+eps_ls = [1,20,30]
 
-fig = plt.plot()
-for age in ages:
+as_star = as_stars[1]
+σs_star =σs_stars[1]
+
+
+fig,axes = plt.subplots(1,n_sub,figsize=(4*n_sub,4))
+
+for x,age in enumerate(ages):
     i = lc.T-age
-    plt.plot(as_star[i,:,0],
-             σs_star[i,:,0],
-             label = str(age))
-#plt.plot(as_star[0,:,0],as_star[0,:,0],'-')
-plt.legend(loc=1)
+    for y,eps in enumerate(eps_ls):
+        axes[x].plot(as_star[i,:,eps,0],
+                     σs_star[i,:,eps,0],
+                     label = str(round(lc.eps_grid[eps],2)),
+                     lw=1)
+    axes[x].legend()
+    axes[x].set_xlabel('asset')
+    axes[0].set_ylabel('c')
+    axes[x].set_title(r'$age={}$'.format(age))
 
-# + code_folding=[4]
-## interpolate consumption function on continuous z grid 
+# + code_folding=[0]
+## interpolate consumption function on continuous s/eps grid 
 
 σs_list = []
 
 for i in range(lc.T):
-    this_σ= policyfunc(lc,
-                   as_star[i,:,:],
-                   σs_star[i,:,:],
-                   discrete = False)
+    this_σ= policyfuncMA(lc,
+                         as_star[i,:,:,0],
+                         σs_star[i,:,:,0])
     σs_list.append(this_σ)
-    
+
 
 # + code_folding=[0]
 ## plot contour for policy function 
 
 a_grid = np.linspace(0.00001,5,20)
-z_grid = np.linspace(0,8,20)
-aa,zz = np.meshgrid(a_grid,z_grid)
+eps_grid = lc.eps_grid
+aa,epss = np.meshgrid(a_grid,
+                      eps_grid)
 
-σ_this = σs_list[3]
+σ_this = σs_list[10]
+c_stars = σ_this(a_grid,
+                 eps_grid)
 
-c_stars = σ_this(a_grid,z_grid)
-
-cp = plt.contourf(aa, zz,c_stars)
+cp = plt.contourf(aa,epss,
+                  c_stars)
 plt.title(r'$c$')
-plt.xlabel('asset')
-plt.ylabel('another state')
+plt.xlabel('wealth')
+plt.ylabel('ma income shock')
+# -
+
+σs_star.shape
 
 # + code_folding=[0]
 ## plot 3d consumption function 
-
-
-x,y,z =σs_star
+#age,asset,inc_shk =σs_star[:,:,:,0]
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-ax.scatter(x, y, -z, zdir='z', c= 'red')
-plt.savefig("demo.png")
+ax.scatter(aa, epss, c_stars, zdir='z', c= 'red')
+ax.set_xlabel('wealth')
+ax.set_ylabel('inc shock')
+ax.set_title('consumption at a certain age')
+#plt.savefig("demo.png")
 
 # + code_folding=[0]
-## plot 3d functions 
-x = np.linspace(0, 1, nx)
-y = np.linspace(0, 1, ny)
-xv, yv = np.meshgrid(x, y)
+## plot 3d functions over life cycle 
 
+ages = np.array(range(as_star.shape[0]))
+#ages_id = lc.T-ages
+asset = as_star[0,:,10,0]
+xx, yy = np.meshgrid(ages, asset)
+c_stars = σs_star[:,:,10,0].T
 
 fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-dem3d=ax.plot_surface(xv,yv,dem_100,cmap='afmhot', linewidth=0)
-ax.set_title('consumption function over life cycle')
-ax.set_zlabel('wealth')
-plt.show()
+ax = fig.add_subplot(111, 
+                     projection='3d')
+dem3d = ax.plot_surface(xx,
+                        yy,
+                        c_stars,
+                        rstride=1, 
+                        cstride=1,
+                        cmap='viridis', 
+                        edgecolor='none'
+                       )
+ax.set_title('consumption over life cycle')
+ax.set_xlabel('time before retirement')
+ax.set_ylabel('wealth')
+ax.view_init(30, 30)
 # -
 
-# ### Adding a macro Markov/persistent state 
+# #### Different persistence
 
+# + code_folding=[3]
+at_age = 50
+at_asset_id = 1
+
+for i,x in enumerate(x_ls):
+    this_σs_star = σs_stars[i]
+    plt.plot(lc.eps_grid,
+             this_σs_star[lc.T-at_age,at_asset_id,:,0],
+             '-.',
+             label = r'$x={}$'.format(x),
+             lw=3)
+plt.legend(loc=0)
+plt.xlabel(r'$\epsilon$')
+plt.ylabel(r'$c(a,\epsilon,age)$')
+plt.title(r'work age$={}$'.format(at_age))
+
+# +
+## solve for bounded rationality agent 
+
+lc.x = 0.5
+as_br, σs_br = solve_model_backward_iter(lc,
+                                         a_init,
+                                         σ_init,
+                                         br = True)
+# -
+
+# ### Adding a Markov/persistent state 
+
+# +
 ## initialize another 
-lc_ag = LifeCycle()
-
-# + code_folding=[0]
-## tauchenize an ar1
-
-ρ, σ = (0.98,0.18)
-constant = 0.13  
-
-mc = qe.markov.approximation.tauchen(ρ, σ, b=constant, m=3, n=7)
-z_ss_av = constant/(1-ρ)
-z_ss_sd = σ*np.sqrt(1/(1-ρ**2))
-
-## feed the model with a markov matrix of macro state 
-lc_ag.z_val, lc_ag.P = mc.state_values, mc.P
+lc_ρ = LifeCycle()
 
 ## set the macro state loading to be positive
-lc_ag.b_y = 0.1
+lc_ρ.b_y = 1.0
+lc_ρ.x = 0.0 ## shut down ma(1)
 
 # + code_folding=[0]
-## initialize policies 
+## solve the model for different persistence 
 
-k = len(lc_ag.s_grid)
-n = len(lc_ag.P)
-σ_init = np.empty((k, n))
-a_init = np.empty((k, n))
+ρ_ls = [0.99]
+as_stars_ρ=[]
+σs_stars_ρ = []
 
-for z in range(n):
-    σ_init[:, z] = 2*lc_ag.s_grid
-    a_init[:,z] =  2*lc_ag.s_grid
+for i, ρ in enumerate(ρ_ls):
+    
+    ## tauchenize an ar1
+    σ = 0.18
+    constant = 0.00
 
-# + code_folding=[0]
-as_star_ag, σs_star_ag = solve_model_backward_iter(lc_ag,
-                                                   a_init,
-                                                   σ_init)
+    mc = qe.markov.approximation.tauchen(ρ, σ, b=constant, m=3, n=7)
+    #z_ss_av = constant/(1-ρ)
+    #z_ss_sd = σ*np.sqrt(1/(1-ρ**2))
+    
+    ## feed the model with a markov matrix of macro state 
+    lc_ρ.z_val, lc_ρ.P = mc.state_values, mc.P
+    
+    ## initial guess
+    k = len(lc_ρ.s_grid)
+    k2 =len(lc_ρ.eps_grid)
+    n = len(lc_ρ.P)
+    
+    σ_init_ρ = np.empty((k,k2,n))
+    a_init_ρ = np.empty((k,k2,n))
+
+    for z in range(n):
+        for j in range(k2):
+            σ_init_ρ[:,j,z] = 2*lc_ρ.s_grid
+            a_init_ρ[:,j,z] = 2*lc_ρ.s_grid
+    
+    ## solve the model 
+    as_star_ρ, σs_star_ρ = solve_model_backward_iter(lc_ρ,
+                                                     a_init_ρ,
+                                                     σ_init_ρ)
+    as_stars_ρ.append(as_star_ρ)
+    σs_stars_ρ.append(σs_star_ρ)
 
 # + code_folding=[]
+## solve the model for different persistence 
+
+ρ_ls = [0.95,0.98]
+as_stars_ρ=[]
+σs_stars_ρ = []
+
+for i, ρ in enumerate(ρ_ls):
+    
+    ## tauchenize an ar1
+    σ = 0.18
+    constant = 0.00
+
+    mc = qe.markov.approximation.tauchen(ρ, σ, b=constant, m=3, n=7)
+    #z_ss_av = constant/(1-ρ)
+    #z_ss_sd = σ*np.sqrt(1/(1-ρ**2))
+    
+    ## feed the model with a markov matrix of macro state 
+    lc_ρ.z_val, lc_ρ.P = mc.state_values, mc.P
+    
+    ## initial guess
+    k = len(lc_ρ.s_grid)
+    k2 =len(lc_ρ.eps_grid)
+    n = len(lc_ρ.P)
+    
+    σ_init_ρ = np.empty((k,k2,n))
+    a_init_ρ = np.empty((k,k2,n))
+
+    for z in range(n):
+        for j in range(k2):
+            σ_init_ρ[:,j,z] = 2*lc_ρ.s_grid
+            a_init_ρ[:,j,z] = 2*lc_ρ.s_grid
+    
+    ## solve the model 
+    as_star_ρ, σs_star_ρ = solve_model_backward_iter(lc_ρ,
+                                                     a_init_ρ,
+                                                     σ_init_ρ)
+    as_stars_ρ.append(as_star_ρ)
+    σs_stars_ρ.append(σs_star_ρ)
+
+# + code_folding=[0]
 ## interpolate consumption function on continuous z grid 
 
 σs_ag_list = []
@@ -500,12 +773,12 @@ c_stars = σ_this(a_grid,z_grid)
 cp = plt.contourf(aa, zz,c_stars)
 plt.title(r'$c$')
 plt.xlabel('asset')
-plt.ylabel('macro state')
+plt.ylabel('persistence state')
 
 
 # -
 
-# ## Simulate a cross history 
+# ## Simulate a cross-sectionl history 
 
 # + code_folding=[1, 28, 48, 78, 100]
 #@njit
@@ -703,7 +976,7 @@ for n in range(N):
                                        sigma = lc.sigma_n,
                                        init = 0.0001)
 
-# + code_folding=[]
+# + code_folding=[3]
 ## Simulate the distribution of consumption/asset (perfect understanding)
 
 p_vec = (1,1) 

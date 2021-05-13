@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res} 5 Apr 2021, 11:38:45
+ {txt}opened on:  {res}27 Apr 2021, 11:43:50
 {txt}
 {com}. 
 . 
@@ -40,9 +40,9 @@ float, now double to accommodate using data's values)
 
 {col 5}Result{col 38}# of obs.
 {col 5}{hline 41}
-{col 5}not matched{col 30}{res}         193,706
+{col 5}not matched{col 30}{res}         197,186
 {txt}{col 9}from master{col 30}{res}          98,593{txt}  (_merge==1)
-{col 9}from using{col 30}{res}          95,113{txt}  (_merge==2)
+{col 9}from using{col 30}{res}          98,593{txt}  (_merge==2)
 
 {col 5}matched{col 30}{res}               0{txt}  (_merge==3)
 {col 5}{hline 41}
@@ -454,16 +454,16 @@ float, now double to accommodate using data's values)
  {res}     1191
 {txt}{ralign 9:1.8e+08} {...}
 {c |}{...}
- {res}     1223
+ {res}     1222
 {txt}{ralign 9:1.8e+08} {...}
 {c |}{...}
- {res}     1223
+ {res}     1222
 {txt}{ralign 9:1.8e+08} {...}
 {c |}{...}
- {res}     1206
+ {res}     1205
 {txt}{ralign 9:1.8e+08} {...}
 {c |}{...}
- {res}     1228
+ {res}     1227
 {txt}{ralign 9:1.8e+08} {...}
 {c |}{...}
  {res}     1143
@@ -566,14 +566,22 @@ float, now double to accommodate using data's values)
 {txt}{ralign 9:1.9e+08} {...}
 {c |}{...}
  {res}     1168
+{txt}{ralign 9:1.9e+08} {...}
+{c |}{...}
+ {res}     1171
+{txt}{ralign 9:1.9e+08} {...}
+{c |}{...}
+ {res}     1153
+{txt}{ralign 9:1.9e+08} {...}
+{c |}{...}
+ {res}     1160
 {txt}{hline 10}{c +}{hline 10}
 {ralign 9:Total} {...}
 {c |}{...}
- {res}   193706
+ {res}   197186
 {txt}{hline 10}{c BT}{hline 10}
 
 {com}. 
-. 
 . *****************************************
 . ****  Renaming so that more consistent **
 . *****************************************
@@ -614,507 +622,4215 @@ float, now double to accommodate using data's values)
 {res}{txt}
 {com}. rename Q26v2part2 spending 
 {res}{txt}
-{com}. 
-. *******************************
-. **  Generate Variables       **
-. *******************************
-. 
-. gen Incmean = .
-{txt}(193706 missing values generated)
+{com}. ddd
+{err}unrecognized command:  ddd
+{txt}{search r(199):r(199);}
 
-{com}. gen Incvar = .
-{txt}(193706 missing values generated)
+end of do-file
 
-{com}. gen Inciqr = .
-{txt}(193706 missing values generated)
+{search r(199):r(199);}
 
-{com}. 
-. gen Incmean_ch = .
-{txt}(193706 missing values generated)
+{com}. clear
 
-{com}. gen Incvar_ch = .
-{txt}(193706 missing values generated)
-
-{com}. gen Inciqr_ch = .
-{txt}(193706 missing values generated)
-
-{com}. 
-. 
-. gen Inc_mom = .
-{txt}(193706 missing values generated)
-
-{com}. gen Inc_mom_ch = .
-{txt}(193706 missing values generated)
-
-{com}. 
-. ************************************************
-. ** spending decisions and perceived risks **
-. ************************************************
-. 
-. 
-. foreach mom in mean var{c -(}
-{txt}  2{com}.     xtset ID date
-{txt}  3{com}.         eststo `mom': xtreg spending inc`mom', fe
-{txt}  4{com}.         eststo `mom': xtreg spending rinc`mom', fe
-{txt}  5{com}. {c )-}
-{res}{txt}{col 8}panel variable:  {res}ID (unbalanced)
-{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 1.9e+12, but with gaps
-{txt}{col 17}delta:  {res}1 month
-
-{txt}Fixed-effects (within) regression               Number of obs      = {res}    63946
-{txt}Group variable: {res}ID                              {txt}Number of groups   = {res}    10462
-
-{txt}R-sq:  within  = {res}0.0010                         {txt}Obs per group: min = {res}        1
-{txt}       between = {res}0.0006                                        {txt}avg = {res}      6.1
-{txt}       overall = {res}0.0004                                        {txt}max = {res}       12
-
-                                                {txt}F({res}1{txt},{res}53483{txt})         = {res}    53.07
-{txt}corr(u_i, Xb)  = {res}0.0070                         {txt}Prob > F           =    {res}0.0000
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}    spending{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}incmean {c |}{col 14}{res}{space 2}  23.8704{col 26}{space 2} 3.276581{col 37}{space 1}    7.29{col 46}{space 3}0.000{col 54}{space 4} 17.44827{col 67}{space 3} 30.29252
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.704746{col 26}{space 2} .1030425{col 37}{space 1}   35.95{col 46}{space 3}0.000{col 54}{space 4} 3.502782{col 67}{space 3}  3.90671
-{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-     sigma_u {c |} {res} 98.444183
-     {txt}sigma_e {c |} {res} 11.662758
-         {txt}rho {c |} {res} .98615894{txt}   (fraction of variance due to u_i)
-{hline 13}{c BT}{hline 64}
-F test that all u_i=0:     F({res}10461{txt}, {res}53483{txt}) = {res}   74.98        {txt}Prob > F = {res}0.0000
-
-{txt}Fixed-effects (within) regression               Number of obs      = {res}    58445
-{txt}Group variable: {res}ID                              {txt}Number of groups   = {res}     9968
-
-{txt}R-sq:  within  = {res}0.0000                         {txt}Obs per group: min = {res}        1
-{txt}       between = {res}0.0009                                        {txt}avg = {res}      5.9
-{txt}       overall = {res}0.0001                                        {txt}max = {res}       12
-
-                                                {txt}F({res}1{txt},{res}48476{txt})         = {res}     2.18
-{txt}corr(u_i, Xb)  = {res}-0.0227                        {txt}Prob > F           =    {res}0.1395
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}    spending{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 4}rincmean {c |}{col 14}{res}{space 2}  3.69748{col 26}{space 2} 2.502515{col 37}{space 1}    1.48{col 46}{space 3}0.140{col 54}{space 4}-1.207481{col 67}{space 3} 8.602441
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2}  4.10125{col 26}{space 2} .0478824{col 37}{space 1}   85.65{col 46}{space 3}0.000{col 54}{space 4}   4.0074{col 67}{space 3}   4.1951
-{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-     sigma_u {c |} {res} 11.681358
-     {txt}sigma_e {c |} {res} 11.445123
-         {txt}rho {c |} {res} .51021385{txt}   (fraction of variance due to u_i)
-{hline 13}{c BT}{hline 64}
-F test that all u_i=0:     F({res}9967{txt}, {res}48476{txt}) = {res}    4.68         {txt}Prob > F = {res}0.0000
-{txt}{col 8}panel variable:  {res}ID (unbalanced)
-{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 1.9e+12, but with gaps
-{txt}{col 17}delta:  {res}1 month
-
-{txt}Fixed-effects (within) regression               Number of obs      = {res}    65655
-{txt}Group variable: {res}ID                              {txt}Number of groups   = {res}    10503
-
-{txt}R-sq:  within  = {res}0.0005                         {txt}Obs per group: min = {res}        1
-{txt}       between = {res}0.0001                                        {txt}avg = {res}      6.3
-{txt}       overall = {res}0.0005                                        {txt}max = {res}       12
-
-                                                {txt}F({res}1{txt},{res}55151{txt})         = {res}    24.92
-{txt}corr(u_i, Xb)  = {res}0.0138                         {txt}Prob > F           =    {res}0.0000
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}    spending{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 6}incvar {c |}{col 14}{res}{space 2} 372.7544{col 26}{space 2} 74.66595{col 37}{space 1}    4.99{col 46}{space 3}0.000{col 54}{space 4} 226.4087{col 67}{space 3} 519.1002
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 4.332515{col 26}{space 2} .0675662{col 37}{space 1}   64.12{col 46}{space 3}0.000{col 54}{space 4} 4.200085{col 67}{space 3} 4.464946
-{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-     sigma_u {c |} {res} 98.932671
-     {txt}sigma_e {c |} {res} 14.005406
-         {txt}rho {c |} {res} .98035308{txt}   (fraction of variance due to u_i)
-{hline 13}{c BT}{hline 64}
-F test that all u_i=0:     F({res}10502{txt}, {res}55151{txt}) = {res}   54.00        {txt}Prob > F = {res}0.0000
-
-{txt}Fixed-effects (within) regression               Number of obs      = {res}    61541
-{txt}Group variable: {res}ID                              {txt}Number of groups   = {res}    10178
-
-{txt}R-sq:  within  = {res}0.0010                         {txt}Obs per group: min = {res}        1
-{txt}       between = {res}0.0008                                        {txt}avg = {res}      6.0
-{txt}       overall = {res}0.0009                                        {txt}max = {res}       12
-
-                                                {txt}F({res}1{txt},{res}51362{txt})         = {res}    52.04
-{txt}corr(u_i, Xb)  = {res}0.0160                         {txt}Prob > F           =    {res}0.0000
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}    spending{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}rincvar {c |}{col 14}{res}{space 2} 319.0705{col 26}{space 2} 44.23069{col 37}{space 1}    7.21{col 46}{space 3}0.000{col 54}{space 4} 232.3779{col 67}{space 3} 405.7631
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 4.055584{col 26}{space 2}    .0799{col 37}{space 1}   50.76{col 46}{space 3}0.000{col 54}{space 4} 3.898979{col 67}{space 3} 4.212189
-{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-     sigma_u {c |} {res} 100.39466
-     {txt}sigma_e {c |} {res} 13.584029
-         {txt}rho {c |} {res} .98202136{txt}   (fraction of variance due to u_i)
-{hline 13}{c BT}{hline 64}
-F test that all u_i=0:     F({res}10177{txt}, {res}51362{txt}) = {res}   58.90        {txt}Prob > F = {res}0.0000
+. do "/Users/Myworld/Dropbox/SearchMatchExpectation/code/SCE.do"
 {txt}
-{com}. 
-. foreach var in UEprobAgg UEprobInd{c -(}
-{txt}  2{com}.     eststo `var': xtreg spending `var', fe
-{txt}  3{com}. {c )-}
-
-{txt}Fixed-effects (within) regression               Number of obs      = {res}    98191
-{txt}Group variable: {res}ID                              {txt}Number of groups   = {res}    14022
-
-{txt}R-sq:  within  = {res}0.0000                         {txt}Obs per group: min = {res}        1
-{txt}       between = {res}0.0006                                        {txt}avg = {res}      7.0
-{txt}       overall = {res}0.0001                                        {txt}max = {res}       12
-
-                                                {txt}F({res}1{txt},{res}84168{txt})         = {res}     0.81
-{txt}corr(u_i, Xb)  = {res}0.0090                         {txt}Prob > F           =    {res}0.3677
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}    spending{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 3}UEprobAgg {c |}{col 14}{res}{space 2} .0163768{col 26}{space 2} .0181793{col 37}{space 1}    0.90{col 46}{space 3}0.368{col 54}{space 4}-.0192544{col 67}{space 3} .0520081
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 3.973708{col 26}{space 2} .7477129{col 37}{space 1}    5.31{col 46}{space 3}0.000{col 54}{space 4} 2.508197{col 67}{space 3}  5.43922
-{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-     sigma_u {c |} {res} 87.906403
-     {txt}sigma_e {c |} {res} 87.911759
-         {txt}rho {c |} {res} .49996954{txt}   (fraction of variance due to u_i)
-{hline 13}{c BT}{hline 64}
-F test that all u_i=0:     F({res}14021{txt}, {res}84168{txt}) = {res}    1.63        {txt}Prob > F = {res}0.0000
-
-{txt}Fixed-effects (within) regression               Number of obs      = {res}    62536
-{txt}Group variable: {res}ID                              {txt}Number of groups   = {res}     9764
-
-{txt}R-sq:  within  = {res}0.0000                         {txt}Obs per group: min = {res}        1
-{txt}       between = {res}0.0001                                        {txt}avg = {res}      6.4
-{txt}       overall = {res}0.0000                                        {txt}max = {res}       12
-
-                                                {txt}F({res}1{txt},{res}52771{txt})         = {res}     1.36
-{txt}corr(u_i, Xb)  = {res}-0.0012                        {txt}Prob > F           =    {res}0.2441
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}    spending{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 3}UEprobInd {c |}{col 14}{res}{space 2}-.0136895{col 26}{space 2} .0117532{col 37}{space 1}   -1.16{col 46}{space 3}0.244{col 54}{space 4} -.036726{col 67}{space 3} .0093469
-{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 4.564588{col 26}{space 2} .2232397{col 37}{space 1}   20.45{col 46}{space 3}0.000{col 54}{space 4} 4.127036{col 67}{space 3}  5.00214
-{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-     sigma_u {c |} {res} 102.14766
-     {txt}sigma_e {c |} {res} 35.688542
-         {txt}rho {c |} {res} .89121182{txt}   (fraction of variance due to u_i)
-{hline 13}{c BT}{hline 64}
-F test that all u_i=0:     F({res}9763{txt}, {res}52771{txt}) = {res}    9.07         {txt}Prob > F = {res}0.0000
+{com}. ****************************************************
+. ***  This do files uses SCE individual labor market *
+. *** survey to generate the aggregate perceived probability * 
+. *** of different flow rates and compare it with CPS **
+. **************************************** ************
+. 
+. 
+. clear
 {txt}
-{com}. esttab using "${c -(}sum_table_folder{c )-}/ind/spending_reg_fe.csv", mtitles se  r2 replace
-{res}{txt}(output written to {browse  `"/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/ind/spending_reg_fe.csv"'})
-
-{com}. eststo clear
+{com}. global mainfolder "/Users/Myworld/Dropbox/SearchMatchExpectation/"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/data/SCE"
+{txt}
+{com}. global graph_folder "${c -(}mainfolder{c )-}/graph/"
+{txt}
+{com}. *global sum_table_folder "${c -(}mainfolder{c )-}/tables"
+. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. set more off 
 {txt}
 {com}. 
 . 
-. ************************************************
-. ** pesistence of the individual perceived risks **
-. ************************************************
+. *** labor market data
 . 
-. eststo clear
-{txt}
-{com}. 
-. foreach mom in mean var{c -(}
-{txt}  2{com}.     xtset ID date
-{txt}  3{com}.         replace Inc_mom = inc`mom' 
-{txt}  4{com}.     *replace Incmom_ch = Inc`mom'- l1.Inc`mom'
-. 
-.         eststo `mom'1: reg Inc_mom l(1/3).Inc_mom, vce(cluster date)
-{txt}  5{com}.         eststo `mom'2: reg Inc_mom l(1/6).Inc_mom, vce(cluster date)
-{txt}  6{com}.         eststo `mom'3: reg Inc_mom l(1/8).Inc_mom, vce(cluster date)
-{txt}  7{com}.         
-.         replace Inc_mom = rinc`mom'
-{txt}  8{com}.         eststo r`mom'1: reg Inc_mom l(1/3).Inc_mom, vce(cluster date)
-{txt}  9{com}.         eststo r`mom'2: reg Inc_mom l(1/6).Inc_mom, vce(cluster date)
-{txt} 10{com}.         eststo r`mom'3: reg Inc_mom l(1/8).Inc_mom, vce(cluster date)
-{txt} 11{com}.  {c )-}
-{res}{txt}{col 8}panel variable:  {res}ID (unbalanced)
-{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 1.9e+12, but with gaps
-{txt}{col 17}delta:  {res}1 month
-{txt}(63968 real changes made)
-
-Linear regression                                      Number of obs ={res}   27767
-                                                       {txt}F(  3,    79) ={res} 5667.38
-                                                       {txt}Prob > F      = {res} 0.0000
-                                                       {txt}R-squared     = {res} 0.5269
-                                                       {txt}Root MSE      = {res} .01432
-
-{txt}{ralign 78:(Std. Err. adjusted for {res:80} clusters in date)}
-{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
-{col 1}     Inc_mom{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}Inc_mom {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .3827632{col 26}{space 2}  .009986{col 37}{space 1}   38.33{col 46}{space 3}0.000{col 54}{space 4} .3628865{col 67}{space 3} .4026399
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .2524366{col 26}{space 2} .0098479{col 37}{space 1}   25.63{col 46}{space 3}0.000{col 54}{space 4} .2328348{col 67}{space 3} .2720384
-{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .1835906{col 26}{space 2}  .008149{col 37}{space 1}   22.53{col 46}{space 3}0.000{col 54}{space 4} .1673704{col 67}{space 3} .1998108
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0044267{col 26}{space 2} .0001505{col 37}{space 1}   29.41{col 46}{space 3}0.000{col 54}{space 4}  .004127{col 67}{space 3} .0047263
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}Linear regression                                      Number of obs ={res}   13093
-                                                       {txt}F(  6,    76) ={res} 2332.16
-                                                       {txt}Prob > F      = {res} 0.0000
-                                                       {txt}R-squared     = {res} 0.5667
-                                                       {txt}Root MSE      = {res} .01309
-
-{txt}{ralign 78:(Std. Err. adjusted for {res:77} clusters in date)}
-{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
-{col 1}     Inc_mom{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}Inc_mom {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .3304805{col 26}{space 2} .0123528{col 37}{space 1}   26.75{col 46}{space 3}0.000{col 54}{space 4} .3058777{col 67}{space 3} .3550832
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .2007408{col 26}{space 2} .0146773{col 37}{space 1}   13.68{col 46}{space 3}0.000{col 54}{space 4} .1715084{col 67}{space 3} .2299733
-{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .1273208{col 26}{space 2} .0126197{col 37}{space 1}   10.09{col 46}{space 3}0.000{col 54}{space 4} .1021865{col 67}{space 3} .1524551
-{txt}{space 9}L4. {c |}{col 14}{res}{space 2} .1092545{col 26}{space 2} .0117365{col 37}{space 1}    9.31{col 46}{space 3}0.000{col 54}{space 4} .0858793{col 67}{space 3} .1326296
-{txt}{space 9}L5. {c |}{col 14}{res}{space 2} .0618461{col 26}{space 2} .0127141{col 37}{space 1}    4.86{col 46}{space 3}0.000{col 54}{space 4} .0365237{col 67}{space 3} .0871685
-{txt}{space 9}L6. {c |}{col 14}{res}{space 2} .0501951{col 26}{space 2} .0100287{col 37}{space 1}    5.01{col 46}{space 3}0.000{col 54}{space 4} .0302212{col 67}{space 3}  .070169
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0028253{col 26}{space 2} .0001924{col 37}{space 1}   14.69{col 46}{space 3}0.000{col 54}{space 4} .0024422{col 67}{space 3} .0032085
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}Linear regression                                      Number of obs ={res}    7203
-                                                       {txt}F(  8,    74) ={res}  848.47
-                                                       {txt}Prob > F      = {res} 0.0000
-                                                       {txt}R-squared     = {res} 0.5708
-                                                       {txt}Root MSE      = {res} .01267
-
-{txt}{ralign 78:(Std. Err. adjusted for {res:75} clusters in date)}
-{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
-{col 1}     Inc_mom{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}Inc_mom {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .3314353{col 26}{space 2} .0179052{col 37}{space 1}   18.51{col 46}{space 3}0.000{col 54}{space 4} .2957584{col 67}{space 3} .3671123
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .1947494{col 26}{space 2} .0179425{col 37}{space 1}   10.85{col 46}{space 3}0.000{col 54}{space 4} .1589983{col 67}{space 3} .2305005
-{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .1415255{col 26}{space 2} .0161437{col 37}{space 1}    8.77{col 46}{space 3}0.000{col 54}{space 4} .1093584{col 67}{space 3} .1736926
-{txt}{space 9}L4. {c |}{col 14}{res}{space 2} .0808475{col 26}{space 2}  .016161{col 37}{space 1}    5.00{col 46}{space 3}0.000{col 54}{space 4} .0486459{col 67}{space 3}  .113049
-{txt}{space 9}L5. {c |}{col 14}{res}{space 2} .0738805{col 26}{space 2} .0171578{col 37}{space 1}    4.31{col 46}{space 3}0.000{col 54}{space 4} .0396929{col 67}{space 3} .1080682
-{txt}{space 9}L6. {c |}{col 14}{res}{space 2} .0262227{col 26}{space 2} .0144299{col 37}{space 1}    1.82{col 46}{space 3}0.073{col 54}{space 4}-.0025295{col 67}{space 3}  .054975
-{txt}{space 9}L7. {c |}{col 14}{res}{space 2} .0121168{col 26}{space 2} .0113493{col 37}{space 1}    1.07{col 46}{space 3}0.289{col 54}{space 4}-.0104971{col 67}{space 3} .0347307
-{txt}{space 9}L8. {c |}{col 14}{res}{space 2} .0209592{col 26}{space 2} .0135344{col 37}{space 1}    1.55{col 46}{space 3}0.126{col 54}{space 4}-.0060087{col 67}{space 3} .0479272
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0027399{col 26}{space 2} .0002701{col 37}{space 1}   10.14{col 46}{space 3}0.000{col 54}{space 4} .0022017{col 67}{space 3}  .003278
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}(62617 real changes made, 5505 to missing)
-
-Linear regression                                      Number of obs ={res}   23684
-                                                       {txt}F(  3,    79) ={res} 4096.57
-                                                       {txt}Prob > F      = {res} 0.0000
-                                                       {txt}R-squared     = {res} 0.4698
-                                                       {txt}Root MSE      = {res} .01873
-
-{txt}{ralign 78:(Std. Err. adjusted for {res:80} clusters in date)}
-{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
-{col 1}     Inc_mom{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}Inc_mom {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .3654575{col 26}{space 2} .0086347{col 37}{space 1}   42.32{col 46}{space 3}0.000{col 54}{space 4} .3482706{col 67}{space 3} .3826444
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .2355552{col 26}{space 2} .0083489{col 37}{space 1}   28.21{col 46}{space 3}0.000{col 54}{space 4}  .218937{col 67}{space 3} .2521733
-{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .1790654{col 26}{space 2} .0064141{col 37}{space 1}   27.92{col 46}{space 3}0.000{col 54}{space 4} .1662984{col 67}{space 3} .1918323
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2}-.0005079{col 26}{space 2} .0001632{col 37}{space 1}   -3.11{col 46}{space 3}0.003{col 54}{space 4}-.0008327{col 67}{space 3}-.0001831
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}Linear regression                                      Number of obs ={res}   10714
-                                                       {txt}F(  6,    76) ={res} 1498.52
-                                                       {txt}Prob > F      = {res} 0.0000
-                                                       {txt}R-squared     = {res} 0.5240
-                                                       {txt}Root MSE      = {res} .01685
-
-{txt}{ralign 78:(Std. Err. adjusted for {res:77} clusters in date)}
-{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
-{col 1}     Inc_mom{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}Inc_mom {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .3124322{col 26}{space 2} .0129122{col 37}{space 1}   24.20{col 46}{space 3}0.000{col 54}{space 4} .2867153{col 67}{space 3} .3381492
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .2114527{col 26}{space 2} .0130335{col 37}{space 1}   16.22{col 46}{space 3}0.000{col 54}{space 4} .1854944{col 67}{space 3} .2374111
-{txt}{space 9}L3. {c |}{col 14}{res}{space 2}  .131211{col 26}{space 2} .0120973{col 37}{space 1}   10.85{col 46}{space 3}0.000{col 54}{space 4} .1071173{col 67}{space 3} .1553048
-{txt}{space 9}L4. {c |}{col 14}{res}{space 2}  .085787{col 26}{space 2} .0113299{col 37}{space 1}    7.57{col 46}{space 3}0.000{col 54}{space 4} .0632216{col 67}{space 3} .1083524
-{txt}{space 9}L5. {c |}{col 14}{res}{space 2} .0702489{col 26}{space 2} .0122835{col 37}{space 1}    5.72{col 46}{space 3}0.000{col 54}{space 4} .0457841{col 67}{space 3} .0947137
-{txt}{space 9}L6. {c |}{col 14}{res}{space 2} .0534206{col 26}{space 2}  .009596{col 37}{space 1}    5.57{col 46}{space 3}0.000{col 54}{space 4} .0343086{col 67}{space 3} .0725326
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} -.000419{col 26}{space 2} .0002088{col 37}{space 1}   -2.01{col 46}{space 3}0.048{col 54}{space 4} -.000835{col 67}{space 3}-3.08e-06
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}Linear regression                                      Number of obs ={res}    5750
-                                                       {txt}F(  8,    74) ={res}  607.22
-                                                       {txt}Prob > F      = {res} 0.0000
-                                                       {txt}R-squared     = {res} 0.5460
-                                                       {txt}Root MSE      = {res} .01613
-
-{txt}{ralign 78:(Std. Err. adjusted for {res:75} clusters in date)}
-{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
-{col 1}     Inc_mom{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}Inc_mom {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .2891615{col 26}{space 2} .0164115{col 37}{space 1}   17.62{col 46}{space 3}0.000{col 54}{space 4} .2564609{col 67}{space 3} .3218621
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .2024383{col 26}{space 2} .0172943{col 37}{space 1}   11.71{col 46}{space 3}0.000{col 54}{space 4} .1679787{col 67}{space 3} .2368979
-{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .1497786{col 26}{space 2}  .017366{col 37}{space 1}    8.62{col 46}{space 3}0.000{col 54}{space 4} .1151761{col 67}{space 3}  .184381
-{txt}{space 9}L4. {c |}{col 14}{res}{space 2} .0707424{col 26}{space 2} .0148503{col 37}{space 1}    4.76{col 46}{space 3}0.000{col 54}{space 4} .0411524{col 67}{space 3} .1003323
-{txt}{space 9}L5. {c |}{col 14}{res}{space 2} .0971565{col 26}{space 2} .0175062{col 37}{space 1}    5.55{col 46}{space 3}0.000{col 54}{space 4} .0622747{col 67}{space 3} .1320383
-{txt}{space 9}L6. {c |}{col 14}{res}{space 2} .0466621{col 26}{space 2} .0156814{col 37}{space 1}    2.98{col 46}{space 3}0.004{col 54}{space 4} .0154162{col 67}{space 3}  .077908
-{txt}{space 9}L7. {c |}{col 14}{res}{space 2} .0102599{col 26}{space 2} .0132814{col 37}{space 1}    0.77{col 46}{space 3}0.442{col 54}{space 4}-.0162039{col 67}{space 3} .0367237
-{txt}{space 9}L8. {c |}{col 14}{res}{space 2} .0202152{col 26}{space 2}  .012374{col 37}{space 1}    1.63{col 46}{space 3}0.107{col 54}{space 4}-.0044405{col 67}{space 3} .0448708
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2}-.0004999{col 26}{space 2} .0002608{col 37}{space 1}   -1.92{col 46}{space 3}0.059{col 54}{space 4}-.0010196{col 67}{space 3} .0000199
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}{col 8}panel variable:  {res}ID (unbalanced)
-{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 1.9e+12, but with gaps
-{txt}{col 17}delta:  {res}1 month
-{txt}(68982 real changes made, 3306 to missing)
-
-Linear regression                                      Number of obs ={res}   29076
-                                                       {txt}F(  3,    79) ={res} 1008.34
-                                                       {txt}Prob > F      = {res} 0.0000
-                                                       {txt}R-squared     = {res} 0.3690
-                                                       {txt}Root MSE      = {res} .00073
-
-{txt}{ralign 78:(Std. Err. adjusted for {res:80} clusters in date)}
-{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
-{col 1}     Inc_mom{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}Inc_mom {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .3183245{col 26}{space 2} .0138744{col 37}{space 1}   22.94{col 46}{space 3}0.000{col 54}{space 4} .2907081{col 67}{space 3} .3459408
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .2302121{col 26}{space 2} .0130819{col 37}{space 1}   17.60{col 46}{space 3}0.000{col 54}{space 4} .2041732{col 67}{space 3}  .256251
-{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .1598969{col 26}{space 2} .0118174{col 37}{space 1}   13.53{col 46}{space 3}0.000{col 54}{space 4} .1363748{col 67}{space 3} .1834189
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0001048{col 26}{space 2} 5.28e-06{col 37}{space 1}   19.87{col 46}{space 3}0.000{col 54}{space 4} .0000943{col 67}{space 3} .0001153
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}Linear regression                                      Number of obs ={res}   13657
-                                                       {txt}F(  6,    76) ={res}  230.30
-                                                       {txt}Prob > F      = {res} 0.0000
-                                                       {txt}R-squared     = {res} 0.3846
-                                                       {txt}Root MSE      = {res} .00067
-
-{txt}{ralign 78:(Std. Err. adjusted for {res:77} clusters in date)}
-{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
-{col 1}     Inc_mom{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}Inc_mom {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .2559891{col 26}{space 2} .0228848{col 37}{space 1}   11.19{col 46}{space 3}0.000{col 54}{space 4}   .21041{col 67}{space 3} .3015682
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .1686581{col 26}{space 2} .0260468{col 37}{space 1}    6.48{col 46}{space 3}0.000{col 54}{space 4} .1167814{col 67}{space 3} .2205349
-{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .1293816{col 26}{space 2} .0186348{col 37}{space 1}    6.94{col 46}{space 3}0.000{col 54}{space 4} .0922671{col 67}{space 3} .1664961
-{txt}{space 9}L4. {c |}{col 14}{res}{space 2} .1123917{col 26}{space 2} .0183522{col 37}{space 1}    6.12{col 46}{space 3}0.000{col 54}{space 4} .0758402{col 67}{space 3} .1489431
-{txt}{space 9}L5. {c |}{col 14}{res}{space 2} .0474033{col 26}{space 2}  .014947{col 37}{space 1}    3.17{col 46}{space 3}0.002{col 54}{space 4} .0176337{col 67}{space 3} .0771729
-{txt}{space 9}L6. {c |}{col 14}{res}{space 2} .0662509{col 26}{space 2} .0117618{col 37}{space 1}    5.63{col 46}{space 3}0.000{col 54}{space 4} .0428251{col 67}{space 3} .0896766
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0000678{col 26}{space 2} 7.71e-06{col 37}{space 1}    8.79{col 46}{space 3}0.000{col 54}{space 4} .0000525{col 67}{space 3} .0000832
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}Linear regression                                      Number of obs ={res}    7465
-                                                       {txt}F(  8,    74) ={res}   99.16
-                                                       {txt}Prob > F      = {res} 0.0000
-                                                       {txt}R-squared     = {res} 0.3935
-                                                       {txt}Root MSE      = {res} .00064
-
-{txt}{ralign 78:(Std. Err. adjusted for {res:75} clusters in date)}
-{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
-{col 1}     Inc_mom{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}Inc_mom {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .2124869{col 26}{space 2} .0324034{col 37}{space 1}    6.56{col 46}{space 3}0.000{col 54}{space 4} .1479216{col 67}{space 3} .2770521
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .1442912{col 26}{space 2} .0315762{col 37}{space 1}    4.57{col 46}{space 3}0.000{col 54}{space 4} .0813742{col 67}{space 3} .2072083
-{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .1668453{col 26}{space 2} .0334118{col 37}{space 1}    4.99{col 46}{space 3}0.000{col 54}{space 4} .1002709{col 67}{space 3} .2334197
-{txt}{space 9}L4. {c |}{col 14}{res}{space 2} .0862551{col 26}{space 2} .0311605{col 37}{space 1}    2.77{col 46}{space 3}0.007{col 54}{space 4} .0241664{col 67}{space 3} .1483438
-{txt}{space 9}L5. {c |}{col 14}{res}{space 2} .0698183{col 26}{space 2} .0273979{col 37}{space 1}    2.55{col 46}{space 3}0.013{col 54}{space 4} .0152269{col 67}{space 3} .1244098
-{txt}{space 9}L6. {c |}{col 14}{res}{space 2}  .063552{col 26}{space 2} .0199169{col 37}{space 1}    3.19{col 46}{space 3}0.002{col 54}{space 4} .0238666{col 67}{space 3} .1032373
-{txt}{space 9}L7. {c |}{col 14}{res}{space 2}  .038387{col 26}{space 2} .0229858{col 37}{space 1}    1.67{col 46}{space 3}0.099{col 54}{space 4}-.0074133{col 67}{space 3} .0841873
-{txt}{space 9}L8. {c |}{col 14}{res}{space 2} .0413513{col 26}{space 2} .0179336{col 37}{space 1}    2.31{col 46}{space 3}0.024{col 54}{space 4} .0056179{col 67}{space 3} .0770848
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0000485{col 26}{space 2} 9.09e-06{col 37}{space 1}    5.33{col 46}{space 3}0.000{col 54}{space 4} .0000304{col 67}{space 3} .0000666
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}(65676 real changes made, 4118 to missing)
-
-Linear regression                                      Number of obs ={res}   25189
-                                                       {txt}F(  3,    79) ={res} 2193.36
-                                                       {txt}Prob > F      = {res} 0.0000
-                                                       {txt}R-squared     = {res} 0.4732
-                                                       {txt}Root MSE      = {res} .00113
-
-{txt}{ralign 78:(Std. Err. adjusted for {res:80} clusters in date)}
-{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
-{col 1}     Inc_mom{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}Inc_mom {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .3787116{col 26}{space 2} .0115869{col 37}{space 1}   32.68{col 46}{space 3}0.000{col 54}{space 4} .3556484{col 67}{space 3} .4017749
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .2302742{col 26}{space 2} .0111558{col 37}{space 1}   20.64{col 46}{space 3}0.000{col 54}{space 4} .2080691{col 67}{space 3} .2524794
-{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .1521413{col 26}{space 2} .0093932{col 37}{space 1}   16.20{col 46}{space 3}0.000{col 54}{space 4} .1334446{col 67}{space 3} .1708379
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0001723{col 26}{space 2} 9.55e-06{col 37}{space 1}   18.04{col 46}{space 3}0.000{col 54}{space 4} .0001533{col 67}{space 3} .0001913
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}Linear regression                                      Number of obs ={res}   11208
-                                                       {txt}F(  6,    76) ={res}  577.88
-                                                       {txt}Prob > F      = {res} 0.0000
-                                                       {txt}R-squared     = {res} 0.5254
-                                                       {txt}Root MSE      = {res} .00099
-
-{txt}{ralign 78:(Std. Err. adjusted for {res:77} clusters in date)}
-{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
-{col 1}     Inc_mom{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}Inc_mom {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .3129107{col 26}{space 2} .0194381{col 37}{space 1}   16.10{col 46}{space 3}0.000{col 54}{space 4} .2741964{col 67}{space 3}  .351625
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2}  .196829{col 26}{space 2} .0220189{col 37}{space 1}    8.94{col 46}{space 3}0.000{col 54}{space 4} .1529745{col 67}{space 3} .2406835
-{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .1479145{col 26}{space 2} .0200059{col 37}{space 1}    7.39{col 46}{space 3}0.000{col 54}{space 4} .1080694{col 67}{space 3} .1877596
-{txt}{space 9}L4. {c |}{col 14}{res}{space 2} .0885893{col 26}{space 2} .0184729{col 37}{space 1}    4.80{col 46}{space 3}0.000{col 54}{space 4} .0517973{col 67}{space 3} .1253812
-{txt}{space 9}L5. {c |}{col 14}{res}{space 2}   .05809{col 26}{space 2}  .017458{col 37}{space 1}    3.33{col 46}{space 3}0.001{col 54}{space 4} .0233195{col 67}{space 3} .0928605
-{txt}{space 9}L6. {c |}{col 14}{res}{space 2} .0437248{col 26}{space 2} .0134624{col 37}{space 1}    3.25{col 46}{space 3}0.002{col 54}{space 4} .0169121{col 67}{space 3} .0705375
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0000917{col 26}{space 2} .0000134{col 37}{space 1}    6.86{col 46}{space 3}0.000{col 54}{space 4} .0000651{col 67}{space 3} .0001184
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}Linear regression                                      Number of obs ={res}    5906
-                                                       {txt}F(  8,    74) ={res}  195.15
-                                                       {txt}Prob > F      = {res} 0.0000
-                                                       {txt}R-squared     = {res} 0.5181
-                                                       {txt}Root MSE      = {res} .00094
-
-{txt}{ralign 78:(Std. Err. adjusted for {res:75} clusters in date)}
-{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
-{col 1}     Inc_mom{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}Inc_mom {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .2706046{col 26}{space 2} .0269417{col 37}{space 1}   10.04{col 46}{space 3}0.000{col 54}{space 4}  .216922{col 67}{space 3} .3242871
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .1824146{col 26}{space 2} .0323831{col 37}{space 1}    5.63{col 46}{space 3}0.000{col 54}{space 4} .1178898{col 67}{space 3} .2469394
-{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .1561422{col 26}{space 2} .0316508{col 37}{space 1}    4.93{col 46}{space 3}0.000{col 54}{space 4} .0930766{col 67}{space 3} .2192079
-{txt}{space 9}L4. {c |}{col 14}{res}{space 2} .0812407{col 26}{space 2} .0244997{col 37}{space 1}    3.32{col 46}{space 3}0.001{col 54}{space 4} .0324239{col 67}{space 3} .1300576
-{txt}{space 9}L5. {c |}{col 14}{res}{space 2} .1184247{col 26}{space 2} .0270002{col 37}{space 1}    4.39{col 46}{space 3}0.000{col 54}{space 4} .0646256{col 67}{space 3} .1722238
-{txt}{space 9}L6. {c |}{col 14}{res}{space 2} .0595451{col 26}{space 2} .0272647{col 37}{space 1}    2.18{col 46}{space 3}0.032{col 54}{space 4}  .005219{col 67}{space 3} .1138713
-{txt}{space 9}L7. {c |}{col 14}{res}{space 2}-.0197455{col 26}{space 2} .0159182{col 37}{space 1}   -1.24{col 46}{space 3}0.219{col 54}{space 4}-.0514632{col 67}{space 3} .0119723
-{txt}{space 9}L8. {c |}{col 14}{res}{space 2}-.0075724{col 26}{space 2} .0136577{col 37}{space 1}   -0.55{col 46}{space 3}0.581{col 54}{space 4} -.034786{col 67}{space 3} .0196412
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0001099{col 26}{space 2} .0000194{col 37}{space 1}    5.68{col 46}{space 3}0.000{col 54}{space 4} .0000713{col 67}{space 3} .0001484
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+. import excel "${c -(}folder{c )-}/sce-labor-microdata-public.xlsx", sheet("Data") cellrange(A2:DN18419) firstrow
 {res}{txt}
-{com}.  
-.   
-. esttab using "${c -(}sum_table_folder{c )-}/ind/autoregIndM.csv", mtitles se  r2 replace
-{res}{txt}(output written to {browse  `"/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Tables/ind/autoregIndM.csv"'})
-
-{com}. eststo clear
+{com}. 
+. ********************
+. *** Date format ****
+. ********************
+. gen date_str = string(date)
+{txt}
+{com}. gen year = substr(date_str,1,4)
+{txt}
+{com}. gen month = substr(date_str,5,2)
+{txt}
+{com}. gen date2=year+"m"+month
+{txt}
+{com}. gen date3= monthly(date2,"YM")
+{txt}
+{com}. format date3 %tm
+{txt}
+{com}. drop date_str date2 date
+{txt}
+{com}. rename date3 date
+{res}{txt}
+{com}. destring year, replace
+{txt}year has all characters numeric; {res}replaced {txt}as {res}int
+{txt}
+{com}. destring month, replace 
+{txt}month has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}
+{com}. order date year month
+{txt}
+{com}. xtset userid date
+{res}{txt}{col 8}panel variable:  {res}userid (unbalanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 2014m3 to 2019m3, but with gaps
+{txt}{col 17}delta:  {res}1 month
 {txt}
 {com}. 
 . 
+. label var l1m "starting month of current/main job"
+{txt}
+{com}. label var l1y "starting year of current/main job"
+{txt}
+{com}. label var l3 "(average) annual earning from the current/main job before tax/deductions (in $)"
+{txt}
+{com}. label var l4 "(average) annual earning from the current/main job before tax/deductions by range"
+{txt}note: label truncated to 80 characters
+
+{com}. label var l4b "expected annual earning from the current/main job at y+10 (nominal)"
+{txt}
+{com}. label var lmtype "employer type of current/main"
+{txt}
+{com}. label var lmtype_5_other "employer type (others)"
+{txt}
+{com}. label var lmind "business/industry of current employer"
+{txt}
+{com}. label var lm5_1 "employer benefits: pension plan"
+{txt}
+{com}. label var lm5_2 "employer benefits: pension plan"
+{txt}
+{com}. label var lm5_3  "employer benefits: health insurance"
+{txt}
+{com}. label var lm5_4 "employer benefits: dental/vision insurance"
+{txt}
+{com}. label var lm5_5  "employer benefits: health care or dependent care"
+{txt}
+{com}. label var lm5_6  "employer benefits: housing/husing subsidy"
+{txt}
+{com}. label var lm5_7  "employer benefits: life/disability insurance"
+{txt}
+{com}. label var lm5_8 "employer benefits: commuter benefits"
+{txt}
+{com}. label var lm5_9 "employer benefits: childcare assistance"
+{txt}
+{com}. label var lm5_10 "employer benefits: other"
+{txt}
+{com}. label var lm5_10_other "employer benefits: other specified"
+{txt}
+{com}. label var lm5_11 "employer benefits: none"
+{txt}
+{com}. label var lmsat1 "satisfied with compensation (1-5 more satisfied)"
+{txt}
+{com}. label var lmsat2 "satisfied with other aspect of the job (1-5 more satisfied)"
+{txt}
+{com}. label var lmsat3 "fit with the job (1-7 more fit)"
+{txt}
+{com}. label var lmsat4 "opportunity for promotion/progression from y to y+3"
+{txt}
+{com}. label var lmsat5 "overall satisfication (1-5 more satisfied)"
+{txt}
+{com}. label var l7m "last month of the most recent job"
+{txt}
+{com}. label var l7y "last year of the most recent job"
+{txt}
+{com}. label var l7dk_1 "never had a paid job"
+{txt}
+{com}. label var l7bm "starting month of the most recent job"
+{txt}
+{com}. label var l7by "starting year of the most recent job"
+{txt}
+{com}. label var l9 "(average) annual earning from the most recent job before tax/deductions (in $)"
+{txt}
+{com}. label var l10 "(average) annual earning from the most recent job before tax/deductions by range"
+{txt}
+{com}. label var l11 "work for someone(1) or self-employment (2)"
+{txt}
+{com}. label var l12 "employer type of most recent job"
+{txt}
+{com}. label var l12_5_other "employer type of most recent job (other)"
+{txt}
+{com}. label var l12b "business/industry of the most recent job"
+{txt}
+{com}. label var l13_1 "employer benefits most recent job: pension plans"
+{txt}
+{com}. label var l13_2 ""
+{txt}
+{com}. label var l13_3 ""
+{txt}
+{com}. label var l13_4 ""
+{txt}
+{com}. label var l13_5 ""
+{txt}
+{com}. label var l13_6 ""
+{txt}
+{com}. label var l13_7 ""
+{txt}
+{com}. label var l13_8 ""
+{txt}
+{com}. label var l13_9 ""
+{txt}
+{com}. label var l13_10 ""
+{txt}
+{com}. label var l13_11 ""
+{txt}
+{com}. label var l13_10_other ""
+{txt}
+{com}. label var js5 "have looked for a job m-1 to m (1 yes 2 no)"
+{txt}
+{com}. label var js6 "looking for a job leaving current (1), not leaving (2), no (3)" 
+{txt}
+{com}. label var rw2a "min wage/salary for accepting a hypothetical job offer right now"
+{txt}
+{com}. label var rw2b "unit for wage (hour 1 week 2 biweek 3 month 4 year 5) till 2017, yearly after 2017"
+{txt}note: label truncated to 80 characters
+
+{com}. label var js7 "nb of weeks looking for a job"
+{txt}
+{com}. label var js8_1 "things done to look for a job"
+{txt}
+{com}. label var js8_2 ""
+{txt}
+{com}. label var js8_3 ""
+{txt}
+{com}. label var js8_4 ""
+{txt}
+{com}. label var js8_5 ""
+{txt}
+{com}. label var js8_6 ""
+{txt}
+{com}. label var js8_7 ""
+{txt}
+{com}. label var js8_8 ""
+{txt}
+{com}. label var js8_9 ""
+{txt}
+{com}. label var js8_10 ""
+{txt}
+{com}. label var js8_11 ""
+{txt}
+{com}. label var js8_12 ""
+{txt}
+{com}. label var js8_13 ""
+{txt}
+{com}. label var js8_14 ""
+{txt}
+{com}. label var js8_14_other
+{txt}
+{com}. label var js9 "nb of hours spent on job search from d-7 to d"
+{txt}
+{com}. label var nl1 "nb of job offers received from m-4 to m"
+{txt}
+{com}. label var nl2a_1 ""
+{txt}
+{com}. label var nl2a_2 ""
+{txt}
+{com}. label var nl2a_3 ""
+{txt}
+{com}. label var nl2b_1 ""
+{txt}
+{com}. label var nl2b_2 ""
+{txt}
+{com}. label var nl2b_3 ""
+{txt}
+{com}. label var nl3_1 "currently working at the accepted job"
+{txt}
+{com}. label var nl3_2 "once worked at the accepted job"
+{txt}
+{com}. label var nl3_3 "rejected the job offer"
+{txt}
+{com}. label var nl4_1 ""
+{txt}
+{com}. label var nl4_2 ""
+{txt}
+{com}. label var nl4_3 "" 
+{txt}
+{com}. label var oo1_1 "expected prob of employed from m to m+4" 
+{txt}
+{com}. label var oo1_2 "expected prob of employed by same employer from m to m+4" 
+{txt}
+{com}. label var oo1_3 "expected prob of employed by a different employer from m to m+4" 
+{txt}
+{com}. label var oo1_4 "expected prob of self-employed from m to m+4" 
+{txt}
+{com}. label var oo1_5 "expected prob of unemployed/looking for a job from m to m+4" 
+{txt}
+{com}. label var oo1_6 "expected prob of unemployed/not looking for a job from m to m+4" 
+{txt}
+{com}. label var oo2u "expected prob of receing >1 job offer from m to m+4" 
+{txt}
+{com}. label var oo2e "expected prob of receing >1 job offer from another employer m to m+4" 
+{txt}
+{com}. label var oo2new "expected nb of job offers received from m to m+4" 
+{txt}
+{com}. label var oo2a "expected AVERAGE wage ($ annual) for possible offers received from m to m+4" 
+{txt}
+{com}. label var oo2a2 "expected MAX wage ($ annual) for possible offers received from m to m+4" 
+{txt}
+{com}. label var oo2b_1 ""
+{txt}
+{com}. label var oo2b_2 ""
+{txt}
+{com}. label var oo2b_3 ""
+{txt}
+{com}. label var oo2b_4 ""
+{txt}
+{com}. label var oo2b_5 ""
+{txt}
+{com}. label var oo2b_6 ""
+{txt}
+{com}. label var oo2c1 "prob of accepting an offer at wage < 0.8 average expected wage offer"
+{txt}
+{com}. label var oo2c2 "prob of accepting an offer at wage between 0.8-0.9 average expected wage offer"
+{txt}
+{com}. label var oo2c3 "prob of accepting an offer at wage between 0.9-1.0 average expected wage offer"
+{txt}
+{com}. label var oo2c4 "prob of accepting an offer at wage between 1.0-1.1 average expected wage offer"
+{txt}
+{com}. label var oo2c5 "prob of accepting an offer at wage between 1.1-1.2 average expected wage offer"
+{txt}
+{com}. label var oo2c6 "prob of accepting an offer at wage>1.2*average expected wage offer"
+{txt}
+{com}. label var oo2e2 "expected earning in m+4 (in $)"
+{txt}
+{com}. label var oo2e2dk_1 "zero earning due to non-working from m to m+4"
+{txt}
+{com}. label var oo2f ""
+{txt}
+{com}. label var q113 ""
+{txt}
+{com}. label var q115 ""
+{txt}
+{com}. label var q117 "planed retirement age"
+{txt}
+{com}. label var q118 "planed retirement age has changed from y-1 to y(1 sooner 2 no change 3 later)"
+{txt}
+{com}. label var q119 "nb of years earlier before retirement than planed"
+{txt}
+{com}. label var q120  "nb of years later before retirement than planed"
+{txt}
+{com}. label var q121  ""
+{txt}
+{com}. label var q122 ""
+{txt}
+{com}. 
 . 
-. log close 
-      {txt}name:  {res}<unnamed>
-       {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_log.smcl
-  {txt}log type:  {res}smcl
- {txt}closed on:  {res} 5 Apr 2021, 11:39:15
-{txt}{.-}
-{smcl}
-{txt}{sf}{ul off}
+. save "${c -(}folder{c )-}/LaborExpSCEIndM",replace 
+{txt}file /Users/Myworld/Dropbox/SearchMatchExpectation//data/SCE/LaborExpSCEIndM.dta saved
+
+{com}. ddd
+{err}unrecognized command:  ddd
+{txt}{search r(199):r(199);}
+
+end of do-file
+
+{search r(199):r(199);}
+
+{com}. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD01766.000000"
+{txt}
+{com}. ****************************************************
+. ***  This do files uses SCE individual labor market *
+. *** survey to generate the aggregate perceived probability * 
+. *** of different flow rates and compare it with CPS **
+. **************************************** ************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/SearchMatchExpectation/"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/data/SCE"
+{txt}
+{com}. global graph_folder "${c -(}mainfolder{c )-}/graph/"
+{txt}
+{com}. global SCE_core_folder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/"
+{txt}
+{com}. *global sum_table_folder "${c -(}mainfolder{c )-}/tables"
+. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. /*
+> *****************************
+> *** import raw labor market SCE
+> *********************************
+> 
+> import excel "${c -(}folder{c )-}/sce-labor-microdata-public.xlsx", sheet("Data") cellrange(A2:DN18419) firstrow
+> 
+> ********************
+> *** Date format ****
+> ********************
+> gen date_str = string(date)
+> gen year = substr(date_str,1,4)
+> gen month = substr(date_str,5,2)
+> gen date2=year+"m"+month
+> gen date3= monthly(date2,"YM")
+> format date3 %tm
+> drop date_str date2 date
+> rename date3 date
+> destring year, replace
+> destring month, replace 
+> order date year month
+> xtset userid date
+> 
+> 
+> label var l1m "starting month of current/main job"
+> label var l1y "starting year of current/main job"
+> label var l3 "(average) annual earning from the current/main job before tax/deductions (in $)"
+> label var l4 "(average) annual earning from the current/main job before tax/deductions by range"
+> label var l4b "expected annual earning from the current/main job at y+10 (nominal)"
+> label var lmtype "employer type of current/main"
+> label var lmtype_5_other "employer type (others)"
+> label var lmind "business/industry of current employer"
+> label var lm5_1 "employer benefits: pension plan"
+> label var lm5_2 "employer benefits: pension plan"
+> label var lm5_3  "employer benefits: health insurance"
+> label var lm5_4 "employer benefits: dental/vision insurance"
+> label var lm5_5  "employer benefits: health care or dependent care"
+> label var lm5_6  "employer benefits: housing/husing subsidy"
+> label var lm5_7  "employer benefits: life/disability insurance"
+> label var lm5_8 "employer benefits: commuter benefits"
+> label var lm5_9 "employer benefits: childcare assistance"
+> label var lm5_10 "employer benefits: other"
+> label var lm5_10_other "employer benefits: other specified"
+> label var lm5_11 "employer benefits: none"
+> label var lmsat1 "satisfied with compensation (1-5 more satisfied)"
+> label var lmsat2 "satisfied with other aspect of the job (1-5 more satisfied)"
+> label var lmsat3 "fit with the job (1-7 more fit)"
+> label var lmsat4 "opportunity for promotion/progression from y to y+3"
+> label var lmsat5 "overall satisfication (1-5 more satisfied)"
+> label var l7m "last month of the most recent job"
+> label var l7y "last year of the most recent job"
+> label var l7dk_1 "never had a paid job"
+> label var l7bm "starting month of the most recent job"
+> label var l7by "starting year of the most recent job"
+> label var l9 "(average) annual earning from the most recent job before tax/deductions (in $)"
+> label var l10 "(average) annual earning from the most recent job before tax/deductions by range"
+> label var l11 "work for someone(1) or self-employment (2)"
+> label var l12 "employer type of most recent job"
+> label var l12_5_other "employer type of most recent job (other)"
+> label var l12b "business/industry of the most recent job"
+> label var l13_1 "employer benefits most recent job: pension plans"
+> label var l13_2 ""
+> label var l13_3 ""
+> label var l13_4 ""
+> label var l13_5 ""
+> label var l13_6 ""
+> label var l13_7 ""
+> label var l13_8 ""
+> label var l13_9 ""
+> label var l13_10 ""
+> label var l13_11 ""
+> label var l13_10_other ""
+> label var js5 "have looked for a job m-1 to m (1 yes 2 no)"
+> label var js6 "looking for a job leaving current (1), not leaving (2), no (3)" 
+> label var rw2a "min wage/salary for accepting a hypothetical job offer right now"
+> label var rw2b "unit for wage (hour 1 week 2 biweek 3 month 4 year 5) till 2017, yearly after 2017"
+> label var js7 "nb of weeks looking for a job"
+> label var js8_1 "things done to look for a job"
+> label var js8_2 ""
+> label var js8_3 ""
+> label var js8_4 ""
+> label var js8_5 ""
+> label var js8_6 ""
+> label var js8_7 ""
+> label var js8_8 ""
+> label var js8_9 ""
+> label var js8_10 ""
+> label var js8_11 ""
+> label var js8_12 ""
+> label var js8_13 ""
+> label var js8_14 ""
+> label var js8_14_other
+> label var js9 "nb of hours spent on job search from d-7 to d"
+> label var nl1 "nb of job offers received from m-4 to m"
+> label var nl2a_1 ""
+> label var nl2a_2 ""
+> label var nl2a_3 ""
+> label var nl2b_1 ""
+> label var nl2b_2 ""
+> label var nl2b_3 ""
+> label var nl3_1 "currently working at the accepted job"
+> label var nl3_2 "once worked at the accepted job"
+> label var nl3_3 "rejected the job offer"
+> label var nl4_1 ""
+> label var nl4_2 ""
+> label var nl4_3 "" 
+> label var oo1_1 "expected prob of employed from m to m+4" 
+> label var oo1_2 "expected prob of employed by same employer from m to m+4" 
+> label var oo1_3 "expected prob of employed by a different employer from m to m+4" 
+> label var oo1_4 "expected prob of self-employed from m to m+4" 
+> label var oo1_5 "expected prob of unemployed/looking for a job from m to m+4" 
+> label var oo1_6 "expected prob of unemployed/not looking for a job from m to m+4" 
+> label var oo2u "expected prob of receing >1 job offer from m to m+4" 
+> label var oo2e "expected prob of receing >1 job offer from another employer m to m+4" 
+> label var oo2new "expected nb of job offers received from m to m+4" 
+> label var oo2a "expected AVERAGE wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2a2 "expected MAX wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2b_1 ""
+> label var oo2b_2 ""
+> label var oo2b_3 ""
+> label var oo2b_4 ""
+> label var oo2b_5 ""
+> label var oo2b_6 ""
+> label var oo2c1 "prob of accepting an offer at wage < 0.8 average expected wage offer"
+> label var oo2c2 "prob of accepting an offer at wage between 0.8-0.9 average expected wage offer"
+> label var oo2c3 "prob of accepting an offer at wage between 0.9-1.0 average expected wage offer"
+> label var oo2c4 "prob of accepting an offer at wage between 1.0-1.1 average expected wage offer"
+> label var oo2c5 "prob of accepting an offer at wage between 1.1-1.2 average expected wage offer"
+> label var oo2c6 "prob of accepting an offer at wage>1.2*average expected wage offer"
+> label var oo2e2 "expected earning in m+4 (in $)"
+> label var oo2e2dk_1 "zero earning due to non-working from m to m+4"
+> label var oo2f ""
+> label var q113 ""
+> label var q115 ""
+> label var q117 "planed retirement age"
+> label var q118 "planed retirement age has changed from y-1 to y(1 sooner 2 no change 3 later)"
+> label var q119 "nb of years earlier before retirement than planed"
+> label var q120  "nb of years later before retirement than planed"
+> label var q121  ""
+> label var q122 ""
+> 
+> save "${c -(}folder{c )-}/LaborExpSCEIndM",replace 
+> */
+. 
+. ***************************************************
+. **** subselect variables from core module of SCE ***
+. ****************************************************
+. 
+. use "${c -(}SCE_core_folder{c )-}/IncExpSCEProbIndM.dta", clear
+{txt}
+{com}. ddd
+{err}unrecognized command:  ddd
+{txt}{search r(199):r(199);}
+
+end of do-file
+
+{search r(199):r(199);}
+
+{com}. table Q48
+
+{txt}{hline 10}{c TT}{hline 11}
+interesti {c |}
+ng/uninte {c |}
+resting   {c |}
+of the    {c |}
+questions {c |}
+in the    {c |}
+survey(1/ {c |}
+0)        {c |}      Freq.
+{hline 10}{c +}{hline 11}
+        1 {c |}      {res}3,764
+        {txt}2 {c |}      {res}8,318
+        {txt}3 {c |}     {res}17,698
+        {txt}4 {c |}     {res}49,752
+        {txt}5 {c |}     {res}19,047
+{txt}{hline 10}{c BT}{hline 11}
+
+{com}. clear
+
+. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD01766.000000"
+{txt}
+{com}. ****************************************************
+. ***   This do files cleans SCE individual density **
+. ***   forecasts and moments. It exclude the top and *
+. ***   bottom 5 percentiles of mean and uncertainty. *
+. ***   It also plots histograms of mean forecast and *
+. ***   uncertainty. **********************************
+. *****************************************************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
+{txt}
+{com}. global otherfolder "${c -(}mainfolder{c )-}/OtherData/"
+{txt}
+{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/pop"
+{txt}
+{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
+{txt}
+{com}. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. 
+. use "${c -(}folder{c )-}/SCE/NYFED_SCE_13_16.dta",clear
+{err}{p 0 4 2}
+file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData//SCE/NYFED_SCE_13_16.dta
+not found
+{p_end}
+{txt}{search r(601):r(601);}
+
+end of do-file
+
+{search r(601):r(601);}
+
+{com}. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD01766.000000"
+{txt}
+{com}. ****************************************************
+. ***   This do files cleans SCE individual density **
+. ***   forecasts and moments. It exclude the top and *
+. ***   bottom 5 percentiles of mean and uncertainty. *
+. ***   It also plots histograms of mean forecast and *
+. ***   uncertainty. **********************************
+. *****************************************************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
+{txt}
+{com}. global data_folder "/Users/Myworld/Dropbox/ExpProject/workingfolder/SurveyData/SCE/"
+{txt}
+{com}. global otherfolder "${c -(}mainfolder{c )-}/OtherData/"
+{txt}
+{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/pop"
+{txt}
+{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
+{txt}
+{com}. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. 
+. use "${c -(}folder{c )-}/SCE/NYFED_SCE_13_16.dta",clear
+{err}{p 0 4 2}
+file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData//SCE/NYFED_SCE_13_16.dta
+not found
+{p_end}
+{txt}{search r(601):r(601);}
+
+end of do-file
+
+{search r(601):r(601);}
+
+{com}. do "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/DoFile/Step01_CleaningSCE.do"
+{txt}
+{com}. ****************************************************
+. ***   This do files cleans SCE individual density **
+. ***   forecasts and moments. It exclude the top and *
+. ***   bottom 5 percentiles of mean and uncertainty. *
+. ***   It also plots histograms of mean forecast and *
+. ***   uncertainty. **********************************
+. *****************************************************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
+{txt}
+{com}. global data_folder "/Users/Myworld/Dropbox/ExpProject/workingfolder/SurveyData/SCE/"
+{txt}
+{com}. global otherfolder "${c -(}mainfolder{c )-}/OtherData/"
+{txt}
+{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/pop"
+{txt}
+{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
+{txt}
+{com}. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. 
+. use "${c -(}datafolder{c )-}NYFED_SCE_13_16.dta",clear
+{err}{p 0 4 2}
+file NYFED_SCE_13_16.dta
+not found
+{p_end}
+{txt}{search r(601):r(601);}
+
+end of do-file
+
+{search r(601):r(601);}
+
+{com}. do "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/DoFile/Step01_CleaningSCE.do"
+{txt}
+{com}. ****************************************************
+. ***   This do files cleans SCE individual density **
+. ***   forecasts and moments. It exclude the top and *
+. ***   bottom 5 percentiles of mean and uncertainty. *
+. ***   It also plots histograms of mean forecast and *
+. ***   uncertainty. **********************************
+. *****************************************************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
+{txt}
+{com}. global data_folder "/Users/Myworld/Dropbox/ExpProject/workingfolder/SurveyData/SCE/"
+{txt}
+{com}. global otherfolder "${c -(}mainfolder{c )-}/OtherData/"
+{txt}
+{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/pop"
+{txt}
+{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
+{txt}
+{com}. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. 
+. use "${c -(}data_folder{c )-}NYFED_SCE_13_16.dta",clear
+{txt}
+{com}. append using "${c -(}data_folder{c )-}NYFED_SCE_17_19.dta",force
+{txt}{p 0 7 2}
+(note: variable
+Q3 was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q4new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q5new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q6new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q14new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q22new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q30new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q32 was 
+int, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+DHH2_11_other was 
+str48, now str83 to accommodate using data's values)
+{p_end}
+
+{com}. append using  "${c -(}data_folder{c )-}NYFED_SCE_20.dta",force
+{txt}
+{com}. ddd
+{err}unrecognized command:  ddd
+{txt}{search r(199):r(199);}
+
+end of do-file
+
+{search r(199):r(199);}
+
+{com}. do "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/DoFile/Step01_CleaningSCE.do"
+{txt}
+{com}. ****************************************************
+. ***   This do files cleans SCE individual density **
+. ***   forecasts and moments. It exclude the top and *
+. ***   bottom 5 percentiles of mean and uncertainty. *
+. ***   It also plots histograms of mean forecast and *
+. ***   uncertainty. **********************************
+. *****************************************************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
+{txt}
+{com}. global data_folder "/Users/Myworld/Dropbox/ExpProject/workingfolder/SurveyData/SCE/"
+{txt}
+{com}. global otherfolder "${c -(}mainfolder{c )-}/OtherData/"
+{txt}
+{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/pop"
+{txt}
+{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
+{txt}
+{com}. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. 
+. use "${c -(}data_folder{c )-}NYFED_SCE_13_16.dta",clear
+{txt}
+{com}. append using "${c -(}data_folder{c )-}NYFED_SCE_17_19.dta",force
+{txt}{p 0 7 2}
+(note: variable
+Q3 was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q4new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q5new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q6new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q14new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q22new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q30new was 
+byte, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+Q32 was 
+int, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+DHH2_11_other was 
+str48, now str83 to accommodate using data's values)
+{p_end}
+
+{com}. append using  "${c -(}data_folder{c )-}NYFED_SCE_20.dta",force
+{txt}
+{com}. 
+. sort date
+{txt}
+{com}. unique userid
+{txt}Number of unique values of userid is  {res}15499
+{txt}Number of records is  {res}109372
+{txt}
+{com}. 
+. ********************
+. *** Date format ****
+. ********************
+. gen date_str = string(date)
+{txt}
+{com}. gen year = substr(date_str,1,4)
+{txt}
+{com}. gen month = substr(date_str,5,2)
+{txt}
+{com}. gen date2=year+"m"+month
+{txt}
+{com}. gen date3= monthly(date2,"YM")
+{txt}
+{com}. format date3 %tm
+{txt}
+{com}. drop date_str date2 date
+{txt}
+{com}. rename date3 date
+{res}{txt}
+{com}. destring year, replace
+{txt}year has all characters numeric; {res}replaced {txt}as {res}int
+{txt}
+{com}. destring month, replace 
+{txt}month has all characters numeric; {res}replaced {txt}as {res}byte
+{txt}
+{com}. order date year month
+{txt}
+{com}. xtset userid date
+{res}{txt}{col 8}panel variable:  {res}userid (unbalanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m4, but with gaps
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. **********************
+. ** Label variables ***
+. **********************
+. 
+. label var Q1 "finance better or worse(5 vals) from y-1 to y"
+{txt}
+{com}. label var Q2 "finance better or worse(5 vals) from y to y+1"
+{txt}
+{com}. label var Q3 "chance of moving (%)"
+{txt}
+{com}. label var Q4new "chance of UE higher from y to y+1(0-1)"
+{txt}
+{com}. label var Q5new "chance of saving interest rate higher from y to y+1(%)"
+{txt}
+{com}. label var Q6new "chance of stock market up from y to y+1(%)"
+{txt}
+{com}. label var Q8v2 "inflation or deflation from y to y+1 (1/0)"
+{txt}
+{com}. label var Q8v2part2 "inflation(or deflation) from y to y+1 (%) "
+{txt}
+{com}. label var Q9_cent25 "25 percentile of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_cent50 "50 percentile of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_cent75 "75 percentile of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_var "var of inflation from y to y+1"
+{txt}
+{com}. label var Q9_iqr "25/75 inter-quantile range of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_mean "mean of inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_probdeflation "prob of deflation from y to y+1 (0-1)"
+{txt}
+{com}. label var Q9_bin1 "density: >12% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin2 "density: 8%-12% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin3 "density: 4%-8% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin4 "density: 2%-4% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin5 "density: 0%-2% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin6 "density: -2%-0% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin7 "density: -4%- -2% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin8 "density: -8%--4% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin9 "density: -12%- -8% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9_bin10 "density: <-12% inflation from y to y+1(%)"
+{txt}
+{com}. label var Q9bv2 "inflation or deflation from y+1 to y+2 (1/0)"
+{txt}
+{com}. label var Q9bv2part2 "inflation(or deflation) from y+1 to y+2 (%)"
+{txt}
+{com}. label var Q9c_cent25 "25 percentile of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_cent50 "50 percentile of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_cent75 "75 percentile of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_var "var of inflation from y+1 to y+2"
+{txt}
+{com}. label var Q9c_mean "mean of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_iqr "25/75 inter-quantile range of inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_probdeflation "prob of deflation from y+1 to y+2 (0-1)"
+{txt}
+{com}. label var Q9c_bin1 "density: >12% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin2 "density: 8%-12% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin3 "density: 4%-8% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin4 "density: 2%-4% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin5 "density: 0%-2% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin6 "density: -2%-0% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin7 "density: -4%- -2% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin8 "density: -8%--4% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin9 "density: -12%- -8% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q9c_bin10 "density: <-12% inflation from y+1 to y+2(%)"
+{txt}
+{com}. label var Q10_1 "current emp situations:full-time"
+{txt}
+{com}. label var Q10_2 "current emp situations:part-time"
+{txt}
+{com}. label var Q10_3 "current emp situations: not working but wants to work"
+{txt}
+{com}. label var Q10_4 "current emp situations: temporary laid-off"
+{txt}
+{com}. label var Q10_5 "current emp situations: on sick or other leave"
+{txt}
+{com}. label var Q10_6 "current emp situations: permanently disabled/unable to work"
+{txt}
+{com}. label var Q10_7 "current emp situations: retiree or early retiree"
+{txt}
+{com}. label var Q10_8 "current emp situations: student or in training"
+{txt}
+{com}. label var Q10_9 "current emp situations: homemaker"
+{txt}
+{com}. label var Q10_10 "current emp situations: others"
+{txt}
+{com}. label var Q11 "number of jobs"
+{txt}
+{com}. label var Q12new "work for someone or self-employed(1/0)"
+{txt}
+{com}. label var ES1_1 ""
+{txt}
+{com}. label var ES1_2 ""
+{txt}
+{com}. label var ES1_3 ""
+{txt}
+{com}. label var ES1_4 ""
+{txt}
+{com}. label var ES2 ""
+{txt}
+{com}. label var ES3new ""
+{txt}
+{com}. label var ES4 ""
+{txt}
+{com}. label var ES5 ""
+{txt}
+{com}. label var Q13new "chance of losing job from y to y+1(%)"
+{txt}
+{com}. label var Q14new "chance of voluntarily leaving the job from y to y+1(%)"
+{txt}
+{com}. label var Q15 "currently looking for a job (1/0)"
+{txt}
+{com}. label var Q16 "duration of unemployment (months)"
+{txt}
+{com}. label var Q17new "chance of finding and accepting a job from y to y+1(%)"
+{txt}
+{com}. label var Q18new "chance of finding and accepting a job from m to m+3"
+{txt}
+{com}. label var Q19 "duration of out of work(%)"
+{txt}
+{com}. label var Q20new "chance of starting looking for a job from y to y+1(%)"
+{txt}
+{com}. label var Q21new "chance of starting looking for a job from m to m+3(%)"
+{txt}
+{com}. label var Q22new "chance of finding a new job if losing the current one within 3 months"
+{txt}
+{com}. label var Q23v2 "earning increase/decrease from the same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q23v2part2 "change of earning from the same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_cent25 "25 percentile of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_cent50 "50 percentile of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_cent75 "75 percentile of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_var "var of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_mean "mean of earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_iqr "25/75 inter-quantile range of earning growth of same job/time/place from y to y+1(%)"
+{txt}note: label truncated to 80 characters
+
+{com}. label var Q24_probdeflation "???"
+{txt}
+{com}. label var Q24_bin1 ">12% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin2 "8%-12% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin3 "4%-8% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin4 "2%-4% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin5 "0-2% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin6 "-2%-0 earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin7 "-4%- -2% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin8 "-8% - -4% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin9 "-12%- -8% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q24_bin10 "<-12% earning growth of same job/time/place from y to y+1(%)"
+{txt}
+{com}. label var Q25v2 "increase/decrease of total household income from y to y+1(1/0)"
+{txt}
+{com}. label var Q25v2part2 "increase of total household income from y to y+1(%)"
+{txt}
+{com}. label var Q26v2 "increase/decrease of total household spending from y to y+1(1/0)"
+{txt}
+{com}. label var Q26v2part2 "increase of total household spending from y to y+1(%)"
+{txt}
+{com}. label var Q27v2 "increase/decrease of total household tax payment given the same income (1/0)"
+{txt}
+{com}. label var Q27v2part2 "increase of total household tax payment given the same income (%)"
+{txt}
+{com}. label var Q28 "easier/harder to get credit/loan from y-1 to y(1-5)"
+{txt}
+{com}. label var Q29 "easier/harder to get credit/loan from y to y+1(1-5)"
+{txt}
+{com}. label var Q30new "chance of non-payment of debt from m to m+3(%)"
+{txt}
+{com}. label var Q31v2 "increase/decrease of nationwide house price(1/0)"
+{txt}
+{com}. label var Q31v2part2 "increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_cent25 "25 percentile of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_cent50 "50 percentile of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_cent75 "75 percentile of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_var "var of increase of nationwide house price"
+{txt}
+{com}. label var C1_mean "mean of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_iqr "25/75 inter-quantile range  of increase of nationwide house price(%)"
+{txt}
+{com}. label var C1_probdeflation "??"
+{txt}
+{com}. label var C1_bin1 ">12% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin2 "8%-12% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin3 "4%-8% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin4 "2%-4% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin5 "0-2% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin6 "-2%-0% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin7 "-4%- -2% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin8 "-8%- -4% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin9 "-12%- -8% increase in nationwide house price(%)"
+{txt}
+{com}. label var C1_bin10 "<-12% increase in nationwide house price(%)"
+{txt}
+{com}. label var C2 "increase/decrease in nationwide house price from y+1 to y+2(1/0)"
+{txt}
+{com}. label var C2part2 "increase in nationwide house price from y+1 to y+2(%)"
+{txt}
+{com}. label var C3 "increase/decrease of U.S. gov debt from y to y+1(1/0)"
+{txt}
+{com}. label var C3part2"increase of U.S. gov debt from y to y+1(%)"
+{txt}
+{com}. label var C4_1 "increase of a gallon of gas from y to y+1(%)"
+{txt}
+{com}. label var C4_2 "increase of food price from y to y+1(%)"
+{txt}
+{com}. label var C4_3 "increase of a medical care from y to y+1(%)"
+{txt}
+{com}. label var C4_4 "increase of college education from y to y+1(%)"
+{txt}
+{com}. label var C4_5 "increase of price of renting a typical house/apt from y to y+1(%)"
+{txt}
+{com}. label var C4_6  "increase of gold price from y to y+1(%)"
+{txt}
+{com}. label var QNUM1 "num q 1: (correct if ==150)"
+{txt}
+{com}. label var QNUM2 "num q 2: (correct if ==242)"
+{txt}
+{com}. label var QNUM3 "num q 3: (correct if ==10)"
+{txt}
+{com}. label var QNUM5 "num q 5: (correct if ==100)"
+{txt}
+{com}. label var QNUM6 "num q 6: (correct if ==5)"
+{txt}
+{com}. label var QNUM8 "num q 8: (correct if ==3)"
+{txt}
+{com}. label var QNUM9 "num q 9: (correct if ==2)"
+{txt}
+{com}. label var Q32 "age(in years)"
+{txt}
+{com}. label var Q33 "gender"
+{txt}
+{com}. label var Q34 "hispanic/latino/spanish(1/0)"
+{txt}
+{com}. label var Q35_1 "race: white"
+{txt}
+{com}. label var Q35_2 "race: black/african american"
+{txt}
+{com}. label var Q35_3 "race: american indian/alaska native"
+{txt}
+{com}. label var Q35_4 "race: asian"
+{txt}
+{com}. label var Q35_5 "race: native hawaiian or other pacific islander"
+{txt}
+{com}. label var Q35_6 "race: other"
+{txt}
+{com}. label var Q36 "education (1-8 low to high, 9 other)"
+{txt}
+{com}. label var Q37 "months of current work"
+{txt}
+{com}. label var Q38 "living with partner/not (1/0)"
+{txt}
+{com}. label var HH2_1 "emp of partner: full-time for someone"
+{txt}
+{com}. label var HH2_2 "emp of partner: part-time for someone"
+{txt}
+{com}. label var HH2_3 "emp of partner: self-employed"
+{txt}
+{com}. label var HH2_4 "emp of partner: not working but wants to work"
+{txt}
+{com}. label var HH2_5 "emp of partner: temporary laid-off"
+{txt}
+{com}. label var HH2_6 "emp of partner: on sick or other leave"
+{txt}
+{com}. label var HH2_7 "emp of partner: permanently disabled/unable to work"
+{txt}
+{com}. label var HH2_8 "emp of partner: retiree or early retiree"
+{txt}
+{com}. label var HH2_9 "emp of partner: student or in training"
+{txt}
+{com}. label var HH2_10 "emp of partner: homemaker"
+{txt}
+{com}. label var HH2_10 "emp of partner: other"
+{txt}
+{com}. label var _STATE "state (2-digit code)"
+{txt}
+{com}. label var Q41 "years of living in the current residence"
+{txt}
+{com}. label var Q42 "years of living in the current states"
+{txt}
+{com}. label var Q43 "own/rent/other a house(1/2/3)"
+{txt}
+{com}. label var Q43a "my/spounser/both's name under which current residence is owned/rent"
+{txt}
+{com}. label var Q44 "own other homes(1/0)"
+{txt}
+{com}. label var Q45b "health condition(1-5 from good to poor)"
+{txt}
+{com}. label var Q45new_1 ""
+{txt}
+{com}. label var Q45new_2 ""
+{txt}
+{com}. label var Q45new_3 ""
+{txt}
+{com}. label var Q45new_4 ""
+{txt}
+{com}. label var Q45new_5 ""
+{txt}
+{com}. label var Q45new_6 ""
+{txt}
+{com}. label var Q45new_7 ""
+{txt}
+{com}. label var Q45new_8 ""
+{txt}
+{com}. label var Q45new_9 ""
+{txt}
+{com}. label var Q46 "financial decision making of household(1-5, together to individual)"
+{txt}
+{com}. label var Q47 "total pre-tax household income from y-1 to y(1-11, low to high)"
+{txt}
+{com}. label var D1 "same household as last year(1/0)"
+{txt}
+{com}. label var D3 "date of moving to the current residence(month/year)"
+{txt}
+{com}. label var D6 "total pre-tax household income from y-1 to y(1-11,low to high)"
+{txt}
+{com}. label var D2new_1 "memeber in the current resident:spounse/partner"
+{txt}
+{com}. label var D2new_2 "memeber in the current resident: child >25"
+{txt}
+{com}. label var D2new_3 "memeber in the current resident: child 18-24"
+{txt}
+{com}. label var D2new_4 "memeber in the current resident: child 6-17"
+{txt}
+{com}. label var D2new_5 "memeber in the current resident: child <=5 "
+{txt}
+{com}. label var D2new_6 "memeber in the current resident: own/sponse's parents"
+{txt}
+{com}. label var D2new_7 "memeber in the current resident:other relatives"
+{txt}
+{com}. label var D2new_8 "memeber in the current resident:non-relatives"
+{txt}
+{com}. label var DSAME "same job as last year in survey"
+{txt}
+{com}. label var DQ38 "living as a partner or married with some one(1/0)"
+{txt}
+{com}. label var Q48 "interesting/uninteresting of the questions in the survey(1/0)"
+{txt}
+{com}. 
+. 
+. ** Only keep useful variables so that the data file is smaller. 
+. 
+. global keeplist date year month userid tenure weight ///        
+>        Q24_cent25 Q24_cent50 Q24_cent75 Q24_var Q24_mean Q24_iqr ///
+>            Q24_bin1 Q24_bin2 Q24_bin3 Q24_bin4 Q24_bin5 Q24_bin6 Q24_bin7 Q24_bin8 Q24_bin9 Q24_bin10 ///
+>            Q32 Q33 Q34 Q35_1 Q35_2 Q35_3 Q35_4 Q35_5 Q35_6 Q36 Q37 Q38 ///
+>            HH2_1 HH2_2 HH2_3 HH2_4 HH2_5 HH2_6 HH2_7 HH2_8 HH2_9 HH2_10 HH2_11 ///
+>            _STATE Q41 Q42 Q43 Q43a Q44 Q45b ///
+>            Q45new_1 Q45new_2 Q45new_3 Q45new_4 Q45new_5 Q45new_6 Q45new_7 Q45new_8 Q45new_9 ///
+>            Q46 Q47 D1 D3 D6 D2new_1 D2new_2 D2new_3 D2new_4 D2new_5 D2new_6 D2new_7 D2new_8 D2new_9 DSAME DQ38 ///
+>            DHH2_1 DHH2_2 DHH2_3 DHH2_4 DHH2_5 DHH2_6 DHH2_7 DHH2_8 DHH2_9 DHH2_10 DHH2_11 DHH2_11_other D5b Q48 QRA1 QRA2 ///
+>            _AGE_CAT _NUM_CAT _REGION_CAT _COMMUTING_ZONE _EDU_CAT _HH_INC_CAT ///
+>            Q1 Q2 Q3 Q4new Q5new Q6new Q9_mean Q9_var ///
+>            Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 Q12new Q13new Q14new ///
+>            Q25v2 Q25v2part2 Q31v2 Q31v2part2 C1_mean C1_var ///
+>            Q26v2 Q26v2part2 QNUM1 QNUM2 QNUM3 QNUM5 QNUM6 QNUM8 QNUM9  ///
+>            Q17new Q18new Q19 Q20new Q21new Q22new 
+{txt}
+{com}.  
+. keep ${c -(}keeplist{c )-}
+{txt}
+{com}. 
+. *************************
+. *** Merge with state level 
+. *************************
+. 
+. rename _STATE state 
+{res}{txt}
+{com}. 
+. 
+. merge m:1 state using "${c -(}otherfolder{c )-}statecode.dta"
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}             201
+{txt}{col 9}from master{col 30}{res}             200{txt}  (_merge==1)
+{col 9}from using{col 30}{res}               1{txt}  (_merge==2)
+
+{col 5}matched{col 30}{res}         109,172{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. rename _merge state_code_merge 
+{res}{txt}
+{com}. 
+. merge m:1 statecode year month using "${c -(}otherfolder{c )-}stateM.dta",keep(master match) 
+{res}{txt}{p 0 7 2}
+(note: variable
+month was 
+byte, now float to accommodate using data's values)
+{p_end}
+(label _merge already defined)
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}          13,187
+{txt}{col 9}from master{col 30}{res}          13,187{txt}  (_merge==1)
+{col 9}from using{col 30}{res}               0{txt}  (_merge==2)
+
+{col 5}matched{col 30}{res}          96,186{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. rename _merge stateM_merge 
+{res}{txt}
+{com}. 
+. *************************
+. *** Exclude outliers ****
+. *************************
+. 
+. local Moments Q24_mean Q24_var Q9_mean Q9_var 
+{txt}
+{com}. 
+. foreach var in `Moments'{c -(}
+{txt}  2{com}.       egen `var'pl=pctile(`var'),p(5)
+{txt}  3{com}.           egen `var'pu=pctile(`var'),p(95)
+{txt}  4{com}.           replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
+{txt}  5{com}. {c )-}
+{txt}(6968 real changes made, 6968 to missing)
+(5086 real changes made, 5086 to missing)
+(10497 real changes made, 10497 to missing)
+(8245 real changes made, 8245 to missing)
+
+{com}. 
+. 
+. foreach var in Q24{c -(}
+{txt}  2{com}. foreach mom in mean var{c -(}
+{txt}  3{com}.     * nominal 
+.      egen `var'_`mom'p75 =pctile(`var'_`mom'),p(75) by(year month)
+{txt}  4{com}.          egen `var'_`mom'p25 =pctile(`var'_`mom'),p(25) by(year month)
+{txt}  5{com}.          egen `var'_`mom'p50 =pctile(`var'_`mom'),p(50) by(year month)
+{txt}  6{com}.          local lb: variable label `var'_`mom'
+{txt}  7{com}.          label var `var'_`mom'p75 "`lb': 75 pctile"
+{txt}  8{com}.          label var `var'_`mom'p25 "`lb': 25 pctile"
+{txt}  9{com}.          label var `var'_`mom'p50 "`lb': 50 pctile"
+{txt} 10{com}. {c )-}
+{txt} 11{com}. {c )-}
+{txt}(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+
+{com}. 
+. 
+. *************************
+. *** Nominal to real *****
+. *************************
+. gen Q24_rmean = Q24_mean - Q9_mean 
+{txt}(49644 missing values generated)
+
+{com}. label var Q24_rmean "mean of real earning growth of same job/time/place from y to y+1(%) "
+{txt}
+{com}. 
+. gen Q24_rvar = Q24_var + Q9_var 
+{txt}(46366 missing values generated)
+
+{com}. label var Q24_rvar "variance of real earning growth of same job/time/place from y to y+1(%) "
+{txt}
+{com}. 
+. ****************************************
+. *** Persontage point to log change *****
+. * for example: 10% is 0.1 in log change 
+. ****************************************
+. 
+. foreach pc_var in Q24_mean Q24_rmean Q9_mean Q24_iqr{c -(}
+{txt}  2{com}. replace `pc_var' = `pc_var'/100
+{txt}  3{com}. {c )-}
+{txt}(63765 real changes made)
+(54851 real changes made)
+(95693 real changes made)
+(72347 real changes made)
+
+{com}. 
+. foreach pc_var in Q24_var Q24_rvar Q9_var{c -(}
+{txt}  2{com}. replace `pc_var' = `pc_var'/10000
+{txt}  3{com}. {c )-}
+{txt}(67261 real changes made)
+(63007 real changes made)
+(98709 real changes made)
+
+{com}. 
+. 
+. *************************
+. *** Other Measures *****
+. *************************
+. 
+. 
+. egen Q24_sd = sd(Q24_mean), by(date)
+{txt}(1 missing value generated)
+
+{com}. gen Q24_disg = Q24_sd^2
+{txt}(1 missing value generated)
+
+{com}. label var Q24_disg "Disagreements of 1-yr-ahead expted income growth"
+{txt}
+{com}. 
+. 
+. egen Q24_rsd = sd(Q24_rmean), by(date)
+{txt}(1 missing value generated)
+
+{com}. gen Q24_rdisg = Q24_rsd^2
+{txt}(1 missing value generated)
+
+{com}. label var Q24_rdisg "Disagreements of 1-yr-ahead real expted income growth"
+{txt}
+{com}. 
+. 
+. ** calculate financial/numeric literacy score
+. 
+. gen QNUM1_ = 0 if QNUM1!=.
+{txt}(93939 missing values generated)
+
+{com}. gen QNUM2_ = 0 if QNUM2!=.
+{txt}(93961 missing values generated)
+
+{com}. gen QNUM3_ = 0 if QNUM3!=.
+{txt}(94010 missing values generated)
+
+{com}. gen QNUM5_ = 0 if QNUM5!=.
+{txt}(93991 missing values generated)
+
+{com}. gen QNUM6_ = 0 if QNUM6!=.
+{txt}(94064 missing values generated)
+
+{com}. gen QNUM8_ = 0 if QNUM8!=.
+{txt}(99250 missing values generated)
+
+{com}. gen QNUM9_ = 0 if QNUM9!=.
+{txt}(99284 missing values generated)
+
+{com}. 
+. replace QNUM1_ = 1 if QNUM1==150
+{txt}(14050 real changes made)
+
+{com}. replace QNUM2_ = 1 if QNUM2<=244 & QNUM2>=240
+{txt}(11058 real changes made)
+
+{com}. replace QNUM3_ = 1 if QNUM3==10
+{txt}(12426 real changes made)
+
+{com}. replace QNUM5_ = 1 if QNUM5==100
+{txt}(13564 real changes made)
+
+{com}. replace QNUM6_ = 1 if QNUM6==5
+{txt}(11794 real changes made)
+
+{com}. replace QNUM8_ = 1 if QNUM8==3
+{txt}(8449 real changes made)
+
+{com}. replace QNUM9_ = 1 if QNUM9==2
+{txt}(9218 real changes made)
+
+{com}. 
+. gen nlit = QNUM1_+QNUM2_+QNUM3_+QNUM5_+QNUM6_+QNUM8_+QNUM9_
+{txt}(99358 missing values generated)
+
+{com}. label var nlit "numeracy literacy score: (0-7)"
+{txt}
+{com}. 
+. ***************************************************
+. **** Fill the age/education for the same household
+. *************************************************
+. 
+. 
+. sort userid date 
+{txt}
+{com}. 
+. replace nlit = nlit[_n-1] if nlit==. & userid == userid[_n-1] 
+{txt}(62387 real changes made)
+
+{com}. replace Q32 = Q32[_n-1] if Q32==. & userid == userid[_n-1] 
+{txt}(93825 real changes made)
+
+{com}. replace Q36 = Q36[_n-1] if Q36==. & userid == userid[_n-1]
+{txt}(93864 real changes made)
+
+{com}. replace Q33 = Q33[_n-1] if Q33==. & userid == userid[_n-1] & D1==1
+{txt}(78652 real changes made)
+
+{com}. replace Q47 = Q47[_n-1] if Q47==. & userid ==userid[_n-1] & D1 ==1 
+{txt}(77810 real changes made)
+
+{com}. 
+. ***************************************************
+. **** Winsorization
+. *************************************************
+. 
+. drop if Q32 > 70 | Q32 < 20 /*age greater than 100 */ 
+{txt}(10776 observations deleted)
+
+{com}. 
+. ***************************************************
+. **** create cohort 
+. *************************************************
+. 
+. gen byear = year - Q32
+{txt}
+{com}. label var byear "year of birth"
+{txt}
+{com}. 
+. egen byear_gr = cut(byear), group(5)
+{txt}
+{com}. label var byear_gr "cohort by year of birth"
+{txt}
+{com}. 
+. label define byear_grlb 0 "1952" 1 "1961" 2 "1970" 3 "1980" 4 "1998"
+{txt}
+{com}. label value byear_gr byear_grlb
+{txt}
+{com}. 
+. 
+. ***********************
+. ** generate variables 
+. ************************
+. 
+. ** replace educ with highest degree for each individual
+. egen educ = max(Q36), by(userid) 
+{txt}(4 missing values generated)
+
+{com}. *although actually no change ine ducation within the panel 
+. 
+. ** education group 
+. gen educ_gr = .
+{txt}(98597 missing values generated)
+
+{com}. replace educ_gr = 1 if educ==1
+{txt}(855 real changes made)
+
+{com}. replace educ_gr = 2 if educ==2 | educ ==3 | educ == 4
+{txt}(42895 real changes made)
+
+{com}. replace educ_gr = 3 if educ <=9 & educ>4
+{txt}(54843 real changes made)
+
+{com}. drop if educ_gr==.
+{txt}(4 observations deleted)
+
+{com}. 
+. label var educ_gr "education group"
+{txt}
+{com}. label define educ_grlb 1 "HS dropout" 2 "HS graduate" 3 "College/above"
+{txt}
+{com}. label value educ_gr educ_grlb
+{txt}
+{com}. 
+. save "${c -(}folder{c )-}/SCE/IncExpSCEProbIndM",replace 
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData//SCE/IncExpSCEProbIndM.dta saved
+
+{com}. 
+. ***************************************
+. **   Histograms of Moments  ***********
+. ** Maybe replaced by kernel desntiy **
+. ***************************************
+. 
+. * for forecasting
+. 
+. gen SCE_mean = .
+{txt}(98593 missing values generated)
+
+{com}. gen SCE_var = .
+{txt}(98593 missing values generated)
+
+{com}. 
+. /*
+> * Kernal density plot only 
+> 
+> label var Q24_mean "1-yr-ahead forecast of income growth "
+> 
+>  foreach var in SCE{c -(}
+>  foreach mom in mean{c -(}
+>     replace `var'_`mom' = Q24_`mom'
+>         local lb: variable label Q24_`mom'
+>     twoway (kdensity `var'_`mom',lcolor(red) lwidth(thick) ), ///
+>                by(year,title("Distribution of `lb'",size(med)) note("")) xtitle("Mean forecast") ///
+>                    ytitle("Fraction of population")
+>         graph export "${c -(}sum_graph_folder{c )-}/hist/`var'`mom'_hist", as(png) replace 
+> {c )-}
+> {c )-}
+> 
+> * Kernal density plot only 
+> 
+> 
+> label var Q24_var "1-yr-ahead uncertainty of income growth"
+> 
+> foreach mom in var{c -(}
+> foreach var in SCE{c -(}
+>     replace `var'_`mom' = Q24_`mom'
+>         local lb: variable label Q24_`mom'
+>     twoway (kdensity `var'_`mom',lcolor(blue) lwidth(thick)), ///
+>                by(year,title("Distribution of `lb'",size(med)) note("")) xtitle("Uncertainty") ///
+>                    ytitle("Fraction of population")
+>         graph export "${c -(}sum_graph_folder{c )-}/hist/`var'`mom'_hist", as(png) replace 
+> {c )-}
+> {c )-}
+> 
+> */
+. 
+. *************************
+. *** Population SCE ******
+. *************************
+. 
+. local Moments Q24_mean Q24_var Q24_iqr Q24_cent50 Q24_disg 
+{txt}
+{com}. local rMoments Q24_rmean Q24_rvar Q24_rdisg 
+{txt}
+{com}. local MomentsMom Q24_meanp25 Q24_meanp50 Q24_meanp75 Q24_varp25 Q24_varp50 Q24_varp75
+{txt}
+{com}. 
+. 
+. collapse (mean) `Moments' `rMoments' `MomentsMom', by(date year month)
+{txt}
+{com}. 
+. label var Q24_mean "Average 1-yr-ahead expected earning growth(%)"
+{txt}
+{com}. label var Q24_var "Average Uncertainty of 1-yr-ahead expected earning growth"
+{txt}
+{com}. label var Q24_iqr "Average 25/75 IQR of 1-yr-ahead expected earning growth(%)"
+{txt}
+{com}. label var Q24_cent50 "Average Median of 1-yr-ahead expected earning growth(%)"
+{txt}
+{com}. label var Q24_disg "Disagreements of 1-yr-ahead expected earning growth"
+{txt}
+{com}. 
+. 
+. label var Q24_rmean "Average 1-yr-ahead expected real earning growth(%)"
+{txt}
+{com}. label var Q24_rvar "Average Uncertainty of 1-yr-ahead real expected earning growth"
+{txt}
+{com}. label var Q24_rdisg "Disagreements of 1-yr-ahead expected real earning growth"
+{txt}
+{com}. 
+. save "${c -(}folder{c )-}/SCE/IncExpSCEProbPopM",replace 
+{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData//SCE/IncExpSCEProbPopM.dta saved
+
+{com}. 
+. 
+. 
+. 
+{txt}end of do-file
+
+{com}. clear
+
+. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD01766.000000"
+{txt}
+{com}. ****************************************************
+. ***  This do files uses SCE individual labor market *
+. *** survey to generate the aggregate perceived probability * 
+. *** of different flow rates and compare it with CPS **
+. **************************************** ************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/SearchMatchExpectation/"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/data/SCE"
+{txt}
+{com}. global graph_folder "${c -(}mainfolder{c )-}/graph/"
+{txt}
+{com}. global SCE_core_folder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/"
+{txt}
+{com}. *global sum_table_folder "${c -(}mainfolder{c )-}/tables"
+. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. /*
+> *****************************
+> *** import raw labor market SCE
+> *********************************
+> 
+> import excel "${c -(}folder{c )-}/sce-labor-microdata-public.xlsx", sheet("Data") cellrange(A2:DN18419) firstrow
+> 
+> ********************
+> *** Date format ****
+> ********************
+> gen date_str = string(date)
+> gen year = substr(date_str,1,4)
+> gen month = substr(date_str,5,2)
+> gen date2=year+"m"+month
+> gen date3= monthly(date2,"YM")
+> format date3 %tm
+> drop date_str date2 date
+> rename date3 date
+> destring year, replace
+> destring month, replace 
+> order date year month
+> xtset userid date
+> 
+> 
+> label var l1m "starting month of current/main job"
+> label var l1y "starting year of current/main job"
+> label var l3 "(average) annual earning from the current/main job before tax/deductions (in $)"
+> label var l4 "(average) annual earning from the current/main job before tax/deductions by range"
+> label var l4b "expected annual earning from the current/main job at y+10 (nominal)"
+> label var lmtype "employer type of current/main"
+> label var lmtype_5_other "employer type (others)"
+> label var lmind "business/industry of current employer"
+> label var lm5_1 "employer benefits: pension plan"
+> label var lm5_2 "employer benefits: pension plan"
+> label var lm5_3  "employer benefits: health insurance"
+> label var lm5_4 "employer benefits: dental/vision insurance"
+> label var lm5_5  "employer benefits: health care or dependent care"
+> label var lm5_6  "employer benefits: housing/husing subsidy"
+> label var lm5_7  "employer benefits: life/disability insurance"
+> label var lm5_8 "employer benefits: commuter benefits"
+> label var lm5_9 "employer benefits: childcare assistance"
+> label var lm5_10 "employer benefits: other"
+> label var lm5_10_other "employer benefits: other specified"
+> label var lm5_11 "employer benefits: none"
+> label var lmsat1 "satisfied with compensation (1-5 more satisfied)"
+> label var lmsat2 "satisfied with other aspect of the job (1-5 more satisfied)"
+> label var lmsat3 "fit with the job (1-7 more fit)"
+> label var lmsat4 "opportunity for promotion/progression from y to y+3"
+> label var lmsat5 "overall satisfication (1-5 more satisfied)"
+> label var l7m "last month of the most recent job"
+> label var l7y "last year of the most recent job"
+> label var l7dk_1 "never had a paid job"
+> label var l7bm "starting month of the most recent job"
+> label var l7by "starting year of the most recent job"
+> label var l9 "(average) annual earning from the most recent job before tax/deductions (in $)"
+> label var l10 "(average) annual earning from the most recent job before tax/deductions by range"
+> label var l11 "work for someone(1) or self-employment (2)"
+> label var l12 "employer type of most recent job"
+> label var l12_5_other "employer type of most recent job (other)"
+> label var l12b "business/industry of the most recent job"
+> label var l13_1 "employer benefits most recent job: pension plans"
+> label var l13_2 ""
+> label var l13_3 ""
+> label var l13_4 ""
+> label var l13_5 ""
+> label var l13_6 ""
+> label var l13_7 ""
+> label var l13_8 ""
+> label var l13_9 ""
+> label var l13_10 ""
+> label var l13_11 ""
+> label var l13_10_other ""
+> label var js5 "have looked for a job m-1 to m (1 yes 2 no)"
+> label var js6 "looking for a job leaving current (1), not leaving (2), no (3)" 
+> label var rw2a "min wage/salary for accepting a hypothetical job offer right now"
+> label var rw2b "unit for wage (hour 1 week 2 biweek 3 month 4 year 5) till 2017, yearly after 2017"
+> label var js7 "nb of weeks looking for a job"
+> label var js8_1 "things done to look for a job"
+> label var js8_2 ""
+> label var js8_3 ""
+> label var js8_4 ""
+> label var js8_5 ""
+> label var js8_6 ""
+> label var js8_7 ""
+> label var js8_8 ""
+> label var js8_9 ""
+> label var js8_10 ""
+> label var js8_11 ""
+> label var js8_12 ""
+> label var js8_13 ""
+> label var js8_14 ""
+> label var js8_14_other
+> label var js9 "nb of hours spent on job search from d-7 to d"
+> label var nl1 "nb of job offers received from m-4 to m"
+> label var nl2a_1 ""
+> label var nl2a_2 ""
+> label var nl2a_3 ""
+> label var nl2b_1 ""
+> label var nl2b_2 ""
+> label var nl2b_3 ""
+> label var nl3_1 "currently working at the accepted job"
+> label var nl3_2 "once worked at the accepted job"
+> label var nl3_3 "rejected the job offer"
+> label var nl4_1 ""
+> label var nl4_2 ""
+> label var nl4_3 "" 
+> label var oo1_1 "expected prob of employed from m to m+4" 
+> label var oo1_2 "expected prob of employed by same employer from m to m+4" 
+> label var oo1_3 "expected prob of employed by a different employer from m to m+4" 
+> label var oo1_4 "expected prob of self-employed from m to m+4" 
+> label var oo1_5 "expected prob of unemployed/looking for a job from m to m+4" 
+> label var oo1_6 "expected prob of unemployed/not looking for a job from m to m+4" 
+> label var oo2u "expected prob of receing >1 job offer from m to m+4" 
+> label var oo2e "expected prob of receing >1 job offer from another employer m to m+4" 
+> label var oo2new "expected nb of job offers received from m to m+4" 
+> label var oo2a "expected AVERAGE wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2a2 "expected MAX wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2b_1 ""
+> label var oo2b_2 ""
+> label var oo2b_3 ""
+> label var oo2b_4 ""
+> label var oo2b_5 ""
+> label var oo2b_6 ""
+> label var oo2c1 "prob of accepting an offer at wage < 0.8 average expected wage offer"
+> label var oo2c2 "prob of accepting an offer at wage between 0.8-0.9 average expected wage offer"
+> label var oo2c3 "prob of accepting an offer at wage between 0.9-1.0 average expected wage offer"
+> label var oo2c4 "prob of accepting an offer at wage between 1.0-1.1 average expected wage offer"
+> label var oo2c5 "prob of accepting an offer at wage between 1.1-1.2 average expected wage offer"
+> label var oo2c6 "prob of accepting an offer at wage>1.2*average expected wage offer"
+> label var oo2e2 "expected earning in m+4 (in $)"
+> label var oo2e2dk_1 "zero earning due to non-working from m to m+4"
+> label var oo2f ""
+> label var q113 ""
+> label var q115 ""
+> label var q117 "planed retirement age"
+> label var q118 "planed retirement age has changed from y-1 to y(1 sooner 2 no change 3 later)"
+> label var q119 "nb of years earlier before retirement than planed"
+> label var q120  "nb of years later before retirement than planed"
+> label var q121  ""
+> label var q122 ""
+> 
+> save "${c -(}folder{c )-}/LaborExpSCEIndM",replace 
+> */
+. 
+. ***************************************************
+. **** subselect variables from core module of SCE ***
+. ****************************************************
+. 
+. use "${c -(}SCE_core_folder{c )-}/IncExpSCEProbIndM.dta", clear
+{txt}
+{com}. ddd
+{err}unrecognized command:  ddd
+{txt}{search r(199):r(199);}
+
+end of do-file
+
+{search r(199):r(199);}
+
+{com}. do "/Users/Myworld/Dropbox/SearchMatchExpectation/code/SCE.do"
+{txt}
+{com}. ****************************************************
+. ***  This do files uses SCE individual labor market *
+. *** survey to generate the aggregate perceived probability * 
+. *** of different flow rates and compare it with CPS **
+. **************************************** ************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/SearchMatchExpectation/"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/data/SCE"
+{txt}
+{com}. global graph_folder "${c -(}mainfolder{c )-}/graph/"
+{txt}
+{com}. global SCE_core_folder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/"
+{txt}
+{com}. *global sum_table_folder "${c -(}mainfolder{c )-}/tables"
+. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. /*
+> *****************************
+> *** import raw labor market SCE
+> *********************************
+> 
+> import excel "${c -(}folder{c )-}/sce-labor-microdata-public.xlsx", sheet("Data") cellrange(A2:DN18419) firstrow
+> 
+> ********************
+> *** Date format ****
+> ********************
+> gen date_str = string(date)
+> gen year = substr(date_str,1,4)
+> gen month = substr(date_str,5,2)
+> gen date2=year+"m"+month
+> gen date3= monthly(date2,"YM")
+> format date3 %tm
+> drop date_str date2 date
+> rename date3 date
+> destring year, replace
+> destring month, replace 
+> order date year month
+> xtset userid date
+> 
+> 
+> label var l1m "starting month of current/main job"
+> label var l1y "starting year of current/main job"
+> label var l3 "(average) annual earning from the current/main job before tax/deductions (in $)"
+> label var l4 "(average) annual earning from the current/main job before tax/deductions by range"
+> label var l4b "expected annual earning from the current/main job at y+10 (nominal)"
+> label var lmtype "employer type of current/main"
+> label var lmtype_5_other "employer type (others)"
+> label var lmind "business/industry of current employer"
+> label var lm5_1 "employer benefits: pension plan"
+> label var lm5_2 "employer benefits: pension plan"
+> label var lm5_3  "employer benefits: health insurance"
+> label var lm5_4 "employer benefits: dental/vision insurance"
+> label var lm5_5  "employer benefits: health care or dependent care"
+> label var lm5_6  "employer benefits: housing/husing subsidy"
+> label var lm5_7  "employer benefits: life/disability insurance"
+> label var lm5_8 "employer benefits: commuter benefits"
+> label var lm5_9 "employer benefits: childcare assistance"
+> label var lm5_10 "employer benefits: other"
+> label var lm5_10_other "employer benefits: other specified"
+> label var lm5_11 "employer benefits: none"
+> label var lmsat1 "satisfied with compensation (1-5 more satisfied)"
+> label var lmsat2 "satisfied with other aspect of the job (1-5 more satisfied)"
+> label var lmsat3 "fit with the job (1-7 more fit)"
+> label var lmsat4 "opportunity for promotion/progression from y to y+3"
+> label var lmsat5 "overall satisfication (1-5 more satisfied)"
+> label var l7m "last month of the most recent job"
+> label var l7y "last year of the most recent job"
+> label var l7dk_1 "never had a paid job"
+> label var l7bm "starting month of the most recent job"
+> label var l7by "starting year of the most recent job"
+> label var l9 "(average) annual earning from the most recent job before tax/deductions (in $)"
+> label var l10 "(average) annual earning from the most recent job before tax/deductions by range"
+> label var l11 "work for someone(1) or self-employment (2)"
+> label var l12 "employer type of most recent job"
+> label var l12_5_other "employer type of most recent job (other)"
+> label var l12b "business/industry of the most recent job"
+> label var l13_1 "employer benefits most recent job: pension plans"
+> label var l13_2 ""
+> label var l13_3 ""
+> label var l13_4 ""
+> label var l13_5 ""
+> label var l13_6 ""
+> label var l13_7 ""
+> label var l13_8 ""
+> label var l13_9 ""
+> label var l13_10 ""
+> label var l13_11 ""
+> label var l13_10_other ""
+> label var js5 "have looked for a job m-1 to m (1 yes 2 no)"
+> label var js6 "looking for a job leaving current (1), not leaving (2), no (3)" 
+> label var rw2a "min wage/salary for accepting a hypothetical job offer right now"
+> label var rw2b "unit for wage (hour 1 week 2 biweek 3 month 4 year 5) till 2017, yearly after 2017"
+> label var js7 "nb of weeks looking for a job"
+> label var js8_1 "things done to look for a job"
+> label var js8_2 ""
+> label var js8_3 ""
+> label var js8_4 ""
+> label var js8_5 ""
+> label var js8_6 ""
+> label var js8_7 ""
+> label var js8_8 ""
+> label var js8_9 ""
+> label var js8_10 ""
+> label var js8_11 ""
+> label var js8_12 ""
+> label var js8_13 ""
+> label var js8_14 ""
+> label var js8_14_other
+> label var js9 "nb of hours spent on job search from d-7 to d"
+> label var nl1 "nb of job offers received from m-4 to m"
+> label var nl2a_1 ""
+> label var nl2a_2 ""
+> label var nl2a_3 ""
+> label var nl2b_1 ""
+> label var nl2b_2 ""
+> label var nl2b_3 ""
+> label var nl3_1 "currently working at the accepted job"
+> label var nl3_2 "once worked at the accepted job"
+> label var nl3_3 "rejected the job offer"
+> label var nl4_1 ""
+> label var nl4_2 ""
+> label var nl4_3 "" 
+> label var oo1_1 "expected prob of employed from m to m+4" 
+> label var oo1_2 "expected prob of employed by same employer from m to m+4" 
+> label var oo1_3 "expected prob of employed by a different employer from m to m+4" 
+> label var oo1_4 "expected prob of self-employed from m to m+4" 
+> label var oo1_5 "expected prob of unemployed/looking for a job from m to m+4" 
+> label var oo1_6 "expected prob of unemployed/not looking for a job from m to m+4" 
+> label var oo2u "expected prob of receing >1 job offer from m to m+4" 
+> label var oo2e "expected prob of receing >1 job offer from another employer m to m+4" 
+> label var oo2new "expected nb of job offers received from m to m+4" 
+> label var oo2a "expected AVERAGE wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2a2 "expected MAX wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2b_1 ""
+> label var oo2b_2 ""
+> label var oo2b_3 ""
+> label var oo2b_4 ""
+> label var oo2b_5 ""
+> label var oo2b_6 ""
+> label var oo2c1 "prob of accepting an offer at wage < 0.8 average expected wage offer"
+> label var oo2c2 "prob of accepting an offer at wage between 0.8-0.9 average expected wage offer"
+> label var oo2c3 "prob of accepting an offer at wage between 0.9-1.0 average expected wage offer"
+> label var oo2c4 "prob of accepting an offer at wage between 1.0-1.1 average expected wage offer"
+> label var oo2c5 "prob of accepting an offer at wage between 1.1-1.2 average expected wage offer"
+> label var oo2c6 "prob of accepting an offer at wage>1.2*average expected wage offer"
+> label var oo2e2 "expected earning in m+4 (in $)"
+> label var oo2e2dk_1 "zero earning due to non-working from m to m+4"
+> label var oo2f ""
+> label var q113 ""
+> label var q115 ""
+> label var q117 "planed retirement age"
+> label var q118 "planed retirement age has changed from y-1 to y(1 sooner 2 no change 3 later)"
+> label var q119 "nb of years earlier before retirement than planed"
+> label var q120  "nb of years later before retirement than planed"
+> label var q121  ""
+> label var q122 ""
+> 
+> save "${c -(}folder{c )-}/LaborExpSCEIndM",replace 
+> */
+. 
+. ***************************************************
+. **** subselect variables from core module of SCE ***
+. ****************************************************
+. 
+. use "${c -(}SCE_core_folder{c )-}/IncExpSCEProbIndM.dta", clear
+{txt}
+{com}. 
+. global keep_list year month userid weight ///
+>        Q32 Q33 Q37 state D6 D2new_9 DSAME Q12new Q13new Q14new ///
+>            Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 ///
+>            Q17new Q18new Q19 Q20new Q21new Q22new
+{txt}
+{com}. 
+. keep ${c -(}keep_list{c )-}
+{txt}
+{com}. 
+. save "${c -(}folder{c )-}/IncExpSCEIndM_short",replace 
+{txt}(note: file /Users/Myworld/Dropbox/SearchMatchExpectation//data/SCE/IncExpSCEIndM_short.dta not found)
+file /Users/Myworld/Dropbox/SearchMatchExpectation//data/SCE/IncExpSCEIndM_short.dta saved
+
+{com}. ddd
+{err}unrecognized command:  ddd
+{txt}{search r(199):r(199);}
+
+end of do-file
+
+{search r(199):r(199);}
+
+{com}. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD01766.000000"
+{txt}
+{com}. ****************************************************
+. ***  This do files uses SCE individual labor market *
+. *** survey to generate the aggregate perceived probability * 
+. *** of different flow rates and compare it with CPS **
+. **************************************** ************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/SearchMatchExpectation/"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/data/SCE"
+{txt}
+{com}. global graph_folder "${c -(}mainfolder{c )-}/graph/"
+{txt}
+{com}. global SCE_core_folder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/"
+{txt}
+{com}. *global sum_table_folder "${c -(}mainfolder{c )-}/tables"
+. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. /*
+> *****************************
+> *** import raw labor market SCE
+> *********************************
+> 
+> import excel "${c -(}folder{c )-}/sce-labor-microdata-public.xlsx", sheet("Data") cellrange(A2:DN18419) firstrow
+> 
+> ********************
+> *** Date format ****
+> ********************
+> gen date_str = string(date)
+> gen year = substr(date_str,1,4)
+> gen month = substr(date_str,5,2)
+> gen date2=year+"m"+month
+> gen date3= monthly(date2,"YM")
+> format date3 %tm
+> drop date_str date2 date
+> rename date3 date
+> destring year, replace
+> destring month, replace 
+> order date year month
+> xtset userid date
+> 
+> 
+> label var l1m "starting month of current/main job"
+> label var l1y "starting year of current/main job"
+> label var l3 "(average) annual earning from the current/main job before tax/deductions (in $)"
+> label var l4 "(average) annual earning from the current/main job before tax/deductions by range"
+> label var l4b "expected annual earning from the current/main job at y+10 (nominal)"
+> label var lmtype "employer type of current/main"
+> label var lmtype_5_other "employer type (others)"
+> label var lmind "business/industry of current employer"
+> label var lm5_1 "employer benefits: pension plan"
+> label var lm5_2 "employer benefits: pension plan"
+> label var lm5_3  "employer benefits: health insurance"
+> label var lm5_4 "employer benefits: dental/vision insurance"
+> label var lm5_5  "employer benefits: health care or dependent care"
+> label var lm5_6  "employer benefits: housing/husing subsidy"
+> label var lm5_7  "employer benefits: life/disability insurance"
+> label var lm5_8 "employer benefits: commuter benefits"
+> label var lm5_9 "employer benefits: childcare assistance"
+> label var lm5_10 "employer benefits: other"
+> label var lm5_10_other "employer benefits: other specified"
+> label var lm5_11 "employer benefits: none"
+> label var lmsat1 "satisfied with compensation (1-5 more satisfied)"
+> label var lmsat2 "satisfied with other aspect of the job (1-5 more satisfied)"
+> label var lmsat3 "fit with the job (1-7 more fit)"
+> label var lmsat4 "opportunity for promotion/progression from y to y+3"
+> label var lmsat5 "overall satisfication (1-5 more satisfied)"
+> label var l7m "last month of the most recent job"
+> label var l7y "last year of the most recent job"
+> label var l7dk_1 "never had a paid job"
+> label var l7bm "starting month of the most recent job"
+> label var l7by "starting year of the most recent job"
+> label var l9 "(average) annual earning from the most recent job before tax/deductions (in $)"
+> label var l10 "(average) annual earning from the most recent job before tax/deductions by range"
+> label var l11 "work for someone(1) or self-employment (2)"
+> label var l12 "employer type of most recent job"
+> label var l12_5_other "employer type of most recent job (other)"
+> label var l12b "business/industry of the most recent job"
+> label var l13_1 "employer benefits most recent job: pension plans"
+> label var l13_2 ""
+> label var l13_3 ""
+> label var l13_4 ""
+> label var l13_5 ""
+> label var l13_6 ""
+> label var l13_7 ""
+> label var l13_8 ""
+> label var l13_9 ""
+> label var l13_10 ""
+> label var l13_11 ""
+> label var l13_10_other ""
+> label var js5 "have looked for a job m-1 to m (1 yes 2 no)"
+> label var js6 "looking for a job leaving current (1), not leaving (2), no (3)" 
+> label var rw2a "min wage/salary for accepting a hypothetical job offer right now"
+> label var rw2b "unit for wage (hour 1 week 2 biweek 3 month 4 year 5) till 2017, yearly after 2017"
+> label var js7 "nb of weeks looking for a job"
+> label var js8_1 "things done to look for a job"
+> label var js8_2 ""
+> label var js8_3 ""
+> label var js8_4 ""
+> label var js8_5 ""
+> label var js8_6 ""
+> label var js8_7 ""
+> label var js8_8 ""
+> label var js8_9 ""
+> label var js8_10 ""
+> label var js8_11 ""
+> label var js8_12 ""
+> label var js8_13 ""
+> label var js8_14 ""
+> label var js8_14_other
+> label var js9 "nb of hours spent on job search from d-7 to d"
+> label var nl1 "nb of job offers received from m-4 to m"
+> label var nl2a_1 ""
+> label var nl2a_2 ""
+> label var nl2a_3 ""
+> label var nl2b_1 ""
+> label var nl2b_2 ""
+> label var nl2b_3 ""
+> label var nl3_1 "currently working at the accepted job"
+> label var nl3_2 "once worked at the accepted job"
+> label var nl3_3 "rejected the job offer"
+> label var nl4_1 ""
+> label var nl4_2 ""
+> label var nl4_3 "" 
+> label var oo1_1 "expected prob of employed from m to m+4" 
+> label var oo1_2 "expected prob of employed by same employer from m to m+4" 
+> label var oo1_3 "expected prob of employed by a different employer from m to m+4" 
+> label var oo1_4 "expected prob of self-employed from m to m+4" 
+> label var oo1_5 "expected prob of unemployed/looking for a job from m to m+4" 
+> label var oo1_6 "expected prob of unemployed/not looking for a job from m to m+4" 
+> label var oo2u "expected prob of receing >1 job offer from m to m+4" 
+> label var oo2e "expected prob of receing >1 job offer from another employer m to m+4" 
+> label var oo2new "expected nb of job offers received from m to m+4" 
+> label var oo2a "expected AVERAGE wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2a2 "expected MAX wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2b_1 ""
+> label var oo2b_2 ""
+> label var oo2b_3 ""
+> label var oo2b_4 ""
+> label var oo2b_5 ""
+> label var oo2b_6 ""
+> label var oo2c1 "prob of accepting an offer at wage < 0.8 average expected wage offer"
+> label var oo2c2 "prob of accepting an offer at wage between 0.8-0.9 average expected wage offer"
+> label var oo2c3 "prob of accepting an offer at wage between 0.9-1.0 average expected wage offer"
+> label var oo2c4 "prob of accepting an offer at wage between 1.0-1.1 average expected wage offer"
+> label var oo2c5 "prob of accepting an offer at wage between 1.1-1.2 average expected wage offer"
+> label var oo2c6 "prob of accepting an offer at wage>1.2*average expected wage offer"
+> label var oo2e2 "expected earning in m+4 (in $)"
+> label var oo2e2dk_1 "zero earning due to non-working from m to m+4"
+> label var oo2f ""
+> label var q113 ""
+> label var q115 ""
+> label var q117 "planed retirement age"
+> label var q118 "planed retirement age has changed from y-1 to y(1 sooner 2 no change 3 later)"
+> label var q119 "nb of years earlier before retirement than planed"
+> label var q120  "nb of years later before retirement than planed"
+> label var q121  ""
+> label var q122 ""
+> 
+> save "${c -(}folder{c )-}/LaborExpSCEIndM",replace 
+> */
+. 
+. ***************************************************
+. **** subselect variables from core module of SCE ***
+. ****************************************************
+. 
+. use "${c -(}SCE_core_folder{c )-}/IncExpSCEProbIndM.dta", clear
+{txt}
+{com}. 
+. global keep_list year month userid weight ///
+>        Q32 Q33 Q37 state D6 D2new_9 DSAME Q12new Q13new Q14new ///
+>            Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 ///
+>            Q17new Q18new Q19 Q20new Q21new Q22new
+{txt}
+{com}. 
+. keep ${c -(}keep_list{c )-}
+{txt}
+{com}. 
+. save "${c -(}folder{c )-}/IncExpSCEIndM_short",replace 
+{txt}file /Users/Myworld/Dropbox/SearchMatchExpectation//data/SCE/IncExpSCEIndM_short.dta saved
+
+{com}. 
+. 
+. ***************************************************
+. ***** merge SCE core and labor market module ****
+. ************************************************
+. 
+. use "${c -(}folder{c )-}/IncExpSCEIndM_short",clear
+{txt}
+{com}. 
+. merge 1:1 year month userid using "${c -(}folder{c )-}/LaborExpSCEIndM", keep(master match using)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}          83,800
+{txt}{col 9}from master{col 30}{res}          81,988{txt}  (_merge==1)
+{col 9}from using{col 30}{res}           1,812{txt}  (_merge==2)
+
+{col 5}matched{col 30}{res}          16,605{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. rename _merge sce_module_merge
+{res}{txt}
+{com}. ddd
+{err}unrecognized command:  ddd
+{txt}{search r(199):r(199);}
+
+end of do-file
+
+{search r(199):r(199);}
+
+{com}. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD01766.000000"
+{txt}
+{com}. ****************************************************
+. ***  This do files uses SCE individual labor market *
+. *** survey to generate the aggregate perceived probability * 
+. *** of different flow rates and compare it with CPS **
+. **************************************** ************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/SearchMatchExpectation/"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/data/SCE"
+{txt}
+{com}. global graph_folder "${c -(}mainfolder{c )-}/graph/"
+{txt}
+{com}. global SCE_core_folder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/"
+{txt}
+{com}. *global sum_table_folder "${c -(}mainfolder{c )-}/tables"
+. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. /*
+> *****************************
+> *** import raw labor market SCE
+> *********************************
+> 
+> import excel "${c -(}folder{c )-}/sce-labor-microdata-public.xlsx", sheet("Data") cellrange(A2:DN18419) firstrow
+> 
+> ********************
+> *** Date format ****
+> ********************
+> gen date_str = string(date)
+> gen year = substr(date_str,1,4)
+> gen month = substr(date_str,5,2)
+> gen date2=year+"m"+month
+> gen date3= monthly(date2,"YM")
+> format date3 %tm
+> drop date_str date2 date
+> rename date3 date
+> destring year, replace
+> destring month, replace 
+> order date year month
+> xtset userid date
+> 
+> 
+> label var l1m "starting month of current/main job"
+> label var l1y "starting year of current/main job"
+> label var l3 "(average) annual earning from the current/main job before tax/deductions (in $)"
+> label var l4 "(average) annual earning from the current/main job before tax/deductions by range"
+> label var l4b "expected annual earning from the current/main job at y+10 (nominal)"
+> label var lmtype "employer type of current/main"
+> label var lmtype_5_other "employer type (others)"
+> label var lmind "business/industry of current employer"
+> label var lm5_1 "employer benefits: pension plan"
+> label var lm5_2 "employer benefits: pension plan"
+> label var lm5_3  "employer benefits: health insurance"
+> label var lm5_4 "employer benefits: dental/vision insurance"
+> label var lm5_5  "employer benefits: health care or dependent care"
+> label var lm5_6  "employer benefits: housing/husing subsidy"
+> label var lm5_7  "employer benefits: life/disability insurance"
+> label var lm5_8 "employer benefits: commuter benefits"
+> label var lm5_9 "employer benefits: childcare assistance"
+> label var lm5_10 "employer benefits: other"
+> label var lm5_10_other "employer benefits: other specified"
+> label var lm5_11 "employer benefits: none"
+> label var lmsat1 "satisfied with compensation (1-5 more satisfied)"
+> label var lmsat2 "satisfied with other aspect of the job (1-5 more satisfied)"
+> label var lmsat3 "fit with the job (1-7 more fit)"
+> label var lmsat4 "opportunity for promotion/progression from y to y+3"
+> label var lmsat5 "overall satisfication (1-5 more satisfied)"
+> label var l7m "last month of the most recent job"
+> label var l7y "last year of the most recent job"
+> label var l7dk_1 "never had a paid job"
+> label var l7bm "starting month of the most recent job"
+> label var l7by "starting year of the most recent job"
+> label var l9 "(average) annual earning from the most recent job before tax/deductions (in $)"
+> label var l10 "(average) annual earning from the most recent job before tax/deductions by range"
+> label var l11 "work for someone(1) or self-employment (2)"
+> label var l12 "employer type of most recent job"
+> label var l12_5_other "employer type of most recent job (other)"
+> label var l12b "business/industry of the most recent job"
+> label var l13_1 "employer benefits most recent job: pension plans"
+> label var l13_2 ""
+> label var l13_3 ""
+> label var l13_4 ""
+> label var l13_5 ""
+> label var l13_6 ""
+> label var l13_7 ""
+> label var l13_8 ""
+> label var l13_9 ""
+> label var l13_10 ""
+> label var l13_11 ""
+> label var l13_10_other ""
+> label var js5 "have looked for a job m-1 to m (1 yes 2 no)"
+> label var js6 "looking for a job leaving current (1), not leaving (2), no (3)" 
+> label var rw2a "min wage/salary for accepting a hypothetical job offer right now"
+> label var rw2b "unit for wage (hour 1 week 2 biweek 3 month 4 year 5) till 2017, yearly after 2017"
+> label var js7 "nb of weeks looking for a job"
+> label var js8_1 "things done to look for a job"
+> label var js8_2 ""
+> label var js8_3 ""
+> label var js8_4 ""
+> label var js8_5 ""
+> label var js8_6 ""
+> label var js8_7 ""
+> label var js8_8 ""
+> label var js8_9 ""
+> label var js8_10 ""
+> label var js8_11 ""
+> label var js8_12 ""
+> label var js8_13 ""
+> label var js8_14 ""
+> label var js8_14_other
+> label var js9 "nb of hours spent on job search from d-7 to d"
+> label var nl1 "nb of job offers received from m-4 to m"
+> label var nl2a_1 ""
+> label var nl2a_2 ""
+> label var nl2a_3 ""
+> label var nl2b_1 ""
+> label var nl2b_2 ""
+> label var nl2b_3 ""
+> label var nl3_1 "currently working at the accepted job"
+> label var nl3_2 "once worked at the accepted job"
+> label var nl3_3 "rejected the job offer"
+> label var nl4_1 ""
+> label var nl4_2 ""
+> label var nl4_3 "" 
+> label var oo1_1 "expected prob of employed from m to m+4" 
+> label var oo1_2 "expected prob of employed by same employer from m to m+4" 
+> label var oo1_3 "expected prob of employed by a different employer from m to m+4" 
+> label var oo1_4 "expected prob of self-employed from m to m+4" 
+> label var oo1_5 "expected prob of unemployed/looking for a job from m to m+4" 
+> label var oo1_6 "expected prob of unemployed/not looking for a job from m to m+4" 
+> label var oo2u "expected prob of receing >1 job offer from m to m+4" 
+> label var oo2e "expected prob of receing >1 job offer from another employer m to m+4" 
+> label var oo2new "expected nb of job offers received from m to m+4" 
+> label var oo2a "expected AVERAGE wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2a2 "expected MAX wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2b_1 ""
+> label var oo2b_2 ""
+> label var oo2b_3 ""
+> label var oo2b_4 ""
+> label var oo2b_5 ""
+> label var oo2b_6 ""
+> label var oo2c1 "prob of accepting an offer at wage < 0.8 average expected wage offer"
+> label var oo2c2 "prob of accepting an offer at wage between 0.8-0.9 average expected wage offer"
+> label var oo2c3 "prob of accepting an offer at wage between 0.9-1.0 average expected wage offer"
+> label var oo2c4 "prob of accepting an offer at wage between 1.0-1.1 average expected wage offer"
+> label var oo2c5 "prob of accepting an offer at wage between 1.1-1.2 average expected wage offer"
+> label var oo2c6 "prob of accepting an offer at wage>1.2*average expected wage offer"
+> label var oo2e2 "expected earning in m+4 (in $)"
+> label var oo2e2dk_1 "zero earning due to non-working from m to m+4"
+> label var oo2f ""
+> label var q113 ""
+> label var q115 ""
+> label var q117 "planed retirement age"
+> label var q118 "planed retirement age has changed from y-1 to y(1 sooner 2 no change 3 later)"
+> label var q119 "nb of years earlier before retirement than planed"
+> label var q120  "nb of years later before retirement than planed"
+> label var q121  ""
+> label var q122 ""
+> 
+> save "${c -(}folder{c )-}/LaborExpSCEIndM",replace 
+> 
+> 
+> ***************************************************
+> **** subselect variables from core module of SCE ***
+> ****************************************************
+> 
+> use "${c -(}SCE_core_folder{c )-}/IncExpSCEProbIndM.dta", clear
+> 
+> global keep_list year month userid weight ///
+>        Q32 Q33 Q37 state D6 D2new_9 DSAME Q12new Q13new Q14new ///
+>            Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 ///
+>            Q17new Q18new Q19 Q20new Q21new Q22new
+> 
+> keep ${c -(}keep_list{c )-}
+> 
+> save "${c -(}folder{c )-}/IncExpSCEIndM_short",replace 
+> */
+. 
+. ***************************************************
+. ***** merge SCE core and labor market module ****
+. ************************************************
+. 
+. use "${c -(}folder{c )-}/IncExpSCEIndM_short",clear
+{txt}
+{com}. 
+. merge 1:1 year month userid using "${c -(}folder{c )-}/LaborExpSCEIndM", keep(master match using)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}          83,800
+{txt}{col 9}from master{col 30}{res}          81,988{txt}  (_merge==1)
+{col 9}from using{col 30}{res}           1,812{txt}  (_merge==2)
+
+{col 5}matched{col 30}{res}          16,605{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. rename _merge sce_module_merge
+{res}{txt}
+{com}. 
+. *****************************************************
+. *** generate aggregate average rates expectations ***
+. ****************************************************
+. 
+. keep if l1y!=.  
+{txt}(88116 observations deleted)
+
+{com}. * keep only obs with current job 
+. 
+. gen exp_en = oo1_6  
+{txt}(7535 missing values generated)
+
+{com}. gen exp_eu = oo1_5
+{txt}(6929 missing values generated)
+
+{com}. gen exp_es = oo1_4 
+{txt}(6563 missing values generated)
+
+{com}. gen exp_ee_change = oo1_3 
+{txt}(5397 missing values generated)
+
+{com}. gen exp_ee_stay = oo1_2 
+{txt}(1627 missing values generated)
+
+{com}. gen exp_ee = exp_ee_change+exp_ee_stay
+{txt}(5537 missing values generated)
+
+{com}. gen exp_ue = Q22new 
+{txt}(1808 missing values generated)
+
+{com}. 
+. label var exp_en "expected prob from e to non-participation from m to m+4"
+{txt}
+{com}. label var exp_eu "expected prob from e to ue from m to m+4"
+{txt}
+{com}. label var exp_es "expected prob from e to self-employment from m to m+4"
+{txt}
+{com}. label var exp_ee_change "expected prob from e to e at a different job from m to m+4"
+{txt}
+{com}. label var exp_ee_stay "expected prob from e to e at the same job from m to m+4"
+{txt}
+{com}. label var exp_ee "expected prob from e to e from m to m+4"
+{txt}
+{com}. label var exp_ue "expected prob of finding a job if ue from m to m+3"
+{txt}
+{com}. 
+. dddd
+{err}unrecognized command:  dddd
+{txt}{search r(199):r(199);}
+
+end of do-file
+
+{search r(199):r(199);}
+
+{com}. hist Q19
+{res}
+{com}. summarize Q19
+
+{txt}    Variable {c |}       Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 56}
+{space 9}Q19 {c |}{res}         0
+
+{com}. summarize Q18new
+
+{txt}    Variable {c |}       Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 56}
+{space 6}Q18new {c |}{res}         0
+
+{com}. summarize Q22
+
+{txt}    Variable {c |}       Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 56}
+{space 6}Q22new {c |}{res}     10481    55.85068    31.83255          0        100
+
+{com}. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD01766.000000"
+{txt}
+{com}. ****************************************************
+. ***  This do files uses SCE individual labor market *
+. *** survey to generate the aggregate perceived probability * 
+. *** of different flow rates and compare it with CPS **
+. **************************************** ************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/SearchMatchExpectation/"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/data/SCE"
+{txt}
+{com}. global graph_folder "${c -(}mainfolder{c )-}/graph/"
+{txt}
+{com}. global SCE_core_folder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/"
+{txt}
+{com}. *global sum_table_folder "${c -(}mainfolder{c )-}/tables"
+. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. /*
+> *****************************
+> *** import raw labor market SCE
+> *********************************
+> 
+> import excel "${c -(}folder{c )-}/sce-labor-microdata-public.xlsx", sheet("Data") cellrange(A2:DN18419) firstrow
+> 
+> ********************
+> *** Date format ****
+> ********************
+> gen date_str = string(date)
+> gen year = substr(date_str,1,4)
+> gen month = substr(date_str,5,2)
+> gen date2=year+"m"+month
+> gen date3= monthly(date2,"YM")
+> format date3 %tm
+> drop date_str date2 date
+> rename date3 date
+> destring year, replace
+> destring month, replace 
+> order date year month
+> xtset userid date
+> 
+> 
+> label var l1m "starting month of current/main job"
+> label var l1y "starting year of current/main job"
+> label var l3 "(average) annual earning from the current/main job before tax/deductions (in $)"
+> label var l4 "(average) annual earning from the current/main job before tax/deductions by range"
+> label var l4b "expected annual earning from the current/main job at y+10 (nominal)"
+> label var lmtype "employer type of current/main"
+> label var lmtype_5_other "employer type (others)"
+> label var lmind "business/industry of current employer"
+> label var lm5_1 "employer benefits: pension plan"
+> label var lm5_2 "employer benefits: pension plan"
+> label var lm5_3  "employer benefits: health insurance"
+> label var lm5_4 "employer benefits: dental/vision insurance"
+> label var lm5_5  "employer benefits: health care or dependent care"
+> label var lm5_6  "employer benefits: housing/husing subsidy"
+> label var lm5_7  "employer benefits: life/disability insurance"
+> label var lm5_8 "employer benefits: commuter benefits"
+> label var lm5_9 "employer benefits: childcare assistance"
+> label var lm5_10 "employer benefits: other"
+> label var lm5_10_other "employer benefits: other specified"
+> label var lm5_11 "employer benefits: none"
+> label var lmsat1 "satisfied with compensation (1-5 more satisfied)"
+> label var lmsat2 "satisfied with other aspect of the job (1-5 more satisfied)"
+> label var lmsat3 "fit with the job (1-7 more fit)"
+> label var lmsat4 "opportunity for promotion/progression from y to y+3"
+> label var lmsat5 "overall satisfication (1-5 more satisfied)"
+> label var l7m "last month of the most recent job"
+> label var l7y "last year of the most recent job"
+> label var l7dk_1 "never had a paid job"
+> label var l7bm "starting month of the most recent job"
+> label var l7by "starting year of the most recent job"
+> label var l9 "(average) annual earning from the most recent job before tax/deductions (in $)"
+> label var l10 "(average) annual earning from the most recent job before tax/deductions by range"
+> label var l11 "work for someone(1) or self-employment (2)"
+> label var l12 "employer type of most recent job"
+> label var l12_5_other "employer type of most recent job (other)"
+> label var l12b "business/industry of the most recent job"
+> label var l13_1 "employer benefits most recent job: pension plans"
+> label var l13_2 ""
+> label var l13_3 ""
+> label var l13_4 ""
+> label var l13_5 ""
+> label var l13_6 ""
+> label var l13_7 ""
+> label var l13_8 ""
+> label var l13_9 ""
+> label var l13_10 ""
+> label var l13_11 ""
+> label var l13_10_other ""
+> label var js5 "have looked for a job m-1 to m (1 yes 2 no)"
+> label var js6 "looking for a job leaving current (1), not leaving (2), no (3)" 
+> label var rw2a "min wage/salary for accepting a hypothetical job offer right now"
+> label var rw2b "unit for wage (hour 1 week 2 biweek 3 month 4 year 5) till 2017, yearly after 2017"
+> label var js7 "nb of weeks looking for a job"
+> label var js8_1 "things done to look for a job"
+> label var js8_2 ""
+> label var js8_3 ""
+> label var js8_4 ""
+> label var js8_5 ""
+> label var js8_6 ""
+> label var js8_7 ""
+> label var js8_8 ""
+> label var js8_9 ""
+> label var js8_10 ""
+> label var js8_11 ""
+> label var js8_12 ""
+> label var js8_13 ""
+> label var js8_14 ""
+> label var js8_14_other
+> label var js9 "nb of hours spent on job search from d-7 to d"
+> label var nl1 "nb of job offers received from m-4 to m"
+> label var nl2a_1 ""
+> label var nl2a_2 ""
+> label var nl2a_3 ""
+> label var nl2b_1 ""
+> label var nl2b_2 ""
+> label var nl2b_3 ""
+> label var nl3_1 "currently working at the accepted job"
+> label var nl3_2 "once worked at the accepted job"
+> label var nl3_3 "rejected the job offer"
+> label var nl4_1 ""
+> label var nl4_2 ""
+> label var nl4_3 "" 
+> label var oo1_1 "expected prob of employed from m to m+4" 
+> label var oo1_2 "expected prob of employed by same employer from m to m+4" 
+> label var oo1_3 "expected prob of employed by a different employer from m to m+4" 
+> label var oo1_4 "expected prob of self-employed from m to m+4" 
+> label var oo1_5 "expected prob of unemployed/looking for a job from m to m+4" 
+> label var oo1_6 "expected prob of unemployed/not looking for a job from m to m+4" 
+> label var oo2u "expected prob of receing >1 job offer from m to m+4" 
+> label var oo2e "expected prob of receing >1 job offer from another employer m to m+4" 
+> label var oo2new "expected nb of job offers received from m to m+4" 
+> label var oo2a "expected AVERAGE wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2a2 "expected MAX wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2b_1 ""
+> label var oo2b_2 ""
+> label var oo2b_3 ""
+> label var oo2b_4 ""
+> label var oo2b_5 ""
+> label var oo2b_6 ""
+> label var oo2c1 "prob of accepting an offer at wage < 0.8 average expected wage offer"
+> label var oo2c2 "prob of accepting an offer at wage between 0.8-0.9 average expected wage offer"
+> label var oo2c3 "prob of accepting an offer at wage between 0.9-1.0 average expected wage offer"
+> label var oo2c4 "prob of accepting an offer at wage between 1.0-1.1 average expected wage offer"
+> label var oo2c5 "prob of accepting an offer at wage between 1.1-1.2 average expected wage offer"
+> label var oo2c6 "prob of accepting an offer at wage>1.2*average expected wage offer"
+> label var oo2e2 "expected earning in m+4 (in $)"
+> label var oo2e2dk_1 "zero earning due to non-working from m to m+4"
+> label var oo2f ""
+> label var q113 ""
+> label var q115 ""
+> label var q117 "planed retirement age"
+> label var q118 "planed retirement age has changed from y-1 to y(1 sooner 2 no change 3 later)"
+> label var q119 "nb of years earlier before retirement than planed"
+> label var q120  "nb of years later before retirement than planed"
+> label var q121  ""
+> label var q122 ""
+> 
+> save "${c -(}folder{c )-}/LaborExpSCEIndM",replace 
+> 
+> 
+> ***************************************************
+> **** subselect variables from core module of SCE ***
+> ****************************************************
+> 
+> use "${c -(}SCE_core_folder{c )-}/IncExpSCEProbIndM.dta", clear
+> 
+> global keep_list year month userid weight ///
+>        Q32 Q33 Q37 state D6 D2new_9 DSAME Q12new Q13new Q14new ///
+>            Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 ///
+>            Q17new Q18new Q19 Q20new Q21new Q22new
+> 
+> keep ${c -(}keep_list{c )-}
+> 
+> save "${c -(}folder{c )-}/IncExpSCEIndM_short",replace 
+> */
+. 
+. ***************************************************
+. ***** merge SCE core and labor market module ****
+. ************************************************
+. 
+. use "${c -(}folder{c )-}/IncExpSCEIndM_short",clear
+{txt}
+{com}. 
+. merge 1:1 year month userid using "${c -(}folder{c )-}/LaborExpSCEIndM", keep(master match using)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}          83,800
+{txt}{col 9}from master{col 30}{res}          81,988{txt}  (_merge==1)
+{col 9}from using{col 30}{res}           1,812{txt}  (_merge==2)
+
+{col 5}matched{col 30}{res}          16,605{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. rename _merge sce_module_merge
+{res}{txt}
+{com}. 
+. *****************************************************
+. *** generate aggregate average rates expectations ***
+. ****************************************************
+. 
+. keep if l1y!=.  
+{txt}(88116 observations deleted)
+
+{com}. * keep only obs with current job 
+. 
+. gen exp_en = oo1_6  
+{txt}(7535 missing values generated)
+
+{com}. gen exp_eu = oo1_5
+{txt}(6929 missing values generated)
+
+{com}. gen exp_es = oo1_4 
+{txt}(6563 missing values generated)
+
+{com}. gen exp_ee_change = oo1_3 
+{txt}(5397 missing values generated)
+
+{com}. gen exp_ee_stay = oo1_2 
+{txt}(1627 missing values generated)
+
+{com}. gen exp_ee = exp_ee_change+exp_ee_stay
+{txt}(5537 missing values generated)
+
+{com}. gen exp_ue = Q22new
+{txt}(1808 missing values generated)
+
+{com}. gen exp_ieu_1y = Q13new
+{txt}(1816 missing values generated)
+
+{com}. gen exp_veu_1y = Q14new
+{txt}(1813 missing values generated)
+
+{com}. 
+. label var exp_en "expected prob from e to non-participation from m to m+4"
+{txt}
+{com}. label var exp_eu "expected prob from e to ue from m to m+4"
+{txt}
+{com}. label var exp_es "expected prob from e to self-employment from m to m+4"
+{txt}
+{com}. label var exp_ee_change "expected prob from e to e at a different job from m to m+4"
+{txt}
+{com}. label var exp_ee_stay "expected prob from e to e at the same job from m to m+4"
+{txt}
+{com}. label var exp_ee "expected prob from e to e from m to m+4"
+{txt}
+{com}. label var exp_ue "expected prob of finding a job if ue from m to m+3"
+{txt}
+{com}. label var exp_ieu_1y "expected prob of losing the job from y to y+1"
+{txt}
+{com}. label var exp_veu_1y "expected prob of voluntarily leaving the job from y to y+1"
+{txt}
+{com}. 
+. *****************
+. ** summary stats
+. *****************
+. 
+. global exp_rates exp_en exp_eu exp_es exp_ee_change exp_ee_stay exp_ee exp_ue exp_ieu_1y exp_veu_1y
+{txt}
+{com}. 
+. summarize ${c -(}exp_rates{c )-}
+
+{txt}    Variable {c |}       Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 56}
+{space 6}exp_en {c |}{res}      4754    3.406815    12.85871          0        100
+{txt}{space 6}exp_eu {c |}{res}      5360    4.431716    9.208994          0        100
+{txt}{space 6}exp_es {c |}{res}      5726    21.65526    37.48647          0        100
+{txt}exp_ee_cha~e {c |}{res}      6892    15.02539    19.90427          0        100
+{txt}{space 1}exp_ee_stay {c |}{res}     10662    82.78691    26.64279          0        100
+{txt}{hline 13}{c +}{hline 56}
+{space 6}exp_ee {c |}{res}      6752    89.06887    23.59591          0        110
+{txt}{space 6}exp_ue {c |}{res}     10481    55.85068    31.83255          0        100
+{txt}{space 2}exp_ieu_1y {c |}{res}     10473    14.08431    19.27732          0        100
+{txt}{space 2}exp_veu_1y {c |}{res}     10476    22.03961    26.92852          0        100
+{txt}
+{com}. 
+. *****************
+. ** histograms of indidividuals 
+. ******************
+. 
+. 
+. foreach prob in ${c -(}exp_rates{c )-}{c -(}
+{err}program error:  code follows on the same line as open brace
+{txt}{search r(198):r(198);}
+
+end of do-file
+
+{search r(198):r(198);}
+
+{com}. do "/Users/Myworld/Dropbox/SearchMatchExpectation/code/SCE.do"
+{txt}
+{com}. ****************************************************
+. ***  This do files uses SCE individual labor market *
+. *** survey to generate the aggregate perceived probability * 
+. *** of different flow rates and compare it with CPS **
+. **************************************** ************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/SearchMatchExpectation/"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/data/SCE"
+{txt}
+{com}. global graph_folder "${c -(}mainfolder{c )-}/graph/"
+{txt}
+{com}. global SCE_core_folder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/"
+{txt}
+{com}. *global sum_table_folder "${c -(}mainfolder{c )-}/tables"
+. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. /*
+> *****************************
+> *** import raw labor market SCE
+> *********************************
+> 
+> import excel "${c -(}folder{c )-}/sce-labor-microdata-public.xlsx", sheet("Data") cellrange(A2:DN18419) firstrow
+> 
+> ********************
+> *** Date format ****
+> ********************
+> gen date_str = string(date)
+> gen year = substr(date_str,1,4)
+> gen month = substr(date_str,5,2)
+> gen date2=year+"m"+month
+> gen date3= monthly(date2,"YM")
+> format date3 %tm
+> drop date_str date2 date
+> rename date3 date
+> destring year, replace
+> destring month, replace 
+> order date year month
+> xtset userid date
+> 
+> 
+> label var l1m "starting month of current/main job"
+> label var l1y "starting year of current/main job"
+> label var l3 "(average) annual earning from the current/main job before tax/deductions (in $)"
+> label var l4 "(average) annual earning from the current/main job before tax/deductions by range"
+> label var l4b "expected annual earning from the current/main job at y+10 (nominal)"
+> label var lmtype "employer type of current/main"
+> label var lmtype_5_other "employer type (others)"
+> label var lmind "business/industry of current employer"
+> label var lm5_1 "employer benefits: pension plan"
+> label var lm5_2 "employer benefits: pension plan"
+> label var lm5_3  "employer benefits: health insurance"
+> label var lm5_4 "employer benefits: dental/vision insurance"
+> label var lm5_5  "employer benefits: health care or dependent care"
+> label var lm5_6  "employer benefits: housing/husing subsidy"
+> label var lm5_7  "employer benefits: life/disability insurance"
+> label var lm5_8 "employer benefits: commuter benefits"
+> label var lm5_9 "employer benefits: childcare assistance"
+> label var lm5_10 "employer benefits: other"
+> label var lm5_10_other "employer benefits: other specified"
+> label var lm5_11 "employer benefits: none"
+> label var lmsat1 "satisfied with compensation (1-5 more satisfied)"
+> label var lmsat2 "satisfied with other aspect of the job (1-5 more satisfied)"
+> label var lmsat3 "fit with the job (1-7 more fit)"
+> label var lmsat4 "opportunity for promotion/progression from y to y+3"
+> label var lmsat5 "overall satisfication (1-5 more satisfied)"
+> label var l7m "last month of the most recent job"
+> label var l7y "last year of the most recent job"
+> label var l7dk_1 "never had a paid job"
+> label var l7bm "starting month of the most recent job"
+> label var l7by "starting year of the most recent job"
+> label var l9 "(average) annual earning from the most recent job before tax/deductions (in $)"
+> label var l10 "(average) annual earning from the most recent job before tax/deductions by range"
+> label var l11 "work for someone(1) or self-employment (2)"
+> label var l12 "employer type of most recent job"
+> label var l12_5_other "employer type of most recent job (other)"
+> label var l12b "business/industry of the most recent job"
+> label var l13_1 "employer benefits most recent job: pension plans"
+> label var l13_2 ""
+> label var l13_3 ""
+> label var l13_4 ""
+> label var l13_5 ""
+> label var l13_6 ""
+> label var l13_7 ""
+> label var l13_8 ""
+> label var l13_9 ""
+> label var l13_10 ""
+> label var l13_11 ""
+> label var l13_10_other ""
+> label var js5 "have looked for a job m-1 to m (1 yes 2 no)"
+> label var js6 "looking for a job leaving current (1), not leaving (2), no (3)" 
+> label var rw2a "min wage/salary for accepting a hypothetical job offer right now"
+> label var rw2b "unit for wage (hour 1 week 2 biweek 3 month 4 year 5) till 2017, yearly after 2017"
+> label var js7 "nb of weeks looking for a job"
+> label var js8_1 "things done to look for a job"
+> label var js8_2 ""
+> label var js8_3 ""
+> label var js8_4 ""
+> label var js8_5 ""
+> label var js8_6 ""
+> label var js8_7 ""
+> label var js8_8 ""
+> label var js8_9 ""
+> label var js8_10 ""
+> label var js8_11 ""
+> label var js8_12 ""
+> label var js8_13 ""
+> label var js8_14 ""
+> label var js8_14_other
+> label var js9 "nb of hours spent on job search from d-7 to d"
+> label var nl1 "nb of job offers received from m-4 to m"
+> label var nl2a_1 ""
+> label var nl2a_2 ""
+> label var nl2a_3 ""
+> label var nl2b_1 ""
+> label var nl2b_2 ""
+> label var nl2b_3 ""
+> label var nl3_1 "currently working at the accepted job"
+> label var nl3_2 "once worked at the accepted job"
+> label var nl3_3 "rejected the job offer"
+> label var nl4_1 ""
+> label var nl4_2 ""
+> label var nl4_3 "" 
+> label var oo1_1 "expected prob of employed from m to m+4" 
+> label var oo1_2 "expected prob of employed by same employer from m to m+4" 
+> label var oo1_3 "expected prob of employed by a different employer from m to m+4" 
+> label var oo1_4 "expected prob of self-employed from m to m+4" 
+> label var oo1_5 "expected prob of unemployed/looking for a job from m to m+4" 
+> label var oo1_6 "expected prob of unemployed/not looking for a job from m to m+4" 
+> label var oo2u "expected prob of receing >1 job offer from m to m+4" 
+> label var oo2e "expected prob of receing >1 job offer from another employer m to m+4" 
+> label var oo2new "expected nb of job offers received from m to m+4" 
+> label var oo2a "expected AVERAGE wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2a2 "expected MAX wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2b_1 ""
+> label var oo2b_2 ""
+> label var oo2b_3 ""
+> label var oo2b_4 ""
+> label var oo2b_5 ""
+> label var oo2b_6 ""
+> label var oo2c1 "prob of accepting an offer at wage < 0.8 average expected wage offer"
+> label var oo2c2 "prob of accepting an offer at wage between 0.8-0.9 average expected wage offer"
+> label var oo2c3 "prob of accepting an offer at wage between 0.9-1.0 average expected wage offer"
+> label var oo2c4 "prob of accepting an offer at wage between 1.0-1.1 average expected wage offer"
+> label var oo2c5 "prob of accepting an offer at wage between 1.1-1.2 average expected wage offer"
+> label var oo2c6 "prob of accepting an offer at wage>1.2*average expected wage offer"
+> label var oo2e2 "expected earning in m+4 (in $)"
+> label var oo2e2dk_1 "zero earning due to non-working from m to m+4"
+> label var oo2f ""
+> label var q113 ""
+> label var q115 ""
+> label var q117 "planed retirement age"
+> label var q118 "planed retirement age has changed from y-1 to y(1 sooner 2 no change 3 later)"
+> label var q119 "nb of years earlier before retirement than planed"
+> label var q120  "nb of years later before retirement than planed"
+> label var q121  ""
+> label var q122 ""
+> 
+> save "${c -(}folder{c )-}/LaborExpSCEIndM",replace 
+> 
+> 
+> ***************************************************
+> **** subselect variables from core module of SCE ***
+> ****************************************************
+> 
+> use "${c -(}SCE_core_folder{c )-}/IncExpSCEProbIndM.dta", clear
+> 
+> global keep_list year month userid weight ///
+>        Q32 Q33 Q37 state D6 D2new_9 DSAME Q12new Q13new Q14new ///
+>            Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 ///
+>            Q17new Q18new Q19 Q20new Q21new Q22new
+> 
+> keep ${c -(}keep_list{c )-}
+> 
+> save "${c -(}folder{c )-}/IncExpSCEIndM_short",replace 
+> */
+. 
+. ***************************************************
+. ***** merge SCE core and labor market module ****
+. ************************************************
+. 
+. use "${c -(}folder{c )-}/IncExpSCEIndM_short",clear
+{txt}
+{com}. 
+. merge 1:1 year month userid using "${c -(}folder{c )-}/LaborExpSCEIndM", keep(master match using)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}          83,800
+{txt}{col 9}from master{col 30}{res}          81,988{txt}  (_merge==1)
+{col 9}from using{col 30}{res}           1,812{txt}  (_merge==2)
+
+{col 5}matched{col 30}{res}          16,605{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. rename _merge sce_module_merge
+{res}{txt}
+{com}. 
+. *****************************************************
+. *** generate aggregate average rates expectations ***
+. ****************************************************
+. 
+. keep if l1y!=.  
+{txt}(88116 observations deleted)
+
+{com}. * keep only obs with current job 
+. 
+. gen exp_en = oo1_6  
+{txt}(7535 missing values generated)
+
+{com}. gen exp_eu = oo1_5
+{txt}(6929 missing values generated)
+
+{com}. gen exp_es = oo1_4 
+{txt}(6563 missing values generated)
+
+{com}. gen exp_ee_change = oo1_3 
+{txt}(5397 missing values generated)
+
+{com}. gen exp_ee_stay = oo1_2 
+{txt}(1627 missing values generated)
+
+{com}. gen exp_ee = exp_ee_change+exp_ee_stay
+{txt}(5537 missing values generated)
+
+{com}. gen exp_ue = Q22new
+{txt}(1808 missing values generated)
+
+{com}. gen exp_ieu_1y = Q13new
+{txt}(1816 missing values generated)
+
+{com}. gen exp_veu_1y = Q14new
+{txt}(1813 missing values generated)
+
+{com}. 
+. label var exp_en "expected prob from e to non-participation from m to m+4"
+{txt}
+{com}. label var exp_eu "expected prob from e to ue from m to m+4"
+{txt}
+{com}. label var exp_es "expected prob from e to self-employment from m to m+4"
+{txt}
+{com}. label var exp_ee_change "expected prob from e to e at a different job from m to m+4"
+{txt}
+{com}. label var exp_ee_stay "expected prob from e to e at the same job from m to m+4"
+{txt}
+{com}. label var exp_ee "expected prob from e to e from m to m+4"
+{txt}
+{com}. label var exp_ue "expected prob of finding a job if ue from m to m+3"
+{txt}
+{com}. label var exp_ieu_1y "expected prob of losing the job from y to y+1"
+{txt}
+{com}. label var exp_veu_1y "expected prob of voluntarily leaving the job from y to y+1"
+{txt}
+{com}. 
+. *****************
+. ** summary stats
+. *****************
+. 
+. local exp_rates exp_en exp_eu exp_es exp_ee_change exp_ee_stay exp_ee exp_ue exp_ieu_1y exp_veu_1y
+{txt}
+{com}. 
+. summarize `exp_rates'
+
+{txt}    Variable {c |}       Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 56}
+{space 6}exp_en {c |}{res}      4754    3.406815    12.85871          0        100
+{txt}{space 6}exp_eu {c |}{res}      5360    4.431716    9.208994          0        100
+{txt}{space 6}exp_es {c |}{res}      5726    21.65526    37.48647          0        100
+{txt}exp_ee_cha~e {c |}{res}      6892    15.02539    19.90427          0        100
+{txt}{space 1}exp_ee_stay {c |}{res}     10662    82.78691    26.64279          0        100
+{txt}{hline 13}{c +}{hline 56}
+{space 6}exp_ee {c |}{res}      6752    89.06887    23.59591          0        110
+{txt}{space 6}exp_ue {c |}{res}     10481    55.85068    31.83255          0        100
+{txt}{space 2}exp_ieu_1y {c |}{res}     10473    14.08431    19.27732          0        100
+{txt}{space 2}exp_veu_1y {c |}{res}     10476    22.03961    26.92852          0        100
+{txt}
+{com}. 
+. *****************
+. ** histograms of indidividuals 
+. ******************
+. 
+. 
+. foreach prob in `exp_rates'{c -(}
+{txt}  2{com}. hist `prob'
+{txt}  3{com}. graph export "${c -(}graph_folder{c )-}/sce_individual_dist/hist_`prob'",as(png) replace
+{txt}  4{com}. {c )-}
+{txt}(bin={res}36{txt}, start={res}0{txt}, width={res}2.7777778{txt})
+{res}{txt}(file /Users/Myworld/Dropbox/SearchMatchExpectation//graph//sce_individual_dist/hist_exp_en written in PNG format)
+(bin={res}37{txt}, start={res}0{txt}, width={res}2.7027027{txt})
+{res}{txt}(file /Users/Myworld/Dropbox/SearchMatchExpectation//graph//sce_individual_dist/hist_exp_eu written in PNG format)
+(bin={res}37{txt}, start={res}0{txt}, width={res}2.7027027{txt})
+{res}{txt}(file /Users/Myworld/Dropbox/SearchMatchExpectation//graph//sce_individual_dist/hist_exp_es written in PNG format)
+(bin={res}38{txt}, start={res}0{txt}, width={res}2.6315789{txt})
+{res}{txt}(file /Users/Myworld/Dropbox/SearchMatchExpectation//graph//sce_individual_dist/hist_exp_ee_change written in PNG format)
+(bin={res}40{txt}, start={res}0{txt}, width={res}2.5{txt})
+{res}{txt}(file /Users/Myworld/Dropbox/SearchMatchExpectation//graph//sce_individual_dist/hist_exp_ee_stay written in PNG format)
+(bin={res}38{txt}, start={res}0{txt}, width={res}2.8947368{txt})
+{res}{txt}(file /Users/Myworld/Dropbox/SearchMatchExpectation//graph//sce_individual_dist/hist_exp_ee written in PNG format)
+(bin={res}40{txt}, start={res}0{txt}, width={res}2.5{txt})
+{res}{txt}(file /Users/Myworld/Dropbox/SearchMatchExpectation//graph//sce_individual_dist/hist_exp_ue written in PNG format)
+(bin={res}40{txt}, start={res}0{txt}, width={res}2.5{txt})
+{res}{txt}(file /Users/Myworld/Dropbox/SearchMatchExpectation//graph//sce_individual_dist/hist_exp_ieu_1y written in PNG format)
+(bin={res}40{txt}, start={res}0{txt}, width={res}2.5{txt})
+{res}{txt}(file /Users/Myworld/Dropbox/SearchMatchExpectation//graph//sce_individual_dist/hist_exp_veu_1y written in PNG format)
+
+{com}. */
+. 
+. ddd
+{err}unrecognized command:  ddd
+{txt}{search r(199):r(199);}
+
+end of do-file
+
+{search r(199):r(199);}
+
+{com}. do "/Users/Myworld/Dropbox/SearchMatchExpectation/code/SCE.do"
+{txt}
+{com}. ****************************************************
+. ***  This do files uses SCE individual labor market *
+. *** survey to generate the aggregate perceived probability * 
+. *** of different flow rates and compare it with CPS **
+. **************************************** ************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/SearchMatchExpectation/"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/data/SCE"
+{txt}
+{com}. global graph_folder "${c -(}mainfolder{c )-}/graph/"
+{txt}
+{com}. global SCE_core_folder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/"
+{txt}
+{com}. *global sum_table_folder "${c -(}mainfolder{c )-}/tables"
+. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. /*
+> *****************************
+> *** import raw labor market SCE
+> *********************************
+> 
+> import excel "${c -(}folder{c )-}/sce-labor-microdata-public.xlsx", sheet("Data") cellrange(A2:DN18419) firstrow
+> 
+> ********************
+> *** Date format ****
+> ********************
+> gen date_str = string(date)
+> gen year = substr(date_str,1,4)
+> gen month = substr(date_str,5,2)
+> gen date2=year+"m"+month
+> gen date3= monthly(date2,"YM")
+> format date3 %tm
+> drop date_str date2 date
+> rename date3 date
+> destring year, replace
+> destring month, replace 
+> order date year month
+> xtset userid date
+> 
+> 
+> label var l1m "starting month of current/main job"
+> label var l1y "starting year of current/main job"
+> label var l3 "(average) annual earning from the current/main job before tax/deductions (in $)"
+> label var l4 "(average) annual earning from the current/main job before tax/deductions by range"
+> label var l4b "expected annual earning from the current/main job at y+10 (nominal)"
+> label var lmtype "employer type of current/main"
+> label var lmtype_5_other "employer type (others)"
+> label var lmind "business/industry of current employer"
+> label var lm5_1 "employer benefits: pension plan"
+> label var lm5_2 "employer benefits: pension plan"
+> label var lm5_3  "employer benefits: health insurance"
+> label var lm5_4 "employer benefits: dental/vision insurance"
+> label var lm5_5  "employer benefits: health care or dependent care"
+> label var lm5_6  "employer benefits: housing/husing subsidy"
+> label var lm5_7  "employer benefits: life/disability insurance"
+> label var lm5_8 "employer benefits: commuter benefits"
+> label var lm5_9 "employer benefits: childcare assistance"
+> label var lm5_10 "employer benefits: other"
+> label var lm5_10_other "employer benefits: other specified"
+> label var lm5_11 "employer benefits: none"
+> label var lmsat1 "satisfied with compensation (1-5 more satisfied)"
+> label var lmsat2 "satisfied with other aspect of the job (1-5 more satisfied)"
+> label var lmsat3 "fit with the job (1-7 more fit)"
+> label var lmsat4 "opportunity for promotion/progression from y to y+3"
+> label var lmsat5 "overall satisfication (1-5 more satisfied)"
+> label var l7m "last month of the most recent job"
+> label var l7y "last year of the most recent job"
+> label var l7dk_1 "never had a paid job"
+> label var l7bm "starting month of the most recent job"
+> label var l7by "starting year of the most recent job"
+> label var l9 "(average) annual earning from the most recent job before tax/deductions (in $)"
+> label var l10 "(average) annual earning from the most recent job before tax/deductions by range"
+> label var l11 "work for someone(1) or self-employment (2)"
+> label var l12 "employer type of most recent job"
+> label var l12_5_other "employer type of most recent job (other)"
+> label var l12b "business/industry of the most recent job"
+> label var l13_1 "employer benefits most recent job: pension plans"
+> label var l13_2 ""
+> label var l13_3 ""
+> label var l13_4 ""
+> label var l13_5 ""
+> label var l13_6 ""
+> label var l13_7 ""
+> label var l13_8 ""
+> label var l13_9 ""
+> label var l13_10 ""
+> label var l13_11 ""
+> label var l13_10_other ""
+> label var js5 "have looked for a job m-1 to m (1 yes 2 no)"
+> label var js6 "looking for a job leaving current (1), not leaving (2), no (3)" 
+> label var rw2a "min wage/salary for accepting a hypothetical job offer right now"
+> label var rw2b "unit for wage (hour 1 week 2 biweek 3 month 4 year 5) till 2017, yearly after 2017"
+> label var js7 "nb of weeks looking for a job"
+> label var js8_1 "things done to look for a job"
+> label var js8_2 ""
+> label var js8_3 ""
+> label var js8_4 ""
+> label var js8_5 ""
+> label var js8_6 ""
+> label var js8_7 ""
+> label var js8_8 ""
+> label var js8_9 ""
+> label var js8_10 ""
+> label var js8_11 ""
+> label var js8_12 ""
+> label var js8_13 ""
+> label var js8_14 ""
+> label var js8_14_other
+> label var js9 "nb of hours spent on job search from d-7 to d"
+> label var nl1 "nb of job offers received from m-4 to m"
+> label var nl2a_1 ""
+> label var nl2a_2 ""
+> label var nl2a_3 ""
+> label var nl2b_1 ""
+> label var nl2b_2 ""
+> label var nl2b_3 ""
+> label var nl3_1 "currently working at the accepted job"
+> label var nl3_2 "once worked at the accepted job"
+> label var nl3_3 "rejected the job offer"
+> label var nl4_1 ""
+> label var nl4_2 ""
+> label var nl4_3 "" 
+> label var oo1_1 "expected prob of employed from m to m+4" 
+> label var oo1_2 "expected prob of employed by same employer from m to m+4" 
+> label var oo1_3 "expected prob of employed by a different employer from m to m+4" 
+> label var oo1_4 "expected prob of self-employed from m to m+4" 
+> label var oo1_5 "expected prob of unemployed/looking for a job from m to m+4" 
+> label var oo1_6 "expected prob of unemployed/not looking for a job from m to m+4" 
+> label var oo2u "expected prob of receing >1 job offer from m to m+4" 
+> label var oo2e "expected prob of receing >1 job offer from another employer m to m+4" 
+> label var oo2new "expected nb of job offers received from m to m+4" 
+> label var oo2a "expected AVERAGE wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2a2 "expected MAX wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2b_1 ""
+> label var oo2b_2 ""
+> label var oo2b_3 ""
+> label var oo2b_4 ""
+> label var oo2b_5 ""
+> label var oo2b_6 ""
+> label var oo2c1 "prob of accepting an offer at wage < 0.8 average expected wage offer"
+> label var oo2c2 "prob of accepting an offer at wage between 0.8-0.9 average expected wage offer"
+> label var oo2c3 "prob of accepting an offer at wage between 0.9-1.0 average expected wage offer"
+> label var oo2c4 "prob of accepting an offer at wage between 1.0-1.1 average expected wage offer"
+> label var oo2c5 "prob of accepting an offer at wage between 1.1-1.2 average expected wage offer"
+> label var oo2c6 "prob of accepting an offer at wage>1.2*average expected wage offer"
+> label var oo2e2 "expected earning in m+4 (in $)"
+> label var oo2e2dk_1 "zero earning due to non-working from m to m+4"
+> label var oo2f ""
+> label var q113 ""
+> label var q115 ""
+> label var q117 "planed retirement age"
+> label var q118 "planed retirement age has changed from y-1 to y(1 sooner 2 no change 3 later)"
+> label var q119 "nb of years earlier before retirement than planed"
+> label var q120  "nb of years later before retirement than planed"
+> label var q121  ""
+> label var q122 ""
+> 
+> save "${c -(}folder{c )-}/LaborExpSCEIndM",replace 
+> 
+> 
+> ***************************************************
+> **** subselect variables from core module of SCE ***
+> ****************************************************
+> 
+> use "${c -(}SCE_core_folder{c )-}/IncExpSCEProbIndM.dta", clear
+> 
+> global keep_list year month userid weight ///
+>        Q32 Q33 Q37 state D6 D2new_9 DSAME Q12new Q13new Q14new ///
+>            Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 ///
+>            Q17new Q18new Q19 Q20new Q21new Q22new
+> 
+> keep ${c -(}keep_list{c )-}
+> 
+> save "${c -(}folder{c )-}/IncExpSCEIndM_short",replace 
+> */
+. 
+. ***************************************************
+. ***** merge SCE core and labor market module ****
+. ************************************************
+. 
+. use "${c -(}folder{c )-}/IncExpSCEIndM_short",clear
+{txt}
+{com}. 
+. merge 1:1 year month userid using "${c -(}folder{c )-}/LaborExpSCEIndM", keep(master match using)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}          83,800
+{txt}{col 9}from master{col 30}{res}          81,988{txt}  (_merge==1)
+{col 9}from using{col 30}{res}           1,812{txt}  (_merge==2)
+
+{col 5}matched{col 30}{res}          16,605{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. rename _merge sce_module_merge
+{res}{txt}
+{com}. 
+. *****************************************************
+. *** generate aggregate average rates expectations ***
+. ****************************************************
+. 
+. keep if l1y!=.  
+{txt}(88116 observations deleted)
+
+{com}. * keep only obs with current job 
+. 
+. gen exp_en = oo1_6  
+{txt}(7535 missing values generated)
+
+{com}. gen exp_eu = oo1_5
+{txt}(6929 missing values generated)
+
+{com}. gen exp_es = oo1_4 
+{txt}(6563 missing values generated)
+
+{com}. gen exp_ee_change = oo1_3 
+{txt}(5397 missing values generated)
+
+{com}. gen exp_ee_stay = oo1_2 
+{txt}(1627 missing values generated)
+
+{com}. gen exp_ee = exp_ee_change+exp_ee_stay
+{txt}(5537 missing values generated)
+
+{com}. gen exp_ue = Q22new
+{txt}(1808 missing values generated)
+
+{com}. gen exp_ieu_1y = Q13new
+{txt}(1816 missing values generated)
+
+{com}. gen exp_veu_1y = Q14new
+{txt}(1813 missing values generated)
+
+{com}. 
+. *****************
+. ** summary stats
+. *****************
+. 
+. local exp_rates exp_en exp_eu exp_es exp_ee_change exp_ee_stay exp_ee exp_ue exp_ieu_1y exp_veu_1y
+{txt}
+{com}. 
+. summarize `exp_rates'
+
+{txt}    Variable {c |}       Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 56}
+{space 6}exp_en {c |}{res}      4754    3.406815    12.85871          0        100
+{txt}{space 6}exp_eu {c |}{res}      5360    4.431716    9.208994          0        100
+{txt}{space 6}exp_es {c |}{res}      5726    21.65526    37.48647          0        100
+{txt}exp_ee_cha~e {c |}{res}      6892    15.02539    19.90427          0        100
+{txt}{space 1}exp_ee_stay {c |}{res}     10662    82.78691    26.64279          0        100
+{txt}{hline 13}{c +}{hline 56}
+{space 6}exp_ee {c |}{res}      6752    89.06887    23.59591          0        110
+{txt}{space 6}exp_ue {c |}{res}     10481    55.85068    31.83255          0        100
+{txt}{space 2}exp_ieu_1y {c |}{res}     10473    14.08431    19.27732          0        100
+{txt}{space 2}exp_veu_1y {c |}{res}     10476    22.03961    26.92852          0        100
+{txt}
+{com}. 
+. *****************
+. ** histograms of indidividuals 
+. ******************
+. 
+. /*
+> foreach prob in `exp_rates'{c -(}
+> hist `prob'
+> graph export "${c -(}graph_folder{c )-}/sce_individual_dist/hist_`prob'",as(png) replace
+> {c )-}
+> */
+. 
+. ddd
+{err}unrecognized command:  ddd
+{txt}{search r(199):r(199);}
+
+end of do-file
+
+{search r(199):r(199);}
+
+{com}. do "/Users/Myworld/Dropbox/SearchMatchExpectation/code/SCE.do"
+{txt}
+{com}. ****************************************************
+. ***  This do files uses SCE individual labor market *
+. *** survey to generate the aggregate perceived probability * 
+. *** of different flow rates and compare it with CPS **
+. **************************************** ************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/SearchMatchExpectation/"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/data/SCE"
+{txt}
+{com}. global graph_folder "${c -(}mainfolder{c )-}/graph/"
+{txt}
+{com}. global SCE_core_folder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/"
+{txt}
+{com}. *global sum_table_folder "${c -(}mainfolder{c )-}/tables"
+. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. /*
+> *****************************
+> *** import raw labor market SCE
+> *********************************
+> 
+> import excel "${c -(}folder{c )-}/sce-labor-microdata-public.xlsx", sheet("Data") cellrange(A2:DN18419) firstrow
+> 
+> ********************
+> *** Date format ****
+> ********************
+> gen date_str = string(date)
+> gen year = substr(date_str,1,4)
+> gen month = substr(date_str,5,2)
+> gen date2=year+"m"+month
+> gen date3= monthly(date2,"YM")
+> format date3 %tm
+> drop date_str date2 date
+> rename date3 date
+> destring year, replace
+> destring month, replace 
+> order date year month
+> xtset userid date
+> 
+> 
+> label var l1m "starting month of current/main job"
+> label var l1y "starting year of current/main job"
+> label var l3 "(average) annual earning from the current/main job before tax/deductions (in $)"
+> label var l4 "(average) annual earning from the current/main job before tax/deductions by range"
+> label var l4b "expected annual earning from the current/main job at y+10 (nominal)"
+> label var lmtype "employer type of current/main"
+> label var lmtype_5_other "employer type (others)"
+> label var lmind "business/industry of current employer"
+> label var lm5_1 "employer benefits: pension plan"
+> label var lm5_2 "employer benefits: pension plan"
+> label var lm5_3  "employer benefits: health insurance"
+> label var lm5_4 "employer benefits: dental/vision insurance"
+> label var lm5_5  "employer benefits: health care or dependent care"
+> label var lm5_6  "employer benefits: housing/husing subsidy"
+> label var lm5_7  "employer benefits: life/disability insurance"
+> label var lm5_8 "employer benefits: commuter benefits"
+> label var lm5_9 "employer benefits: childcare assistance"
+> label var lm5_10 "employer benefits: other"
+> label var lm5_10_other "employer benefits: other specified"
+> label var lm5_11 "employer benefits: none"
+> label var lmsat1 "satisfied with compensation (1-5 more satisfied)"
+> label var lmsat2 "satisfied with other aspect of the job (1-5 more satisfied)"
+> label var lmsat3 "fit with the job (1-7 more fit)"
+> label var lmsat4 "opportunity for promotion/progression from y to y+3"
+> label var lmsat5 "overall satisfication (1-5 more satisfied)"
+> label var l7m "last month of the most recent job"
+> label var l7y "last year of the most recent job"
+> label var l7dk_1 "never had a paid job"
+> label var l7bm "starting month of the most recent job"
+> label var l7by "starting year of the most recent job"
+> label var l9 "(average) annual earning from the most recent job before tax/deductions (in $)"
+> label var l10 "(average) annual earning from the most recent job before tax/deductions by range"
+> label var l11 "work for someone(1) or self-employment (2)"
+> label var l12 "employer type of most recent job"
+> label var l12_5_other "employer type of most recent job (other)"
+> label var l12b "business/industry of the most recent job"
+> label var l13_1 "employer benefits most recent job: pension plans"
+> label var l13_2 ""
+> label var l13_3 ""
+> label var l13_4 ""
+> label var l13_5 ""
+> label var l13_6 ""
+> label var l13_7 ""
+> label var l13_8 ""
+> label var l13_9 ""
+> label var l13_10 ""
+> label var l13_11 ""
+> label var l13_10_other ""
+> label var js5 "have looked for a job m-1 to m (1 yes 2 no)"
+> label var js6 "looking for a job leaving current (1), not leaving (2), no (3)" 
+> label var rw2a "min wage/salary for accepting a hypothetical job offer right now"
+> label var rw2b "unit for wage (hour 1 week 2 biweek 3 month 4 year 5) till 2017, yearly after 2017"
+> label var js7 "nb of weeks looking for a job"
+> label var js8_1 "things done to look for a job"
+> label var js8_2 ""
+> label var js8_3 ""
+> label var js8_4 ""
+> label var js8_5 ""
+> label var js8_6 ""
+> label var js8_7 ""
+> label var js8_8 ""
+> label var js8_9 ""
+> label var js8_10 ""
+> label var js8_11 ""
+> label var js8_12 ""
+> label var js8_13 ""
+> label var js8_14 ""
+> label var js8_14_other
+> label var js9 "nb of hours spent on job search from d-7 to d"
+> label var nl1 "nb of job offers received from m-4 to m"
+> label var nl2a_1 ""
+> label var nl2a_2 ""
+> label var nl2a_3 ""
+> label var nl2b_1 ""
+> label var nl2b_2 ""
+> label var nl2b_3 ""
+> label var nl3_1 "currently working at the accepted job"
+> label var nl3_2 "once worked at the accepted job"
+> label var nl3_3 "rejected the job offer"
+> label var nl4_1 ""
+> label var nl4_2 ""
+> label var nl4_3 "" 
+> label var oo1_1 "expected prob of employed from m to m+4" 
+> label var oo1_2 "expected prob of employed by same employer from m to m+4" 
+> label var oo1_3 "expected prob of employed by a different employer from m to m+4" 
+> label var oo1_4 "expected prob of self-employed from m to m+4" 
+> label var oo1_5 "expected prob of unemployed/looking for a job from m to m+4" 
+> label var oo1_6 "expected prob of unemployed/not looking for a job from m to m+4" 
+> label var oo2u "expected prob of receing >1 job offer from m to m+4" 
+> label var oo2e "expected prob of receing >1 job offer from another employer m to m+4" 
+> label var oo2new "expected nb of job offers received from m to m+4" 
+> label var oo2a "expected AVERAGE wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2a2 "expected MAX wage ($ annual) for possible offers received from m to m+4" 
+> label var oo2b_1 ""
+> label var oo2b_2 ""
+> label var oo2b_3 ""
+> label var oo2b_4 ""
+> label var oo2b_5 ""
+> label var oo2b_6 ""
+> label var oo2c1 "prob of accepting an offer at wage < 0.8 average expected wage offer"
+> label var oo2c2 "prob of accepting an offer at wage between 0.8-0.9 average expected wage offer"
+> label var oo2c3 "prob of accepting an offer at wage between 0.9-1.0 average expected wage offer"
+> label var oo2c4 "prob of accepting an offer at wage between 1.0-1.1 average expected wage offer"
+> label var oo2c5 "prob of accepting an offer at wage between 1.1-1.2 average expected wage offer"
+> label var oo2c6 "prob of accepting an offer at wage>1.2*average expected wage offer"
+> label var oo2e2 "expected earning in m+4 (in $)"
+> label var oo2e2dk_1 "zero earning due to non-working from m to m+4"
+> label var oo2f ""
+> label var q113 ""
+> label var q115 ""
+> label var q117 "planed retirement age"
+> label var q118 "planed retirement age has changed from y-1 to y(1 sooner 2 no change 3 later)"
+> label var q119 "nb of years earlier before retirement than planed"
+> label var q120  "nb of years later before retirement than planed"
+> label var q121  ""
+> label var q122 ""
+> 
+> save "${c -(}folder{c )-}/LaborExpSCEIndM",replace 
+> 
+> 
+> ***************************************************
+> **** subselect variables from core module of SCE ***
+> ****************************************************
+> 
+> use "${c -(}SCE_core_folder{c )-}/IncExpSCEProbIndM.dta", clear
+> 
+> global keep_list year month userid weight ///
+>        Q32 Q33 Q37 state D6 D2new_9 DSAME Q12new Q13new Q14new ///
+>            Q10_1 Q10_2 Q10_3 Q10_4 Q10_5 Q10_6 Q10_7 Q10_8 Q10_9 Q10_10 Q11 ///
+>            Q17new Q18new Q19 Q20new Q21new Q22new
+> 
+> keep ${c -(}keep_list{c )-}
+> 
+> save "${c -(}folder{c )-}/IncExpSCEIndM_short",replace 
+> */
+. 
+. ***************************************************
+. ***** merge SCE core and labor market module ****
+. ************************************************
+. 
+. use "${c -(}folder{c )-}/IncExpSCEIndM_short",clear
+{txt}
+{com}. 
+. merge 1:1 year month userid using "${c -(}folder{c )-}/LaborExpSCEIndM", keep(master match using)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}          83,800
+{txt}{col 9}from master{col 30}{res}          81,988{txt}  (_merge==1)
+{col 9}from using{col 30}{res}           1,812{txt}  (_merge==2)
+
+{col 5}matched{col 30}{res}          16,605{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. rename _merge sce_module_merge
+{res}{txt}
+{com}. 
+. *****************************************************
+. *** generate aggregate average rates expectations ***
+. ****************************************************
+. 
+. keep if l1y!=.  
+{txt}(88116 observations deleted)
+
+{com}. * keep only obs with current job 
+. 
+. gen exp_en = oo1_6  
+{txt}(7535 missing values generated)
+
+{com}. gen exp_eu = oo1_5
+{txt}(6929 missing values generated)
+
+{com}. gen exp_es = oo1_4 
+{txt}(6563 missing values generated)
+
+{com}. gen exp_ee_change = oo1_3 
+{txt}(5397 missing values generated)
+
+{com}. gen exp_ee_stay = oo1_2 
+{txt}(1627 missing values generated)
+
+{com}. gen exp_ee = exp_ee_change+exp_ee_stay
+{txt}(5537 missing values generated)
+
+{com}. gen exp_ue = Q22new
+{txt}(1808 missing values generated)
+
+{com}. gen exp_ieu_1y = Q13new
+{txt}(1816 missing values generated)
+
+{com}. gen exp_veu_1y = Q14new
+{txt}(1813 missing values generated)
+
+{com}. 
+. *****************
+. ** summary stats
+. *****************
+. 
+. local exp_rates exp_en exp_eu exp_es exp_ee_change exp_ee_stay exp_ee exp_ue exp_ieu_1y exp_veu_1y
+{txt}
+{com}. 
+. summarize `exp_rates'
+
+{txt}    Variable {c |}       Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 56}
+{space 6}exp_en {c |}{res}      4754    3.406815    12.85871          0        100
+{txt}{space 6}exp_eu {c |}{res}      5360    4.431716    9.208994          0        100
+{txt}{space 6}exp_es {c |}{res}      5726    21.65526    37.48647          0        100
+{txt}exp_ee_cha~e {c |}{res}      6892    15.02539    19.90427          0        100
+{txt}{space 1}exp_ee_stay {c |}{res}     10662    82.78691    26.64279          0        100
+{txt}{hline 13}{c +}{hline 56}
+{space 6}exp_ee {c |}{res}      6752    89.06887    23.59591          0        110
+{txt}{space 6}exp_ue {c |}{res}     10481    55.85068    31.83255          0        100
+{txt}{space 2}exp_ieu_1y {c |}{res}     10473    14.08431    19.27732          0        100
+{txt}{space 2}exp_veu_1y {c |}{res}     10476    22.03961    26.92852          0        100
+{txt}
+{com}. 
+. *****************
+. ** histograms of indidividuals 
+. ******************
+. 
+. /*
+> foreach prob in `exp_rates'{c -(}
+> hist `prob'
+> graph export "${c -(}graph_folder{c )-}/sce_individual_dist/hist_`prob'",as(png) replace
+> {c )-}
+> */
+. 
+. 
+. 
+. *********************
+. ** aggregate average 
+. ********************
+. 
+. collapse `exp_rates', by(date year month)
+{txt}
+{com}. 
+. *********************
+. ** convert to 0-1 scale 
+. ********************
+. 
+. foreach rate in `exp_rates'{c -(}
+{txt}  2{com}. replace `rate'=`rate'/100
+{txt}  3{com}. {c )-}
+{txt}(15 real changes made)
+(15 real changes made)
+(15 real changes made)
+(15 real changes made)
+(15 real changes made)
+(15 real changes made)
+(16 real changes made)
+(16 real changes made)
+(16 real changes made)
+
+{com}. 
+. 
+. label var exp_en "expected prob from e to non-participation from m to m+4"
+{txt}
+{com}. label var exp_eu "expected prob from e to ue from m to m+4"
+{txt}
+{com}. label var exp_es "expected prob from e to self-employment from m to m+4"
+{txt}
+{com}. label var exp_ee_change "expected prob from e to e at a different job from m to m+4"
+{txt}
+{com}. label var exp_ee_stay "expected prob from e to e at the same job from m to m+4"
+{txt}
+{com}. label var exp_ee "expected prob from e to e from m to m+4"
+{txt}
+{com}. label var exp_ue "expected prob of finding a job if ue from m to m+3"
+{txt}
+{com}. label var exp_ieu_1y "expected prob of losing the job from y to y+1"
+{txt}
+{com}. label var exp_veu_1y "expected prob of voluntarily leaving the job from y to y+1"
+{txt}
+{com}. 
+. *************************
+. * from month to quarter 
+. *************************
+. 
+. rename month month_survey
+{res}{txt}
+{com}. 
+. gen month = .
+{txt}(16 missing values generated)
+
+{com}. replace month = 4 if month_survey ==3
+{txt}(6 real changes made)
+
+{com}. replace month = 7 if month_survey ==7 
+{txt}(5 real changes made)
+
+{com}. replace month = 10 if month_survey == 11
+{txt}(5 real changes made)
+
+{com}. drop date
+{txt}
+{com}. ** the month to be merged with CPS
+. save "${c -(}folder{c )-}/LaborExpSCEPopM.dta",replace 
+{txt}file /Users/Myworld/Dropbox/SearchMatchExpectation//data/SCE/LaborExpSCEPopM.dta saved
+
+{com}. 
+. 
+. 
+{txt}end of do-file
+
+{com}. clear
+
+. clear
+
+. do "/Users/Myworld/Dropbox/SearchMatchExpectation/code/SCE_CPS_compare.do"
+{txt}
+{com}. ****************************************************
+. ***  This do files uses SCE individual labor market *
+. *** survey to generate the aggregate perceived probability * 
+. *** of different flow rates and compare it with CPS **
+. **************************************** ************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/SearchMatchExpectation/"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/data/SCE"
+{txt}
+{com}. global graph_folder "${c -(}mainfolder{c )-}/graph/"
+{txt}
+{com}. *global sum_table_folder "${c -(}mainfolder{c )-}/tables"
+. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. 
+. /*
+> ** reformat date in CPS data
+> 
+> use "${c -(}mainfolder{c )-}/workingdata/CPS_worker_flows.dta",clear
+> generate date = dofc(tq)
+> format date %td
+> *gen year = year(date)
+> *gen month = month(date)
+> save "${c -(}mainfolder{c )-}/workingdata/CPS_worker_flows.dta",replace
+> */
+. 
+. 
+. use "${c -(}folder{c )-}/LaborExpSCEPopM.dta",clear
+{txt}
+{com}. merge 1:1 year month using "${c -(}mainfolder{c )-}/workingdata/CPS_worker_flows.dta",keep(master match using)
+{res}{txt}{p 0 7 2}
+(note: variable
+year was 
+int, now float to accommodate using data's values)
+{p_end}
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}              84
+{txt}{col 9}from master{col 30}{res}               0{txt}  (_merge==1)
+{col 9}from using{col 30}{res}              84{txt}  (_merge==2)
+
+{col 5}matched{col 30}{res}              16{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. drop _merge 
+{txt}
+{com}. 
+. *****************************
+. *** generate monthly date
+. *****************************
+. gen date_str=string(year)+"m"+string(month)
+{txt}
+{com}. gen ymdate= monthly(date_str,"YM")
+{txt}
+{com}. format ymdate %tm
+{txt}
+{com}. drop date 
+{txt}
+{com}. rename ymdate date
+{res}{txt}
+{com}. tsset date
+{res}{txt}{col 9}time variable:  {res}{col 25}date, 1995m1 to 2019m10, but with gaps
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. 
+. ************************
+. * realizations at m+3 **
+. ************************
+. * realized flow rate from m to m+3 and the expected rate at m
+. 
+. foreach rate in eurate_sa enrate_sa uerate_sa ///
+>         unrate_sa nerate_sa nurate_sa urate_sa ///
+>                 j2jrate_sa{c -(}
+{txt}  2{com}. gen `rate'_r = f3.`rate'                
+{txt}  3{com}. label var `rate'_r "realized rate next quarter"
+{txt}  4{com}. {c )-}
+{txt}(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+
+{com}. 
+. 
+. ********************
+. * times series plot
+. *********************
+. 
+. keep if year>=2013
+{txt}(72 observations deleted)
+
+{com}. 
+. *seperation rate
+. 
+. /*
+> twoway (tsline exp_eu, lcolor(blue) lwidth(thick)) /// 
+>        (tsline eurate_sa,yaxis(2) lcolor(red) lwidth(thick)), ///
+>            ytitle("expected") ///
+>            ytitle("realized", axis(2)) ///
+>            legend(label(1 "expected") label(2 "realized (RHS)")) ///
+>            title("expected and perceived seperation rate")
+>            
+> graph export "${c -(}graph_folder{c )-}/compare/seperation_rate.png", as(png) replace 
+> 
+> 
+> * emp to non-labor force rate
+> 
+> twoway (tsline exp_en, lcolor(blue) lwidth(thick)) /// 
+>        (tsline enrate_sa,yaxis(2) lcolor(red) lwidth(thick)), ///
+>            ytitle("expected") ///
+>            ytitle("realized", axis(2)) ///
+>            legend(label(1 "expected") label(2 "realized (RHS)")) ///
+>            title("expected and realized exit rate")
+>            
+> graph export "${c -(}graph_folder{c )-}/compare/exit_rate.png", as(png) replace 
+> 
+> * job to job rate
+> twoway (tsline exp_ee_change, lcolor(blue) lwidth(thick)) /// 
+>        (tsline j2jrate_sa,yaxis(2) lcolor(red) lwidth(thick)), ///
+>            ytitle("expected") ///
+>            ytitle("realized", axis(2)) ///
+>            legend(label(1 "expected") label(2 "realized (RHS)")) ///
+>            title("expected and realized job-to-job rate")
+>            
+> graph export "${c -(}graph_folder{c )-}/compare/j2j_rate.png", as(png) replace 
+> */
+. 
+. * job finding rate
+. twoway (tsline exp_ue, lcolor(blue) lwidth(thick)) /// 
+>        (tsline uerate_sa,yaxis(2) lcolor(red) lwidth(thick)), ///
+>            ytitle("expected") ///
+>            ytitle("realized", axis(2)) ///
+>            legend(label(1 "expected") label(2 "realized (RHS)")) ///
+>            title("expected and realized job-finding rate")
+{res}{txt}
+{com}.            
+. graph export "${c -(}graph_folder{c )-}/compare/j2j_rate.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/SearchMatchExpectation//graph//compare/j2j_rate.png written in PNG format)
+
+{com}. 
+. 
+{txt}end of do-file
+
+{com}. clear
+
+. do "/Users/Myworld/Dropbox/SearchMatchExpectation/code/SCE_CPS_compare.do"
+{txt}
+{com}. ****************************************************
+. ***  This do files uses SCE individual labor market *
+. *** survey to generate the aggregate perceived probability * 
+. *** of different flow rates and compare it with CPS **
+. **************************************** ************
+. 
+. 
+. clear
+{txt}
+{com}. global mainfolder "/Users/Myworld/Dropbox/SearchMatchExpectation/"
+{txt}
+{com}. global folder "${c -(}mainfolder{c )-}/data/SCE"
+{txt}
+{com}. global graph_folder "${c -(}mainfolder{c )-}/graph/"
+{txt}
+{com}. *global sum_table_folder "${c -(}mainfolder{c )-}/tables"
+. 
+. cd ${c -(}folder{c )-}
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. pwd
+{res}/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE
+{txt}
+{com}. set more off 
+{txt}
+{com}. 
+. 
+. /*
+> ** reformat date in CPS data
+> 
+> use "${c -(}mainfolder{c )-}/workingdata/CPS_worker_flows.dta",clear
+> generate date = dofc(tq)
+> format date %td
+> *gen year = year(date)
+> *gen month = month(date)
+> save "${c -(}mainfolder{c )-}/workingdata/CPS_worker_flows.dta",replace
+> */
+. 
+. 
+. use "${c -(}folder{c )-}/LaborExpSCEPopM.dta",clear
+{txt}
+{com}. merge 1:1 year month using "${c -(}mainfolder{c )-}/workingdata/CPS_worker_flows.dta",keep(master match using)
+{res}{txt}{p 0 7 2}
+(note: variable
+year was 
+int, now float to accommodate using data's values)
+{p_end}
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}              84
+{txt}{col 9}from master{col 30}{res}               0{txt}  (_merge==1)
+{col 9}from using{col 30}{res}              84{txt}  (_merge==2)
+
+{col 5}matched{col 30}{res}              16{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. drop _merge 
+{txt}
+{com}. 
+. *****************************
+. *** generate monthly date
+. *****************************
+. gen date_str=string(year)+"m"+string(month)
+{txt}
+{com}. gen ymdate= monthly(date_str,"YM")
+{txt}
+{com}. format ymdate %tm
+{txt}
+{com}. drop date 
+{txt}
+{com}. rename ymdate date
+{res}{txt}
+{com}. tsset date
+{res}{txt}{col 9}time variable:  {res}{col 25}date, 1995m1 to 2019m10, but with gaps
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. 
+. ************************
+. * realizations at m+3 **
+. ************************
+. * realized flow rate from m to m+3 and the expected rate at m
+. 
+. foreach rate in eurate_sa enrate_sa uerate_sa ///
+>         unrate_sa nerate_sa nurate_sa urate_sa ///
+>                 j2jrate_sa{c -(}
+{txt}  2{com}. gen `rate'_r = f3.`rate'                
+{txt}  3{com}. label var `rate'_r "realized rate next quarter"
+{txt}  4{com}. {c )-}
+{txt}(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+(1 missing value generated)
+
+{com}. 
+. 
+. ********************
+. * times series plot
+. *********************
+. 
+. keep if year>=2013
+{txt}(72 observations deleted)
+
+{com}. 
+. *seperation rate
+. 
+. 
+. twoway (tsline exp_eu, lcolor(blue) lwidth(thick)) /// 
+>        (tsline eurate_sa,yaxis(2) lcolor(red) lwidth(thick)), ///
+>            ytitle("expected") ///
+>            ytitle("realized", axis(2)) ///
+>            legend(label(1 "expected") label(2 "realized (RHS)")) ///
+>            title("expected and perceived seperation rate")
+{res}{txt}
+{com}.            
+. graph export "${c -(}graph_folder{c )-}/compare/seperation_rate.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/SearchMatchExpectation//graph//compare/seperation_rate.png written in PNG format)
+
+{com}. 
+. 
+. * emp to non-labor force rate
+. 
+. twoway (tsline exp_en, lcolor(blue) lwidth(thick)) /// 
+>        (tsline enrate_sa,yaxis(2) lcolor(red) lwidth(thick)), ///
+>            ytitle("expected") ///
+>            ytitle("realized", axis(2)) ///
+>            legend(label(1 "expected") label(2 "realized (RHS)")) ///
+>            title("expected and realized exit rate")
+{res}{txt}
+{com}.            
+. graph export "${c -(}graph_folder{c )-}/compare/exit_rate.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/SearchMatchExpectation//graph//compare/exit_rate.png written in PNG format)
+
+{com}. 
+. * job to job rate
+. twoway (tsline exp_ee_change, lcolor(blue) lwidth(thick)) /// 
+>        (tsline j2jrate_sa,yaxis(2) lcolor(red) lwidth(thick)), ///
+>            ytitle("expected") ///
+>            ytitle("realized", axis(2)) ///
+>            legend(label(1 "expected") label(2 "realized (RHS)")) ///
+>            title("expected and realized job-to-job rate")
+{res}{txt}
+{com}.            
+. graph export "${c -(}graph_folder{c )-}/compare/j2j_rate.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/SearchMatchExpectation//graph//compare/j2j_rate.png written in PNG format)
+
+{com}. 
+. 
+. * job finding rate
+. twoway (tsline exp_ue, lcolor(blue) lwidth(thick)) /// 
+>        (tsline uerate_sa,yaxis(2) lcolor(red) lwidth(thick)), ///
+>            ytitle("expected") ///
+>            ytitle("realized", axis(2)) ///
+>            legend(label(1 "expected") label(2 "realized (RHS)")) ///
+>            title("expected and realized job-finding rate")
+{res}{txt}
+{com}. graph export "${c -(}graph_folder{c )-}/compare/job_finding_rate.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/SearchMatchExpectation//graph//compare/job_finding_rate.png written in PNG format)
+
+{com}. 
+. 
+{txt}end of do-file
+
+{com}. clear
+
+. clear
+
+. 
