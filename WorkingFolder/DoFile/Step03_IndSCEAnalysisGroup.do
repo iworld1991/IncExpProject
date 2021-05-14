@@ -1,9 +1,9 @@
 clear
 global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
 global folder "${mainfolder}/SurveyData/"
-global sum_graph_folder "${mainfolder}/Graphs/ind"
+global graph_folder "${mainfolder}/Graphs/"
 global sum_table_folder "${mainfolder}/Tables"
-
+global otherdata_folder "${mainfolder}/OtherData"
 cd ${folder}
 pwd
 set more off 
@@ -199,11 +199,10 @@ label value nlit_g nlitlb
 
 local group_vars byear_g age_g edu_g HHinc_g fbetter nlit_g
 
-ddd
+/*
 *********************************
 *** bar charts *****
 **********************************
-
 
 graph bar incvar, ///
            over(HHinc,relabel(1 "<10k" 2 "<20k" 3 "<30k" 4 "<40k" 5 "<50k" 6 "<60k" 7 "<75k" 8 "<100k" 9 "<150k" 10 "<200k" 11 ">200k")) ///
@@ -299,7 +298,7 @@ preserve
 collapse incvar rincvar, by(byear_5yr edu_g gender) 
 save "${folder}/SCE/incvar_by_byear_5yr_edu_gender.dta",replace
 restore 
-
+*/
 
 **********************************
 *** tables and hists of Vars *****
@@ -384,6 +383,84 @@ graph export "${sum_graph_folder}/hist/hist_`mom'_`gp'.png",as(png) replace
 */
 
 
+*******************************************
+*** comparison with SIPP realizations *****
+********************************************
+
+gen YM = year*100+month
+*replace educ = edu_g
+
+
+** full sample
+preserve
+
+merge m:1 YM using "${otherdata_folder}/sipp/sipp_history_vol_decomposed.dta", keep(master match)
+drop _merge 
+xtset ID date
+
+collapse (mean) incvar rincvar permanent transitory, by(date year month) 
+tsset date 
+
+table date if permanent!=.
+gen pvar = permanent^2
+gen tvar = transitory^2
+
+twoway (tsline rincvar,lp(solid) lwidth(thick)) ///
+       (tsline tvar, yaxis(2) lp(dash) lwidth(thick)), ///
+       xtitle("date") ///
+	   ytitle("") ///
+	   title("Perceived and realized transitory risk") ///
+	   legend(label(1 "perceived") label(2 "realized transitory(RHS)") col(2))
+ graph export "${graph_folder}/sipp/real_transitory_compare.png",as(png) replace  
+
+ 
+twoway (tsline rincvar,lp(solid) lwidth(thick)) ///
+       (tsline pvar, yaxis(2) lp(dash) lwidth(thick)), ///
+       xtitle("date") ///
+	   ytitle("") ///
+	   title("Perceived and realized permanent risk") ///
+	   legend(label(1 "perceived") label(2 "realized permanent(RHS)") col(2))
+graph export "${graph_folder}/sipp/real_permanent_compare.png",as(png) replace  
+restore
+
+
+** sub sample
+
+
+preserve
+
+merge m:1 gender educ age_5yr YM ///
+         using "${otherdata_folder}/sipp/sipp_history_vol_decomposed_edu_gender_age5.dta", keep(master match)
+drop _merge 
+xtset ID date
+
+collapse (mean) incvar rincvar permanent transitory, by(date year month gender educ age_5yr) 
+
+table date if permanent!=.
+gen pvar = permanent^2
+gen tvar = transitory^2
+
+
+twoway (scatter rincvar tvar) ///
+       (lfit rincvar tvar), ///
+       xtitle("transitory risks") ///
+	   ytitle("perceived risks") ///
+	   title("Perceived and realized transitory risk") ///
+	   legend(label(1 "xxx") label(2 "xx") col(2))
+ graph export "${graph_folder}/sipp/real_transitory_by_age_edu_gender_compare.png",as(png) replace  
+
+ 
+twoway (scatter rincvar pvar) ///
+       (lfit rincvar pvar), ///
+       xtitle("permanent risks") ///
+	   ytitle("perceived risks") ///
+	   title("Perceived and realized permanent risk") ///
+	   legend(label(1 "xxx") label(2 "xxx") col(2))
+graph export "${graph_folder}/sipp/real_permanent_by_age_edu_gender_compare.png",as(png) replace  
+restore
+
+
+/*
 **********************************
 *** time series pltos by group *****
 **********************************

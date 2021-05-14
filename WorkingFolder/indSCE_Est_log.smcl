@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Est_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}23 Apr 2021, 10:22:28
+ {txt}opened on:  {res}14 May 2021, 10:19:21
 {txt}
 {com}. 
 . *********************************************************
@@ -320,7 +320,466 @@
 . local group_vars byear_g age_g edu_g HHinc_g fbetter nlit_g
 {txt}
 {com}. 
-. ddd
+. /*
+> *********************************
+> *** bar charts *****
+> **********************************
+> 
+> graph bar incvar, ///
+>            over(HHinc,relabel(1 "<10k" 2 "<20k" 3 "<30k" 4 "<40k" 5 "<50k" 6 "<60k" 7 "<75k" 8 "<100k" 9 "<150k" 10 "<200k" 11 ">200k")) ///
+>                    bar(1, color(navy)) ///
+>                    title("Perceived Risk by Household Income") ///
+>                    b1title("Household income") ///
+>                    ytitle("Average perceived risk") 
+> graph export "${c -(}sum_graph_folder{c )-}/boxplot_var_HHinc_stata.png", as(png) replace 
+> 
+> 
+> graph bar rincvar, ///
+>            over(HHinc,relabel(1 "<10k" 2 "<20k" 3 "<30k" 4 "<40k" 5 "<50k" 6 "<60k" 7 "<75k" 8 "<100k" 9 "<150k" 10 "<200k" 11 ">200k")) ///
+>                    bar(1, color(navy)) ///
+>                    title("Perceived Real Income Risk by Household Income") ///
+>                    b1title("Household income") ///
+>                    ytitle("Average perceived risk of real income") 
+> graph export "${c -(}sum_graph_folder{c )-}/boxplot_rvar_HHinc_stata.png", as(png) replace 
+> 
+> *********************************
+> *** generate group summary data file *****
+> **********************************
+> 
+> * by age 
+> 
+> preserve 
+> collapse incvar rincvar, by(age) 
+> save "${c -(}folder{c )-}/SCE/incvar_by_age.dta",replace
+> restore 
+> 
+> * by age x gender 
+> preserve
+> collapse incvar rincvar, by(age gender) 
+> save "${c -(}folder{c )-}/SCE/incvar_by_age_gender.dta",replace 
+> restore 
+> 
+> * by age x education 
+> preserve
+> collapse incvar rincvar, by(age edu_g) 
+> save "${c -(}folder{c )-}/SCE/incvar_by_age_edu.dta",replace 
+> restore 
+> 
+> * by age x education x gender
+> preserve
+> collapse incvar rincvar, by(age edu_g gender) 
+> save "${c -(}folder{c )-}/SCE/incvar_by_age_edu_gender.dta",replace 
+> restore 
+> 
+> * by age5 x education x gender
+> preserve
+> collapse incvar rincvar, by(age_5yr edu_g gender) 
+> save "${c -(}folder{c )-}/SCE/incvar_by_age5y_edu_gender.dta",replace 
+> restore 
+> 
+> * by year of birth
+> 
+> preserve 
+> collapse incvar rincvar, by(byear) 
+> save "${c -(}folder{c )-}/SCE/incvar_by_byear.dta",replace
+> restore 
+> 
+> * by year of birth(5year) and age
+> 
+> preserve 
+> collapse incvar rincvar, by(byear_5yr age) 
+> save "${c -(}folder{c )-}/SCE/incvar_by_byear_5_yr_age.dta",replace
+> restore 
+> 
+> * by year of birth and gender
+> 
+> preserve 
+> collapse incvar rincvar, by(byear gender) 
+> save "${c -(}folder{c )-}/SCE/incvar_by_byear_gender.dta",replace
+> restore 
+> 
+> * by year of birth and education
+> 
+> preserve 
+> collapse incvar rincvar, by(byear edu_g) 
+> save "${c -(}folder{c )-}/SCE/incvar_by_byear_edu.dta",replace
+> restore 
+> 
+> * by year of birth(5 year cohort) and education
+> 
+> preserve 
+> collapse incvar rincvar, by(byear_5yr edu_g) 
+> save "${c -(}folder{c )-}/SCE/incvar_by_byear_5yr_edu.dta",replace
+> restore 
+> 
+> 
+> * by year of birth(5 year cohort) and education and gender 
+> 
+> preserve 
+> collapse incvar rincvar, by(byear_5yr edu_g gender) 
+> save "${c -(}folder{c )-}/SCE/incvar_by_byear_5yr_edu_gender.dta",replace
+> restore 
+> */
+. 
+. **********************************
+. *** tables and hists of Vars *****
+. **********************************
+. 
+. /*
+> local Moments incmean incvar inciqr rincmean rincvar incskew
+> 
+> foreach gp in `group_vars' {c -(}
+> tabstat `Moments', st(p10 p50 p90) by(`gp')
+> {c )-}
+> 
+> 
+> foreach gp in `group_vars' {c -(}
+> table `gp', c(median incvar mean incvar median rincvar mean rincvar) by(year)
+> {c )-}
+> 
+> 
+> ** histograms 
+> 
+> foreach mom in `Moments'{c -(}
+> 
+> twoway (hist `mom',fcolor(ltblue) lcolor(none)), ///
+>            ytitle("") ///
+>            title("`mom'")
+> graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'.png",as(png) replace  
+> 
+> {c )-}
+> 
+> 
+> * 4 groups 
+> foreach gp in byear_g{c -(}
+> foreach mom in `Moments'{c -(}
+> twoway (hist `mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
+>        (hist `mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
+>            (hist `mom' if `gp'==2,fcolor(red) lcolor("")) ///
+>            (hist `mom' if `gp'==3,fcolor(green) lcolor("")), ///
+>            xtitle("") ///
+>            ytitle("") ///
+>            title("`mom'") ///
+>            legend(label(1 `gp'=0) label(2 `gp'=1) label(3 `gp'=2) label(4 `gp'=3) col(1))
+> 
+> graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'_`gp'.png",as(png) replace  
+> {c )-}
+> {c )-}
+> 
+> * 3 groups 
+> foreach gp in HHinc_g age_g{c -(}
+> foreach mom in `Moments'{c -(}
+> 
+> twoway (hist `mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
+>        (hist `mom' if `gp'==1,fcolor(ltblue) lcolor("")) ///
+>            (hist `mom' if `gp'==2,fcolor(red) lcolor("")), ///
+>            xtitle("") ///
+>            ytitle("") ///
+>            title("`mom'") ///
+>            legend(label(1 `gp'=0) label(2 `gp'=1) label(3 `gp'=2) col(1))
+> 
+> graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'_`gp'.png",as(png) replace  
+> 
+> {c )-}
+> {c )-}
+> 
+> * 2 groups 
+> 
+> 
+> foreach gp in edu_g fbetter{c -(}
+> foreach mom in `Moments'{c -(}
+> 
+> twoway (hist `mom' if `gp'==0,fcolor(gs15) lcolor("")) /// 
+>        (hist `mom' if `gp'==1,fcolor(ltblue) lcolor("")), ///
+>            xtitle("") ///
+>            ytitle("") ///
+>            title("`mom'") ///
+>            legend(label(1 `gp'=0) label(2 `gp'=1) col(1))
+> 
+> graph export "${c -(}sum_graph_folder{c )-}/hist/hist_`mom'_`gp'.png",as(png) replace  
+> 
+> {c )-}
+> {c )-}
+> 
+> */
+. 
+. 
+. *******************************************
+. *** comparison with SIPP realizations *****
+. ********************************************
+. 
+. gen YM = year*100+month
+{txt}
+{com}. *replace educ = edu_g
+. 
+. 
+. ** full sample
+. preserve
+{txt}
+{com}. 
+. merge m:1 YM using "${c -(}otherdata_folder{c )-}/sipp/sipp_history_vol_decomposed.dta", keep(master match)
+{res}{txt}{p 0 7 2}
+(note: variable
+YM was 
+float, now double to accommodate using data's values)
+{p_end}
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}          31,536
+{txt}{col 9}from master{col 30}{res}          31,536{txt}  (_merge==1)
+{col 9}from using{col 30}{res}               0{txt}  (_merge==2)
+
+{col 5}matched{col 30}{res}          56,681{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. drop _merge 
+{txt}
+{com}. xtset ID date
+{res}{txt}{col 8}panel variable:  {res}ID (unbalanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m4, but with gaps
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. collapse (mean) incvar rincvar permanent transitory, by(date year month) 
+{txt}
+{com}. tsset date 
+{res}{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m4
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. table date if permanent!=.
+
+{txt}{hline 10}{c TT}{hline 11}
+     date {c |}      Freq.
+{hline 10}{c +}{hline 11}
+   2014m5 {c |}          {res}1
+   {txt}2014m6 {c |}          {res}1
+   {txt}2014m7 {c |}          {res}1
+   {txt}2014m8 {c |}          {res}1
+   {txt}2014m9 {c |}          {res}1
+  {txt}2014m10 {c |}          {res}1
+  {txt}2014m11 {c |}          {res}1
+  {txt}2014m12 {c |}          {res}1
+   {txt}2015m2 {c |}          {res}1
+   {txt}2015m3 {c |}          {res}1
+   {txt}2015m4 {c |}          {res}1
+   {txt}2015m5 {c |}          {res}1
+   {txt}2015m6 {c |}          {res}1
+   {txt}2015m7 {c |}          {res}1
+   {txt}2015m8 {c |}          {res}1
+   {txt}2015m9 {c |}          {res}1
+  {txt}2015m10 {c |}          {res}1
+  {txt}2015m11 {c |}          {res}1
+  {txt}2015m12 {c |}          {res}1
+   {txt}2016m2 {c |}          {res}1
+   {txt}2016m3 {c |}          {res}1
+   {txt}2016m4 {c |}          {res}1
+   {txt}2016m5 {c |}          {res}1
+   {txt}2016m6 {c |}          {res}1
+   {txt}2016m7 {c |}          {res}1
+   {txt}2016m8 {c |}          {res}1
+   {txt}2016m9 {c |}          {res}1
+  {txt}2016m10 {c |}          {res}1
+  {txt}2016m11 {c |}          {res}1
+  {txt}2016m12 {c |}          {res}1
+   {txt}2017m2 {c |}          {res}1
+   {txt}2017m3 {c |}          {res}1
+   {txt}2017m4 {c |}          {res}1
+   {txt}2017m5 {c |}          {res}1
+   {txt}2017m6 {c |}          {res}1
+   {txt}2017m7 {c |}          {res}1
+   {txt}2017m8 {c |}          {res}1
+   {txt}2017m9 {c |}          {res}1
+  {txt}2017m10 {c |}          {res}1
+  {txt}2017m11 {c |}          {res}1
+  {txt}2017m12 {c |}          {res}1
+   {txt}2018m4 {c |}          {res}1
+   {txt}2018m5 {c |}          {res}1
+   {txt}2018m6 {c |}          {res}1
+   {txt}2018m7 {c |}          {res}1
+   {txt}2018m8 {c |}          {res}1
+   {txt}2018m9 {c |}          {res}1
+  {txt}2018m10 {c |}          {res}1
+  {txt}2018m11 {c |}          {res}1
+  {txt}2018m12 {c |}          {res}1
+{txt}{hline 10}{c BT}{hline 11}
+
+{com}. gen pvar = permanent^2
+{txt}(33 missing values generated)
+
+{com}. gen tvar = transitory^2
+{txt}(29 missing values generated)
+
+{com}. 
+. twoway (tsline rincvar,lp(solid) lwidth(thick)) ///
+>        (tsline tvar, yaxis(2) lp(dash) lwidth(thick)), ///
+>        xtitle("date") ///
+>            ytitle("") ///
+>            title("Perceived and realized transitory risk") ///
+>            legend(label(1 "perceived") label(2 "realized transitory(RHS)") col(2))
+{res}{txt}
+{com}.  graph export "${c -(}graph_folder{c )-}/sipp/real_transitory_compare.png",as(png) replace  
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs//sipp/real_transitory_compare.png written in PNG format)
+
+{com}. 
+.  
+. twoway (tsline rincvar,lp(solid) lwidth(thick)) ///
+>        (tsline pvar, yaxis(2) lp(dash) lwidth(thick)), ///
+>        xtitle("date") ///
+>            ytitle("") ///
+>            title("Perceived and realized permanent risk") ///
+>            legend(label(1 "perceived") label(2 "realized permanent(RHS)") col(2))
+{res}{txt}
+{com}. graph export "${c -(}graph_folder{c )-}/sipp/real_permanent_compare.png",as(png) replace  
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs//sipp/real_permanent_compare.png written in PNG format)
+
+{com}. restore
+{txt}
+{com}. 
+. 
+. ** sub sample
+. 
+. 
+. preserve
+{txt}
+{com}. 
+. merge m:1 gender educ age_5yr YM ///
+>          using "${c -(}otherdata_folder{c )-}/sipp/sipp_history_vol_decomposed_edu_gender_age5.dta", keep(master match)
+{res}{txt}{p 0 7 2}
+(note: variable
+educ was 
+float, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+gender was 
+byte, now long to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+age_5yr was 
+float, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+YM was 
+float, now double to accommodate using data's values)
+{p_end}
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}          75,907
+{txt}{col 9}from master{col 30}{res}          75,907{txt}  (_merge==1)
+{col 9}from using{col 30}{res}               0{txt}  (_merge==2)
+
+{col 5}matched{col 30}{res}          12,310{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. drop _merge 
+{txt}
+{com}. xtset ID date
+{res}{txt}{col 8}panel variable:  {res}ID (unbalanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m4, but with gaps
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. collapse (mean) incvar rincvar permanent transitory, by(date year month gender educ age_5yr) 
+{txt}
+{com}. 
+. table date if permanent!=.
+
+{txt}{hline 10}{c TT}{hline 11}
+     date {c |}      Freq.
+{hline 10}{c +}{hline 11}
+   2014m5 {c |}         {res}38
+   {txt}2014m6 {c |}         {res}36
+   {txt}2014m7 {c |}         {res}35
+   {txt}2014m8 {c |}         {res}35
+   {txt}2014m9 {c |}         {res}35
+  {txt}2014m10 {c |}         {res}36
+  {txt}2014m11 {c |}         {res}35
+  {txt}2014m12 {c |}         {res}37
+   {txt}2015m1 {c |}         {res}38
+   {txt}2015m2 {c |}         {res}38
+   {txt}2015m3 {c |}         {res}36
+   {txt}2015m4 {c |}         {res}36
+   {txt}2015m5 {c |}         {res}34
+   {txt}2015m6 {c |}         {res}35
+   {txt}2015m7 {c |}         {res}35
+   {txt}2015m8 {c |}         {res}37
+   {txt}2015m9 {c |}         {res}37
+  {txt}2015m10 {c |}         {res}39
+  {txt}2015m11 {c |}         {res}37
+  {txt}2015m12 {c |}         {res}36
+   {txt}2016m1 {c |}         {res}35
+   {txt}2016m2 {c |}         {res}35
+   {txt}2016m3 {c |}         {res}35
+   {txt}2016m4 {c |}         {res}37
+   {txt}2016m5 {c |}         {res}40
+   {txt}2016m6 {c |}         {res}36
+   {txt}2016m7 {c |}         {res}38
+   {txt}2016m8 {c |}         {res}35
+   {txt}2016m9 {c |}         {res}34
+  {txt}2016m10 {c |}         {res}35
+  {txt}2016m11 {c |}         {res}38
+  {txt}2016m12 {c |}         {res}39
+   {txt}2017m1 {c |}         {res}37
+   {txt}2017m2 {c |}         {res}37
+   {txt}2017m3 {c |}         {res}36
+   {txt}2017m4 {c |}         {res}34
+   {txt}2017m5 {c |}         {res}36
+   {txt}2017m6 {c |}         {res}35
+   {txt}2017m7 {c |}         {res}34
+   {txt}2017m8 {c |}         {res}33
+   {txt}2017m9 {c |}         {res}31
+  {txt}2017m10 {c |}         {res}33
+  {txt}2017m11 {c |}         {res}33
+  {txt}2017m12 {c |}         {res}33
+   {txt}2018m4 {c |}         {res}31
+   {txt}2018m5 {c |}         {res}33
+   {txt}2018m6 {c |}         {res}33
+   {txt}2018m7 {c |}         {res}35
+   {txt}2018m8 {c |}         {res}36
+   {txt}2018m9 {c |}         {res}35
+  {txt}2018m10 {c |}         {res}34
+  {txt}2018m11 {c |}         {res}34
+  {txt}2018m12 {c |}         {res}33
+{txt}{hline 10}{c BT}{hline 11}
+
+{com}. gen pvar = permanent^2
+{txt}(11544 missing values generated)
+
+{com}. gen tvar = transitory^2
+{txt}(11507 missing values generated)
+
+{com}. 
+. 
+. twoway (scatter rincvar tvar) ///
+>        (lfit rincvar tvar), ///
+>        xtitle("transitory risks") ///
+>            ytitle("perceived risks") ///
+>            title("Perceived and realized transitory risk") ///
+>            legend(label(1 "xxx") label(2 "xx") col(2))
+{res}{txt}
+{com}.  graph export "${c -(}graph_folder{c )-}/sipp/real_transitory_by_age_edu_gender_compare.png",as(png) replace  
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs//sipp/real_transitory_by_age_edu_gender_compare.png written in PNG format)
+
+{com}. 
+.  
+. twoway (scatter rincvar pvar) ///
+>        (lfit rincvar pvar), ///
+>        xtitle("permanent risks") ///
+>            ytitle("perceived risks") ///
+>            title("Perceived and realized permanent risk") ///
+>            legend(label(1 "xxx") label(2 "xxx") col(2))
+{res}{txt}
+{com}. graph export "${c -(}graph_folder{c )-}/sipp/real_permanent_by_age_edu_gender_compare.png",as(png) replace  
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs//sipp/real_permanent_by_age_edu_gender_compare.png written in PNG format)
+
+{com}. restore
+{txt}
+{com}. ddd
 {err}unrecognized command:  ddd
 {txt}{search r(199):r(199);}
 
@@ -328,31 +787,6 @@ end of do-file
 
 {search r(199):r(199);}
 
-{com}. reg incvar l11.incvar
-{err}not sorted
-{txt}{search r(5):r(5);}
-
-{com}. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD82631.000000"
-{txt}
 {com}. clear
-{txt}
-{com}. global mainfolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder"
-{txt}
-{com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
-{txt}
-{com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/ind"
-{txt}
-{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
-{txt}
-{com}. 
-. cd ${c -(}folder{c )-}
-{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
-{txt}
-{com}. pwd
-{res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData
-{txt}
-{com}. set more off 
-{txt}
-{com}. capture log close
-{smcl}
-{com}{sf}{ul off}
+
+. 

@@ -19,7 +19,7 @@
 # This noteobok contains the following
 #
 #  - Estimation functions of time-varying income risks for an integrated moving average(IMA) process of income/earnings
-#  - It uses the function to estimate the realized risks using PSID data 
+#  - It uses the function to estimate the realized risks using PSID data(annual/biennial) and SIPP panel(monthly) 
 
 import numpy as np
 import numpy.ma as ma
@@ -30,7 +30,7 @@ import copy as cp
 
 from IncomeProcess import IMAProcess as ima
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## debugging test of the data 
 
 t = 100
@@ -107,7 +107,7 @@ plt.legend(loc=1)
 
 # ### Estimation
 
-# + {"code_folding": []}
+# + {"code_folding": [0]}
 ## some fake data moments with alternative parameters
 
 ## fix ratio of p and t risks
@@ -143,7 +143,7 @@ para_est = dt_est.EstimatePara(method='BFGS',
                                para_guess = para_guess_this)
 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## check the estimation and true parameters 
 
 fig = plt.figure(figsize=([10,4]))
@@ -158,6 +158,35 @@ plt.title('Transitory Risk')
 plt.plot(dt_est.para_est[1][1][1:].T**2,'r-',label='Estimation')
 plt.plot(dt_fake.sigmas[1][1:]**2,'-*',label='Truth')
 plt.legend(loc=0)
+
+
+# + {"code_folding": [2]}
+### define the general function
+
+def estimate_sample(sample):
+    """
+    this function take a sample of the first differences of income in different time(column) of all individuals(row)
+    and returns the estimates of the permanent and transitory sigmas. 
+    """
+    data = np.array(sample)
+    data_mean = np.nanmean(data,axis=0)
+    data_var = ma.cov(ma.masked_invalid(data), rowvar=False)
+    moms_data = {'Mean':data_mean,
+                 'Var':data_var}
+    ## initialize 
+    dt_data_est = cp.deepcopy(dt)
+    t_data = len(data_var)+1
+    dt_data_est.t = t_data
+    dt_data_est.GetDataMoments(moms_data)
+    para_guess_this = np.ones(2*t_data + dt_data_est.ma_q)
+    
+    ## estimation
+    data_para_est = dt_data_est.EstimatePara(method='BFGS',
+                               para_guess = para_guess_this)
+    
+    return data_para_est
+
+
 # -
 
 # ### Estimation using SIPP data
@@ -177,7 +206,7 @@ SIPP = SIPP.dropna(axis=1,how='all')
 
 SIPP.dtypes
 
-# +
+# + {"code_folding": []}
 ## different samples 
 
 education_groups = [1, #'HS dropout',
@@ -215,45 +244,130 @@ for edu in education_groups:
 # +
 ## estimation for full sample 
 
-sipp_para_est_full = estimate_sample(sample_full)
+data_para_est_full = estimate_sample(sample_full)
+# -
 
-# +
 ## time stamp 
-t0 = 1971
-tT = 2016
-t_break = 1998 #the year when no annual data was released i.e. no 1998 data 
-years = np.arange(t0+1,tT+2)
-years=years.astype(int)
+months_str = [string.replace('lwage_id_shk_gr','') for string in sample_full.columns if 'lwage_id_shk_gr' in string]
+months = np.array(months_str) # notice I dropped the first month 
 
-years_sub = np.concatenate((np.arange(t0+1,t_break),np.arange(t_break+1,tT+2,2)))
 
-# +
+# + {"code_folding": []}
 ## plot estimate 
 
 lw = 3
 for i,paras_est in enumerate([data_para_est_full]):
     print('whole sample')
-    fig = plt.figure(figsize=([12,4]))
+    fig = plt.figure(figsize=([13,12]))
     this_est = paras_est
-    plt.subplot(1,2,1)
+    plt.subplot(2,1,1)
     plt.title('Permanent Risk')
-    plt.plot(years_sub,
+    plt.plot(months,
              this_est[1][0][1:].T**2,
              'r-o',
              lw=lw,
              label='Estimation')
+    plt.xticks(rotation='vertical')
     plt.grid(True)
 
-    plt.subplot(1,2,2)
+    plt.subplot(2,1,2)
     plt.title('Transitory Risk')
-    plt.plot(years_sub,
+    plt.plot(months,
              this_est[1][1][1:].T**2,
              'r-o',
              lw=lw,
              label='Estimation')
+    plt.xticks(rotation='vertical')
     plt.legend(loc=0)
     plt.grid(True)
 # -
+
+np.abs(-.3)
+
+# + {"code_folding": []}
+## generate a dataset of date, permanent and transitory 
+
+est_df = pd.DataFrame()
+
+#vols_est_sub_group = pd.DataFrame([])
+for i,para_est in enumerate([data_para_est_full]):
+    #print(i)
+    #print(group_var)
+    times = len(months)
+    this_est = pd.DataFrame([list(months),
+                             np.abs(para_est[1][0]), 
+                             np.abs(para_est[1][1])] 
+                           ).transpose()
+    est_df = est_df.append(this_est)
+    
+    
+## post processing
+est_df.columns = ['YM','permanent','transitory']
+est_df=est_df.dropna(how='any')
+for var in ['YM']:
+    est_df[var] = est_df[var].astype('int32')
+
+est_df['permanent']=est_df['permanent'].astype('float')
+est_df['transitory']=est_df['transitory'].astype('float')
+
+# +
+## replace extreme values 
+for date in [201404]:
+    est_df.loc[est_df['YM']==date,'permanent']=np.nan
+    
+est_df
+# -
+
+## export to stata
+est_df.to_stata('../OtherData/sipp/sipp_history_vol_decomposed.dta')
+
+# + {"code_folding": [2]}
+## estimation for sub-group
+
+for sample in sub_samples:
+    ## estimation
+    data_para_est = estimate_sample(sample)
+    para_est_list.append(data_para_est)
+
+# + {"code_folding": []}
+## generate a dataset of year, edu, gender, byear_5yr permanent and transitory 
+
+est_df = pd.DataFrame()
+
+#vols_est_sub_group = pd.DataFrame([])
+for i,para_est in enumerate(para_est_list):
+    #print(i)
+    group_var = sub_group_names[i]
+    #print(group_var)
+    times = len(months)
+    this_est = pd.DataFrame([[group_var[0]]*times,   ##educ
+                             [group_var[1]]*times,   ## gender 
+                             [group_var[2]]*times,   ## age_5yr
+                             list(months),
+                             np.abs(para_est[1][0]), 
+                             np.abs(para_est[1][1])] 
+                           ).transpose()
+    est_df = est_df.append(this_est)
+
+# +
+## post processing
+est_df.columns = group_by+['YM','permanent','transitory']
+est_df=est_df.dropna(how='any')
+for var in group_by+['YM']:
+    est_df[var] = est_df[var].astype('int32')
+    
+
+est_df['permanent']=est_df['permanent'].astype('float')
+est_df['transitory']=est_df['transitory'].astype('float')
+# -
+
+for date in [201404]:
+    est_df.loc[est_df['YM']==date,'permanent']=np.nan
+
+## export to stata
+est_df.to_stata('../OtherData/sipp/sipp_history_vol_decomposed_edu_gender_age5.dta')
+
+est_df.head()
 
 # ### Estimation using PSID data
 #
@@ -329,6 +443,11 @@ for sample in sub_samples:
     ## estimation
     data_para_est = estimate_sample(sample)
     para_est_list.append(data_para_est)
+
+# +
+## time stamp 
+#years_str = [string.replace('lwage_id_shk_gr','') for string in sample_full.columns if 'lwage_id_shk_gr' in string]
+#years = np.array(years_str)
 
 # + {"code_folding": []}
 ## time stamp 
