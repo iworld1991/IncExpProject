@@ -48,8 +48,7 @@ from quantecon.optimize import brent_max, brentq
 from interpolation import interp, mlinterp
 from scipy import interpolate
 import numba as nb
-from numba import njit, float64, int64, boolean
-from numba.experimental import jitclass
+from numba import njit, float64, int64, boolean, jitclass
 import matplotlib as mp
 import matplotlib.pyplot as plt
 # %matplotlib inline
@@ -60,7 +59,7 @@ from matplotlib import cm
 
 
 # + code_folding=[0]
-## figures configurations
+## figure plotting configurations
 
 mp.rc('xtick', labelsize=14) 
 mp.rc('ytick', labelsize=14) 
@@ -99,35 +98,34 @@ lc_data = [
 ]
 
 
-# + code_folding=[1, 59, 63]
+# + code_folding=[1]
 @jitclass(lc_data)
 class LifeCycle:
     """
-    A class that stores primitives for the life cycle consumption
-    problem.
+    A class that stores primitives for the life cycle consumption problem.
     """
 
     def __init__(self,
-                 ρ = 2,
-                 β = 0.96,
+                 ρ = 2,     ## relative risk aversion  
+                 β = 0.96,  ## discount factor
                  P = np.array([(0.9, 0.1),
-                             (0.1, 0.9)]),
+                             (0.1, 0.9)]),   ## transitory probability of stochastical state z
                  z_val = np.array([1.0,2.0]), 
                  sigma_n = 0.01,     ## size of permanent income shocks
-                 #a_s = 0.02,     ## size of the taste shock  
-                 #b_s = 0.0,       ## coefficient of pandemic state on taste 
-                 x = 0.9,           ## MA(1) coefficient of non-permanent inocme shocks
+                 #a_s = 0.02,        ## size of the taste shock  
+                 #b_s = 0.0,         ## coefficient of pandemic state on taste 
+                 x = 0.9,            ## MA(1) coefficient of non-permanent inocme shocks
                  sigma_eps = 0.03,     ## size of transitory income risks
-                 U = 0.1,           ## unemployment risk probability (0-1)
+                 U = 0.0,           ## unemployment risk probability (0-1)
                  b_y = 0.0,         ## loading of macro state on income  
                  R = 1.03,           ## interest factor 
                  T = 40,             ## work age, from 25 to 65
                  L = 60,             ## life length 85
                  G = 1.00,            ## growth rate of permanent income 
-                 shock_draw_size = 50,
+                 shock_draw_size = 20,
                  grid_max = 2.5,
-                 grid_size = 40,
-                 seed = 1234,
+                 grid_size = 50,
+                 seed = 12343,
                  theta = 2):
 
         np.random.seed(seed)  # arbitrary seed
@@ -143,18 +141,22 @@ class LifeCycle:
         self.sigma_eps = sigma_eps
         self.b_y = b_y
         
+        ## shocks 
+        self.shock_draw_size = shock_draw_size
         self.n_shk_draws = sigma_n*np.random.randn(shock_draw_size)-sigma_n**2/2
         self.eps_shk_draws = sigma_eps*np.random.randn(shock_draw_size)-sigma_eps**2/2
         self.ue_shk_draws = np.random.uniform(0,1,shock_draw_size)<U
-
+        
+        ## ma(1) shock grid 
+        self.eps_grid = np.linspace(lb_sigma_ϵ,ub_sigma_ϵ,grid_size)
+        ## saving grid
         self.s_grid = np.exp(np.linspace(np.log(1e-6), np.log(grid_max), grid_size))
         lb_sigma_ϵ = -sigma_eps**2/2-2*sigma_eps
         ub_sigma_ϵ = -sigma_eps**2/2+2*sigma_eps
-        self.eps_grid = np.linspace(lb_sigma_ϵ,ub_sigma_ϵ,grid_size)
         
-        self.theta = theta 
-        self.shock_draw_size = shock_draw_size
-        # This creates an unevenly spaced grids where grids are more dense in low values
+       
+        ## extrapolaton coefficient, i.e. higher theta, higher asymmetric response
+        self.theta = theta
         
         # Test stability assuming {R_t} is IID and adopts the lognormal
         # specification given below.  The test is then β E R_t < 1.
@@ -174,12 +176,15 @@ class LifeCycle:
     #    return np.exp(self.sigma_s * ζ + (z*self.b_s))
 
     def Y(self, z, u_shk):
-        ## u_shk is the MA of past shocks 
+        ## u_shk here represents the cumulated MA shock, for instance, for ma(1), u_shk = phi eps_(t-1) + eps_t
         ## income 
         return np.exp(u_shk + (z * self.b_y))
     
     def Γ(self,n_shk):
         return np.exp(n_shk)
+    
+    def reset(self):
+        self.__init__()
 
 
 # + code_folding=[1, 40]
@@ -258,18 +263,24 @@ def K(aϵ_in, σ_in, lc):
     return aϵ_out, σ_out
 
 
-# -
-
+# + code_folding=[1]
 @njit
 def extrapolate(theta,
                 x,
                 eps_shk):
+    """
+    extrapolation function from realized eps_shk from unbiased risk x to the subjective risk x_sub
+    x_sub = x when eps_shk = 0  
+    """
+    if x ==0.0:
+        alpha=0.0
+    else:
         alpha=np.log((1-x)/x) ## get the alpha for unbiased x
-        x_sub = 1/(1+np.exp(alpha-theta*eps_shk))
-        return x_sub
+    x_sub = 1/(1+np.exp(alpha-theta*eps_shk))
+    return x_sub
 
 
-# + code_folding=[57]
+# + code_folding=[1]
 @njit
 def K_br(aϵ_in, σ_in, lc):
     """
@@ -298,6 +309,8 @@ def K_br(aϵ_in, σ_in, lc):
     G = lc.G
     x = lc.x
     theta = lc.theta 
+    sigma_eps = lc.sigma_eps
+    eps_mean = -sigma_eps**2/2
     ###################
     
     n = len(P)
@@ -315,10 +328,11 @@ def K_br(aϵ_in, σ_in, lc):
     for i, s in enumerate(s_grid):
         for j, eps in enumerate(eps_grid):
             ##############################################################
-            x_sj = extrapolate(theta,
-                               lc.x,
-                              eps) ## sj: subjective 
-            sigma_eps_sj = abs(eps)
+            #x_sj = extrapolate(theta,
+            #                   lc.x,
+            #                   eps-eps_mean) ## sj: subjective 
+            sigma_eps_sj = 0.01*np.sqrt((eps-eps_mean)**2)+0.99*lc.sigma_eps
+            np.random.seed(166789)
             eps_shk_draws_sj = sigma_eps_sj*np.random.randn(lc.shock_draw_size)-sigma_eps_sj**2/2
             #############################################################
             for z in range(n):
@@ -333,7 +347,7 @@ def K_br(aϵ_in, σ_in, lc):
                             for n_shk in n_shk_draws:
                                 Γ_hat = Γ(n_shk) 
                                 ###############
-                                u_shk = x_sj*eps+eps_shk
+                                u_shk = x*eps+eps_shk
                                 ####################
                                 Y_hat = Y(z_val_hat,u_shk)*(1-ue_shk) ## conditional on being employed 
                                 c_hat = σ(R/(G*Γ_hat) * s + Y_hat,eps_shk,z_hat)
@@ -469,11 +483,38 @@ def policyPF(β,
     return (1-c_growth)/(1-c_growth**(L-T))
 
 
-# + code_folding=[0]
+# +
+## stochastical parameters 
+
+U = 0.1
+sigma_n = np.sqrt(0.02) # permanent 
+sigma_eps = np.sqrt(0.09) # transitory 
+
+## other parameters 
+
+ρ = 2
+R = 1.03
+β = 0.96
+x = 0.50
+theta = 1.1
+
+## no macro state
+b_y = 0.00
+
+# +
 ## intialize 
 
-lc = LifeCycle()
+lc = LifeCycle(sigma_n=sigma_n,
+               sigma_eps = sigma_eps,
+               U=U,
+               ρ=ρ,
+               R=R,
+               β=β,
+               x=x,
+               theta=theta,
+               b_y=b_y)
 
+# + code_folding=[]
 # Initial the retirement consumption policy of σ = consume all assets
 
 #mpc_ret = policyPF(lc.β,
@@ -482,6 +523,9 @@ lc = LifeCycle()
 #                   lc.T,
 #                   lc.L) 
 #ratio = mpc_ret/(1-mpc_ret)
+
+
+## initial consumption functions 
 
 k = len(lc.s_grid)
 k2 =len(lc.eps_grid)
@@ -499,26 +543,12 @@ for z in range(n):
 plt.title('The consumption in the last period')
 plt.plot(σ_init[:,1,1],a_init[:,1,1])
 
-# + code_folding=[0]
-## Set quarterly parameters 
-
-lc.ρ = 0.5
-lc.R = 1.03
-lc.β = 0.96
-lc.x = 0.5
-
-lc.sigma_n = np.sqrt(0.02) # permanent 
-lc.sigma_eps = np.sqrt(0.09) # transitory 
-
-# + code_folding=[0]
-## shut down the macro state 
-
-lc.b_y = 0.00
+plt.plot(lc.eps_grid)
 
 # + code_folding=[]
 ## solve the model for a range of ma(1) coefficients
 
-x_ls = [0.0,0.6,0.9]
+x_ls = [0.5]
 as_stars =[]
 σs_stars = []
 for i,x in enumerate(x_ls):
@@ -536,12 +566,14 @@ as_star.shape
 # ### Plot interpolated policy functions
 
 # + code_folding=[]
+## plot c func at different age /asset grid
+
 ages  = [25,35,45,59]
 n_sub = len(ages)
-eps_ls = [1,20,30]
+eps_ls = [1,20,45]
 
-as_star = as_stars[1]
-σs_star =σs_stars[1]
+as_star = as_stars[0]
+σs_star =σs_stars[0]
 
 
 fig,axes = plt.subplots(1,n_sub,figsize=(4*n_sub,4))
@@ -558,7 +590,7 @@ for x,age in enumerate(ages):
     axes[0].set_ylabel('c')
     axes[x].set_title(r'$age={}$'.format(age))
 
-# + code_folding=[0]
+# + code_folding=[]
 ## interpolate consumption function on continuous s/eps grid 
 
 σs_list = []
@@ -570,7 +602,7 @@ for i in range(lc.T):
     σs_list.append(this_σ)
 
 
-# + code_folding=[0]
+# + code_folding=[]
 ## plot contour for policy function 
 
 a_grid = np.linspace(0.00001,5,20)
@@ -631,9 +663,9 @@ ax.view_init(30, 30)
 
 # #### Different persistence
 
-# + code_folding=[3]
-at_age = 50
-at_asset_id = 1
+# + code_folding=[]
+at_age = 30
+at_asset_id = 20
 
 for i,x in enumerate(x_ls):
     this_σs_star = σs_stars[i]
@@ -647,14 +679,65 @@ plt.xlabel(r'$\epsilon$')
 plt.ylabel(r'$c(a,\epsilon,age)$')
 plt.title(r'work age$={}$'.format(at_age))
 
-# +
-## solve for bounded rationality agent 
+# + code_folding=[]
+## solve for subjective agent 
 
-lc.x = 0.5
 as_br, σs_br = solve_model_backward_iter(lc,
                                          a_init,
                                          σ_init,
                                          br = True)
+
+# + code_folding=[]
+## compare subjective and objective model 
+ages  = [25,35,45,59]
+n_sub = len(ages)
+eps_ls = [20]
+
+fig,axes = plt.subplots(1,n_sub,figsize=(4*n_sub,4))
+
+for x,age in enumerate(ages):
+    i = lc.T-age
+    for y,eps in enumerate(eps_ls):
+        axes[x].plot(as_br[i,:,eps,0],
+                     σs_br[i,:,eps,0],
+                     '*',
+                     label = 'subjective:'+str(round(lc.eps_grid[eps],2)),
+                     lw=3)
+        axes[x].plot(as_star[i,:,eps,0],
+                     σs_star[i,:,eps,0],
+                     '--',
+                     label ='objective:'+str(round(lc.eps_grid[eps],2)),
+                     lw=3)
+    axes[x].legend()
+    axes[x].set_xlabel('asset')
+    axes[0].set_ylabel('c')
+    axes[x].set_title(r'subjective c at $age={}$'.format(age))
+
+# +
+x_sj = extrapolate(5, 
+                   lc.x,
+                   lc.eps_grid) ## sj: subjective 
+
+plt.plot(lc.eps_grid,x_sj)
+
+# + code_folding=[]
+at_age = 24
+at_asset_id = 32
+
+plt.plot(lc.eps_grid,
+         σs_br[lc.T-at_age,at_asset_id,:,0],
+             'v-',
+             label = 'subjective',
+             lw=3)
+plt.plot(lc.eps_grid,
+         σs_star[lc.T-at_age,at_asset_id,:,0],
+         '--',
+         label='objective',
+         lw=3)
+plt.legend(loc=0)
+plt.xlabel(r'$\epsilon$')
+plt.ylabel(r'$c(a,\epsilon,age)$')
+plt.title(r'subjectiv c at work age$={}$'.format(at_age))
 # -
 
 # ### Adding a Markov/persistent state 

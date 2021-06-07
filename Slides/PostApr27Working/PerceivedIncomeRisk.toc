@@ -1,0 +1,11 @@
+\beamer@sectionintoc {1}{Motivation}{3}{0}{1}
+\beamer@sectionintoc {2}{Theoretical framework}{6}{0}{2}
+\beamer@sectionintoc {3}{Empirical evidence}{10}{0}{3}
+\beamer@subsectionintoc {3}{1}{Cross-sectional patterns}{12}{0}{3}
+\beamer@subsectionintoc {3}{2}{Permanent versus transitory risks}{17}{0}{3}
+\beamer@subsectionintoc {3}{3}{Perceived risks and macroeconomic history}{20}{0}{3}
+\beamer@subsectionintoc {3}{4}{Couter-cyclical perceived risks}{22}{0}{3}
+\beamer@subsectionintoc {3}{5}{Perceived unemployment risks}{25}{0}{3}
+\beamer@subsectionintoc {3}{6}{Extrapolation of recent experience}{26}{0}{3}
+\beamer@subsectionintoc {3}{7}{Perceived risks and decisions}{27}{0}{3}
+\beamer@sectionintoc {4}{Summary}{28}{0}{4}

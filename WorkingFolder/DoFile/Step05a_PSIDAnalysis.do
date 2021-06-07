@@ -55,7 +55,6 @@ merge m:1 year using "${otherdatafolder}UNRATE.dta", keep(master match)
 drop _merge 
 rename unrate ue
 
-
 ** Set the panel 
 xtset uniqueid year 
 

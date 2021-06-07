@@ -280,9 +280,6 @@ for i,paras_est in enumerate([data_para_est_full]):
     plt.xticks(rotation='vertical')
     plt.legend(loc=0)
     plt.grid(True)
-# -
-
-np.abs(-.3)
 
 # + {"code_folding": []}
 ## generate a dataset of date, permanent and transitory 
@@ -312,11 +309,13 @@ est_df['transitory']=est_df['transitory'].astype('float')
 
 # +
 ## replace extreme values 
-for date in [201404]:
+for date in [201404,201501,201601,201701,201801]:
     est_df.loc[est_df['YM']==date,'permanent']=np.nan
     
 est_df
 # -
+
+est_df['permanent'].plot()
 
 ## export to stata
 est_df.to_stata('../OtherData/sipp/sipp_history_vol_decomposed.dta')

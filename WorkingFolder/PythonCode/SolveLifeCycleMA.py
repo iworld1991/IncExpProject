@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.11.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -59,7 +59,7 @@ from matplotlib import cm
 
 
 # + code_folding=[0]
-## figures configurations
+## figure plotting configurations
 
 mp.rc('xtick', labelsize=14) 
 mp.rc('ytick', labelsize=14) 
@@ -98,24 +98,23 @@ lc_data = [
 ]
 
 
-# + code_folding=[]
+# + code_folding=[1]
 @jitclass(lc_data)
 class LifeCycle:
     """
-    A class that stores primitives for the life cycle consumption
-    problem.
+    A class that stores primitives for the life cycle consumption problem.
     """
 
     def __init__(self,
-                 ρ = 2,
-                 β = 0.96,
+                 ρ = 2,     ## relative risk aversion  
+                 β = 0.96,  ## discount factor
                  P = np.array([(0.9, 0.1),
-                             (0.1, 0.9)]),
+                             (0.1, 0.9)]),   ## transitory probability of stochastical state z
                  z_val = np.array([1.0,2.0]), 
                  sigma_n = 0.01,     ## size of permanent income shocks
-                 #a_s = 0.02,     ## size of the taste shock  
-                 #b_s = 0.0,       ## coefficient of pandemic state on taste 
-                 x = 0.9,           ## MA(1) coefficient of non-permanent inocme shocks
+                 #a_s = 0.02,        ## size of the taste shock  
+                 #b_s = 0.0,         ## coefficient of pandemic state on taste 
+                 x = 0.9,            ## MA(1) coefficient of non-permanent inocme shocks
                  sigma_eps = 0.03,     ## size of transitory income risks
                  U = 0.0,           ## unemployment risk probability (0-1)
                  b_y = 0.0,         ## loading of macro state on income  
@@ -143,18 +142,21 @@ class LifeCycle:
         self.b_y = b_y
         
         ## shocks 
+        self.shock_draw_size = shock_draw_size
         self.n_shk_draws = sigma_n*np.random.randn(shock_draw_size)-sigma_n**2/2
         self.eps_shk_draws = sigma_eps*np.random.randn(shock_draw_size)-sigma_eps**2/2
         self.ue_shk_draws = np.random.uniform(0,1,shock_draw_size)<U
-        self.shock_draw_size = shock_draw_size
         
-        ## ma(1) grid 
-        self.s_grid = np.exp(np.linspace(np.log(1e-6), np.log(grid_max), grid_size))
+        ## ma(1) shock grid 
         lb_sigma_ϵ = -sigma_eps**2/2-2*sigma_eps
         ub_sigma_ϵ = -sigma_eps**2/2+2*sigma_eps
-        self.eps_grid = np.linspace(lb_sigma_ϵ,ub_sigma_ϵ,grid_size)
         
-        ## extrapolaton
+        self.eps_grid = np.linspace(lb_sigma_ϵ,ub_sigma_ϵ,grid_size)
+        ## saving grid
+        self.s_grid = np.exp(np.linspace(np.log(1e-6), np.log(grid_max), grid_size))
+       
+       
+        ## extrapolaton coefficient, i.e. higher theta, higher asymmetric response
         self.theta = theta
         
         # Test stability assuming {R_t} is IID and adopts the lognormal
@@ -175,7 +177,7 @@ class LifeCycle:
     #    return np.exp(self.sigma_s * ζ + (z*self.b_s))
 
     def Y(self, z, u_shk):
-        ## u_shk is the MA of past shocks 
+        ## u_shk here represents the cumulated MA shock, for instance, for ma(1), u_shk = phi eps_(t-1) + eps_t
         ## income 
         return np.exp(u_shk + (z * self.b_y))
     
@@ -186,7 +188,7 @@ class LifeCycle:
         self.__init__()
 
 
-# + code_folding=[40]
+# + code_folding=[1, 40]
 @njit
 def K(aϵ_in, σ_in, lc):
     """
@@ -267,6 +269,10 @@ def K(aϵ_in, σ_in, lc):
 def extrapolate(theta,
                 x,
                 eps_shk):
+    """
+    extrapolation function from realized eps_shk from unbiased risk x to the subjective risk x_sub
+    x_sub = x when eps_shk = 0  
+    """
     if x ==0.0:
         alpha=0.0
     else:
@@ -275,7 +281,7 @@ def extrapolate(theta,
     return x_sub
 
 
-# + code_folding=[]
+# + code_folding=[1]
 @njit
 def K_br(aϵ_in, σ_in, lc):
     """
@@ -326,7 +332,7 @@ def K_br(aϵ_in, σ_in, lc):
             #x_sj = extrapolate(theta,
             #                   lc.x,
             #                   eps-eps_mean) ## sj: subjective 
-            sigma_eps_sj = 0.01*np.sqrt((eps-eps_mean)**2)+0.99*lc.sigma_eps
+            sigma_eps_sj = 0.05*np.sqrt((eps-eps_mean)**2)+0.95*lc.sigma_eps
             np.random.seed(166789)
             eps_shk_draws_sj = sigma_eps_sj*np.random.randn(lc.shock_draw_size)-sigma_eps_sj**2/2
             #############################################################
@@ -478,7 +484,7 @@ def policyPF(β,
     return (1-c_growth)/(1-c_growth**(L-T))
 
 
-# +
+# + code_folding=[0]
 ## stochastical parameters 
 
 U = 0.1
@@ -496,7 +502,7 @@ theta = 1.1
 ## no macro state
 b_y = 0.00
 
-# +
+# + code_folding=[0, 2]
 ## intialize 
 
 lc = LifeCycle(sigma_n=sigma_n,
@@ -543,7 +549,7 @@ plt.plot(lc.eps_grid)
 # + code_folding=[]
 ## solve the model for a range of ma(1) coefficients
 
-x_ls = [0.5]
+x_ls = [0.0]
 as_stars =[]
 σs_stars = []
 for i,x in enumerate(x_ls):
@@ -656,7 +662,7 @@ ax.set_ylabel('wealth')
 ax.view_init(30, 30)
 # -
 
-# #### Different persistence
+# #### Different ma persistence
 
 # + code_folding=[]
 at_age = 30
@@ -680,7 +686,7 @@ plt.title(r'work age$={}$'.format(at_age))
 as_br, σs_br = solve_model_backward_iter(lc,
                                          a_init,
                                          σ_init,
-                                         br = True)
+                                         br = True) ## bounded rationality is true 
 
 # + code_folding=[]
 ## compare subjective and objective model 
@@ -716,7 +722,7 @@ x_sj = extrapolate(5,
 plt.plot(lc.eps_grid,x_sj)
 
 # + code_folding=[]
-at_age = 24
+at_age = 35
 at_asset_id = 32
 
 plt.plot(lc.eps_grid,

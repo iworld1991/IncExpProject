@@ -3,58 +3,12 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Maro_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}22 Apr 2021, 19:59:55
+ {txt}opened on:  {res}14 May 2021, 15:03:23
 {txt}
 {com}. 
 . use "${c -(}folder{c )-}/SCE/IncExpSCEIndMacroM.dta"
 {txt}
-{com}. 
-. ************************
-. ***** date *************
-. ***********************
-. generate new_date = dofc(date)
-{txt}
-{com}. gen year = year(new_date)
-{txt}
-{com}. gen month = month(new_date)
-{txt}
-{com}. gen date_str = string(year)+ "m"+string(month)
-{txt}
-{com}. drop date index new_date 
-{txt}
-{com}. gen date = monthly(date_str,"YM")
-{txt}
-{com}. format date %tm
-{txt}
-{com}. drop date_str
-{txt}
-{com}. order userid date 
-{txt}
-{com}. xtset userid date 
-{res}{txt}{col 8}panel variable:  {res}userid (unbalanced)
-{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m3, but with gaps
-{txt}{col 17}delta:  {res}1 month
-{txt}
-{com}. 
-. **********************
-. ***** Other measures **
-. ************************
-. 
-. 
-. local Moments incvar rincvar inciqr incskew 
-{txt}
-{com}. 
-. foreach mom in `Moments'{c -(}
-{txt}  2{com}. gen `mom'_ch = `mom' - l1.`mom'
-{txt}  3{com}. label var `mom'_ch "change in `mom'"
-{txt}  4{com}. {c )-}
-{txt}(13451 missing values generated)
-(13451 missing values generated)
-(13451 missing values generated)
-(13451 missing values generated)
-
-{com}. 
-. ddd
+{com}. ddd
 {err}unrecognized command:  ddd
 {txt}{search r(199):r(199);}
 
@@ -62,66 +16,7 @@ end of do-file
 
 {search r(199):r(199);}
 
-{com}. reg rincvar l1.rincvar
-
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   22146
-{txt}{hline 13}{char +}{hline 30}           F(  1, 22144) ={res}18141.98
-    {txt}   Model {char |} {res} .013687113     1  .013687113           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} .016706416 22144  7.5444e-07           {txt}R-squared     = {res} 0.4503
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.4503
-    {txt}   Total {char |} {res} .030393529 22145  1.3725e-06           {txt}Root MSE      = {res} .00087
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     rincvar{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}rincvar {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .6340358{col 26}{space 2} .0047073{col 37}{space 1}  134.69{col 46}{space 3}0.000{col 54}{space 4} .6248092{col 67}{space 3} .6432624
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0002316{col 26}{space 2} 6.89e-06{col 37}{space 1}   33.62{col 46}{space 3}0.000{col 54}{space 4} .0002181{col 67}{space 3} .0002451
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{com}. reg rincvar l1.rincvar l2.rincvar
-
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   14808
-{txt}{hline 13}{char +}{hline 30}           F(  2, 14805) ={res} 8969.82
-    {txt}   Model {char |} {res} .009382668     2  .004691334           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} .007743212 14805  5.2301e-07           {txt}R-squared     = {res} 0.5479
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.5478
-    {txt}   Total {char |} {res} .017125879 14807  1.1566e-06           {txt}Root MSE      = {res} .00072
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     rincvar{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}rincvar {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .4629722{col 26}{space 2}  .007271{col 37}{space 1}   63.67{col 46}{space 3}0.000{col 54}{space 4} .4487201{col 67}{space 3} .4772243
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .2998471{col 26}{space 2} .0069393{col 37}{space 1}   43.21{col 46}{space 3}0.000{col 54}{space 4} .2862453{col 67}{space 3}  .313449
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0001205{col 26}{space 2} 7.20e-06{col 37}{space 1}   16.74{col 46}{space 3}0.000{col 54}{space 4} .0001064{col 67}{space 3} .0001346
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{com}. reg rincvar l1.rincvar l2.rincvar l3.rincvar
-
-      {txt}Source {c |}       SS       df       MS              Number of obs ={res}   10193
-{txt}{hline 13}{char +}{hline 30}           F(  3, 10189) ={res} 4983.42
-    {txt}   Model {char |} {res} .005911691     3  .001970564           {txt}Prob > F      = {res} 0.0000
-    {txt}Residual {char |} {res} .004028972 10189  3.9542e-07           {txt}R-squared     = {res} 0.5947
-{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res} 0.5946
-    {txt}   Total {char |} {res} .009940663 10192  9.7534e-07           {txt}Root MSE      = {res} .00063
-
-{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}     rincvar{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
-{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 5}rincvar {c |}
-{space 9}L1. {c |}{col 14}{res}{space 2} .4053753{col 26}{space 2} .0088548{col 37}{space 1}   45.78{col 46}{space 3}0.000{col 54}{space 4} .3880181{col 67}{space 3} .4227325
-{txt}{space 9}L2. {c |}{col 14}{res}{space 2} .2689199{col 26}{space 2} .0088937{col 37}{space 1}   30.24{col 46}{space 3}0.000{col 54}{space 4} .2514866{col 67}{space 3} .2863533
-{txt}{space 9}L3. {c |}{col 14}{res}{space 2} .1310345{col 26}{space 2} .0080175{col 37}{space 1}   16.34{col 46}{space 3}0.000{col 54}{space 4} .1153187{col 67}{space 3} .1467503
-{txt}{space 12} {c |}
-{space 7}_cons {c |}{col 14}{res}{space 2} .0000828{col 26}{space 2} 7.64e-06{col 37}{space 1}   10.84{col 46}{space 3}0.000{col 54}{space 4} .0000678{col 67}{space 3} .0000978
-{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{com}. clear
-
-. do "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/DoFile/Step05b_PSIDHistoryAnalysis.do"
+{com}. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD23167.000000"
 {txt}
 {com}. clear
 {txt}
@@ -129,11 +24,13 @@ end of do-file
 {txt}
 {com}. global folder "${c -(}mainfolder{c )-}/SurveyData/"
 {txt}
-{com}. global other "${c -(}mainfolder{c )-}/OtherData/"
+{com}. global otherfolder "/Users/Myworld/Dropbox/SearchMatchExpectation/data/SCE/"
+{txt}
+{com}. global graph_folder "${c -(}mainfolder{c )-}/Graphs/sce/"
 {txt}
 {com}. global sum_graph_folder "${c -(}mainfolder{c )-}/Graphs/ind"
 {txt}
-{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables/"
+{com}. global sum_table_folder "${c -(}mainfolder{c )-}/Tables"
 {txt}
 {com}. 
 . cd ${c -(}folder{c )-}

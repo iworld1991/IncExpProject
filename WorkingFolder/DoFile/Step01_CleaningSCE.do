@@ -413,6 +413,7 @@ label var educ_gr "education group"
 label define educ_grlb 1 "HS dropout" 2 "HS graduate" 3 "College/above"
 label value educ_gr educ_grlb
 
+
 save "${folder}/SCE/IncExpSCEProbIndM",replace 
 
 ***************************************

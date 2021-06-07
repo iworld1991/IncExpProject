@@ -3,37 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/indSCE_Est_log.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}14 May 2021, 10:19:21
-{txt}
-{com}. 
-. *********************************************************
-. *** before working with SCE, clean the stock market data 
-. ********************************************************
-. 
-. use "${c -(}mainfolder{c )-}/OtherData/sp500.dta",clear 
-{txt}
-{com}. 
-. generate new_date = dofc(DATE)
-{txt}
-{com}. *format new_date %tm
-. gen year = year(new_date)
-{txt}
-{com}. gen month = month(new_date)
-{txt}
-{com}. gen date_str = string(year)+ "m"+string(month)
-{txt}
-{com}. gen date = monthly(date_str,"YM")
-{txt}
-{com}. format date %tm
-{txt}
-{com}. drop DATE date_str year month new_date 
-{txt}
-{com}. label var sp500 "growth rate (%) of sp500 index from last month"
-{txt}
-{com}. save "${c -(}mainfolder{c )-}/OtherData/sp500M.dta",replace 
-{txt}file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/OtherData/sp500M.dta saved
-
-{com}. clear 
+ {txt}opened on:  {res} 7 Jun 2021, 17:21:28
 {txt}
 {com}. 
 . 
@@ -84,10 +54,10 @@
 {txt}
 {com}. 
 . *************************************
-. *** Merge with stock market data   **
+. *** Merge with macro data   **
 . *************************************
 . 
-. merge m:1 date using "${c -(}mainfolder{c )-}/OtherData/sp500M.dta", keep(master match) 
+. merge m:1 date using "${c -(}mainfolder{c )-}/OtherData/macroM.dta", keep(master match) 
 {res}
 {txt}{col 5}Result{col 38}# of obs.
 {col 5}{hline 41}
@@ -98,6 +68,7 @@
 {com}. rename _merge sp_merge
 {res}{txt}
 {com}. 
+. 
 . *******************************
 . **  Set Panel Data Structure **
 . *******************************
@@ -115,8 +86,8 @@
 . ** Exclude extreme outliers 
 . ******************************
 . 
-. keep if Q32 <= 65 & Q32 >= 20
-{txt}(10376 observations deleted)
+. keep if Q32 <= 60 & Q32 >= 20
+{txt}(23030 observations deleted)
 
 {com}. 
 . *****************************************
@@ -165,7 +136,7 @@
 . ****************************
 . 
 . replace incskew = . if incskew==0
-{txt}(32933 real changes made, 32933 to missing)
+{txt}(29613 real changes made, 29613 to missing)
 
 {com}. 
 . 
@@ -181,12 +152,12 @@
 {txt}  3{com}.           egen `var'pu=pctile(`var'),p(99)
 {txt}  4{com}.           replace `var' = . if `var' <`var'pl | (`var' >`var'pu & `var'!=.)
 {txt}  5{com}. {c )-}
-{txt}(1172 real changes made, 1172 to missing)
-(1123 real changes made, 1123 to missing)
-(3158 real changes made, 3158 to missing)
-(831 real changes made, 831 to missing)
-(1215 real changes made, 1215 to missing)
-(588 real changes made, 588 to missing)
+{txt}(1017 real changes made, 1017 to missing)
+(1028 real changes made, 1028 to missing)
+(2858 real changes made, 2858 to missing)
+(767 real changes made, 767 to missing)
+(1112 real changes made, 1112 to missing)
+(537 real changes made, 537 to missing)
 
 {com}. 
 . /*
@@ -203,9 +174,9 @@
 . *** generate other vars *****
 . *****************************
 . 
-. gen age_sq = age^2
+. gen age2 = age^2
 {txt}
-{com}. label var age_sq "Age-squared"
+{com}. label var age2 "Age-squared"
 {txt}
 {com}. 
 . encode state, gen(state_id)
@@ -213,12 +184,6 @@
 {com}. label var state_id "state id"
 {txt}
 {com}. 
-. *****************************
-. *** generate group vars *****
-. *****************************
-. 
-. *egen byear_g = cut(byear), group(4)
-. 
 . egen byear_5yr = cut(byear), ///
 >      at(1945 1950 1955 1960 1965 1970 ///
 >             1975 1980 1985 1990 1995 2000 ///
@@ -230,7 +195,7 @@
 . egen age_5yr = cut(age), ///
 >      at(20 25 30 35 40 45 ///
 >             50 55 60)
-{txt}(15341 missing values generated)
+{txt}(2687 missing values generated)
 
 {com}. label var age_5yr "5-year age"
 {txt}
@@ -253,16 +218,16 @@
 {txt}
 {com}. 
 . gen edu_g = . 
-{txt}(88217 missing values generated)
+{txt}(75563 missing values generated)
 
 {com}. replace edu_g = 1 if educ==1
-{txt}(721 real changes made)
+{txt}(620 real changes made)
 
 {com}. replace edu_g = 2 if educ==2 | educ ==3 | educ == 4
-{txt}(38196 real changes made)
+{txt}(31887 real changes made)
 
 {com}. replace edu_g = 3 if educ <=9 & educ>4
-{txt}(49300 real changes made)
+{txt}(43056 real changes made)
 
 {com}. 
 . label var edu_g "education group"
@@ -278,7 +243,7 @@
 {txt}
 {com}. 
 . egen HHinc_g = cut(HHinc), group(2)
-{txt}(12278 missing values generated)
+{txt}(10649 missing values generated)
 
 {com}. label var HHinc_g "Household income group"
 {txt}
@@ -295,7 +260,7 @@
 . gen fbetter =cond(Q1>2,1,0)
 {txt}
 {com}. replace fbetter = . if Q1 ==3  
-{txt}(39151 real changes made, 39151 to missing)
+{txt}(32975 real changes made, 32975 to missing)
 
 {com}. label var fbetter "finance better"
 {txt}
@@ -308,7 +273,7 @@
 . gen nlit_g = cond(nlit>=3,1,0) 
 {txt}
 {com}. replace nlit_g = . if nlit ==.
-{txt}(30181 real changes made, 30181 to missing)
+{txt}(25529 real changes made, 25529 to missing)
 
 {com}. label var nlit_g "numeracy literacy score group"
 {txt}
@@ -516,8 +481,7 @@
 . ** full sample
 . preserve
 {txt}
-{com}. 
-. merge m:1 YM using "${c -(}otherdata_folder{c )-}/sipp/sipp_history_vol_decomposed.dta", keep(master match)
+{com}. merge m:1 YM using "${c -(}otherdata_folder{c )-}/sipp/sipp_history_vol_decomposed.dta", keep(master match)
 {res}{txt}{p 0 7 2}
 (note: variable
 YM was 
@@ -526,11 +490,11 @@ float, now double to accommodate using data's values)
 
 {col 5}Result{col 38}# of obs.
 {col 5}{hline 41}
-{col 5}not matched{col 30}{res}          31,536
-{txt}{col 9}from master{col 30}{res}          31,536{txt}  (_merge==1)
+{col 5}not matched{col 30}{res}          30,633
+{txt}{col 9}from master{col 30}{res}          30,633{txt}  (_merge==1)
 {col 9}from using{col 30}{res}               0{txt}  (_merge==2)
 
-{col 5}matched{col 30}{res}          56,681{txt}  (_merge==3)
+{col 5}matched{col 30}{res}          44,930{txt}  (_merge==3)
 {col 5}{hline 41}
 
 {com}. drop _merge 
@@ -543,7 +507,8 @@ float, now double to accommodate using data's values)
 {com}. 
 . collapse (mean) incvar rincvar permanent transitory, by(date year month) 
 {txt}
-{com}. tsset date 
+{com}. 
+. tsset date 
 {res}{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m4
 {txt}{col 17}delta:  {res}1 month
 {txt}
@@ -553,7 +518,16 @@ float, now double to accommodate using data's values)
 {txt}{hline 10}{c TT}{hline 11}
      date {c |}      Freq.
 {hline 10}{c +}{hline 11}
-   2014m5 {c |}          {res}1
+   2013m6 {c |}          {res}1
+   {txt}2013m7 {c |}          {res}1
+   {txt}2013m8 {c |}          {res}1
+   {txt}2013m9 {c |}          {res}1
+  {txt}2013m10 {c |}          {res}1
+  {txt}2013m11 {c |}          {res}1
+  {txt}2013m12 {c |}          {res}1
+   {txt}2014m2 {c |}          {res}1
+   {txt}2014m3 {c |}          {res}1
+   {txt}2014m5 {c |}          {res}1
    {txt}2014m6 {c |}          {res}1
    {txt}2014m7 {c |}          {res}1
    {txt}2014m8 {c |}          {res}1
@@ -583,8 +557,6 @@ float, now double to accommodate using data's values)
   {txt}2016m10 {c |}          {res}1
   {txt}2016m11 {c |}          {res}1
   {txt}2016m12 {c |}          {res}1
-   {txt}2017m2 {c |}          {res}1
-   {txt}2017m3 {c |}          {res}1
    {txt}2017m4 {c |}          {res}1
    {txt}2017m5 {c |}          {res}1
    {txt}2017m6 {c |}          {res}1
@@ -594,26 +566,136 @@ float, now double to accommodate using data's values)
   {txt}2017m10 {c |}          {res}1
   {txt}2017m11 {c |}          {res}1
   {txt}2017m12 {c |}          {res}1
-   {txt}2018m4 {c |}          {res}1
-   {txt}2018m5 {c |}          {res}1
-   {txt}2018m6 {c |}          {res}1
-   {txt}2018m7 {c |}          {res}1
-   {txt}2018m8 {c |}          {res}1
-   {txt}2018m9 {c |}          {res}1
-  {txt}2018m10 {c |}          {res}1
-  {txt}2018m11 {c |}          {res}1
-  {txt}2018m12 {c |}          {res}1
 {txt}{hline 10}{c BT}{hline 11}
 
 {com}. gen pvar = permanent^2
-{txt}(33 missing values generated)
+{txt}(35 missing values generated)
 
 {com}. gen tvar = transitory^2
-{txt}(29 missing values generated)
+{txt}(34 missing values generated)
 
 {com}. 
-. twoway (tsline rincvar,lp(solid) lwidth(thick)) ///
->        (tsline tvar, yaxis(2) lp(dash) lwidth(thick)), ///
+. egen pvarmv3 = filter(myvar), coef(1 1 1) lags(-1/1) normalise 
+{err}variable myvar not found
+{txt}{search r(111):r(111);}
+
+end of do-file
+
+{search r(111):r(111);}
+
+{com}. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD06284.000000"
+{txt}
+{com}. 
+. ** full sample
+. preserve
+{txt}
+{com}. merge m:1 YM using "${c -(}otherdata_folder{c )-}/sipp/sipp_history_vol_decomposed.dta", keep(master match)
+{res}{txt}{p 0 7 2}
+(note: variable
+YM was 
+float, now double to accommodate using data's values)
+{p_end}
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}          30,633
+{txt}{col 9}from master{col 30}{res}          30,633{txt}  (_merge==1)
+{col 9}from using{col 30}{res}               0{txt}  (_merge==2)
+
+{col 5}matched{col 30}{res}          44,930{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. drop _merge 
+{txt}
+{com}. xtset ID date
+{res}{txt}{col 8}panel variable:  {res}ID (unbalanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m4, but with gaps
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. collapse (mean) incvar rincvar permanent transitory, by(date year month) 
+{txt}
+{com}. 
+. tsset date 
+{res}{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m4
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. table date if permanent!=.
+
+{txt}{hline 10}{c TT}{hline 11}
+     date {c |}      Freq.
+{hline 10}{c +}{hline 11}
+   2013m6 {c |}          {res}1
+   {txt}2013m7 {c |}          {res}1
+   {txt}2013m8 {c |}          {res}1
+   {txt}2013m9 {c |}          {res}1
+  {txt}2013m10 {c |}          {res}1
+  {txt}2013m11 {c |}          {res}1
+  {txt}2013m12 {c |}          {res}1
+   {txt}2014m2 {c |}          {res}1
+   {txt}2014m3 {c |}          {res}1
+   {txt}2014m5 {c |}          {res}1
+   {txt}2014m6 {c |}          {res}1
+   {txt}2014m7 {c |}          {res}1
+   {txt}2014m8 {c |}          {res}1
+   {txt}2014m9 {c |}          {res}1
+  {txt}2014m10 {c |}          {res}1
+  {txt}2014m11 {c |}          {res}1
+  {txt}2014m12 {c |}          {res}1
+   {txt}2015m2 {c |}          {res}1
+   {txt}2015m3 {c |}          {res}1
+   {txt}2015m4 {c |}          {res}1
+   {txt}2015m5 {c |}          {res}1
+   {txt}2015m6 {c |}          {res}1
+   {txt}2015m7 {c |}          {res}1
+   {txt}2015m8 {c |}          {res}1
+   {txt}2015m9 {c |}          {res}1
+  {txt}2015m10 {c |}          {res}1
+  {txt}2015m11 {c |}          {res}1
+  {txt}2015m12 {c |}          {res}1
+   {txt}2016m2 {c |}          {res}1
+   {txt}2016m3 {c |}          {res}1
+   {txt}2016m4 {c |}          {res}1
+   {txt}2016m5 {c |}          {res}1
+   {txt}2016m6 {c |}          {res}1
+   {txt}2016m7 {c |}          {res}1
+   {txt}2016m8 {c |}          {res}1
+   {txt}2016m9 {c |}          {res}1
+  {txt}2016m10 {c |}          {res}1
+  {txt}2016m11 {c |}          {res}1
+  {txt}2016m12 {c |}          {res}1
+   {txt}2017m4 {c |}          {res}1
+   {txt}2017m5 {c |}          {res}1
+   {txt}2017m6 {c |}          {res}1
+   {txt}2017m7 {c |}          {res}1
+   {txt}2017m8 {c |}          {res}1
+   {txt}2017m9 {c |}          {res}1
+  {txt}2017m10 {c |}          {res}1
+  {txt}2017m11 {c |}          {res}1
+  {txt}2017m12 {c |}          {res}1
+{txt}{hline 10}{c BT}{hline 11}
+
+{com}. gen pvar = permanent^2
+{txt}(35 missing values generated)
+
+{com}. gen tvar = transitory^2
+{txt}(34 missing values generated)
+
+{com}. 
+. egen pvarmv3 = filter(pvar), coef(1 1 1) lags(-1/1) normalise 
+{txt}(47 missing values generated)
+
+{com}. egen tvarmv3 = filter(tvar), coef(1 2 1) lags(-1/1) normalise
+{txt}(44 missing values generated)
+
+{com}. egen rincvarmv3 = filter(rincvar), coef(1 2 1) lags(-1/1) normalise
+{txt}(2 missing values generated)
+
+{com}. 
+. 
+. twoway (tsline rincvarmv3,lp(solid) lwidth(thick) lcolor(black)) ///
+>        (tsline tvarmv3, yaxis(2) lp(dash) lwidth(thick) lcolor(red)), ///
 >        xtitle("date") ///
 >            ytitle("") ///
 >            title("Perceived and realized transitory risk") ///
@@ -624,8 +706,8 @@ float, now double to accommodate using data's values)
 
 {com}. 
 .  
-. twoway (tsline rincvar,lp(solid) lwidth(thick)) ///
->        (tsline pvar, yaxis(2) lp(dash) lwidth(thick)), ///
+. twoway (tsline rincvarmv3,lp(solid) lwidth(thick) lcolor(black)) ///
+>        (tsline pvarmv3, yaxis(2) lp(dash) lwidth(thick) lcolor(red)), ///
 >        xtitle("date") ///
 >            ytitle("") ///
 >            title("Perceived and realized permanent risk") ///
@@ -637,31 +719,23 @@ float, now double to accommodate using data's values)
 {com}. restore
 {txt}
 {com}. 
-. 
 . ** sub sample
-. 
-. 
-. preserve
+. dddd
+{err}unrecognized command:  dddd
+{txt}{search r(199):r(199);}
+
+end of do-file
+
+{search r(199):r(199);}
+
+{com}. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD06284.000000"
 {txt}
 {com}. 
-. merge m:1 gender educ age_5yr YM ///
->          using "${c -(}otherdata_folder{c )-}/sipp/sipp_history_vol_decomposed_edu_gender_age5.dta", keep(master match)
+. ** full sample
+. preserve
+{txt}
+{com}. merge m:1 YM using "${c -(}otherdata_folder{c )-}/sipp/sipp_history_vol_decomposed.dta", keep(master match)
 {res}{txt}{p 0 7 2}
-(note: variable
-educ was 
-float, now double to accommodate using data's values)
-{p_end}
-{p 0 7 2}
-(note: variable
-gender was 
-byte, now long to accommodate using data's values)
-{p_end}
-{p 0 7 2}
-(note: variable
-age_5yr was 
-float, now double to accommodate using data's values)
-{p_end}
-{p 0 7 2}
 (note: variable
 YM was 
 float, now double to accommodate using data's values)
@@ -669,11 +743,11 @@ float, now double to accommodate using data's values)
 
 {col 5}Result{col 38}# of obs.
 {col 5}{hline 41}
-{col 5}not matched{col 30}{res}          75,907
-{txt}{col 9}from master{col 30}{res}          75,907{txt}  (_merge==1)
+{col 5}not matched{col 30}{res}          30,633
+{txt}{col 9}from master{col 30}{res}          30,633{txt}  (_merge==1)
 {col 9}from using{col 30}{res}               0{txt}  (_merge==2)
 
-{col 5}matched{col 30}{res}          12,310{txt}  (_merge==3)
+{col 5}matched{col 30}{res}          44,930{txt}  (_merge==3)
 {col 5}{hline 41}
 
 {com}. drop _merge 
@@ -684,7 +758,12 @@ float, now double to accommodate using data's values)
 {txt}{col 17}delta:  {res}1 month
 {txt}
 {com}. 
-. collapse (mean) incvar rincvar permanent transitory, by(date year month gender educ age_5yr) 
+. collapse (mean) incvar rincvar permanent transitory, by(date year month) 
+{txt}
+{com}. 
+. tsset date 
+{res}{txt}{col 9}time variable:  {res}{col 25}date, 2013m6 to 2020m4
+{txt}{col 17}delta:  {res}1 month
 {txt}
 {com}. 
 . table date if permanent!=.
@@ -692,92 +771,1441 @@ float, now double to accommodate using data's values)
 {txt}{hline 10}{c TT}{hline 11}
      date {c |}      Freq.
 {hline 10}{c +}{hline 11}
-   2014m5 {c |}         {res}38
-   {txt}2014m6 {c |}         {res}36
-   {txt}2014m7 {c |}         {res}35
-   {txt}2014m8 {c |}         {res}35
-   {txt}2014m9 {c |}         {res}35
-  {txt}2014m10 {c |}         {res}36
-  {txt}2014m11 {c |}         {res}35
-  {txt}2014m12 {c |}         {res}37
-   {txt}2015m1 {c |}         {res}38
-   {txt}2015m2 {c |}         {res}38
-   {txt}2015m3 {c |}         {res}36
-   {txt}2015m4 {c |}         {res}36
-   {txt}2015m5 {c |}         {res}34
-   {txt}2015m6 {c |}         {res}35
-   {txt}2015m7 {c |}         {res}35
-   {txt}2015m8 {c |}         {res}37
-   {txt}2015m9 {c |}         {res}37
-  {txt}2015m10 {c |}         {res}39
-  {txt}2015m11 {c |}         {res}37
-  {txt}2015m12 {c |}         {res}36
-   {txt}2016m1 {c |}         {res}35
-   {txt}2016m2 {c |}         {res}35
-   {txt}2016m3 {c |}         {res}35
-   {txt}2016m4 {c |}         {res}37
-   {txt}2016m5 {c |}         {res}40
-   {txt}2016m6 {c |}         {res}36
-   {txt}2016m7 {c |}         {res}38
-   {txt}2016m8 {c |}         {res}35
-   {txt}2016m9 {c |}         {res}34
-  {txt}2016m10 {c |}         {res}35
-  {txt}2016m11 {c |}         {res}38
-  {txt}2016m12 {c |}         {res}39
-   {txt}2017m1 {c |}         {res}37
-   {txt}2017m2 {c |}         {res}37
-   {txt}2017m3 {c |}         {res}36
-   {txt}2017m4 {c |}         {res}34
-   {txt}2017m5 {c |}         {res}36
-   {txt}2017m6 {c |}         {res}35
-   {txt}2017m7 {c |}         {res}34
-   {txt}2017m8 {c |}         {res}33
-   {txt}2017m9 {c |}         {res}31
-  {txt}2017m10 {c |}         {res}33
-  {txt}2017m11 {c |}         {res}33
-  {txt}2017m12 {c |}         {res}33
-   {txt}2018m4 {c |}         {res}31
-   {txt}2018m5 {c |}         {res}33
-   {txt}2018m6 {c |}         {res}33
-   {txt}2018m7 {c |}         {res}35
-   {txt}2018m8 {c |}         {res}36
-   {txt}2018m9 {c |}         {res}35
-  {txt}2018m10 {c |}         {res}34
-  {txt}2018m11 {c |}         {res}34
-  {txt}2018m12 {c |}         {res}33
+   2013m6 {c |}          {res}1
+   {txt}2013m7 {c |}          {res}1
+   {txt}2013m8 {c |}          {res}1
+   {txt}2013m9 {c |}          {res}1
+  {txt}2013m10 {c |}          {res}1
+  {txt}2013m11 {c |}          {res}1
+  {txt}2013m12 {c |}          {res}1
+   {txt}2014m2 {c |}          {res}1
+   {txt}2014m3 {c |}          {res}1
+   {txt}2014m5 {c |}          {res}1
+   {txt}2014m6 {c |}          {res}1
+   {txt}2014m7 {c |}          {res}1
+   {txt}2014m8 {c |}          {res}1
+   {txt}2014m9 {c |}          {res}1
+  {txt}2014m10 {c |}          {res}1
+  {txt}2014m11 {c |}          {res}1
+  {txt}2014m12 {c |}          {res}1
+   {txt}2015m2 {c |}          {res}1
+   {txt}2015m3 {c |}          {res}1
+   {txt}2015m4 {c |}          {res}1
+   {txt}2015m5 {c |}          {res}1
+   {txt}2015m6 {c |}          {res}1
+   {txt}2015m7 {c |}          {res}1
+   {txt}2015m8 {c |}          {res}1
+   {txt}2015m9 {c |}          {res}1
+  {txt}2015m10 {c |}          {res}1
+  {txt}2015m11 {c |}          {res}1
+  {txt}2015m12 {c |}          {res}1
+   {txt}2016m2 {c |}          {res}1
+   {txt}2016m3 {c |}          {res}1
+   {txt}2016m4 {c |}          {res}1
+   {txt}2016m5 {c |}          {res}1
+   {txt}2016m6 {c |}          {res}1
+   {txt}2016m7 {c |}          {res}1
+   {txt}2016m8 {c |}          {res}1
+   {txt}2016m9 {c |}          {res}1
+  {txt}2016m10 {c |}          {res}1
+  {txt}2016m11 {c |}          {res}1
+  {txt}2016m12 {c |}          {res}1
+   {txt}2017m4 {c |}          {res}1
+   {txt}2017m5 {c |}          {res}1
+   {txt}2017m6 {c |}          {res}1
+   {txt}2017m7 {c |}          {res}1
+   {txt}2017m8 {c |}          {res}1
+   {txt}2017m9 {c |}          {res}1
+  {txt}2017m10 {c |}          {res}1
+  {txt}2017m11 {c |}          {res}1
+  {txt}2017m12 {c |}          {res}1
 {txt}{hline 10}{c BT}{hline 11}
 
 {com}. gen pvar = permanent^2
-{txt}(11544 missing values generated)
+{txt}(35 missing values generated)
 
 {com}. gen tvar = transitory^2
-{txt}(11507 missing values generated)
+{txt}(34 missing values generated)
 
 {com}. 
-. 
-. twoway (scatter rincvar tvar) ///
->        (lfit rincvar tvar), ///
->        xtitle("transitory risks") ///
->            ytitle("perceived risks") ///
->            title("Perceived and realized transitory risk") ///
->            legend(label(1 "xxx") label(2 "xx") col(2))
+. reg rincvar pvar tvar 
+
+      {txt}Source {c |}       SS       df       MS              Number of obs ={res}      48
+{txt}{hline 13}{char +}{hline 30}           F(  2,    45) ={res}    0.14
+    {txt}   Model {char |} {res} 2.6846e-09     2  1.3423e-09           {txt}Prob > F      = {res} 0.8731
+    {txt}Residual {char |} {res} 4.4391e-07    45  9.8646e-09           {txt}R-squared     = {res} 0.0060
+{txt}{hline 13}{char +}{hline 30}           Adj R-squared = {res}-0.0382
+    {txt}   Total {char |} {res} 4.4659e-07    47  9.5019e-09           {txt}Root MSE      = {res} 9.9e-05
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     rincvar{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 8}pvar {c |}{col 14}{res}{space 2}-.0086263{col 26}{space 2} .0172391{col 37}{space 1}   -0.50{col 46}{space 3}0.619{col 54}{space 4}-.0433475{col 67}{space 3}  .026095
+{txt}{space 8}tvar {c |}{col 14}{res}{space 2}-.0077035{col 26}{space 2} .0455399{col 37}{space 1}   -0.17{col 46}{space 3}0.866{col 54}{space 4}-.0994254{col 67}{space 3} .0840185
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}  .001252{col 26}{space 2} .0000283{col 37}{space 1}   44.29{col 46}{space 3}0.000{col 54}{space 4}  .001195{col 67}{space 3} .0013089
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}{txt}
-{com}.  graph export "${c -(}graph_folder{c )-}/sipp/real_transitory_by_age_edu_gender_compare.png",as(png) replace  
-{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs//sipp/real_transitory_by_age_edu_gender_compare.png written in PNG format)
+{com}. 
+. egen pvarmv3 = filter(pvar), coef(1 1 1) lags(-1/1) normalise 
+{txt}(47 missing values generated)
+
+{com}. egen tvarmv3 = filter(tvar), coef(1 2 1) lags(-1/1) normalise
+{txt}(44 missing values generated)
+
+{com}. egen rincvarmv3 = filter(rincvar), coef(1 2 1) lags(-1/1) normalise
+{txt}(2 missing values generated)
+
+{com}. 
+. twoway (tsline rincvarmv3,lp(solid) lwidth(thick) lcolor(black)) ///
+>        (tsline tvarmv3, yaxis(2) lp(dash) lwidth(thick) lcolor(red)), ///
+>        xtitle("date") ///
+>            ytitle("") ///
+>            title("Perceived and realized transitory risk") ///
+>            legend(label(1 "perceived") label(2 "realized transitory(RHS)") col(2))
+{res}{txt}
+{com}.  graph export "${c -(}graph_folder{c )-}/sipp/real_transitory_compare.png",as(png) replace  
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs//sipp/real_transitory_compare.png written in PNG format)
 
 {com}. 
 .  
-. twoway (scatter rincvar pvar) ///
->        (lfit rincvar pvar), ///
->        xtitle("permanent risks") ///
->            ytitle("perceived risks") ///
+. twoway (tsline rincvarmv3,lp(solid) lwidth(thick) lcolor(black)) ///
+>        (tsline pvarmv3, yaxis(2) lp(dash) lwidth(thick) lcolor(red)), ///
+>        xtitle("date") ///
+>            ytitle("") ///
 >            title("Perceived and realized permanent risk") ///
->            legend(label(1 "xxx") label(2 "xxx") col(2))
+>            legend(label(1 "perceived") label(2 "realized permanent(RHS)") col(2))
 {res}{txt}
-{com}. graph export "${c -(}graph_folder{c )-}/sipp/real_permanent_by_age_edu_gender_compare.png",as(png) replace  
-{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs//sipp/real_permanent_by_age_edu_gender_compare.png written in PNG format)
+{com}. graph export "${c -(}graph_folder{c )-}/sipp/real_permanent_compare.png",as(png) replace  
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs//sipp/real_permanent_compare.png written in PNG format)
 
 {com}. restore
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD06284.000000"
+{txt}
+{com}. *************************************************************
+. *! SIPP data cleaning
+. *! Last modified: May 2021 by Tao 
+. **************************************************************
+. global datafolder "/Users/Myworld/Dropbox/SIPP/"
+{txt}
+{com}. *global scefolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/SurveyData/SCE/"
+. global otherdatafolder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/OtherData/"
+{txt}
+{com}. global table_folder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/OtherData/sipp/"
+{txt}
+{com}. global graph_folder "/Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/sipp/"
+{txt}
+{com}. 
+. clear
+{txt}
+{com}. use "${c -(}datafolder{c )-}sipp.dta"
+{txt}
+{com}. describe
+
+{txt}Contains data from {res}/Users/Myworld/Dropbox/SIPP/sipp.dta
+{txt}  obs:{res}       168,009                          
+{txt} vars:{res}           518                          04 Jun 2021 17:08
+{txt} size:{res}   684,972,693                          
+{txt}{hline}
+              storage   display    value
+variable name   type    format     label      variable label
+{hline}
+{p 0 48}{res}{bind:index          }{txt}{bind: long    }{bind:{txt}%12.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:SSUID          }{txt}{bind: str14   }{bind:{txt}%14s      }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:SHHADID        }{txt}{bind: str3    }{bind:{txt}%3s       }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:PNUM           }{txt}{bind: long    }{bind:{txt}%12.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:EDOB_BMONTH    }{txt}{bind: long    }{bind:{txt}%12.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:ERELRPE        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:ESEX           }{txt}{bind: long    }{bind:{txt}%12.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:EORIGIN        }{txt}{bind: long    }{bind:{txt}%12.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:ERACE          }{txt}{bind: long    }{bind:{txt}%12.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:EEDUC          }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:EHOWWELL       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:EBORNUS        }{txt}{bind: long    }{bind:{txt}%12.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:ECITIZEN       }{txt}{bind: long    }{bind:{txt}%12.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:EINTTYPE       }{txt}{bind: long    }{bind:{txt}%12.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:MONTHCODE      }{txt}{bind: long    }{bind:{txt}%12.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:WPFINWGT       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:ERESIDENCEID   }{txt}{bind: str6    }{bind:{txt}%6s       }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:RJB1_CFLG      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:EJB1_JBORSE    }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:EJB1_CHHOUR1   }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:EJB1_CHHOUR2   }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:ENJ_LAYOFF     }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:EJB1_AWOP1     }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:EJB1_AWOPSM1   }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:EJB1_AWOPEM1   }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:TST_INTV       }{txt}{bind: str2    }{bind:{txt}%2s       }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:TJB1_IND       }{txt}{bind: str4    }{bind:{txt}%4s       }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:TAGE           }{txt}{bind: long    }{bind:{txt}%12.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:TAGE_EHC       }{txt}{bind: long    }{bind:{txt}%12.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:TJB1_MSUM      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:TJB1_MWKHRS    }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:TPEARN         }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:TPTOTINC       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT0        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT1        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT2        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT3        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT4        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT5        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT6        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT7        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT8        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT9        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT10       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT11       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT12       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT13       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT14       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT15       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT16       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT17       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT18       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT19       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT20       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT21       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT22       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT23       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT24       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT25       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT26       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT27       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT28       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT29       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT30       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT31       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT32       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT33       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT34       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT35       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT36       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT37       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT38       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT39       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT40       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT41       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT42       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT43       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT44       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT45       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT46       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT47       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT48       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT49       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT50       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT51       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT52       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT53       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT54       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT55       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT56       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT57       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT58       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT59       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT60       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT61       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT62       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT63       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT64       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT65       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT66       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT67       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT68       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT69       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT70       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT71       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT72       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT73       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT74       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT75       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT76       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT77       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT78       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT79       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT80       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT81       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT82       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT83       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT84       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT85       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT86       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT87       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT88       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT89       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT90       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT91       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT92       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT93       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT94       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT95       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT96       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT97       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT98       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT99       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT100      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT101      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT102      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT103      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT104      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT105      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT106      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT107      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT108      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT109      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT110      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT111      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT112      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT113      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT114      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT115      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT116      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT117      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT118      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT119      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT120      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT121      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT122      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT123      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT124      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT125      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT126      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT127      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT128      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT129      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT130      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT131      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT132      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT133      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT134      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT135      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT136      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT137      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT138      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT139      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT140      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT141      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT142      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT143      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT144      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT145      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT146      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT147      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT148      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT149      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT150      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT151      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT152      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT153      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT154      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT155      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT156      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT157      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT158      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT159      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT160      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT161      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT162      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT163      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT164      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT165      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT166      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT167      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT168      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT169      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT170      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT171      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT172      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT173      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT174      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT175      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT176      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT177      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT178      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT179      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT180      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT181      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT182      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT183      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT184      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT185      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT186      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT187      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT188      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT189      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT190      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT191      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT192      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT193      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT194      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT195      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT196      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT197      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT198      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT199      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT200      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT201      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT202      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT203      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT204      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT205      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT206      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT207      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT208      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT209      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT210      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT211      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT212      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT213      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT214      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT215      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT216      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT217      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT218      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT219      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT220      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT221      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT222      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT223      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT224      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT225      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT226      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT227      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT228      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT229      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT230      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT231      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT232      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT233      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT234      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT235      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT236      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT237      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT238      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT239      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWGT240      }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:SPANEL         }{txt}{bind: long    }{bind:{txt}%12.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:SWAVE          }{txt}{bind: long    }{bind:{txt}%12.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:RJB1_CONTFLG   }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT1         }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT2         }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT3         }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT4         }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT5         }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT6         }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT7         }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT8         }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT9         }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT10        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT11        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT12        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT13        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT14        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT15        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT16        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT17        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT18        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT19        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT20        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT21        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT22        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT23        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT24        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT25        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT26        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT27        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT28        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT29        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT30        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT31        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT32        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT33        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT34        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT35        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT36        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT37        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT38        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT39        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT40        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT41        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT42        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT43        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT44        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT45        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT46        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT47        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT48        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT49        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT50        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT51        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT52        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT53        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT54        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT55        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT56        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT57        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT58        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT59        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT60        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT61        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT62        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT63        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT64        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT65        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT66        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT67        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT68        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT69        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT70        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT71        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT72        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT73        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT74        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT75        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT76        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT77        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT78        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT79        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT80        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT81        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT82        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT83        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT84        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT85        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT86        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT87        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT88        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT89        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT90        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT91        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT92        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT93        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT94        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT95        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT96        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT97        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT98        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT99        }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT100       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT101       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT102       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT103       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT104       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT105       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT106       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT107       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT108       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT109       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT110       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT111       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT112       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT113       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT114       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT115       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT116       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT117       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT118       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT119       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT120       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT121       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT122       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT123       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT124       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT125       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT126       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT127       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT128       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT129       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT130       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT131       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT132       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT133       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT134       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT135       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT136       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT137       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT138       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT139       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT140       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT141       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT142       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT143       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT144       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT145       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT146       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT147       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT148       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT149       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT150       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT151       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT152       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT153       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT154       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT155       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT156       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT157       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT158       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT159       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT160       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT161       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT162       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT163       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT164       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT165       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT166       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT167       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT168       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT169       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT170       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT171       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT172       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT173       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT174       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT175       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT176       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT177       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT178       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT179       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT180       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT181       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT182       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT183       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT184       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT185       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT186       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT187       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT188       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT189       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT190       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT191       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT192       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT193       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT194       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT195       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT196       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT197       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT198       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT199       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT200       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT201       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT202       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT203       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT204       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT205       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT206       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT207       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT208       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT209       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT210       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT211       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT212       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT213       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT214       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT215       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT216       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT217       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT218       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT219       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT220       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT221       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT222       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT223       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT224       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT225       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT226       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT227       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT228       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT229       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT230       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT231       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT232       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT233       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT234       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT235       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT236       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT237       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT238       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT239       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT240       }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:REPWT0         }{txt}{bind: double  }{bind:{txt}%10.0g    }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{txt}{hline}
+Sorted by:  
+
+{com}. count 
+{res}168009
+{txt}
+{com}. 
+. 
+. **************************
+. ** date and id ***********
+. ***************************
+. 
+. 
+. 
+. egen uniqueid=group(SSUID PNUM)
+{txt}
+{com}. gen year= SPANEL+SWAVE-2
+{txt}
+{com}. ** year t panel data is for income for year t-1
+. gen month = MONTHCODE
+{txt}
+{com}. 
+. gen quarter = .
+{txt}(168009 missing values generated)
+
+{com}. replace quarter=1 if month==1 | month==2 | month ==3 
+{txt}(42672 real changes made)
+
+{com}. replace quarter=2 if month==4 | month==5 | month ==6 
+{txt}(42511 real changes made)
+
+{com}. replace quarter=3 if month==7 | month==8 | month ==9 
+{txt}(41772 real changes made)
+
+{com}. replace quarter=4 if month==10 | month==11 | month ==12 
+{txt}(41054 real changes made)
+
+{com}. 
+. gen date_str=string(year)+"M"+string(month)
+{txt}
+{com}. gen date = monthly(date_str,"YM")
+{txt}
+{com}. format date %tm
+{txt}
+{com}. drop date_str
+{txt}
+{com}. 
+. table date
+
+{txt}{hline 10}{c TT}{hline 11}
+     date {c |}      Freq.
+{hline 10}{c +}{hline 11}
+   2013m1 {c |}      {res}3,502
+   {txt}2013m2 {c |}      {res}3,524
+   {txt}2013m3 {c |}      {res}3,549
+   {txt}2013m4 {c |}      {res}3,554
+   {txt}2013m5 {c |}      {res}3,550
+   {txt}2013m6 {c |}      {res}3,554
+   {txt}2013m7 {c |}      {res}3,542
+   {txt}2013m8 {c |}      {res}3,561
+   {txt}2013m9 {c |}      {res}3,546
+  {txt}2013m10 {c |}      {res}3,534
+  {txt}2013m11 {c |}      {res}3,520
+  {txt}2013m12 {c |}      {res}3,485
+   {txt}2014m1 {c |}      {res}2,691
+   {txt}2014m2 {c |}      {res}2,685
+   {txt}2014m3 {c |}      {res}2,689
+   {txt}2014m4 {c |}      {res}2,684
+   {txt}2014m5 {c |}      {res}2,669
+   {txt}2014m6 {c |}      {res}2,631
+   {txt}2014m7 {c |}      {res}2,610
+   {txt}2014m8 {c |}      {res}2,593
+   {txt}2014m9 {c |}      {res}2,550
+  {txt}2014m10 {c |}      {res}2,531
+  {txt}2014m11 {c |}      {res}2,520
+  {txt}2014m12 {c |}      {res}2,494
+   {txt}2015m1 {c |}      {res}2,152
+   {txt}2015m2 {c |}      {res}2,142
+   {txt}2015m3 {c |}      {res}2,144
+   {txt}2015m4 {c |}      {res}2,117
+   {txt}2015m5 {c |}      {res}2,089
+   {txt}2015m6 {c |}      {res}2,060
+   {txt}2015m7 {c |}      {res}2,033
+   {txt}2015m8 {c |}      {res}2,024
+   {txt}2015m9 {c |}      {res}1,993
+  {txt}2015m10 {c |}      {res}1,984
+  {txt}2015m11 {c |}      {res}1,966
+  {txt}2015m12 {c |}      {res}1,945
+   {txt}2016m1 {c |}      {res}1,851
+   {txt}2016m2 {c |}      {res}1,842
+   {txt}2016m3 {c |}      {res}1,843
+   {txt}2016m4 {c |}      {res}1,835
+   {txt}2016m5 {c |}      {res}1,826
+   {txt}2016m6 {c |}      {res}1,806
+   {txt}2016m7 {c |}      {res}1,780
+   {txt}2016m8 {c |}      {res}1,765
+   {txt}2016m9 {c |}      {res}1,741
+  {txt}2016m10 {c |}      {res}1,731
+  {txt}2016m11 {c |}      {res}1,714
+  {txt}2016m12 {c |}      {res}1,691
+   {txt}2017m1 {c |}      {res}3,996
+   {txt}2017m2 {c |}      {res}4,027
+   {txt}2017m3 {c |}      {res}4,035
+   {txt}2017m4 {c |}      {res}4,048
+   {txt}2017m5 {c |}      {res}4,055
+   {txt}2017m6 {c |}      {res}4,033
+   {txt}2017m7 {c |}      {res}4,020
+   {txt}2017m8 {c |}      {res}4,024
+   {txt}2017m9 {c |}      {res}3,990
+  {txt}2017m10 {c |}      {res}3,987
+  {txt}2017m11 {c |}      {res}3,983
+  {txt}2017m12 {c |}      {res}3,969
+{txt}{hline 10}{c BT}{hline 11}
+
+{com}. 
+. xtset uniqueid date
+{res}{txt}{col 8}panel variable:  {res}uniqueid (unbalanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m1 to 2017m12, but with gaps
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. unique uniqueid
+{txt}Number of unique values of uniqueid is  {res}10584
+{txt}Number of records is  {res}168009
+{txt}
+{com}. 
+. by uniqueid: gen tenure = _N if TJB1_MSUM!=.
+{txt}
+{com}. 
+. ************************
+. *** merge macro data **
+. ************************
+. 
+. merge m:1 year month using "${c -(}otherdatafolder{c )-}InfM.dta",keep(master match)
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}               0
+{txt}{col 5}matched{col 30}{res}         168,009{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. drop _merge 
+{txt}
+{com}. 
+. **************************
+. ***** Winsorization ******
+. **************************
+. 
+. gen wage = TJB1_MSUM/TJB1_MWKHRS
+{txt}(1685 missing values generated)
+
+{com}. ** use the primary job monthly earning for now  
+. 
+. ** nominal to real terms 
+. replace wage = wage*100/CPIAU
+{txt}(165940 real changes made)
+
+{com}. label var wage "real monthly earning"
+{txt}
+{com}. 
+. egen wage_mean = mean(wage),by(uniqueid)
+{txt}(148 missing values generated)
+
+{com}. label var wage_mean "average monthly real earning of the individual"
+{txt}
+{com}. drop if wage<0.1* wage_mean | wage>1.9*wage_mean
+{txt}(3892 observations deleted)
+
+{com}. 
+. 
+. foreach var in wage{c -(}
+{txt}  2{com}. egen `var'_p1 = pctile(`var'),p(1) by(date)
+{txt}  3{com}. egen `var'_p99 = pctile(`var'),p(99) by(date)
+{txt}  4{com}. replace `var'=. if `var'<`var'_p1 | `var'>=`var'_p99
+{txt}  5{com}. {c )-}
+{txt}(3299 real changes made, 3299 to missing)
+
+{com}. 
+. 
+. **************************
+. ***** Validation ******
+. **************************
+. xtset uniqueid date
+{res}{txt}{col 8}panel variable:  {res}uniqueid (unbalanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m1 to 2017m12, but with gaps
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. drop if (ESEX!=l1.ESEX & ESEX!=.)| (ERACE!=l1.ERACE & ERACE!=.)
+{txt}(12889 observations deleted)
+
+{com}. gen AGE_df = TAGE-l1.TAGE
+{txt}(12471 missing values generated)
+
+{com}. drop if AGE_df >=2
+{txt}(12725 observations deleted)
+
+{com}. 
+. keep if tenure>=4
+{txt}(149 observations deleted)
+
+{com}. 
+. ** conditional on having no days off from the job 
+. keep if EJB1_AWOP1 ==2
+{txt}(7491 observations deleted)
+
+{com}. 
+. ** keep job that continues to interview year 
+. 
+. gen same_job = .
+{txt}(130863 missing values generated)
+
+{com}. replace same_job=RJB1_CFLG if RJB1_CFLG !=.
+{txt}(36228 real changes made)
+
+{com}. replace same_job=RJB1_CONTFLG if same_job==. & RJB1_CONTFLG!=.
+{txt}(94619 real changes made)
+
+{com}. keep if same_job==1
+{txt}(10670 observations deleted)
+
+{com}. 
+. ** type of employment arrangement 
+. 
+. gen work_type = EJB1_JBORSE
+{txt}
+{com}. drop if work_type!=1
+{txt}(0 observations deleted)
+
+{com}. ** only focus on employed by someone else
+. ** already dropp self-employed and others from raw data
+. 
+. ** drop imputed values
+. keep if EINTTYPE==1 | EINTTYPE==2 
+{txt}(16179 observations deleted)
+
+{com}. 
+. ** first job industry code 
+. destring TJB1_IND, force replace
+{txt}TJB1_IND contains nonnumeric characters; {res}replaced {txt}as {res}int
+{txt}
+{com}. 
+. ** drop some industries, i.e. government jobs
+. 
+. drop if TJB1_IND>=9400
+{txt}(3071 observations deleted)
+
+{com}. 
+. 
+. /*
+> ******************************************************
+> ***** Quarterly                                     **
+> ***** Set on if we want to collapse data into quarterly 
+> *******************************************************
+> 
+> 
+> gen wageQ = wage+l1.wage+l2.wage
+> replace wage =wageQ
+> drop wageQ
+> label var wage "real quarterly earning"
+> ** sum m-2 m-1 and m for quarterly wage 
+> 
+> keep if month==3 | month==6 |month==9|month==12
+> 
+> gen date_str=string(year)+"Q"+string(quarter)
+> gen dateq = quarterly(date_str,"YQ")
+> format dateq %tq
+> drop date_str
+> 
+> table dateq
+> xtset uniqueid dateq
+> */
+. 
+. **************************
+. ***** Summary stats ******
+. **************************
+. 
+. tabstat TPEARN TJB1_MSUM, st(p5 p10 p25 p50 p75 p90 p95) 
+
+{txt}   stats {...}
+{c |}{...}
+    TPEARN  TJB1_M~M
+{hline 9}{c +}{hline 20}
+{ralign 8:p5} {...}
+{c |}{...}
+ {res}      857       849
+{txt}{ralign 8:p10} {...}
+{c |}{...}
+ {res}     1200      1179
+{txt}{ralign 8:p25} {...}
+{c |}{...}
+ {res}     1771      1714
+{txt}{ralign 8:p50} {...}
+{c |}{...}
+ {res}     2657      2571
+{txt}{ralign 8:p75} {...}
+{c |}{...}
+ {res}     4429      4286
+{txt}{ralign 8:p90} {...}
+{c |}{...}
+ {res}     7665      7500
+{txt}{ralign 8:p95} {...}
+{c |}{...}
+ {res}     9920      9794
+{txt}{hline 9}{c BT}{hline 20}
+
+{com}. 
+. *******************************
+. *** Other group variables ***
+. *******************************
+. 
+. gen age = TAGE
+{txt}
+{com}. gen gender = ESEX
+{txt}
+{com}. gen race = ERACE
+{txt}
+{com}. gen educ = .
+{txt}(100943 missing values generated)
+
+{com}. replace educ=1 if EEDUC<=38
+{txt}(23304 real changes made)
+
+{com}. replace educ=2 if EEDUC>=39 & EEDUC<=42
+{txt}(48799 real changes made)
+
+{com}. replace educ=3 if EEDUC>42
+{txt}(28840 real changes made)
+
+{com}. 
+. **************************
+. ***** label variables ***
+. *************************
+. 
+. label define race_lb 1 "white" 2 "black" 3 "asian" ///
+>                     4 "residual"
+{txt}
+{com}. label values race race_lb
+{txt}
+{com}. 
+. label define gender_lb 1 "male" 2 "female"
+{txt}
+{com}. label values gender gender_lb
+{txt}
+{com}. 
+. label define educ_lb 1 "HS dropout" 2 "HS graduate" 3 "college graduates/above"
+{txt}
+{com}. label values educ edu_lb
+{txt}
+{com}. 
+. label var wage "monthly earning of the primary job"
+{txt}
+{com}. 
+. ***********************
+. ** Create new variables
+. ***********************
+. 
+. ** year of birth 
+. 
+. gen byear = year-age
+{txt}
+{com}. label var byear "year of birth"
+{txt}
+{com}. 
+. egen byear_5yr = cut(byear), ///
+>      at(1915 1920 1925 1930 1935 1940 ///
+>             1945 1950 1955 1960 1965 1970 ///
+>             1975 1980 1985 1990 1995 2000 ///
+>                 2005 2010)
+{txt}
+{com}. label var byear_5yr "5-year cohort"
+{txt}
+{com}. 
+. egen age_5yr = cut(age), ///
+>      at(20 25 30 35 40 45 ///
+>             50 55 60)
+{txt}(1790 missing values generated)
+
+{com}. label var age_5yr "5-year age"
+{txt}
+{com}. 
+. ** age square
+. gen age2 = age^2
+{txt}
+{com}. label var age2 "age squared"
+{txt}
+{com}. 
+. ** end/begining of year
+. 
+. gen end_yr = cond(month==12,1,0)
+{txt}
+{com}. label var end_yr "december dummy"
+{txt}
+{com}. 
+. gen beg_yr = cond(month==1,1,0)
+{txt}
+{com}. label var beg_yr "january dummy"
+{txt}
+{com}. 
+. ** take the log
+. gen lwage =log(wage)
+{txt}(1762 missing values generated)
+
+{com}. label var lwage "log monthly earning"
+{txt}
+{com}. 
+. ** demean the data
+. egen lwage_av = mean(lwage), by(date) 
+{txt}
+{com}. egen lwage_sd = sd(lwage), by(date)
+{txt}
+{com}. 
+. ** mincer regressions 
+. reghdfe lwage age age2 end_yr beg_yr, a(i.race i.gender i.educ i.TJB1_IND) resid
+{res}{txt}({browse "http://scorreia.com/research/hdfe.pdf":MWFE estimator} converged in 7 iterations)
+{res}
+{txt}HDFE Linear regression{col 51}Number of obs{col 67}= {res}    99,181
+{txt}Absorbing 4 HDFE groups{col 51}F({res}   4{txt},{res}  98905{txt}){col 67}= {res}   1159.75
+{txt}{col 51}Prob > F{col 67}= {res}    0.0000
+{txt}{col 51}R-squared{col 67}= {res}    0.4175
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.4159
+{txt}{col 51}Within R-sq.{col 67}= {res}    0.0448
+{txt}{col 51}Root MSE{col 67}= {res}    0.4584
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}       lwage{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 9}age {c |}{col 14}{res}{space 2} .0491195{col 26}{space 2} .0010595{col 37}{space 1}   46.36{col 46}{space 3}0.000{col 54}{space 4} .0470429{col 67}{space 3} .0511961
+{txt}{space 8}age2 {c |}{col 14}{res}{space 2}-.0005115{col 26}{space 2} .0000131{col 37}{space 1}  -39.17{col 46}{space 3}0.000{col 54}{space 4}-.0005371{col 67}{space 3}-.0004859
+{txt}{space 6}end_yr {c |}{col 14}{res}{space 2} .0129186{col 26}{space 2} .0048828{col 37}{space 1}    2.65{col 46}{space 3}0.008{col 54}{space 4} .0033483{col 67}{space 3} .0224889
+{txt}{space 6}beg_yr {c |}{col 14}{res}{space 2} .0054418{col 26}{space 2} .0101666{col 37}{space 1}    0.54{col 46}{space 3}0.592{col 54}{space 4}-.0144846{col 67}{space 3} .0253683
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 2.317342{col 26}{space 2} .0204867{col 37}{space 1}  113.11{col 46}{space 3}0.000{col 54}{space 4} 2.277188{col 67}{space 3} 2.357496
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Absorbed degrees of freedom:
+{col 1}{text}{hline 13}{c TT}{hline 12}{hline 12}{hline 14}{hline 1}{c TRC}
+{col 1}{text} Absorbed FE{col 14}{c |} Categories{col 27} - Redundant{col 39}  = Num. Coefs{col 54}{c |}
+{col 1}{text}{hline 13}{c +}{hline 12}{hline 12}{hline 14}{hline 1}{c RT}
+{col 1}{text}        race{col 14}{c |}{space 1}        4{col 27}{space 1}        0{col 39}{result}{space 1}        4{col 53}{text} {col 54}{c |}
+{col 1}{text}      gender{col 14}{c |}{space 1}        2{col 27}{space 1}        1{col 39}{result}{space 1}        1{col 53}{text} {col 54}{c |}
+{col 1}{text}        educ{col 14}{c |}{space 1}        3{col 27}{space 1}        1{col 39}{result}{space 1}        2{col 53}{text}?{col 54}{c |}
+{col 1}{text}    TJB1_IND{col 14}{c |}{space 1}      266{col 27}{space 1}        1{col 39}{result}{space 1}      265{col 53}{text}?{col 54}{c |}
+{col 1}{text}{hline 13}{c BT}{hline 12}{hline 12}{hline 14}{hline 1}{c BRC}
+? = number of redundant parameters may be higher
+
+{com}. predict lwage_shk, residuals
+{txt}(1762 missing values generated)
+
+{com}.  
+. * including aggregate shock
+. reghdfe lwage age age2 end_yr beg_yr, a(i.date i.race i.gender i.educ i.TJB1_IND) resid
+{res}{txt}note: {res}end_yr{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{txt}note: {res}beg_yr{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{txt}({browse "http://scorreia.com/research/hdfe.pdf":MWFE estimator} converged in 8 iterations)
+{res}{txt}note: end_yr omitted because of collinearity
+{txt}note: beg_yr omitted because of collinearity
+{res}
+{txt}HDFE Linear regression{col 51}Number of obs{col 67}= {res}    99,181
+{txt}Absorbing 5 HDFE groups{col 51}F({res}   2{txt},{res}  98852{txt}){col 67}= {res}   2307.17
+{txt}{col 51}Prob > F{col 67}= {res}    0.0000
+{txt}{col 51}R-squared{col 67}= {res}    0.4217
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.4198
+{txt}{col 51}Within R-sq.{col 67}= {res}    0.0446
+{txt}{col 51}Root MSE{col 67}= {res}    0.4569
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}       lwage{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 9}age {c |}{col 14}{res}{space 2} .0493561{col 26}{space 2} .0010563{col 37}{space 1}   46.73{col 46}{space 3}0.000{col 54}{space 4} .0472858{col 67}{space 3} .0514264
+{txt}{space 8}age2 {c |}{col 14}{res}{space 2}-.0005156{col 26}{space 2}  .000013{col 37}{space 1}  -39.60{col 46}{space 3}0.000{col 54}{space 4}-.0005411{col 67}{space 3}  -.00049
+{txt}{space 6}end_yr {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 6}beg_yr {c |}{col 14}{res}{space 2}        0{col 26}{txt}  (omitted)
+{space 7}_cons {c |}{col 14}{res}{space 2} 2.316199{col 26}{space 2} .0204172{col 37}{space 1}  113.44{col 46}{space 3}0.000{col 54}{space 4} 2.276182{col 67}{space 3} 2.356217
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Absorbed degrees of freedom:
+{col 1}{text}{hline 13}{c TT}{hline 12}{hline 12}{hline 14}{hline 1}{c TRC}
+{col 1}{text} Absorbed FE{col 14}{c |} Categories{col 27} - Redundant{col 39}  = Num. Coefs{col 54}{c |}
+{col 1}{text}{hline 13}{c +}{hline 12}{hline 12}{hline 14}{hline 1}{c RT}
+{col 1}{text}        date{col 14}{c |}{space 1}       56{col 27}{space 1}        0{col 39}{result}{space 1}       56{col 53}{text} {col 54}{c |}
+{col 1}{text}        race{col 14}{c |}{space 1}        4{col 27}{space 1}        1{col 39}{result}{space 1}        3{col 53}{text} {col 54}{c |}
+{col 1}{text}      gender{col 14}{c |}{space 1}        2{col 27}{space 1}        1{col 39}{result}{space 1}        1{col 53}{text}?{col 54}{c |}
+{col 1}{text}        educ{col 14}{c |}{space 1}        3{col 27}{space 1}        1{col 39}{result}{space 1}        2{col 53}{text}?{col 54}{c |}
+{col 1}{text}    TJB1_IND{col 14}{c |}{space 1}      266{col 27}{space 1}        1{col 39}{result}{space 1}      265{col 53}{text}?{col 54}{c |}
+{col 1}{text}{hline 13}{c BT}{hline 12}{hline 12}{hline 14}{hline 1}{c BRC}
+? = number of redundant parameters may be higher
+
+{com}. predict lwage_id_shk, residuals
+{txt}(1762 missing values generated)
+
+{com}. 
+. gen lwage_ag_shk = lwage_shk- lwage_id_shk
+{txt}(1762 missing values generated)
+
+{com}. 
+. label var lwage_shk "log wage shock"
+{txt}
+{com}. label var lwage_id_shk "log wage idiosyncratic shock"
+{txt}
+{com}. label var lwage_ag_shk "log wage aggregate shock"
+{txt}
+{com}. 
+. 
+. ** first difference
+. foreach var in lwage_shk lwage_id_shk lwage_ag_shk{c -(}
+{txt}  2{com}. gen `var'_gr = `var'- l1.`var'
+{txt}  3{com}. {c )-}
+{txt}(9908 missing values generated)
+(9908 missing values generated)
+(9908 missing values generated)
+
+{com}. 
+. label var lwage_shk_gr "log growth of unexplained wage"
+{txt}
+{com}. label var lwage_id_shk_gr "log growth of idiosyncratic unexplained wage"
+{txt}
+{com}. label var lwage_ag_shk_gr "log growth of aggregate unexplained wage"
+{txt}
+{com}. 
+. 
+. *foreach var in ue{c -(}
+. *gen ue_gr = ue-l2.ue
+. *{c )-}
+. *label var ue_gr "change in ue in 2 year"
+. 
+. **  volatility 
+. egen lwage_shk_gr_sd = sd(lwage_shk_gr), by(date)
+{txt}(5053 missing values generated)
+
+{com}. label var lwage_shk_gr_sd "standard deviation of log shocks"
+{txt}
+{com}. 
+. 
+. ***********************************************
+. ** summary chart of unconditional wages ********
+. ************************************************
+. 
+. preserve
+{txt}
+{com}. 
+. collapse (mean) lwage lwage_sd, by(date year month) 
+{txt}
+{com}. ** average log wage whole sample
+. twoway  (connected lwage date) if lwage!=., title("The mean of log real wages") 
+{res}{txt}
+{com}. graph export "${c -(}graph_folder{c )-}/log_wage_av.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/sipp//log_wage_av.png written in PNG format)
+
+{com}. 
+. ** std log wage whole sample
+. twoway  (connected lwage_sd date) if lwage_sd!=., title("The standard deviation of log real wages") 
+{res}{txt}
+{com}. graph export "${c -(}graph_folder{c )-}/log_wage_sd.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/sipp//log_wage_sd.png written in PNG format)
+
+{com}. restore 
+{txt}
+{com}. 
+. 
+. preserve 
+{txt}
+{com}. collapse (mean) lwage lwage_sd lwage_av_educ=lwage (sd) lwage_sd_educ = lwage, by(date year month educ) 
+{txt}
+{com}. 
+. * average log wage
+. twoway  (connected lwage_av_educ date if lwage_av!=. & educ==1) ///
+>         (connected lwage_av_educ date if lwage_av!=. & educ==2) ///
+>                 (connected lwage_av_educ date if lwage_av!=. & educ==3), ///
+>         title("The mean of log real wages") ///
+>                 legend(label(1 "HS dropout") label(2 "HS") label(3 "college") col(1)) 
+{res}{txt}
+{com}. graph export "${c -(}graph_folder{c )-}/log_wage_av_by_edu.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/sipp//log_wage_av_by_edu.png written in PNG format)
+
+{com}. 
+. * standard deviation log wage
+. twoway  (connected lwage_sd_educ date if lwage_sd_educ!=. & educ==1) ///
+>         (connected lwage_sd_educ date if lwage_sd_educ!=. & educ==2) ///
+>                 (connected lwage_sd_educ date if lwage_sd_educ!=. & educ==3), ///
+>         title("The standard deviation of log real wages") ///
+>                 legend(label(1 "HS dropout") label(2 "HS") label(3 "college") col(1)) 
+{res}{txt}
+{com}. graph export "${c -(}graph_folder{c )-}/log_wage_sd_by_edu.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/sipp//log_wage_sd_by_edu.png written in PNG format)
+
+{com}. 
+. restore 
+{txt}
+{com}. 
+. ************************************************
+. ** summary chart of conditional wages ********
+. ************************************************
+. 
+. preserve
+{txt}
+{com}. 
+. collapse (mean) lwage_shk_gr lwage_shk_gr_sd, by(year month date) 
+{txt}
+{com}. 
+. replace lwage_shk_gr=. if month==1
+{txt}(3 real changes made, 3 to missing)
+
+{com}. replace lwage_shk_gr_sd=. if month==1
+{txt}(3 real changes made, 3 to missing)
+
+{com}. 
+. ** average log wage shock whole sample
+. twoway  (connected lwage_shk_gr date) if lwage_shk_gr!=., title("The mean of log real wage shocks") 
+{res}{txt}
+{com}. graph export "${c -(}graph_folder{c )-}/log_wage_shk_gr.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/sipp//log_wage_shk_gr.png written in PNG format)
+
+{com}. 
+. ** std log wage whole sample
+. twoway  (connected lwage_shk_gr_sd date) if lwage_shk_gr_sd!=., title("The standard deviation of log real wage shocks") 
+{res}{txt}
+{com}. graph export "${c -(}graph_folder{c )-}/log_wage_shk_gr_sd.png", as(png) replace
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/sipp//log_wage_shk_gr_sd.png written in PNG format)
+
+{com}. restore 
+{txt}
+{com}. 
+. * education profile bar
+. preserve 
+{txt}
+{com}. collapse (mean) lwage_shk_gr_av_edu=lwage_shk_gr (sd) lwage_shk_gr_sd_edu = lwage_shk_gr, by(educ) 
+{txt}
+{com}. * average log wage
+. 
+. * standard deviation log wage
+. graph bar lwage_shk_gr_sd_edu, over(educ) ///
+>                                ytitle("standard deviation of log wage shocks") ///
+>                                title("Gross volatility and education")                                                     
+{res}{txt}
+{com}. graph export "${c -(}graph_folder{c )-}/log_wage_shk_gr_sd_bar_by_edu.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/sipp//log_wage_shk_gr_sd_bar_by_edu.png written in PNG format)
+
+{com}. restore 
+{txt}
+{com}. 
+. 
+. * education profile: time series 
+. 
+. preserve 
+{txt}
+{com}. collapse (mean) lwage_shk_gr_av_edu=lwage_shk_gr (sd) lwage_shk_gr_sd_edu = lwage_shk_gr, by(year month date educ) 
+{txt}
+{com}. 
+. replace lwage_shk_gr_av_edu=. if month==1
+{txt}(9 real changes made, 9 to missing)
+
+{com}. replace lwage_shk_gr_sd_edu=. if month==1
+{txt}(9 real changes made, 9 to missing)
+
+{com}. 
+. egen avmv3 = filter(lwage_shk_gr_av_edu), coef(1 1 1) lags(-1/1) normalise 
+{err}variable uniqueid not found
+{txt}{search r(111):r(111);}
+
+end of do-file
+
+{search r(111):r(111);}
+
+{com}. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD06284.000000"
+{txt}
+{com}. 
+. * education profile: time series 
+. 
+. preserve 
+{txt}
+{com}. collapse (mean) lwage_shk_gr_av_edu=lwage_shk_gr (sd) lwage_shk_gr_sd_edu = lwage_shk_gr, by(year month date educ) 
+{txt}
+{com}. 
+. replace lwage_shk_gr_av_edu=. if month==1
+{txt}(9 real changes made, 9 to missing)
+
+{com}. replace lwage_shk_gr_sd_edu=. if month==1
+{txt}(9 real changes made, 9 to missing)
+
+{com}. 
+. xtset educ date 
+{res}{txt}{col 8}panel variable:  {res}educ (strongly balanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m3 to 2017m12, but with gaps
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. egen avmv3 = filter(lwage_shk_gr_av_edu), coef(1 1 1) lags(-1/1) normalise 
+{txt}(45 missing values generated)
+
+{com}. egen sdmv3 = filter(lwage_shk_gr_sd_edu), coef(1 1 1) lags(-1/1) normalise 
+{txt}(45 missing values generated)
+
+{com}. 
+. * average log wage
+. twoway  (connected avmv3 date if lwage_shk_gr_av_edu!=. & educ==1) ///
+>         (connected avmv3 date if lwage_shk_gr_av_edu!=. & educ==2) ///
+>                 (connected avmv3 date if lwage_shk_gr_av_edu!=. & educ==3), ///
+>         title("The mean of log real wage shocks") ///
+>                 legend(label(1 "HS dropout") label(2 "HS") label(3 "college") col(1)) 
+{res}{txt}
+{com}. graph export "${c -(}graph_folder{c )-}/log_wage_shk_gr_by_edu.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/sipp//log_wage_shk_gr_by_edu.png written in PNG format)
+
+{com}. 
+. * standard deviation log wage
+. twoway  (connected sdmv3 date if lwage_shk_gr_sd_edu!=. & educ==1) ///
+>         (connected sdmv3 date if lwage_shk_gr_sd_edu!=. & educ==2) ///
+>                 (connected sdmv3 date if lwage_shk_gr_sd_edu!=. & educ==3), ///
+>         title("The standard deviation of log real wage shocks") ///
+>                 legend(label(1 "HS dropout") label(2 "HS") label(3 "college") col(1)) 
+{res}{txt}
+{com}. graph export "${c -(}graph_folder{c )-}/log_wage_shk_gr_sd_by_edu.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/sipp//log_wage_shk_gr_sd_by_edu.png written in PNG format)
+
+{com}.  
+. restore 
+{txt}
+{com}. ddd
+{err}unrecognized command:  ddd
+{txt}{search r(199):r(199);}
+
+end of do-file
+
+{search r(199):r(199);}
+
+{com}. do "/var/folders/k3/fzq0vzzx2b56ypvhsddgs7hr0000gn/T//SD06284.000000"
+{txt}
+{com}. 
+. preserve 
+{txt}
+{com}. collapse (mean) lwage_shk_gr_av_edu=lwage_shk_gr (sd) lwage_shk_gr_sd_edu = lwage_shk_gr, by(year month date educ) 
+{txt}
+{com}. 
+. replace lwage_shk_gr_av_edu=. if month==1
+{txt}(9 real changes made, 9 to missing)
+
+{com}. replace lwage_shk_gr_sd_edu=. if month==1
+{txt}(9 real changes made, 9 to missing)
+
+{com}. 
+. xtset educ date 
+{res}{txt}{col 8}panel variable:  {res}educ (strongly balanced)
+{txt}{col 9}time variable:  {res}{col 25}date, 2013m3 to 2017m12, but with gaps
+{txt}{col 17}delta:  {res}1 month
+{txt}
+{com}. 
+. egen avmv3 = filter(lwage_shk_gr_av_edu), coef(1 1 1) lags(-1/1) normalise 
+{txt}(45 missing values generated)
+
+{com}. egen sdmv3 = filter(lwage_shk_gr_sd_edu), coef(1 1 1) lags(-1/1) normalise 
+{txt}(45 missing values generated)
+
+{com}. 
+. * average log wage
+. twoway  (connected avmv3 date if avmv3!=. & educ==1) ///
+>         (connected avmv3 date if avmv3!=. & educ==2) ///
+>                 (connected avmv3 date if avmv3!=. & educ==3), ///
+>         title("The mean of log real wage shocks") ///
+>                 legend(label(1 "HS dropout") label(2 "HS") label(3 "college") col(1)) 
+{res}{txt}
+{com}. graph export "${c -(}graph_folder{c )-}/log_wage_shk_gr_by_edu.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/sipp//log_wage_shk_gr_by_edu.png written in PNG format)
+
+{com}. 
+. * standard deviation log wage
+. twoway  (connected sdmv3 date if sdmv3!=. & educ==1) ///
+>         (connected sdmv3 date if sdmv3!=. & educ==2) ///
+>                 (connected sdmv3 date if sdmv3!=. & educ==3), ///
+>         title("The standard deviation of log real wage shocks") ///
+>                 legend(label(1 "HS dropout") label(2 "HS") label(3 "college") col(1)) 
+{res}{txt}
+{com}. graph export "${c -(}graph_folder{c )-}/log_wage_shk_gr_sd_by_edu.png", as(png) replace 
+{txt}(file /Users/Myworld/Dropbox/IncExpProject/WorkingFolder/Graphs/sipp//log_wage_shk_gr_sd_by_edu.png written in PNG format)
+
+{com}.  
+. restore 
 {txt}
 {com}. ddd
 {err}unrecognized command:  ddd
@@ -788,5 +2216,7 @@ end of do-file
 {search r(199):r(199);}
 
 {com}. clear
+
+. clear
 
 . 

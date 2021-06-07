@@ -7,14 +7,14 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.11.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
 #     name: python3
 # ---
 
-# ## Perceived Labor Income Risks and Macroeconomic conditions
+# # Perceived Labor Income Risks and Macroeconomic conditions
 #
 #
 # - This notebook first downloads asset return indicators
@@ -57,23 +57,30 @@ plt.rcParams.update({'figure.max_open_warning': 0})
 
 pd.options.display.float_format = '{:,.2f}'.format
 
-# ###  1. Download stock return and wage rate series 
+# ###  1. Download stock return/wage rate/unemployment rate
 
 # + {"code_folding": []}
-## s&p 500 series
+## time span 
 
 start = datetime.datetime(2000, 1, 30)
-end = datetime.datetime(2020, 3, 30)
+end = datetime.datetime(2020, 6, 30)
 
 # + {"code_folding": []}
 ## downloading the data from Fred
 sp500D= web.DataReader('sp500', 'fred', start, end)
 vixD = web.DataReader('VIXCLS','fred',start,end)
 he = web.DataReader('CES0500000003','fred',start,end) #hourly earning private
+ue = web.DataReader('UNRATE','fred',start,end)
+cpi = web.DataReader('CPIAUCSL','fred',start,end)
 # -
 
-vixD.plot(lw = 2)
-vixplt = plt.title('vix')
+## wage growth 
+he.plot(lw = 2)
+heplt = plt.title('hourly earning')
+
+## wage growth 
+ue.plot(lw = 2)
+ueplt = plt.title('unemployment rate')
 
 # + {"code_folding": []}
 #plotting
@@ -92,14 +99,41 @@ vixM = vixD.resample('M').mean()
 sp500M.plot(lw = 3)
 #sp500Mplt = plt.title('S&P 500 (end of month)')
 
+# +
+## compute change/growths 
+
 sp500MR = np.log(sp500M).diff(periods = 3)
+
+## quarterly wage growth  
 he = he.diff(periods = 3)
 he.columns = ['he']
+
+## unemployment rate 
+# -
 
 sp500MR.plot(lw = 3 )
 sp500MRplt = plt.title('Monthly return of S&P 500')
 
 he.plot(lw = 2)
+
+# adjusting the end-of-month dates to the begining-of-month for combining
+sp500MR.index = sp500MR.index.shift(1,freq='D')
+vixM.index = vixM.index.shift(1,freq='D')
+
+# +
+## merge all monthly variables 
+
+macroM = pd.concat([sp500MR,
+                    vixM,
+                    he,
+                   ue,
+                   cpi],
+                   join="inner",
+                   axis=1)
+# -
+
+## save macroM for further analysis 
+macroM.to_stata('../OtherData/macroM_raw.dta')
 
 # ###  2. Loading and cleaning perceived income series
 
@@ -235,9 +269,7 @@ IncSCEPopMomsMean.index = pd.DatetimeIndex(IncSCEPopMomsMean['date'] ,freq='infe
 
 
 # + {"code_folding": []}
-dt_combM = pd.concat([sp500MR,
-                      vixM,
-                      he,
+dt_combM = pd.concat([macroM,
                       IncSCEPopMomsMed,
                       IncSCEPopMomsMean],
                      join="inner",
@@ -247,11 +279,6 @@ dt_combM = pd.concat([sp500MR,
 dt_combM.tail()
 
 dt_combM.to_stata('../SurveyData/SCE/IncExpSCEPopMacroM.dta')
-
-# +
-## save sp500 as stata for other analysis
-
-sp500MR.to_stata('../OtherData/sp500.dta')
 
 # + {"code_folding": []}
 ## date index for panel

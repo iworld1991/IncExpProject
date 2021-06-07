@@ -12,24 +12,6 @@ capture log close
 
 log using "${mainfolder}/indSCE_Est_log",replace
 
-*********************************************************
-*** before working with SCE, clean the stock market data 
-********************************************************
-
-use "${mainfolder}/OtherData/sp500.dta",clear 
-
-generate new_date = dofc(DATE)
-*format new_date %tm
-gen year = year(new_date)
-gen month = month(new_date)
-gen date_str = string(year)+ "m"+string(month)
-gen date = monthly(date_str,"YM")
-format date %tm
-drop DATE date_str year month new_date 
-label var sp500 "growth rate (%) of sp500 index from last month"
-save "${mainfolder}/OtherData/sp500M.dta",replace 
-clear 
-
 
 ***************************
 **  Clean and Merge Data **
@@ -55,11 +37,12 @@ format date %tm
 order userid date year month   
 
 *************************************
-*** Merge with stock market data   **
+*** Merge with macro data   **
 *************************************
 
-merge m:1 date using "${mainfolder}/OtherData/sp500M.dta", keep(master match) 
+merge m:1 date using "${mainfolder}/OtherData/macroM.dta", keep(master match) 
 rename _merge sp_merge
+
 
 *******************************
 **  Set Panel Data Structure **
@@ -72,7 +55,7 @@ sort ID year month
 ** Exclude extreme outliers 
 ******************************
 
-keep if Q32 <= 65 & Q32 >= 20
+keep if Q32 <= 60 & Q32 >= 20
 
 *****************************************
 ****  Renaming so that more consistent **
@@ -131,17 +114,11 @@ foreach var in `Moments'{
 *** generate other vars *****
 *****************************
 
-gen age_sq = age^2
-label var age_sq "Age-squared"
+gen age2 = age^2
+label var age2 "Age-squared"
 
 encode state, gen(state_id)
 label var state_id "state id"
-
-*****************************
-*** generate group vars *****
-*****************************
-
-*egen byear_g = cut(byear), group(4)
 
 egen byear_5yr = cut(byear), ///
      at(1945 1950 1955 1960 1965 1970 ///
@@ -393,20 +370,26 @@ gen YM = year*100+month
 
 ** full sample
 preserve
-
 merge m:1 YM using "${otherdata_folder}/sipp/sipp_history_vol_decomposed.dta", keep(master match)
 drop _merge 
 xtset ID date
 
 collapse (mean) incvar rincvar permanent transitory, by(date year month) 
+
 tsset date 
 
 table date if permanent!=.
 gen pvar = permanent^2
 gen tvar = transitory^2
 
-twoway (tsline rincvar,lp(solid) lwidth(thick)) ///
-       (tsline tvar, yaxis(2) lp(dash) lwidth(thick)), ///
+reg rincvar pvar tvar 
+
+egen pvarmv3 = filter(pvar), coef(1 1 1) lags(-1/1) normalise 
+egen tvarmv3 = filter(tvar), coef(1 2 1) lags(-1/1) normalise
+egen rincvarmv3 = filter(rincvar), coef(1 2 1) lags(-1/1) normalise
+
+twoway (tsline rincvarmv3,lp(solid) lwidth(thick) lcolor(black)) ///
+       (tsline tvarmv3, yaxis(2) lp(dash) lwidth(thick) lcolor(red)), ///
        xtitle("date") ///
 	   ytitle("") ///
 	   title("Perceived and realized transitory risk") ///
@@ -414,8 +397,8 @@ twoway (tsline rincvar,lp(solid) lwidth(thick)) ///
  graph export "${graph_folder}/sipp/real_transitory_compare.png",as(png) replace  
 
  
-twoway (tsline rincvar,lp(solid) lwidth(thick)) ///
-       (tsline pvar, yaxis(2) lp(dash) lwidth(thick)), ///
+twoway (tsline rincvarmv3,lp(solid) lwidth(thick) lcolor(black)) ///
+       (tsline pvarmv3, yaxis(2) lp(dash) lwidth(thick) lcolor(red)), ///
        xtitle("date") ///
 	   ytitle("") ///
 	   title("Perceived and realized permanent risk") ///
@@ -423,9 +406,7 @@ twoway (tsline rincvar,lp(solid) lwidth(thick)) ///
 graph export "${graph_folder}/sipp/real_permanent_compare.png",as(png) replace  
 restore
 
-
 ** sub sample
-
 
 preserve
 
@@ -433,7 +414,6 @@ merge m:1 gender educ age_5yr YM ///
          using "${otherdata_folder}/sipp/sipp_history_vol_decomposed_edu_gender_age5.dta", keep(master match)
 drop _merge 
 xtset ID date
-
 collapse (mean) incvar rincvar permanent transitory, by(date year month gender educ age_5yr) 
 
 table date if permanent!=.
@@ -441,8 +421,15 @@ gen pvar = permanent^2
 gen tvar = transitory^2
 
 
+foreach var in pvar tvar{
+egen `var'_p5 = pctile(`var'),p(5) by(date)
+egen `var'_p95 = pctile(`var'),p(95) by(date)
+replace `var'=. if `var'<`var'_p5 | `var'>=`var'_p95
+}
+
+
 twoway (scatter rincvar tvar) ///
-       (lfit rincvar tvar), ///
+       (lfit rincvar tvar,lcolor(red)), ///
        xtitle("transitory risks") ///
 	   ytitle("perceived risks") ///
 	   title("Perceived and realized transitory risk") ///
@@ -451,7 +438,7 @@ twoway (scatter rincvar tvar) ///
 
  
 twoway (scatter rincvar pvar) ///
-       (lfit rincvar pvar), ///
+       (lfit rincvar pvar,lcolor(red)), ///
        xtitle("permanent risks") ///
 	   ytitle("perceived risks") ///
 	   title("Perceived and realized permanent risk") ///
