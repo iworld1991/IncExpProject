@@ -12,7 +12,6 @@ capture log close
 
 log using "${mainfolder}/indSCE_Est_log",replace
 
-
 ***************************
 **  Clean and Merge Data **
 ***************************
@@ -35,6 +34,7 @@ gen date_str=string(year)+"m"+string(month)
 gen date= monthly(date_str,"YM")
 format date %tm
 order userid date year month   
+
 
 *************************************
 *** Merge with macro data   **

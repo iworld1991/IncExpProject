@@ -130,7 +130,7 @@ moms_fake = dt_fake.SimulatedMoments()
 
 # ### Estimation using fake data
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 ## estimation of income risks 
 
 dt_est = cp.deepcopy(dt)
@@ -138,7 +138,7 @@ dt_est.GetDataMoments(moms_fake)
 
 para_guess_this = np.ones(2*t  + dt_est.ma_q)  # make sure the length of the parameters are right 
 
-# + {"code_folding": [0]}
+# + {"code_folding": []}
 para_est = dt_est.EstimatePara(method='BFGS',
                                para_guess = para_guess_this)
 
@@ -198,11 +198,13 @@ SIPP = pd.read_stata('../../../SIPP/sipp_matrix.dta',
 SIPP.index = SIPP['uniqueid']
 SIPP = SIPP.drop(['uniqueid'], axis=1)
 SIPP = SIPP.dropna(axis=0,how='all')
-SIPP = SIPP.dropna(axis=1,how='all')
+#SIPP = SIPP.dropna(axis=1,how='all')
 
 #SIPP=SIPP.dropna(subset=['byear_5yr'])
 #SIPP['byear_5yr'] = SIPP['byear_5yr'].astype('int32')
 # -
+
+SIPP.columns
 
 SIPP.dtypes
 
@@ -379,7 +381,7 @@ PSID = pd.read_stata('../../../PSID/J276289/psid_matrix.dta',
 PSID.index = PSID['uniqueid']
 PSID = PSID.drop(['uniqueid'], axis=1)
 PSID = PSID.dropna(axis=0,how='all')
-PSID = PSID.dropna(axis=1,how='all')
+#PSID = PSID.dropna(axis=1,how='all')
 
 #PSID = PSID.rename(columns={'edu_i_g':'edu_i_g', ##
 #                           'sex_h':'sex_h',   # 1 male 2 female 
